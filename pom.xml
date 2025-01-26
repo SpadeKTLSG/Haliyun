@@ -17,12 +17,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>Base</module>
-        <module>Common</module>
-        <module>Domain</module>
-        <module>Gate</module>
-        <module>Infra</module>
-        <module>Serve</module>
-        <module>Test</module>
     </modules>
 
     <properties>

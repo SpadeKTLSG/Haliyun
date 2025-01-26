@@ -11,6 +11,7 @@
 
     <artifactId>Base</artifactId>
     <description>基建模块</description>
+    <packaging>pom</packaging>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
@@ -18,4 +19,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <modules>
+        <module>../Common</module>
+        <module>../Domain</module>
+        <module>../Gate</module>
+        <module>../Infra</module>
+        <module>../Serve</module>
+        <module>../Test</module>
+    </modules>
 </project>

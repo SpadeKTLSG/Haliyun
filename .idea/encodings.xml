@@ -2,12 +2,20 @@
 <project version="4">
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
     <file url="file://$PROJECT_DIR$/Base/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Base/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Domain/DAO/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Domain/Model/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Domain/QO/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Domain/Repo/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Domain/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Domain/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Gate/Gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Gate/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Gate/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Infra/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Serve/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/Try/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Test/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
     <file url="PROJECT" charset="UTF-8" />

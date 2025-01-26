@@ -5,8 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>xyz.spc</groupId>
-        <artifactId>Haliyun</artifactId>
+        <artifactId>Base</artifactId>
         <version>3.0.0-RELEASE</version>
+        <relativePath>../Base/pom.xml</relativePath>
     </parent>
 
     <groupId>xyz.spc.serve</groupId>

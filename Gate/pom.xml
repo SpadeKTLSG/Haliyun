@@ -5,13 +5,18 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>xyz.spc</groupId>
-        <artifactId>Haliyun</artifactId>
+        <artifactId>Base</artifactId>
         <version>3.0.0-RELEASE</version>
+        <relativePath>../Base/pom.xml</relativePath>
     </parent>
 
     <groupId>xyz.spc.gate</groupId>
     <artifactId>Gate</artifactId>
+    <packaging>pom</packaging>
     <description>网关模块</description>
+    <modules>
+        <module>Gateway</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

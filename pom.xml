@@ -15,8 +15,12 @@
     <artifactId>Haliyun</artifactId>
     <version>${Haliyun.version}</version>
     <packaging>pom</packaging>
+
     <modules>
         <module>Base</module>
+        <module>Serve/Guide</module>
+        <module>Serve/Money</module>
+        <module>Serve/Pub</module>
     </modules>
 
     <properties>
@@ -27,10 +31,6 @@
         <maven.compiler.plugin.version>3.12.0</maven.compiler.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <!--struct-->
-        <spring-boot.version>3.2.5</spring-boot.version>
-        <spring-cloud.version>4.1.1</spring-cloud.version>
     </properties>
 
 

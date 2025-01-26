@@ -12,7 +12,15 @@
 
     <groupId>xyz.spc.infra</groupId>
     <artifactId>Infra</artifactId>
+    <packaging>pom</packaging>
     <description>基建模块</description>
+
+    <modules>
+        <module>DO</module>
+        <module>Mapper</module>
+        <module>Special</module>
+        <module>Feign</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

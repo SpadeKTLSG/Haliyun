@@ -14,8 +14,13 @@
     <artifactId>Gate</artifactId>
     <packaging>pom</packaging>
     <description>网关模块</description>
+
     <modules>
         <module>Gateway</module>
+        <module>Remote</module>
+        <module>Api</module>
+        <module>DTO</module>
+        <module>VO</module>
     </modules>
 
     <properties>

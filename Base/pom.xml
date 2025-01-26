@@ -17,6 +17,10 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!--struct-->
+        <spring-boot.version>3.2.5</spring-boot.version>
+        <spring-cloud.version>4.1.1</spring-cloud.version>
     </properties>
 
     <modules>
@@ -27,4 +31,27 @@
         <module>../Serve</module>
         <module>../Test</module>
     </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--sb-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring-boot.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-tx</artifactId>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring-boot.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+
+
+    </dependencyManagement>
 </project>

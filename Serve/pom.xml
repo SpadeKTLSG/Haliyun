@@ -12,7 +12,15 @@
 
     <groupId>xyz.spc.serve</groupId>
     <artifactId>Serve</artifactId>
+    <packaging>pom</packaging>
     <description>服务模块</description>
+
+    <modules>
+        <module>Auxiliary</module>
+        <module>Data</module>
+        <module>Group</module>
+        <module>Guest</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

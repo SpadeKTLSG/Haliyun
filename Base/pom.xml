@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>Base</artifactId>
+    <description>基建模块</description>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

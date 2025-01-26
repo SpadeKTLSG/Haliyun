@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding" defaultCharsetForPropertiesFiles="UTF-8">
+    <file url="file://$PROJECT_DIR$/Base/lib" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Base/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Base/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Common/lib" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Common/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Common/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Domain/DAO/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Domain/Model/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Domain/QO/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Domain/Repo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Domain/lib" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Domain/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Domain/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Gate/Api/src/main/java" charset="UTF-8" />
@@ -16,12 +19,14 @@
     <file url="file://$PROJECT_DIR$/Gate/Gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Gate/Remote/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Gate/VO/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Gate/lib" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Gate/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Gate/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Infra/DO/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Infra/Feign/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Infra/Mapper/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Infra/Special/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Infra/lib" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Infra/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Infra/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Serve/Auxiliary/src/main/java" charset="UTF-8" />
@@ -31,6 +36,7 @@
     <file url="file://$PROJECT_DIR$/Serve/Guide/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Serve/Money/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Serve/Pub/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Serve/lib" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Serve/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Serve/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Test/src/main/java" charset="UTF-8" />

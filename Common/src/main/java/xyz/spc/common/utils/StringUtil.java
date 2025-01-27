@@ -7,6 +7,10 @@ import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * String 工具类
+ */
+@SuppressWarnings("all")
 public class StringUtil {
 
     /**
@@ -140,12 +144,8 @@ public class StringUtil {
         if (str.length() >= minLength) {
             return str;
         }
-        StringBuilder sb = new StringBuilder(minLength);
-        for (int i = str.length(); i < minLength; i++) {
-            sb.append(padChar);
-        }
-        sb.append(str);
-        return sb.toString();
+        String sb = String.valueOf(padChar).repeat(minLength - str.length()) + str;
+        return sb;
     }
 
     /**
@@ -160,12 +160,8 @@ public class StringUtil {
         if (str.length() >= minLength) {
             return str;
         }
-        StringBuilder sb = new StringBuilder(minLength);
-        sb.append(str);
-        for (int i = str.length(); i < minLength; i++) {
-            sb.append(padChar);
-        }
-        return sb.toString();
+        String sb = str + String.valueOf(padChar).repeat(minLength - str.length());
+        return sb;
     }
 
     /**
@@ -219,8 +215,6 @@ public class StringUtil {
     /***
      * 判断 String 是否int
      *
-     * @param input
-     * @return
      */
     public static boolean isInteger(String input) {
         Matcher mer = Pattern.compile("^[+-]?[0-9]+$").matcher(input);
@@ -231,7 +225,6 @@ public class StringUtil {
      * 数字型String字符串转换成int型数组
      *
      * @param str string类型的数组
-     * @return
      */
     public static Integer[] stringToIntegerArray(String[] str) {
         Integer[] array = new Integer[str.length];
@@ -245,7 +238,6 @@ public class StringUtil {
      * 数字型String字符串转换成Long型数组
      *
      * @param str string类型的数组
-     * @return
      */
     public static Long[] stringTOLongArray(String[] str) {
         Long[] array = new Long[str.length];
@@ -283,9 +275,6 @@ public class StringUtil {
 
     /**
      * 判断字符串是否为空（不能为空字符串）
-     *
-     * @param src
-     * @return
      */
     public static boolean isNull(String src) {
 
@@ -294,13 +283,9 @@ public class StringUtil {
 
     /**
      * 检查数组中，是否含有当前元素
-     *
-     * @param arr
-     * @param checkValue
-     * @return
      */
     public static Boolean checkArrayValue(String[] arr, String checkValue) {
-        Boolean checkFlag = false;
+        boolean checkFlag = false;
         if (arr != null && arr.length > 0) {
             for (int i = 0; i < arr.length; i++) {
                 if (arr[i].equals(checkValue)) {
@@ -314,13 +299,9 @@ public class StringUtil {
 
     /**
      * 检查数组中元素，是否在checkValue中出现
-     *
-     * @param arr
-     * @param checkValue
-     * @return
      */
     public static Boolean isContains(String[] arr, String checkValue) {
-        Boolean checkFlag = false;
+        boolean checkFlag = false;
         if (arr != null) {
             for (String str : arr) {
                 if (checkValue.indexOf(str) != -1) {

@@ -21,6 +21,8 @@
         <module>Serve/Guide</module>
         <module>Serve/Money</module>
         <module>Serve/Pub</module>
+        <module>Base</module>
+        <module>Common</module>
     </modules>
 
     <properties>

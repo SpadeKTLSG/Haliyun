@@ -22,6 +22,11 @@ public class RemoteException extends AbstractException {
     }
 
     @Override
+    public void cast(String message) {
+        throw new RemoteException(message);
+    }
+
+    @Override
     public String toString() {
         return "RemoteException{" +
                 "code='" + errorCode + "'," +

@@ -28,6 +28,11 @@ public class ServiceException extends AbstractException {
     }
 
     @Override
+    public void cast(String message) {
+        throw new ServiceException(message);
+    }
+
+    @Override
     public String toString() {
         return "ServiceException{" +
                 "code='" + errorCode + "'," +

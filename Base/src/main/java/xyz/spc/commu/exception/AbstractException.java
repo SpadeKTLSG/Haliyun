@@ -21,4 +21,6 @@ public abstract class AbstractException extends RuntimeException {
         this.errorCode = errorCode.code();
         this.errorMessage = Optional.ofNullable(StringUtils.hasLength(message) ? message : null).orElse(errorCode.message());
     }
+
+    public abstract void cast(String message);
 }

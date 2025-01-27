@@ -26,6 +26,11 @@ public class ClientException extends AbstractException {
     }
 
     @Override
+    public void cast(String message) {
+        throw new ClientException(message);
+    }
+
+    @Override
     public String toString() {
         return "ClientException{" +
                 "code='" + errorCode + "'," +

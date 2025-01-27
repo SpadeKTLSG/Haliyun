@@ -12,7 +12,6 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import xyz.spc.serve.common.interceptor.mp.TenantInterceptor;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -52,10 +51,6 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns(ex).order(0);*/
 
-        // 租户拦截器
-        registry.addInterceptor(new TenantInterceptor())
-                .addPathPatterns("/**")
-                .excludePathPatterns(ex).order(0);
     }
 
 

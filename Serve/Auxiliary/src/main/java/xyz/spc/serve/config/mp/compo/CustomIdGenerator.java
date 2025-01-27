@@ -1,4 +1,4 @@
-package xyz.spc.common.config.mp.compo;
+package xyz.spc.serve.config.mp.compo;
 
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;

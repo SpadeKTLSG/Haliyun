@@ -1,10 +1,10 @@
-package xyz.spc.common.config.web.compo;
+package xyz.spc.serve.config.web.compo;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import static xyz.spc.common.config.web.WebAutoConfiguration.INITIALIZE_PATH;
+import static xyz.spc.serve.config.web.WebAutoConfiguration.INITIALIZE_PATH;
 
 /**
  * 初始化 {@link org.springframework.web.servlet.DispatcherServlet}

@@ -1,4 +1,4 @@
-package xyz.spc.common.config.mp.compo;
+package xyz.spc.serve.config.mp.compo;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;

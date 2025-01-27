@@ -1,4 +1,4 @@
-package xyz.spc.common.config.web.compo;
+package xyz.spc.serve.config.web.compo;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -7,7 +7,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.DispatcherServlet;
 
-import static xyz.spc.common.config.web.WebAutoConfiguration.INITIALIZE_PATH;
+import static xyz.spc.serve.config.web.WebAutoConfiguration.INITIALIZE_PATH;
 
 /**
  * 通过 {@link InitializeDispatcherServletController} 初始化 {@link DispatcherServlet}

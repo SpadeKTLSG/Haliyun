@@ -2,6 +2,7 @@ package xyz.spc.domain;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.Version;
 import lombok.Data;
 import xyz.spc.common.pojo.BasePOJO;
 
@@ -27,4 +28,11 @@ public class BaseDO extends BasePOJO {
      */
     @TableField(fill = FieldFill.INSERT)
     private Integer delFlag;
+
+    /**
+     * 乐观锁 version
+     */
+    @Version
+    @TableField
+    private Integer version;
 }

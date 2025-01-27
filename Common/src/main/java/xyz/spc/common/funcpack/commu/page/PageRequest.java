@@ -1,4 +1,4 @@
-package xyz.spc.commu.page;
+package xyz.spc.common.funcpack.commu.page;
 
 import lombok.Data;
 

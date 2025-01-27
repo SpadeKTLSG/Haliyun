@@ -1,4 +1,4 @@
-package xyz.spc.commu.errorcode;
+package xyz.spc.common.funcpack.commu.exception.errorcode;
 
 /**
  * 基础错误码定义

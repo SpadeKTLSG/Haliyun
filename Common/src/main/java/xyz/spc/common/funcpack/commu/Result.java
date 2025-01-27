@@ -1,4 +1,4 @@
-package xyz.spc.commu;
+package xyz.spc.common.funcpack.commu;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

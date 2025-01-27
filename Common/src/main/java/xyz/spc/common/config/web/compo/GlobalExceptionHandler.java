@@ -11,10 +11,10 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import xyz.spc.commu.Result;
-import xyz.spc.commu.Results;
-import xyz.spc.commu.errorcode.BaseErrorCode;
-import xyz.spc.commu.exception.AbstractException;
+import xyz.spc.common.funcpack.commu.Result;
+import xyz.spc.common.funcpack.commu.Results;
+import xyz.spc.common.funcpack.commu.exception.AbstractException;
+import xyz.spc.common.funcpack.commu.exception.errorcode.BaseErrorCode;
 
 import java.util.Optional;
 

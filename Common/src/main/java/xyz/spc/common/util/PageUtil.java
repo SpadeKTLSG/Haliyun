@@ -2,8 +2,8 @@ package xyz.spc.common.util;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import xyz.spc.commu.page.PageRequest;
-import xyz.spc.commu.page.PageResponse;
+import xyz.spc.common.funcpack.commu.page.PageRequest;
+import xyz.spc.common.funcpack.commu.page.PageResponse;
 
 import java.util.List;
 import java.util.function.Function;

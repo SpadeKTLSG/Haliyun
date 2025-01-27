@@ -1,8 +1,8 @@
-package xyz.spc.commu.exception;
+package xyz.spc.common.funcpack.commu.exception;
 
 
-import xyz.spc.commu.errorcode.BaseErrorCode;
-import xyz.spc.commu.errorcode.IErrorCode;
+import xyz.spc.common.funcpack.commu.exception.errorcode.BaseErrorCode;
+import xyz.spc.common.funcpack.commu.exception.errorcode.IErrorCode;
 
 /**
  * 客户端异常

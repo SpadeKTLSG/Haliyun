@@ -1,8 +1,8 @@
-package xyz.spc.commu.exception;
+package xyz.spc.common.funcpack.commu.exception;
 
 
-import xyz.spc.commu.errorcode.BaseErrorCode;
-import xyz.spc.commu.errorcode.IErrorCode;
+import xyz.spc.common.funcpack.commu.exception.errorcode.BaseErrorCode;
+import xyz.spc.common.funcpack.commu.exception.errorcode.IErrorCode;
 
 import java.util.Optional;
 

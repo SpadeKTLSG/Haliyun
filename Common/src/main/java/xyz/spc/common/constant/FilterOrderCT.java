@@ -1,4 +1,4 @@
-package xyz.spc.constant;
+package xyz.spc.common.constant;
 
 /**
  * 全局过滤器顺序执行常量类

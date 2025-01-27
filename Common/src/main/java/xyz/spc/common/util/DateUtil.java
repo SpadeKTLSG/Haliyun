@@ -1,4 +1,4 @@
-package xyz.spc.common.utils;
+package xyz.spc.common.util;
 
 
 import org.apache.commons.lang.StringUtils;

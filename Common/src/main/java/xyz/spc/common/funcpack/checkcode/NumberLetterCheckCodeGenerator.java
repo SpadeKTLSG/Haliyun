@@ -2,7 +2,7 @@ package xyz.spc.common.funcpack.checkcode;
 
 import java.util.Random;
 
-import static xyz.spc.constant.LoginCheckCT.DEFAULT_LENGTH;
+import static xyz.spc.common.constant.LoginCheckCT.DEFAULT_LENGTH;
 
 /**
  * 数字字母简单验证码生成器

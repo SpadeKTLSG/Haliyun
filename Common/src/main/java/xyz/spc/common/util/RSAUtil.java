@@ -1,4 +1,4 @@
-package xyz.spc.common.utils;
+package xyz.spc.common.util;
 
 import javax.crypto.Cipher;
 import java.io.ByteArrayInputStream;

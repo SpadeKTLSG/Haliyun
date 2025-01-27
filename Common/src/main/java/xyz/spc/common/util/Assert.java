@@ -1,4 +1,4 @@
-package xyz.spc.common.utils;
+package xyz.spc.common.util;
 
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;

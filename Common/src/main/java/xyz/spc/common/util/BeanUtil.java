@@ -1,4 +1,4 @@
-package xyz.spc.common.utils;
+package xyz.spc.common.util;
 
 import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;

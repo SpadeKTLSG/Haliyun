@@ -1,4 +1,4 @@
-package xyz.spc.common.utils;
+package xyz.spc.common.util;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

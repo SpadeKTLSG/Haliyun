@@ -1,4 +1,4 @@
-package xyz.spc.constant;
+package xyz.spc.common.constant;
 
 /**
  * 登录校验常量

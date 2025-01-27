@@ -1,7 +1,7 @@
 /**
  * @(#)JsonUtil.java 2014-2-23 下午5:44:19
  */
-package xyz.spc.common.utils;
+package xyz.spc.common.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;

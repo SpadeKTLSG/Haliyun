@@ -39,6 +39,7 @@
         <jwt.version>0.12.3</jwt.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <springdoc.version>2.0.4</springdoc.version>
+        <dozer-core.version>6.5.2</dozer-core.version>
 
 
     </properties>
@@ -71,7 +72,7 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    
+
     <dependencies>
 
         <!--Struct框架-->
@@ -210,6 +211,13 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
             <version>${springdoc.version}</version>
+        </dependency>
+
+        <!--dozer Map工具 -->
+        <dependency>
+            <groupId>com.github.dozermapper</groupId>
+            <artifactId>dozer-core</artifactId>
+            <version>${dozer-core.version}</version>
         </dependency>
 
         <!--下面默认不使用-->

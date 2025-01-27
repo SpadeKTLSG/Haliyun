@@ -2,7 +2,6 @@ package xyz.spc.commu.page;
 
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -15,7 +14,6 @@ import java.util.stream.Collectors;
  */
 @Data
 @Builder
-@NoArgsConstructor
 public class PageResponse<T> implements Serializable {
 
     public static final long PAGE_SIZE = 10L;
@@ -45,11 +43,16 @@ public class PageResponse<T> implements Serializable {
     }
 
     public PageResponse(long current, long size, long total) {
+        this(current, size, total, Collections.emptyList());
+    }
+
+    public PageResponse(Long current, Long size, Long total, List<T> records) {
         if (current > 1) {
             this.current = current;
         }
         this.size = size;
         this.total = total;
+        this.records = records;
     }
 
     public PageResponse<T> setRecords(List<T> records) {

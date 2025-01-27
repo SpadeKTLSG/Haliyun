@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
  * String 工具类
  */
 @SuppressWarnings("all")
-public class StringUtil {
+public final class StringUtil {
 
     /**
      * yyyy-MM-dd日期格式

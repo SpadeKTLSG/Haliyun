@@ -2,8 +2,8 @@ package xyz.spc.common.util;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.opengoofy.index12306.framework.starter.convention.page.PageRequest;
-import org.opengoofy.index12306.framework.starter.convention.page.PageResponse;
+import xyz.spc.commu.page.PageRequest;
+import xyz.spc.commu.page.PageResponse;
 
 import java.util.List;
 import java.util.function.Function;
@@ -12,7 +12,8 @@ import java.util.stream.Collectors;
 /**
  * 分页工具类
  */
-public class PageUtil {
+@SuppressWarnings({"unchecked", "rawtypes"})
+public final class PageUtil {
 
     /**
      * {@link PageRequest} to {@link Page}
@@ -61,6 +62,7 @@ public class PageUtil {
     /**
      * {@link IPage} build to {@link PageResponse}
      */
+
     private static PageResponse buildConventionPage(IPage iPage) {
         return PageResponse.builder()
                 .current(iPage.getCurrent())

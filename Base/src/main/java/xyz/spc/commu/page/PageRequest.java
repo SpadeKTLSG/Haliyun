@@ -6,6 +6,7 @@ import lombok.Data;
  * 分页请求对象
  */
 @Data
+
 public class PageRequest {
 
     /**

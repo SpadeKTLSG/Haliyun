@@ -4,6 +4,8 @@ import com.github.dozermapper.core.DozerBeanMapperBuilder;
 import com.github.dozermapper.core.Mapper;
 import com.github.dozermapper.core.loader.api.BeanMappingBuilder;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.BeanWrapper;
+import org.springframework.beans.PropertyAccessorFactory;
 
 import java.lang.reflect.Array;
 import java.util.*;
@@ -139,5 +141,30 @@ public class BeanUtil {
             }
         }).build();
         mapper.map(source, target);
+    }
+
+    /**
+     * 使用非空属性列表来指定拷贝 非空属性
+     *
+     * @param source           数据源
+     * @param target           指向源
+     * @param ignoreProperties 忽略属性, 直接写名字
+     */
+    public static void copyProperties(Object source, Object target, String... ignoreProperties) {
+        BeanWrapper srcWrapper = PropertyAccessorFactory.forBeanPropertyAccess(source);
+        BeanWrapper trgWrapper = PropertyAccessorFactory.forBeanPropertyAccess(target);
+
+        Set<String> ignoreSet = new HashSet<>();
+        if (ignoreProperties != null) {
+            Collections.addAll(ignoreSet, ignoreProperties);
+        }
+
+        for (java.beans.PropertyDescriptor descriptor : srcWrapper.getPropertyDescriptors()) {
+            String propertyName = descriptor.getName();
+            if (srcWrapper.isReadableProperty(propertyName) && trgWrapper.isWritableProperty(propertyName) && !ignoreSet.contains(propertyName)) {
+                Object value = srcWrapper.getPropertyValue(propertyName);
+                trgWrapper.setPropertyValue(propertyName, value);
+            }
+        }
     }
 }

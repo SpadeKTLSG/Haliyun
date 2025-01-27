@@ -13,7 +13,7 @@ import java.util.Base64;
  * RSA签名验签类
  */
 @SuppressWarnings("all")
-public class RSAUtil {
+public final class RSAUtil {
 
     public static final String SIGN_ALGORITHMS = "SHA1WithRSA";
     public static final String depository_publicKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJKcP4TjCb9+OKf0uvHkDO6njI8b9KKlu3ZdCkom4SONf8KkZ1jVl6A7XWnJ33gBLnbTGVUm5I+XvFEG5bSWVbkCAwEAAQ==";

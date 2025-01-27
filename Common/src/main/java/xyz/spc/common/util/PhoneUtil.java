@@ -6,7 +6,7 @@ import java.util.regex.Pattern;
 /**
  * 手机号工具类
  */
-public class PhoneUtil {
+public final class PhoneUtil {
 
     /**
      * 校验用户手机号是否合法

@@ -9,6 +9,7 @@ import java.util.Map;
 /**
  * 断言工具类
  */
+@SuppressWarnings("all")
 public class Assert {
 
     public static void isTrue(boolean expression, String message) {

@@ -1,4 +1,4 @@
-package xyz.spc.serve.config.web;
+package xyz.spc.serve.auxiliary.config.web;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -7,9 +7,10 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import xyz.spc.serve.config.web.compo.GlobalExceptionHandler;
-import xyz.spc.serve.config.web.compo.InitializeDispatcherServletController;
-import xyz.spc.serve.config.web.compo.InitializeDispatcherServletHandler;
+import xyz.spc.serve.auxiliary.config.web.compo.GlobalExceptionHandler;
+import xyz.spc.serve.auxiliary.config.web.compo.InitializeDispatcherServletController;
+import xyz.spc.serve.auxiliary.config.web.compo.InitializeDispatcherServletHandler;
+
 
 /**
  * Web 组件自动装配

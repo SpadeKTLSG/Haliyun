@@ -1,4 +1,4 @@
-package xyz.spc.domain;
+package xyz.spc.domain.dao;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 

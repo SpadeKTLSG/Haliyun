@@ -1,4 +1,4 @@
-package xyz.spc.domain;
+package xyz.spc.domain.model;
 
 import lombok.Data;
 import xyz.spc.common.pojo.BasePOJO;

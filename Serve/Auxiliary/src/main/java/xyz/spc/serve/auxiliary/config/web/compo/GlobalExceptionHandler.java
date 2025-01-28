@@ -1,4 +1,4 @@
-package xyz.spc.serve.config.web.compo;
+package xyz.spc.serve.auxiliary.config.web.compo;
 
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.StrUtil;

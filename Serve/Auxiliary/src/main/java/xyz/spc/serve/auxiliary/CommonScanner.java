@@ -1,4 +1,4 @@
-package xyz.spc.serve;
+package xyz.spc.serve.auxiliary;
 
 import org.springframework.context.annotation.ComponentScan;
 

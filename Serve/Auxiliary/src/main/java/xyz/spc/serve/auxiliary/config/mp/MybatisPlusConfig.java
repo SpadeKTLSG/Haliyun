@@ -1,4 +1,4 @@
-package xyz.spc.serve.config.mp;
+package xyz.spc.serve.auxiliary.config.mp;
 
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
@@ -8,8 +8,8 @@ import com.github.yulichang.autoconfigure.consumer.MybatisPlusJoinPropertiesCons
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
-import xyz.spc.serve.config.mp.compo.CustomIdGenerator;
-import xyz.spc.serve.config.mp.compo.MyMetaObjectHandler;
+import xyz.spc.serve.auxiliary.config.mp.compo.CustomIdGenerator;
+import xyz.spc.serve.auxiliary.config.mp.compo.MyMetaObjectHandler;
 
 /**
  * MybatisPlus配置

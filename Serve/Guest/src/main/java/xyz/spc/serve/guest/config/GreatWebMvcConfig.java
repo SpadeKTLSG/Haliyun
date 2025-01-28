@@ -1,4 +1,4 @@
-package xyz.spc.serve.config;
+package xyz.spc.serve.guest.config;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;

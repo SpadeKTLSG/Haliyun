@@ -1,4 +1,4 @@
-package xyz.spc.gate;
+package xyz.spc.gate.gateway;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,4 +1,4 @@
-package xyz.spc.serve;
+package xyz.spc.infra;
 
 public class Main {
     public static void main(String[] args) {

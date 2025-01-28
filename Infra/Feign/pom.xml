@@ -17,12 +17,4 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>xyz.spc.gate</groupId>
-            <artifactId>Gate</artifactId>
-            <version>3.0.0-RELEASE</version>
-        </dependency>
-    </dependencies>
-
 </project>

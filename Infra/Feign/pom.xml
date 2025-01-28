@@ -8,7 +8,7 @@
         <artifactId>Infra</artifactId>
         <version>3.0.0-RELEASE</version>
     </parent>
-
+    <groupId>xyz.spc.infra.feign</groupId>
     <artifactId>Feign</artifactId>
 
     <properties>

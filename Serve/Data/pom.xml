@@ -8,7 +8,7 @@
         <artifactId>Serve</artifactId>
         <version>3.0.0-RELEASE</version>
     </parent>
-
+    <groupId>xyz.spc.serve.data</groupId>
     <artifactId>Data</artifactId>
 
     <properties>
@@ -19,7 +19,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>xyz.spc.serve</groupId>
+            <groupId>xyz.spc.serve.auxiliary</groupId>
             <artifactId>Auxiliary</artifactId>
             <version>3.0.0-RELEASE</version>
             <scope>compile</scope>

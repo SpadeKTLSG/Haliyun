@@ -8,7 +8,7 @@
         <artifactId>Domain</artifactId>
         <version>3.0.0-RELEASE</version>
     </parent>
-
+    <groupId>xyz.spc.domain.model</groupId>
     <artifactId>Model</artifactId>
 
     <properties>

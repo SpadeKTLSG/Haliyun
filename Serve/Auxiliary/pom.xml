@@ -8,7 +8,7 @@
         <artifactId>Serve</artifactId>
         <version>3.0.0-RELEASE</version>
     </parent>
-
+    <groupId>xyz.spc.serve.auxiliary</groupId>
     <artifactId>Auxiliary</artifactId>
 
     <properties>

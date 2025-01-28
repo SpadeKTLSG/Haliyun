@@ -4,10 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>xyz.spc</groupId>
-        <artifactId>Base</artifactId>
+        <groupId>xyz.spc.common</groupId>
+        <artifactId>Common</artifactId>
         <version>3.0.0-RELEASE</version>
-        <relativePath>../Base/pom.xml</relativePath>
+        <relativePath>../Common/pom.xml</relativePath>
     </parent>
 
     <groupId>xyz.spc.infra</groupId>

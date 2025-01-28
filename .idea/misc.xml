@@ -19,6 +19,9 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/Base/pom.xml" />
         <option value="$PROJECT_DIR$/Common/pom.xml" />
+        <option value="$PROJECT_DIR$/Serve/Money/pom.xml" />
+        <option value="$PROJECT_DIR$/Serve/Guide/pom.xml" />
+        <option value="$PROJECT_DIR$/Serve/Pub/pom.xml" />
       </list>
     </option>
   </component>

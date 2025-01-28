@@ -13,21 +13,15 @@
 
     <groupId>xyz.spc</groupId>
     <artifactId>Haliyun</artifactId>
-    <version>${Haliyun.version}</version>
+    <version>3.0.0-RELEASE</version>
     <packaging>pom</packaging>
 
     <modules>
         <module>Base</module>
-        <module>Serve/Guide</module>
-        <module>Serve/Money</module>
-        <module>Serve/Pub</module>
-        <module>Base</module>
-        <module>Common</module>
     </modules>
 
     <properties>
         <!--core-->
-        <Haliyun.version>3.0.0-RELEASE</Haliyun.version>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.plugin.version>3.12.0</maven.compiler.plugin.version>

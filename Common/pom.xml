@@ -31,6 +31,14 @@
         </dependency>
     </dependencies>
 
+    <modules>
+        <module>../Domain</module>
+        <module>../Gate</module>
+        <module>../Infra</module>
+        <module>../Serve</module>
+        <module>../Test</module>
+    </modules>
+
 
     <build>
         <resources>

@@ -13,6 +13,7 @@
     <groupId>xyz.spc.common</groupId>
     <artifactId>Common</artifactId>
     <description>通用模块</description>
+
     <packaging>pom</packaging>
 
     <properties>
@@ -20,6 +21,16 @@
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>xyz.spc</groupId>
+            <artifactId>Base</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
 
     <build>
         <resources>

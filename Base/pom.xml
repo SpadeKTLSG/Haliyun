@@ -97,6 +97,7 @@
     <dependencies>
 
         <!--Struct框架-->
+        <!--spring-boot-starter-web (MVC)-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -128,7 +129,10 @@
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
         <!--geteway-->
-        <!--子模块引入-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-gateway</artifactId>
+        </dependency>
         <!--加载bootstrap-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>

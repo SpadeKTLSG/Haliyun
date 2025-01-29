@@ -1,7 +1,6 @@
 server:
   port: 10000 # Gateway No 0
 
-
 spring:
 
   application:
@@ -11,10 +10,26 @@ spring:
     active: dev
 
   main:
+    web-application-type: reactive # 使用响应式编程(网关与MVC冲突)
     allow-circular-references: true # 允许循环引用
     allow-bean-definition-overriding: true # 允许覆盖bean定义
     lazy-initialization: false # 关闭懒加载, 防止组件失效
 
+  # Nacos
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port} # nacos发现地址
+      config:
+        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port} # nacos配置中心地址
+
+
+  #文件上传
+  servlet:
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+      enabled: true
   # MySQL
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -81,21 +96,6 @@ spring:
         max-interval: 10000ms
         multiplier: 1
 
-  # Nacos
-  cloud:
-    nacos:
-      discovery:
-        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port} # nacos发现地址
-      config:
-        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port} # nacos配置中心地址
-
-
-  #文件上传
-  servlet:
-    multipart:
-      max-file-size: 500MB
-      max-request-size: 500MB
-      enabled: true
 
 
   #时间格式
@@ -104,22 +104,6 @@ spring:
     time-zone: GMT+8
     default-property-inclusion: non_null # JSON处理时忽略空字段
 
-
-mybatis-plus:
-  # todo
-  mapper-locations: classpath*:src/main/java/xyz/spc/infra/mapper/Guest/mapper/*Mapper.xml  # MyBatis Mapper所对应的XML文件位置
-
-  global-config:
-    banner: false
-
-    db-config:
-      # 主键类型 0:数据库ID自增 1.未定义 2.用户输入 3 id_worker 4.uuid 5.id_worker字符串表示
-      # 手动实现雪花算法的主键生成策略
-      id-type: INPUT
-      table-underline: true # 默认数据库表下划线命名
-
-mybatis-plus-join:
-  banner: false
 
 # 日志配置
 logging:

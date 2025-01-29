@@ -4,7 +4,7 @@ infrastructure:
     driver-class-name: com.mysql.cj.jdbc.Driver
     host: localhost
     port: 3306
-    database: haliyun_data
+    database: haliyun_bypass
     username: root
     password: 2333
 

@@ -1,5 +1,5 @@
 server:
-  port: 114513 # 服务端口
+  port: 10003 # Guest No 3
 
 
 spring:
@@ -9,9 +9,6 @@ spring:
 
   profiles:
     active: dev
-
-
-
 
   main:
     allow-circular-references: true # 允许循环引用
@@ -110,10 +107,10 @@ spring:
 
 mybatis-plus:
   # todo
-  mapper-locations: classpath*:/mapper/*Mapper.xml  # MyBatis Mapper所对应的XML文件位置
+  mapper-locations: classpath*:src/main/java/xyz/spc/infra/mapper/Guest/mapper/*Mapper.xml  # MyBatis Mapper所对应的XML文件位置
 
   global-config:
-    banner: false    # 关闭MP3.0自带的banner
+    banner: false
 
     db-config:
       # 主键类型 0:数据库ID自增 1.未定义 2.用户输入 3 id_worker 4.uuid 5.id_worker字符串表示
@@ -121,6 +118,8 @@ mybatis-plus:
       id-type: INPUT
       table-underline: true # 默认数据库表下划线命名
 
+mybatis-plus-join:
+  banner: false
 
 # 日志配置
 logging:
@@ -148,3 +147,4 @@ springdoc:
 
   swagger-ui:
     path: doc.html
+

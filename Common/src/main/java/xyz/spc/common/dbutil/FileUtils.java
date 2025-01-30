@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.*;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 
 /**
@@ -93,4 +94,40 @@ public class FileUtils {
         return s;
     }
 
+
+    public static String toSize(double size) {
+        String sizeStr = "";
+        int level = 0;
+        while (size > 1024) {
+            size = size / 1024.0;
+            level++;
+        }
+        switch (level) {
+            case 0:
+                sizeStr = "B";
+                break;
+            case 1:
+                sizeStr = "KB";
+                break;
+            case 2:
+                sizeStr = "MB";
+                break;
+            case 3:
+                sizeStr = "GB";
+                break;
+            case 4:
+                sizeStr = "TB";
+                break;
+            case 5:
+                sizeStr = "PB";
+                break;
+        }
+
+        sizeStr = new DecimalFormat("######0.00").format(size) + sizeStr;
+        return sizeStr;
+    }
+
+    public static float toGB(long size) {
+        return size / 1024 / 1024 / 1024;
+    }
 }

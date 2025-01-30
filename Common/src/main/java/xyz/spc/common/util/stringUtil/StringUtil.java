@@ -1,4 +1,4 @@
-package xyz.spc.common.util;
+package xyz.spc.common.util.stringUtil;
 
 
 import java.io.File;

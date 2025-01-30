@@ -89,6 +89,15 @@ spring:
       config:
         server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port} # nacos配置中心地址
 
+    sentinel:
+      enabled: true # 是否开启。默认为 true 开启
+      eager: true # 是否饥饿加载。默认为 false 关闭
+      transport:
+        port: 9993
+        dashboard: ${infrastructure.sentinel.host}:${infrastructure.sentinel.port} # Sentinel 控制台地址
+        clientIp: 127.0.0.1
+
+
 
   #文件上传
   servlet:

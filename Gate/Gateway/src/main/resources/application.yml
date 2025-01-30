@@ -15,13 +15,20 @@ spring:
     allow-bean-definition-overriding: true # 允许覆盖bean定义
     lazy-initialization: false # 关闭懒加载, 防止组件失效
 
-  # Nacos
   cloud:
     nacos:
       discovery:
         server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port} # nacos发现地址
       config:
         server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port} # nacos配置中心地址
+
+    sentinel:
+      enabled: true # 是否开启。默认为 true 开启
+      eager: true # 是否饥饿加载。默认为 false 关闭
+      transport:
+        port: 9990
+        dashboard: ${infrastructure.sentinel.host}:${infrastructure.sentinel.port} # Sentinel 控制台地址
+        clientIp: 127.0.0.1
 
 
   #文件上传
@@ -103,6 +110,24 @@ spring:
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
     default-property-inclusion: non_null # JSON处理时忽略空字段
+
+
+mybatis-plus:
+  # todo
+  mapper-locations: classpath*:src/main/java/xyz/spc/infra/mapper/Guest/mapper/*Mapper.xml  # MyBatis Mapper所对应的XML文件位置
+
+  global-config:
+    banner: false
+
+    db-config:
+      # 主键类型 0:数据库ID自增 1.未定义 2.用户输入 3 id_worker 4.uuid 5.id_worker字符串表示
+      # 手动实现雪花算法的主键生成策略
+      id-type: INPUT
+      table-underline: true # 默认数据库表下划线命名
+
+mybatis-plus-join:
+  banner: false
+
 
 
 # 日志配置

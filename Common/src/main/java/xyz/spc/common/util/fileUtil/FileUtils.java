@@ -1,9 +1,9 @@
 package xyz.spc.common.util.fileUtil;
 
-import com.ruoyi.common.config.RuoYiConfig;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.ArrayUtils;
+import xyz.spc.common.util.stringUtil.StringUtils;
+import xyz.spc.common.util.uuid.IdUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,7 +55,8 @@ public class FileUtils {
      * @throws IOException IO异常
      */
     public static String writeImportBytes(byte[] data) throws IOException {
-        return writeBytes(data, RuoYiConfig.getImportPath());
+//        return writeBytes(data, RuoYiConfig.getImportPath());
+        return null;
     }
 
     /**
@@ -115,12 +116,10 @@ public class FileUtils {
      */
     public static boolean checkAllowDownload(String resource) {
         // 禁止目录上跳级别
-        if (StringUtils.contains(resource, "..")) {
-            return false;
-        }
+        return !StringUtils.contains(resource, "..");
 
         // 检查允许下载的文件规则
-        return ArrayUtils.contains(MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION, FileTypeUtils.getFileType(resource));
+//        return ArrayUtils.contains(MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION, FileTypeUtils.getFileType(resource));
 
         // 不在允许下载的文件规则
     }

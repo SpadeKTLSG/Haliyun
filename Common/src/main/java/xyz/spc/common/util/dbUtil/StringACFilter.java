@@ -1,4 +1,4 @@
-package xyz.spc.common.dbutil;
+package xyz.spc.common.util.dbUtil;
 
 import java.io.*;
 import java.util.HashMap;

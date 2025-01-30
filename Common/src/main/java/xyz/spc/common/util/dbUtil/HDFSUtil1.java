@@ -1,4 +1,4 @@
-package xyz.spc.common.dbutil;
+package xyz.spc.common.util.dbUtil;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.*;

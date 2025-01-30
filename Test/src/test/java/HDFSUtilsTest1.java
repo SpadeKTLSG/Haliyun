@@ -1,5 +1,5 @@
 import org.junit.jupiter.api.Test;
-import xyz.spc.common.dbutil.HDFSUtil1;
+import xyz.spc.common.util.dbUtil.HDFSUtil1;
 
 /**
  * 评价是还欠点火候

@@ -1,11 +1,11 @@
-package xyz.spc.common.util;
+package xyz.spc.common.util.threadUtil;
 
 import lombok.SneakyThrows;
 
 /**
  * 线程池工具类
  */
-public final class ThreadUtil {
+public final class ThreadUtils {
 
     /**
      * 睡眠当前线程指定时间 {@param millis}

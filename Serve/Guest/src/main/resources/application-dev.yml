@@ -24,3 +24,7 @@ infrastructure:
   nacos: #Nacos
     host: localhost
     port: 8848
+
+  sentinel: #Sentinel
+    host: localhost
+    port: 9091

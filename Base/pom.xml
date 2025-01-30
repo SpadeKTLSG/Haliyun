@@ -27,7 +27,7 @@
         <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
 
         <!--DBs-->
-        <mysql-connector-java.version>8.0.33</mysql-connector-java.version>
+        <mysql-connector-java.version>8.3.0</mysql-connector-java.version>
         <mybatis-plus.version>3.5.7</mybatis-plus.version>
         <mybatis-plus-join.version>1.5.2</mybatis-plus-join.version>
         <druid.version>1.2.8</druid.version>
@@ -97,18 +97,10 @@
     <dependencies>
 
         <!--Struct框架-->
+        <!--spring-boot-starter-web (MVC)-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -127,8 +119,6 @@
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
         </dependency>
-        <!--geteway-->
-        <!--子模块引入-->
         <!--加载bootstrap-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -158,9 +148,8 @@
         <!--DB-->
         <!--MySQL-->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
             <version>${mysql-connector-java.version}</version>
         </dependency>
         <!--MPJ-->

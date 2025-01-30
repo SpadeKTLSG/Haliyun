@@ -5,10 +5,16 @@ import com.alibaba.fastjson.support.config.FastJsonConfig;
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -80,4 +86,40 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
+    /**
+     * 支持 url 中传入 <>[\]^`{|} 这些特殊字符.
+     */
+    @Bean
+    public ServletWebServerFactory webServerFactory() {
+        TomcatServletWebServerFactory webServerFactory = new TomcatServletWebServerFactory();
+
+        // 添加对 URL 中特殊符号的支持.
+        webServerFactory.addConnectorCustomizers(connector -> {
+            connector.setProperty("relaxedPathChars", "<>[\\]^`{|}%[]");
+            connector.setProperty("relaxedQueryChars", "<>[\\]^`{|}%[]");
+        });
+        return webServerFactory;
+    }
+
+    /**
+     * 跨域配置(网关本身有做跨域, 这里只是调试方便)
+     */
+    @Bean
+    public CorsFilter corsFilter() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowCredentials(true); //允许发送Cookie信息
+        // 设置访问源地址
+        config.addAllowedOriginPattern("*");
+        // 设置访问源请求头
+        config.addAllowedHeader("*");
+        // 设置访问源请求方法
+        config.addAllowedMethod("*");
+        // 有效期 1800秒
+        config.setMaxAge(1800L);
+        // 添加映射路径, 应用到所有请求
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        // 返回新的CorsFilter
+        return new CorsFilter(source);
+    }
 }

@@ -1,7 +1,6 @@
 package xyz.spc.serve.auxiliary.config.mq;
 
 
-import org.shop.guest.common.constant.RabbitMQConstant;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
@@ -9,6 +8,7 @@ import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import xyz.spc.common.constant.mqEntity.RabbitMQConstant;
 
 
 /**

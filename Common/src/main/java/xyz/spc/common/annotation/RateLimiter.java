@@ -1,8 +1,8 @@
 package xyz.spc.common.annotation;
 
 
+import xyz.spc.common.constant.redisKey.SysCacheKey;
 import xyz.spc.common.enums.LimitTypeEnum;
-import xyz.spc.common.redisKey.SysCacheKey;
 
 import java.lang.annotation.*;
 

@@ -3,8 +3,8 @@ package xyz.spc.serve.auxiliary.config.redis;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.CacheManager;
-import org.springframework.cache.annotation.CachingConfigurerSupport;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,15 +17,16 @@ import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
+import java.util.Objects;
+
 
 /**
- * @author Retain
- * @date 2021/3/1 11:13
+ * Redis配置
  */
-
+@Slf4j
 @Configuration
 @EnableCaching
-public class RedisConfig extends CachingConfigurerSupport {
+public class RedisConfig {
 
     @Bean
     public CacheManager cacheManager(RedisTemplate<String, Object> template) {
@@ -43,7 +44,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         RedisCacheManager redisCacheManager =
                 RedisCacheManager.RedisCacheManagerBuilder
                         // Redis 连接工厂
-                        .fromConnectionFactory(template.getConnectionFactory())
+                        .fromConnectionFactory(Objects.requireNonNull(template.getConnectionFactory()))
                         // 缓存配置
                         .cacheDefaults(defaultCacheConfiguration)
                         // 配置同步修改或删除 put/evict
@@ -52,13 +53,13 @@ public class RedisConfig extends CachingConfigurerSupport {
         return redisCacheManager;
     }
 
-    @Bean(name = "redisTemplate")
-    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory) {
+    @Bean
+    public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
         // 创建RedisTemplate<String, Object>对象
         RedisTemplate<String, Object> template = new RedisTemplate<>();
 
         // 配置连接工厂
-        template.setConnectionFactory(factory);
+        template.setConnectionFactory(connectionFactory);
         // 定义Jackson2JsonRedisSerializer序列化对象
         Jackson2JsonRedisSerializer<Object> jacksonSeial = new Jackson2JsonRedisSerializer<>(Object.class);
         ObjectMapper om = new ObjectMapper();
@@ -67,6 +68,7 @@ public class RedisConfig extends CachingConfigurerSupport {
         // 指定序列化输入的类型，类必须是非final修饰的，final修饰的类，比如String,Integer等会报异常
         om.enableDefaultTyping(ObjectMapper.DefaultTyping.NON_FINAL);
         jacksonSeial.setObjectMapper(om);
+
         StringRedisSerializer stringSerial = new StringRedisSerializer();
         // redis key 序列化方式使用stringSerial
         template.setKeySerializer(stringSerial);
@@ -76,8 +78,10 @@ public class RedisConfig extends CachingConfigurerSupport {
         template.setHashKeySerializer(stringSerial);
         // redis hash value 序列化方式使用jackson
         template.setHashValueSerializer(jacksonSeial);
-        template.afterPropertiesSet();
-        template.setEnableTransactionSupport(true);
+
+
+        template.afterPropertiesSet(); // 初始化操作
+//        template.setEnableTransactionSupport(true); // 开启事务支持
         return template;
     }
 }

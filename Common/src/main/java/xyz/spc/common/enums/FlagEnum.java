@@ -1,8 +1,13 @@
 package xyz.spc.common.enums;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 /**
- * 标识枚举，非 {@link Boolean#TRUE} 即 {@link Boolean#FALSE}
+ * 标识枚举, 关联 0/1 T/F
  */
+@Data
+@AllArgsConstructor
 public enum FlagEnum {
 
     /**
@@ -15,22 +20,7 @@ public enum FlagEnum {
      */
     TRUE(1);
 
+
     private final Integer flag;
 
-    FlagEnum(Integer flag) {
-        this.flag = flag;
-    }
-
-    public Integer code() {
-        return this.flag;
-    }
-
-    public String strCode() {
-        return String.valueOf(this.flag);
-    }
-
-    @Override
-    public String toString() {
-        return strCode();
-    }
 }

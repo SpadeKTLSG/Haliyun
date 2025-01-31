@@ -1,9 +1,9 @@
-package xyz.spc.common.constant;
+package xyz.spc.common.redisKey;
 
 /**
- * 用户常量
+ * 用户 Cache Key
  */
-public interface GuestCT {
+public interface GuestCacheKey {
 
     /**
      * 用户 ID Key
@@ -24,4 +24,15 @@ public interface GuestCT {
      * 用户 Token Key
      */
     String USER_TOKEN_KEY = "token";
+
+    /**
+     * 用户验证码 redis key
+     */
+    String CAPTCHA_CODE_KEY = "sysCache:captcha_codes:";
+
+    /**
+     * 用户登录账户密码错误次数 redis key
+     */
+    String PWD_ERR_CNT_KEY = "sysCache:pwd_err_cnt:";
+
 }

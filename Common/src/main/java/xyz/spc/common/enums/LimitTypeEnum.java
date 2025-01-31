@@ -4,7 +4,7 @@ package xyz.spc.common.enums;
  * 限流类型
  */
 
-public enum LimitType {
+public enum LimitTypeEnum {
     /**
      * 默认策略全局限流
      */

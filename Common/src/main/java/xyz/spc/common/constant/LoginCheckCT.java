@@ -10,4 +10,5 @@ public interface LoginCheckCT {
      */
     int DEFAULT_LENGTH = 4;
 
+
 }

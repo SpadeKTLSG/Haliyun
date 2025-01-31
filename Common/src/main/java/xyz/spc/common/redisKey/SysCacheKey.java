@@ -1,18 +1,10 @@
-package xyz.spc.common.constant;
+package xyz.spc.common.redisKey;
 
 /**
- * System key CT
+ * System Cache key
  */
-public interface SysCacheCT {
-    /**
-     * 登录用户 redis key
-     */
-    String LOGIN_TOKEN_KEY = "sysCache:login_tokens:";
+public interface SysCacheKey {
 
-    /**
-     * 验证码 redis key
-     */
-    String CAPTCHA_CODE_KEY = "sysCache:captcha_codes:";
 
     /**
      * 参数管理 cache key
@@ -34,8 +26,4 @@ public interface SysCacheCT {
      */
     String RATE_LIMIT_KEY = "sysCache:rate_limit:";
 
-    /**
-     * 登录账户密码错误次数 redis key
-     */
-    String PWD_ERR_CNT_KEY = "sysCache:pwd_err_cnt:";
 }

@@ -1,4 +1,4 @@
-package xyz.spc.serve.auxiliary.common.filter.xss.artifact;
+package xyz.spc.serve.auxiliary.common.filter.artifact;
 
 
 import xyz.spc.common.util.http.HttpHelper;

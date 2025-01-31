@@ -1,12 +1,12 @@
 package xyz.spc.common.enums;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 /**
  * 用户状态
  */
-@Data
+@Getter
 @AllArgsConstructor
 public enum UserStatusEnum {
 

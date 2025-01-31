@@ -1,12 +1,14 @@
 package xyz.spc.common.enums;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.ToString;
 
 /**
  * 删除标记枚举
  */
-@Data
+@Getter
+@ToString
 @AllArgsConstructor
 public enum DelEnum {
 

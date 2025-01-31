@@ -1,12 +1,12 @@
 package xyz.spc.common.enums;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 
 /**
  * 标识枚举, 关联 0/1 T/F
  */
-@Data
+@Getter
 @AllArgsConstructor
 public enum FlagEnum {
 

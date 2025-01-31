@@ -81,37 +81,54 @@ spring:
         max-interval: 10000ms
         multiplier: 1
 
-  # Nacos
-  cloud:
-    nacos:
-      discovery:
-        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port} # nacos发现地址
-      config:
-        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port} # nacos配置中心地址
 
+  cloud:
+    # Nacos
+    nacos:
+      # 服务发现
+      discovery:
+        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+        group: DEFAULT_GROUP
+
+      # 配置中心
+      config:
+        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+        file-extension: yaml
+        refresh-enabled: true
+        group: DEFAULT_GROUP
+        shared-configs:
+          - data-id: server.general-${spring.profiles.active}.yaml # 服务通用配置
+            group: DEFAULT_GROUP
+            refresh: true
+
+    # Sentinel
     sentinel:
       enabled: true # 是否开启。默认为 true 开启
       eager: true # 是否饥饿加载。默认为 false 关闭
       transport:
-        port: 9993
+        port: 9993  # Guest No 3
         dashboard: ${infrastructure.sentinel.host}:${infrastructure.sentinel.port} # Sentinel 控制台地址
         clientIp: 127.0.0.1
 
 
 
-  #文件上传
+
   servlet:
+    # 文件上传
     multipart:
       max-file-size: 500MB
       max-request-size: 500MB
       enabled: true
 
 
-  #时间格式
+
   jackson:
+    # 时间格式
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
-    default-property-inclusion: non_null # JSON处理时忽略空字段
+
+    # JSON处理时忽略空字段
+    default-property-inclusion: non_null
 
 
 mybatis-plus:

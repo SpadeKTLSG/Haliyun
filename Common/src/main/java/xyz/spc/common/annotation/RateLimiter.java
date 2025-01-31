@@ -1,7 +1,7 @@
 package xyz.spc.common.annotation;
 
 
-import xyz.spc.common.constant.CacheConstants;
+import xyz.spc.common.constant.SysCacheCT;
 import xyz.spc.common.enums.LimitType;
 
 import java.lang.annotation.*;
@@ -18,7 +18,7 @@ public @interface RateLimiter {
     /**
      * 限流key
      */
-    String key() default CacheConstants.RATE_LIMIT_KEY;
+    String key() default SysCacheCT.RATE_LIMIT_KEY;
 
     /**
      * 限流时间,单位秒

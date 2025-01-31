@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import xyz.spc.common.annotation.RepeatSubmit;
-import xyz.spc.common.constant.CacheConstants;
+import xyz.spc.common.constant.SysCacheCT;
 import xyz.spc.common.util.http.HttpHelper;
 import xyz.spc.common.util.stringUtil.StringUtils;
 import xyz.spc.serve.auxiliary.common.filter.xss.artifact.RepeatedlyRequestWrapper;
@@ -59,7 +59,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
         String submitKey = StringUtils.trimToEmpty(request.getHeader(header));
 
         // 唯一标识（指定key + url + 消息头）
-        String cacheRepeatKey = CacheConstants.REPEAT_SUBMIT_KEY + url + submitKey;
+        String cacheRepeatKey = SysCacheCT.REPEAT_SUBMIT_KEY + url + submitKey;
 
         Object sessionObj = redisCache.getCacheObject(cacheRepeatKey);
         if (sessionObj != null) {

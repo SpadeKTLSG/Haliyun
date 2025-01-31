@@ -1,7 +1,7 @@
 package xyz.spc.serve.auxiliary.common.filter.artifact;
 
 
-import xyz.spc.common.util.http.HttpHelper;
+import xyz.spc.common.util.webUtil.HttpHelper;
 import xyz.spc.common.util.stringUtil.Constants;
 
 import javax.servlet.ReadListener;

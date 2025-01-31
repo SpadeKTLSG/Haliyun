@@ -5,7 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import xyz.spc.common.util.fileUtil.DateUtils;
+import xyz.spc.common.util.sysUtil.DateUtils;
 import xyz.spc.common.util.stringUtil.Convert;
 
 import java.lang.reflect.*;

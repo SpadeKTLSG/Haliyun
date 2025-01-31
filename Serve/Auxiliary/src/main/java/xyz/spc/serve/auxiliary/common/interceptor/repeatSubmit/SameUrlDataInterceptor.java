@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import xyz.spc.common.annotation.RepeatSubmit;
 import xyz.spc.common.redisKey.SysCacheKey;
-import xyz.spc.common.util.http.HttpHelper;
+import xyz.spc.common.util.webUtil.HttpHelper;
 import xyz.spc.common.util.stringUtil.StringUtils;
 import xyz.spc.serve.auxiliary.common.filter.artifact.RepeatedlyRequestWrapper;
 import xyz.spc.serve.auxiliary.compo.RedisCache;

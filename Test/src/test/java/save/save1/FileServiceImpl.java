@@ -221,7 +221,7 @@
 //        String saveFileName = file.getOriginalFilename();
 //        // 上传文件到-磁盘
 //        try {
-//            FileUtils.copyInputStreamToFile(file.getInputStream(), new File(saveFilePath, saveFileName));
+//            FileUtils2.copyInputStreamToFile(file.getInputStream(), new File(saveFilePath, saveFileName));
 //            b = true;
 //        } catch (Exception e) {
 //            return InvokeResult.error();

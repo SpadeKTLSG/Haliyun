@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.Version;
 import lombok.Data;
-import xyz.spc.common.pojo.BasePOJO;
+import xyz.spc.common.funcpack.pojo.BasePOJO;
 
 import java.util.Date;
 

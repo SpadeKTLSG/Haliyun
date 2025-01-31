@@ -2,8 +2,6 @@ package xyz.spc.common.enums;
 
 /**
  * 操作人类别
- *
- * @author ruoyi
  */
 public enum OperatorType {
     /**

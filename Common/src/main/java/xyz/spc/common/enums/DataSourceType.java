@@ -2,8 +2,6 @@ package xyz.spc.common.enums;
 
 /**
  * 数据源
- *
- * @author ruoyi
  */
 public enum DataSourceType {
     /**

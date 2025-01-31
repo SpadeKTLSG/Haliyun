@@ -2,8 +2,6 @@ package xyz.spc.common.util.encryptUtil;
 
 /**
  * Base64工具类
- *
- * @author ruoyi
  */
 public final class Base64 {
     static private final int BASELENGTH = 128;

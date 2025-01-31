@@ -19,8 +19,6 @@ import java.util.List;
 
 /**
  * 限流处理
- *
- * @author ruoyi
  */
 @Aspect
 @Component

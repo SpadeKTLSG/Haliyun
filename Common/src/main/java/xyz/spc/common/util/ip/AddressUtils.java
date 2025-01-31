@@ -11,8 +11,6 @@ import xyz.spc.common.util.stringUtil.StringUtils;
 
 /**
  * 获取地址类
- *
- * @author ruoyi
  */
 public class AddressUtils {
     // IP地址查询

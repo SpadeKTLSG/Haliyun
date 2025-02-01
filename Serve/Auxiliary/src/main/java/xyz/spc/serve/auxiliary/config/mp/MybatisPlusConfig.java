@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.github.yulichang.autoconfigure.consumer.MybatisPlusJoinPropertiesConsumer;
+import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -52,5 +53,15 @@ public class MybatisPlusConfig {
     @Primary
     public IdentifierGenerator idGenerator() {
         return new CustomIdGenerator();
+    }
+
+    /**
+     * Mapper扫描配置
+     */
+    @Bean
+    public MapperScannerConfigurer mapperScannerConfigurer() {
+        MapperScannerConfigurer configurer = new MapperScannerConfigurer();
+        configurer.setBasePackage("xyz.spc.infra.mapper.*.mapper");
+        return configurer;
     }
 }

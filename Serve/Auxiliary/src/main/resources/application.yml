@@ -115,8 +115,6 @@ spring:
 
 
 mybatis-plus:
-  # todo
-  mapper-locations: classpath*:src/main/java/xyz/spc/infra/mapper/Guest/mapper/*Mapper.xml  # MyBatis Mapper所对应的XML文件位置
 
   global-config:
     banner: false

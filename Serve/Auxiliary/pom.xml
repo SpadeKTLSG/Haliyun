@@ -19,6 +19,12 @@
 
     <dependencies>
         <dependency>
+            <groupId>xyz.spc.infra.mapper</groupId>
+            <artifactId>Mapper</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>xyz.spc.infra.feign</groupId>
             <artifactId>Feign</artifactId>
             <version>3.0.0-RELEASE</version>

@@ -26,6 +26,11 @@
         <option value="$PROJECT_DIR$/Serve/Pub/pom.xml" />
       </list>
     </option>
+    <option name="ignoredFiles">
+      <set>
+        <option value="$PROJECT_DIR$/Domain/DAO/pom.xml" />
+      </set>
+    </option>
   </component>
   <component name="PWA">
     <option name="enabled" value="true" />

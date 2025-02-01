@@ -19,7 +19,6 @@
         <module>Model</module>
         <module>DO</module>
         <module>QO</module>
-        <module>DAO</module>
     </modules>
 
     <properties>

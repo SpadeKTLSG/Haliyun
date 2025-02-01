@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.domain.model.Guest.users.User;
+import xyz.spc.domain.repo.Guest.users.UsersRepo;
 import xyz.spc.gate.vo.Guest.users.UserVO;
 import xyz.spc.infra.mapper.Guest.users.UserService;
 
@@ -14,6 +15,8 @@ import xyz.spc.infra.mapper.Guest.users.UserService;
 @RequiredArgsConstructor
 public class UsersFuncImpl implements UsersFunc {
 
+
+    private final UsersRepo usersRepo;
     private final UserService userService;
     //...
 
@@ -37,8 +40,7 @@ public class UsersFuncImpl implements UsersFunc {
     public UserVO get() {
         User userModel = User.builder().id(114514L).build();
         UserDO userDO = userModel.toDO();
-//        userDO = userService.getById(userDO);
-        userService.userDAO().test();
+        userDO = userService.getById(userDO);
         System.out.println("get! ");
         return null;
     }

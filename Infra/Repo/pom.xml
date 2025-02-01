@@ -18,12 +18,6 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>xyz.spc.domain.dao</groupId>
-            <artifactId>DAO</artifactId>
-            <version>3.0.0-RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>xyz.spc.infra.mapper</groupId>
             <artifactId>Mapper</artifactId>
             <version>3.0.0-RELEASE</version>

@@ -24,12 +24,6 @@
             <version>3.0.0-RELEASE</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>xyz.spc.domain.dao</groupId>
-            <artifactId>DAO</artifactId>
-            <version>3.0.0-RELEASE</version>
-            <scope>compile</scope>
-        </dependency>
     </dependencies>
 
 </project>

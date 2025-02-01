@@ -1,4 +1,4 @@
-package xyz.spc.domain.model.Guest;
+package xyz.spc.domain.model.Guest.users;
 
 import lombok.Builder;
 import lombok.Data;

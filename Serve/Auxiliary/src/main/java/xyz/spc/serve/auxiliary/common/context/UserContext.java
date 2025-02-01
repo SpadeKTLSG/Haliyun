@@ -13,7 +13,7 @@ public final class UserContext {
     /**
      *
      */
-    private static final ThreadLocal<UserInfoDTO> USER_THREAD_LOCAL = new TransmittableThreadLocal<>();
+    private static final ThreadLocal<U> USER_THREAD_LOCAL = new TransmittableThreadLocal<>();
 
     /**
      * 设置用户至上下文

@@ -17,9 +17,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
     <dependencies>
+        <!--模块依赖-->
         <dependency>
             <groupId>xyz.spc.domain.model</groupId>
             <artifactId>Model</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.spc.domain.dao</groupId>
+            <artifactId>DAO</artifactId>
             <version>3.0.0-RELEASE</version>
             <scope>compile</scope>
         </dependency>

@@ -8,14 +8,18 @@ import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
+import org.springframework.data.redis.core.script.RedisScript;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.scripting.support.ResourceScriptSource;
 
 import java.time.Duration;
 import java.util.Objects;
@@ -40,36 +44,10 @@ public class RedisConfig {
         return factory;
     }
 
+
     /**
-     * 配置CacheManager
+     * 配置RedisTemplate
      */
-    @Bean
-    public CacheManager cacheManager(RedisTemplate<String, Object> template) {
-        RedisCacheConfiguration defaultCacheConfiguration =
-                RedisCacheConfiguration
-                        .defaultCacheConfig()
-                        // 设置key为String
-                        .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(template.getStringSerializer()))
-                        // 设置value 为自动转Json的Object
-                        .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(template.getValueSerializer()))
-                        // 不缓存null
-                        .disableCachingNullValues()
-                        // 缓存数据保存6小时
-                        .entryTtl(Duration.ofHours(6));
-
-        RedisCacheManager redisCacheManager =
-                RedisCacheManager.RedisCacheManagerBuilder
-                        // Redis 连接工厂
-                        .fromConnectionFactory(Objects.requireNonNull(template.getConnectionFactory()))
-                        // 缓存配置
-                        .cacheDefaults(defaultCacheConfiguration)
-                        // 配置同步修改或删除 put/evict
-                        .transactionAware()
-                        .build();
-
-        return redisCacheManager;
-    }
-
     @Bean
     public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
 
@@ -101,4 +79,47 @@ public class RedisConfig {
 //        template.setEnableTransactionSupport(true); // 开启事务支持
         return template;
     }
+
+    /**
+     * 配置限流脚本
+     */
+    @Bean
+    public RedisScript<Long> limitScript() {
+        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
+        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/limit.lua")));
+        redisScript.setResultType(Long.class);
+        return redisScript;
+    }
+
+
+    /**
+     * 配置CacheManager
+     */
+    @Bean
+    public CacheManager cacheManager(RedisTemplate<Object, Object> template) {
+        RedisCacheConfiguration defaultCacheConfiguration =
+                RedisCacheConfiguration
+                        .defaultCacheConfig()
+                        // 设置key为String
+                        .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(template.getStringSerializer()))
+                        // 设置value 为自动转Json的Object
+                        .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(template.getValueSerializer()))
+                        // 不缓存null
+                        .disableCachingNullValues()
+                        // 缓存数据保存6小时
+                        .entryTtl(Duration.ofHours(6));
+
+        RedisCacheManager redisCacheManager =
+                RedisCacheManager.RedisCacheManagerBuilder
+                        // Redis 连接工厂
+                        .fromConnectionFactory(Objects.requireNonNull(template.getConnectionFactory()))
+                        // 缓存配置
+                        .cacheDefaults(defaultCacheConfiguration)
+                        // 配置同步修改或删除 put/evict
+                        .transactionAware()
+                        .build();
+
+        return redisCacheManager;
+    }
+
 }

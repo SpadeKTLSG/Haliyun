@@ -4,7 +4,6 @@ package xyz.spc.serve.auxiliary.common.interceptor.repeatSubmit;
 import com.alibaba.fastjson.JSON;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import xyz.spc.common.annotation.RepeatSubmit;
 import xyz.spc.common.constant.redisKey.SysCacheKey;
@@ -30,8 +29,8 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
     public final String REPEAT_TIME = "repeatTime";
 
     // 令牌自定义标识
-    @Value("${token.header}")
-    private String header;
+//    @Value("${token.header}")
+//    private String header;
 
     @Autowired
     private RedisCache redisCache;
@@ -56,7 +55,9 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
         String url = request.getRequestURI();
 
         // 唯一值（没有消息头则使用请求地址）
-        String submitKey = StringUtils.trimToEmpty(request.getHeader(header));
+//        String submitKey = StringUtils.trimToEmpty(request.getHeader(header));
+        //todo
+        String submitKey = null;
 
         // 唯一标识（指定key + url + 消息头）
         String cacheRepeatKey = SysCacheKey.REPEAT_SUBMIT_KEY + url + submitKey;

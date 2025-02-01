@@ -8,14 +8,12 @@ import lombok.experimental.Accessors;
 import xyz.spc.domain.dos.BaseDO;
 
 /**
- * 用户 DO
+ * 用户详情 DO
  */
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("user")
-public class UserDO extends BaseDO {
-
-
+@TableName("user_detail")
+public class UserDetailDO extends BaseDO {
 }

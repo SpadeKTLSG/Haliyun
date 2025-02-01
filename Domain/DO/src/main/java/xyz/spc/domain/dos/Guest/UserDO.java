@@ -1,11 +1,14 @@
-package xyz.spc.domain.Guest;
+package xyz.spc.domain.dos.Guest;
 
 import lombok.Builder;
 import lombok.Data;
-import xyz.spc.domain.BaseDO;
+import lombok.EqualsAndHashCode;
+import xyz.spc.domain.dos.BaseDO;
+
 
 @Data
 @Builder
+@EqualsAndHashCode(callSuper = true)
 public class UserDO extends BaseDO {
 
 }

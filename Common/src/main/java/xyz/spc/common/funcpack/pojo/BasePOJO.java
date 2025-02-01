@@ -1,4 +1,8 @@
 package xyz.spc.common.funcpack.pojo;
 
-public class BasePOJO {
+import java.io.Serializable;
+
+public class BasePOJO implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 }

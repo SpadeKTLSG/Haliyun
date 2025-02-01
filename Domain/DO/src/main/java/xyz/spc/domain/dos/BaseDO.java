@@ -1,4 +1,4 @@
-package xyz.spc.domain;
+package xyz.spc.domain.dos;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.annotation.Version;
 import lombok.Data;
 import xyz.spc.common.funcpack.pojo.BasePOJO;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 public class BaseDO extends BasePOJO {
@@ -15,13 +15,13 @@ public class BaseDO extends BasePOJO {
      * 创建时间 (自动填充)
      */
     @TableField(fill = FieldFill.INSERT)
-    private Date createTime;
+    private LocalDateTime createTime;
 
     /**
      * 修改时间 (自动填充)
      */
     @TableField(fill = FieldFill.INSERT_UPDATE)
-    private Date updateTime;
+    private LocalDateTime updateTime;
 
     /**
      * 删除标志 (自动填充)

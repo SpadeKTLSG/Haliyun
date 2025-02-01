@@ -1,4 +1,4 @@
-package xyz.spc.domain.dos.Guest;
+package xyz.spc.domain.dos.Guest.users;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Builder;

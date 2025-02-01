@@ -4,11 +4,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>xyz.spc.domain</groupId>
-        <artifactId>Domain</artifactId>
+        <groupId>xyz.spc.infra</groupId>
+        <artifactId>Infra</artifactId>
         <version>3.0.0-RELEASE</version>
     </parent>
-    <groupId>xyz.spc.domain.repo</groupId>
+    <groupId>xyz.spc.infra.repo</groupId>
     <artifactId>Repo</artifactId>
 
     <properties>

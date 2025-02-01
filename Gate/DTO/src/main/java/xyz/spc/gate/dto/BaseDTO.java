@@ -7,4 +7,6 @@ import xyz.spc.common.funcpack.pojo.BasePOJO;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class BaseDTO extends BasePOJO {
+
+
 }

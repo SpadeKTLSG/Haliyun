@@ -54,9 +54,42 @@ public class User extends BaseModel {
 
     //? 转换器
 
-    @Override
     public UserDO toDO() {
-        return UsersMapper.INSTANCE.toUserDO(this);
+        UserDO tmp = UserDO.builder()
+                .id(id)
+                .groupId(groupId)
+                .admin(admin)
+                .status(status)
+                .loginType(loginType)
+                .account(account)
+                .password(password)
+                .build();
+
+        //补充BM的基础信息
+        tmp.setCreateTime(getCreateTime());
+        tmp.setUpdateTime(getUpdateTime());
+        tmp.setDelFlag(getDelFlag());
+
+        return tmp;
+    }
+
+    public User fromDO(UserDO userDO) {
+        User tmp = User.builder()
+                .id(userDO.getId())
+                .groupId(userDO.getGroupId())
+                .admin(userDO.getAdmin())
+                .status(userDO.getStatus())
+                .loginType(userDO.getLoginType())
+                .account(userDO.getAccount())
+                .password(userDO.getPassword())
+                .build();
+
+        //补充BM的基础信息
+        tmp.setCreateTime(userDO.getCreateTime());
+        tmp.setUpdateTime(userDO.getUpdateTime());
+        tmp.setDelFlag(userDO.getDelFlag());
+
+        return tmp;
     }
 
 

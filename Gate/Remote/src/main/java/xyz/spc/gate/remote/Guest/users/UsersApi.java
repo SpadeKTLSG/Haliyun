@@ -1,5 +1,6 @@
 package xyz.spc.gate.remote.Guest.users;
 
+import xyz.spc.common.funcpack.commu.Result;
 import xyz.spc.gate.vo.Guest.users.UserVO;
 
 public interface UsersApi {
@@ -16,7 +17,7 @@ public interface UsersApi {
     void update();
 
 
-    UserVO get();
+    Result<UserVO> get();
 
 
 }

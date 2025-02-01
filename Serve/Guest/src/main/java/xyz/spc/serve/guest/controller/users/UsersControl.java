@@ -3,8 +3,10 @@ package xyz.spc.serve.guest.controller.users;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import xyz.spc.common.funcpack.commu.Result;
 import xyz.spc.gate.remote.Guest.users.UsersApi;
 import xyz.spc.gate.vo.Guest.users.UserVO;
+import xyz.spc.serve.guest.func.users.UsersFunc;
 
 @Tag(name = "Users", description = "用户合集")
 @RequestMapping("/Guest/users/users")
@@ -12,6 +14,7 @@ import xyz.spc.gate.vo.Guest.users.UserVO;
 @RequiredArgsConstructor
 public class UsersControl implements UsersApi {
 
+    private final UsersFunc usersFunc;
 
     //! Client
 
@@ -41,7 +44,7 @@ public class UsersControl implements UsersApi {
 
     @Override
     @GetMapping("/get")
-    public UserVO get() {
-        return null;
+    public Result<UserVO> get() {
+        return Result.success(usersFunc.get());
     }
 }

@@ -11,8 +11,15 @@ public interface UsersMapper extends BaseMapper {
 
     UsersMapper INSTANCE = Mappers.getMapper(UsersMapper.class);
 
+    // Exclude fields when converting from Model to DO
+    @Mapping(target = "createTime", ignore = true)
+    @Mapping(target = "updateTime", ignore = true)
+    @Mapping(target = "delFlag", ignore = true)
+    UserDO toUserDO(User user);
+
+    // Include fields when converting from DO to Model
     @Mapping(source = "createTime", target = "createTime")
     @Mapping(source = "updateTime", target = "updateTime")
     @Mapping(source = "delFlag", target = "delFlag")
-    UserDO toUserDO(User user);
+    User toUser(UserDO userDO);
 }

@@ -38,7 +38,8 @@ public class UsersFuncImpl implements UsersFunc {
     public UserVO get() {
         User userModel = User.builder().id(114514L).build();
         UserDO userDO = userModel.toDO();
-        userDO = usersRepo.userService.getById(userDO);
+        usersRepo.userService.lambdaUpdate().eq(UserDO::getId, userDO.getId()).update(userDO);
+//        userDO = usersRepo.userService.getById(userDO);
         System.out.println("get! ");
         return null;
     }

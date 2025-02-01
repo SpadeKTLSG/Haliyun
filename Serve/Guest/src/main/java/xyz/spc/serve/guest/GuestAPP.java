@@ -16,7 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(scanBasePackages = "xyz.spc") //扩大扫描包
 @EnableFeignClients(basePackages = "xyz.spc.infra.feign.Group") //开启Feign客户端
 @EnableDiscoveryClient //开启服务发现
-@MapperScan("xyz.spc.infra") //扫描Mapper接口
+@MapperScan("xyz.spc") //扫描Mapper接口
 @EnableScheduling //开启定时任务
 @EnableAspectJAutoProxy() //开启AspectJ
 public class GuestAPP {

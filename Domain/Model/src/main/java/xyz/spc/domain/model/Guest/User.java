@@ -1,20 +1,18 @@
-package xyz.spc.domain.dos.Guest;
+package xyz.spc.domain.model.Guest;
 
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import xyz.spc.domain.dos.BaseDO;
+import xyz.spc.domain.model.BaseModel;
 
 /**
- * 用户 DO
+ * 用户 Model
  */
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-@TableName("user")
-public class UserDO extends BaseDO {
+public class User extends BaseModel {
 
 }

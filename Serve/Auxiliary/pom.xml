@@ -23,6 +23,12 @@
             <artifactId>Feign</artifactId>
             <version>3.0.0-RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>xyz.spc.gate.dto</groupId>
+            <artifactId>DTO</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>

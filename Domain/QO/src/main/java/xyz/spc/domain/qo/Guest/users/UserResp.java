@@ -1,19 +1,18 @@
-package xyz.spc.domain.model.Guest;
+package xyz.spc.domain.qo.Guest.users;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import xyz.spc.domain.model.BaseModel;
+import xyz.spc.domain.qo.BaseQO;
 
-/**
- * 用户
- */
+
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-public class User extends BaseModel {
+public class UserResp extends BaseQO {
+
 
     /**
      * User主键
@@ -41,7 +40,7 @@ public class User extends BaseModel {
     private Integer loginType;
 
     /**
-     * 账号 (唯一)
+     * 账号
      */
     private String account;
 
@@ -49,17 +48,4 @@ public class User extends BaseModel {
      * 密码
      */
     private String password;
-
-
-    //? Func
-
-    public boolean isAdmin() {
-        return admin == 0;
-    }
-
-    public boolean isNormal() {
-        return status == 0;
-    }
-
-
 }

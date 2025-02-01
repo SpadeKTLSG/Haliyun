@@ -1,19 +1,16 @@
-package xyz.spc.domain.model.Guest;
+package xyz.spc.gate.vo.Guest.users;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
-import xyz.spc.domain.model.BaseModel;
+import xyz.spc.gate.vo.BaseVO;
 
-/**
- * 用户
- */
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
-public class User extends BaseModel {
+public class UserVO extends BaseVO {
 
     /**
      * User主键
@@ -49,17 +46,4 @@ public class User extends BaseModel {
      * 密码
      */
     private String password;
-
-
-    //? Func
-
-    public boolean isAdmin() {
-        return admin == 0;
-    }
-
-    public boolean isNormal() {
-        return status == 0;
-    }
-
-
 }

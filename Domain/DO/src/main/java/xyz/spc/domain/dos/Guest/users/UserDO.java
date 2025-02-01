@@ -7,9 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 import xyz.spc.domain.dos.BaseDO;
 
-/**
- * 用户 DO
- */
+
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = true)
@@ -30,7 +28,7 @@ public class UserDO extends BaseDO {
     /**
      * 是否是管理 0否
      */
-    private Boolean admin;
+    private Integer admin;
 
     /**
      * 状态 (0正常, 1停用, 2封禁)
@@ -43,7 +41,7 @@ public class UserDO extends BaseDO {
     private Integer loginType;
 
     /**
-     * 账号
+     * 账号 (唯一)
      */
     private String account;
 

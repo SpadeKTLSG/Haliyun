@@ -47,4 +47,5 @@ public class UsersControl implements UsersApi {
     public Result<UserVO> get() {
         return Result.success(usersFunc.get());
     }
+    // http://localhost:10003/Guest/users/users/get
 }

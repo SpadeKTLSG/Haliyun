@@ -37,7 +37,8 @@ public class UsersFuncImpl implements UsersFunc {
     public UserVO get() {
         User userModel = User.builder().id(114514L).build();
         UserDO userDO = userModel.toDO();
-        userDO = userService.getById(userDO);
+//        userDO = userService.getById(userDO);
+        userService.userDAO().test();
         System.out.println("get! ");
         return null;
     }

@@ -28,8 +28,9 @@
 
         <!--DBs-->
         <mysql-connector-java.version>8.3.0</mysql-connector-java.version>
-        <mybatis-plus.version>3.5.7</mybatis-plus.version>
-        <mybatis-plus-join.version>1.5.2</mybatis-plus-join.version>
+        <mybatis.version>3.0.3</mybatis.version>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <mybatis-plus-join.version>1.5.0</mybatis-plus-join.version>
         <druid.version>1.2.8</druid.version>
         <redis.version>3.33.0</redis.version>
         <hdfs.version>3.4.0</hdfs.version>
@@ -156,11 +157,23 @@
             <artifactId>mysql-connector-j</artifactId>
             <version>${mysql-connector-java.version}</version>
         </dependency>
+        <!--Mybatis-->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
         <!--MPJ-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis-plus.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis-spring</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.yulichang</groupId>

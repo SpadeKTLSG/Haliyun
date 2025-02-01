@@ -24,6 +24,18 @@
             <version>3.0.0-RELEASE</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>xyz.spc.gate.remote</groupId>
+            <artifactId>Remote</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.spc.infra.mapper</groupId>
+            <artifactId>Mapper</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

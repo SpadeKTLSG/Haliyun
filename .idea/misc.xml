@@ -4,10 +4,11 @@
     <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="EntryPointsManager">
-    <list size="3">
+    <list size="4">
       <item index="0" class="java.lang.String" itemvalue="lombok.Builder" />
-      <item index="1" class="java.lang.String" itemvalue="org.springframework.context.annotation.ComponentScan" />
-      <item index="2" class="java.lang.String" itemvalue="org.springframework.stereotype.Repository" />
+      <item index="1" class="java.lang.String" itemvalue="org.mapstruct.Mapper" />
+      <item index="2" class="java.lang.String" itemvalue="org.springframework.context.annotation.ComponentScan" />
+      <item index="3" class="java.lang.String" itemvalue="org.springframework.stereotype.Repository" />
     </list>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />

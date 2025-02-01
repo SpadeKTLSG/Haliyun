@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
+import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.domain.model.BaseModel;
 
 /**
@@ -51,7 +52,15 @@ public class User extends BaseModel {
     private String password;
 
 
-    //? Func
+    //? 转换器
+
+    @Override
+    public UserDO toDO() {
+        return UsersMapper.INSTANCE.toUserDO(this);
+    }
+
+
+    //! 基础信息
 
     public boolean isAdmin() {
         return admin == 0;

@@ -19,8 +19,8 @@
     <dependencies>
         <!--模块依赖-->
         <dependency>
-            <groupId>xyz.spc.domain.model</groupId>
-            <artifactId>Model</artifactId>
+            <groupId>xyz.spc.domain.dos</groupId>
+            <artifactId>DO</artifactId>
             <version>3.0.0-RELEASE</version>
             <scope>compile</scope>
         </dependency>

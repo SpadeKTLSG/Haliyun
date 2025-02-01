@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -29,9 +28,6 @@ import java.util.Objects;
 @Configuration
 @EnableCaching
 public class RedisConfig {
-
-    @Autowired
-    RedisConnectionFactory redisConnectionFactory;
 
 
     /**
@@ -75,9 +71,9 @@ public class RedisConfig {
     }
 
     @Bean
-    public RedisTemplate<String, Object> redisTemplate() {
-        // 创建RedisTemplate<String, Object>对象
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
+    public RedisTemplate<Object, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+
+        RedisTemplate<Object, Object> template = new RedisTemplate<>();
 
         // 配置连接工厂
         template.setConnectionFactory(redisConnectionFactory);

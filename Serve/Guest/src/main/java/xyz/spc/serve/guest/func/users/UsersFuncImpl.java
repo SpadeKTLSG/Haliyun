@@ -7,7 +7,6 @@ import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.domain.repo.Guest.users.UsersRepo;
 import xyz.spc.gate.vo.Guest.users.UserVO;
-import xyz.spc.infra.mapper.Guest.users.UserService;
 
 
 @Slf4j
@@ -16,8 +15,7 @@ import xyz.spc.infra.mapper.Guest.users.UserService;
 public class UsersFuncImpl implements UsersFunc {
 
 
-    private final UsersRepo usersRepo;
-    private final UserService userService;
+    private final UsersRepo usersRepo; //利用Repo来聚合Service
     //...
 
 
@@ -40,7 +38,7 @@ public class UsersFuncImpl implements UsersFunc {
     public UserVO get() {
         User userModel = User.builder().id(114514L).build();
         UserDO userDO = userModel.toDO();
-        userDO = userService.getById(userDO);
+        userDO = usersRepo.userService.getById(userDO);
         System.out.println("get! ");
         return null;
     }

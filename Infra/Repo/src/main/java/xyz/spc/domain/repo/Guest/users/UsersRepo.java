@@ -11,6 +11,6 @@ import xyz.spc.infra.mapper.Guest.users.UserService;
 @RequiredArgsConstructor
 public class UsersRepo {
 
-    private final UserService userService;
+    public final UserService userService;
 
 }

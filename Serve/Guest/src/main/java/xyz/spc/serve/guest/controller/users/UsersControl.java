@@ -20,6 +20,10 @@ public class UsersControl implements UsersApi {
 
     //! Func
 
+    public Result login() {
+        return null;
+    }
+
 
     //! ADD
 

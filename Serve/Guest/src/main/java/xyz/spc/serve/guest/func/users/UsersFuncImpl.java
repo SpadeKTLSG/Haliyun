@@ -6,8 +6,7 @@ import org.springframework.stereotype.Service;
 import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.vo.Guest.users.UserVO;
-import xyz.spc.infra.repo.Guest.users.UserService;
-import xyz.spc.infra.repo.Guest.users.UsersRepo;
+import xyz.spc.infra.special.Guest.users.UsersRepo;
 
 
 @Slf4j
@@ -16,9 +15,8 @@ import xyz.spc.infra.repo.Guest.users.UsersRepo;
 public class UsersFuncImpl implements UsersFunc {
 
 
-    //...
-    public final UserService userService;
-    private final UsersRepo usersRepo; //利用Repo来聚合Service
+    private final UsersRepo usersRepo;
+
 
     @Override
     public void add() {
@@ -39,8 +37,7 @@ public class UsersFuncImpl implements UsersFunc {
     public UserVO get() {
         User userModel = User.builder().id(114514L).build();
         UserDO userDO = userModel.toDO();
-        userService.getById(userDO);
-//        userDO = usersRepo.userService.getById(userDO);
+        userDO = usersRepo.userService.getById(userDO);
         System.out.println("get! ");
         return null;
     }

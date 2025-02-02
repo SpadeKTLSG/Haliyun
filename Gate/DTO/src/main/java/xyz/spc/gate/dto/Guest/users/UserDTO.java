@@ -12,6 +12,10 @@ import xyz.spc.gate.dto.BaseDTO;
 @Accessors(chain = true)
 public class UserDTO extends BaseDTO {
 
+    /**
+     * User主键
+     */
+    private Long id;
 
     /**
      * 群组id

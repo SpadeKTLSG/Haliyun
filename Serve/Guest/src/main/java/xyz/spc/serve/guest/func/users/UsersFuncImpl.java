@@ -7,7 +7,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import xyz.spc.common.constant.redisKey.LoginCacheKey;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
-import xyz.spc.common.funcpack.commu.exception.errorcode.BaseErrorCode;
+import xyz.spc.common.funcpack.commu.exception.ErrorCode;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
 import xyz.spc.domain.dos.Guest.users.UserDO;
@@ -97,7 +97,7 @@ public class UsersFuncImpl implements UsersFunc {
 
         //校验手机号
         if (!PhoneUtil.isMatches(phone, true)) {
-            throw new ClientException(BaseErrorCode.PHONE_VERIFY_ERROR);
+            throw new ClientException(ErrorCode.PHONE_VERIFY_ERROR);
         }
 
         //? 生成策略

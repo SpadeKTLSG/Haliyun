@@ -1,32 +1,30 @@
 package xyz.spc.common.funcpack.commu.exception;
 
 
-import xyz.spc.common.funcpack.commu.exception.errorcode.BaseErrorCode;
-import xyz.spc.common.funcpack.commu.exception.errorcode.IErrorCode;
+import java.util.Optional;
 
 /**
  * 客户端异常
  */
 public class ClientException extends AbstractException {
 
-    public ClientException(IErrorCode errorCode) {
+    public ClientException(ErrorCode errorCode) {
         this(null, null, errorCode);
     }
 
     public ClientException(String message) {
-        this(message, null, BaseErrorCode.CLIENT_ERROR);
+        this(message, null, ErrorCode.CLIENT_ERROR);
     }
 
-    public ClientException(String message, IErrorCode errorCode) {
+    public ClientException(String message, ErrorCode errorCode) {
         this(message, null, errorCode);
     }
 
-    public ClientException(String message, Throwable throwable, IErrorCode errorCode) {
-        super(message, throwable, errorCode);
+    public ClientException(String message, Throwable throwable, ErrorCode errorCode) {
+        super(Optional.ofNullable(message).orElse(errorCode.getMessage()), throwable, errorCode);
     }
 
-    @Override
-    public void cast(String message) {
+    public static void cast(String message) {
         throw new ClientException(message);
     }
 

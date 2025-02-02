@@ -1,9 +1,6 @@
 package xyz.spc.common.funcpack.commu.exception;
 
 
-import xyz.spc.common.funcpack.commu.exception.errorcode.BaseErrorCode;
-import xyz.spc.common.funcpack.commu.exception.errorcode.IErrorCode;
-
 import java.util.Optional;
 
 /**
@@ -11,24 +8,24 @@ import java.util.Optional;
  */
 public class ServiceException extends AbstractException {
 
+    public ServiceException(ErrorCode errorCode) {
+        this(null, null, errorCode);
+    }
+
     public ServiceException(String message) {
-        this(message, null, BaseErrorCode.SERVICE_ERROR);
+        this(message, null, ErrorCode.SERVICE_ERROR);
     }
 
-    public ServiceException(IErrorCode errorCode) {
-        this(null, errorCode);
-    }
 
-    public ServiceException(String message, IErrorCode errorCode) {
+    public ServiceException(String message, ErrorCode errorCode) {
         this(message, null, errorCode);
     }
 
-    public ServiceException(String message, Throwable throwable, IErrorCode errorCode) {
-        super(Optional.ofNullable(message).orElse(errorCode.message()), throwable, errorCode);
+    public ServiceException(String message, Throwable throwable, ErrorCode errorCode) {
+        super(Optional.ofNullable(message).orElse(errorCode.getMessage()), throwable, errorCode);
     }
 
-    @Override
-    public void cast(String message) {
+    public static void cast(String message) {
         throw new ServiceException(message);
     }
 

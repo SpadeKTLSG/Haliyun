@@ -2,7 +2,7 @@ package xyz.spc.common.funcpack.commu;
 
 
 import xyz.spc.common.funcpack.commu.exception.AbstractException;
-import xyz.spc.common.funcpack.commu.exception.errorcode.BaseErrorCode;
+import xyz.spc.common.funcpack.commu.exception.ErrorCode;
 
 import java.util.Optional;
 
@@ -33,8 +33,8 @@ public final class Results {
      */
     public static Result<Void> failure() {
         return new Result<Void>()
-                .setCode(BaseErrorCode.SERVICE_ERROR.code())
-                .setMessage(BaseErrorCode.SERVICE_ERROR.message());
+                .setCode(ErrorCode.SERVICE_ERROR.code())
+                .setMessage(ErrorCode.SERVICE_ERROR.message());
     }
 
     /**
@@ -42,9 +42,9 @@ public final class Results {
      */
     public static Result<Void> failure(AbstractException abstractException) {
         String errorCode = Optional.ofNullable(abstractException.getErrorCode())
-                .orElse(BaseErrorCode.SERVICE_ERROR.code());
+                .orElse(ErrorCode.SERVICE_ERROR.code());
         String errorMessage = Optional.ofNullable(abstractException.getErrorMessage())
-                .orElse(BaseErrorCode.SERVICE_ERROR.message());
+                .orElse(ErrorCode.SERVICE_ERROR.message());
         return new Result<Void>()
                 .setCode(errorCode)
                 .setMessage(errorMessage);

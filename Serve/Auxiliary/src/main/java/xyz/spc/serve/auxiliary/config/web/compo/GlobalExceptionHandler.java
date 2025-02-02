@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import xyz.spc.common.funcpack.commu.Result;
 import xyz.spc.common.funcpack.commu.Results;
 import xyz.spc.common.funcpack.commu.exception.AbstractException;
-import xyz.spc.common.funcpack.commu.exception.errorcode.BaseErrorCode;
+import xyz.spc.common.funcpack.commu.exception.ErrorCode;
 
 import java.util.Optional;
 
@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
                 .map(FieldError::getDefaultMessage)
                 .orElse(StrUtil.EMPTY);
         log.error("[{}] {} [ex] {}", request.getMethod(), getUrl(request), exceptionStr);
-        return Results.failure(BaseErrorCode.CLIENT_ERROR.code(), exceptionStr);
+        return Results.failure(ErrorCode.CLIENT_ERROR.code(), exceptionStr);
     }
 
     /**

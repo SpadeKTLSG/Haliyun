@@ -1,6 +1,6 @@
 package xyz.spc.common.util.userUtil;
 
-import xyz.spc.common.constant.LoginCheckCT;
+import xyz.spc.common.constant.LoginCommonCT;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -16,6 +16,6 @@ public final class codeUtil {
                 "w", "x", "y", "z"};
         List<String> list = Arrays.asList(beforeShuffle);//将String转换为List
         Collections.shuffle(list);  //因为要打乱顺序，所以才把String转为list，因为集合里面才有shuffle;
-        return String.join("", list).substring(2, 2 + LoginCheckCT.DEFAULT_LENGTH);
+        return String.join("", list).substring(2, 2 + LoginCommonCT.DEFAULT_LENGTH);
     }
 }

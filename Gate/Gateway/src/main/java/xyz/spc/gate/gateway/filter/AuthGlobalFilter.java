@@ -16,7 +16,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import xyz.spc.common.constant.redisKey.LoginCacheKey;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
-import xyz.spc.common.funcpack.commu.exception.errorcode.BaseErrorCode;
+import xyz.spc.common.funcpack.commu.exception.ErrorCode;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,11 +50,11 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         String token;
         List<String> headers = request.getHeaders().get("authorization");
         if (isEmpty(headers)) {
-            throw new ClientException("请求头中没有鉴权字段", BaseErrorCode.USER_REGISTER_ERROR);
+            throw new ClientException("请求头中没有鉴权字段", ErrorCode.USER_REGISTER_ERROR);
         }
         token = headers.get(0);
         if (StrUtil.isBlank(token)) {
-            throw new ClientException("请求头中没有鉴权字段", BaseErrorCode.USER_REGISTER_ERROR);
+            throw new ClientException("请求头中没有鉴权字段", ErrorCode.USER_REGISTER_ERROR);
         }
 
         //去除Postman产生的Bearer前缀

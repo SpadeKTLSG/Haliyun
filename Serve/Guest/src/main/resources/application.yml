@@ -158,16 +158,6 @@ logging:
     dateformat: mm:ss.SSS
 
 
-
-# 关闭心跳监控
-management:
-  health:
-    redis:
-      enabled: false
-    rabbit:
-      enabled: false
-
-
 # springdoc
 springdoc:
 

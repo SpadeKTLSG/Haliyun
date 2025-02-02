@@ -1,4 +1,4 @@
-package xyz.spc.serve.auxiliary.compo;
+package xyz.spc.serve.auxiliary.config.redis;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundSetOperations;

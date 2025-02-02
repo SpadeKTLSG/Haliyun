@@ -5,17 +5,15 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import xyz.spc.common.constant.mqEntity.RabbitMQConstant;
 
 
 /**
- * RabbitMQ配置
+ * RabbitMQ 组件配置
  */
 @Configuration
-@EnableRabbit
 public class RabbitMQTopicConfig {
 
 

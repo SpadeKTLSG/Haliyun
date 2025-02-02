@@ -10,7 +10,7 @@ import xyz.spc.common.constant.redisKey.SysCacheKey;
 import xyz.spc.common.util.stringUtil.StringUtils;
 import xyz.spc.common.util.webUtil.HttpHelper;
 import xyz.spc.serve.auxiliary.common.filter.artifact.RepeatedlyRequestWrapper;
-import xyz.spc.serve.auxiliary.compo.RedisCache;
+import xyz.spc.serve.auxiliary.config.redis.RedisCache;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -96,7 +96,7 @@ public class UsersFuncImpl implements UsersFunc {
         //? 校验策略
 
         //校验手机号
-        if (PhoneUtil.isMatches(phone, true)) {
+        if (!PhoneUtil.isMatches(phone, true)) {
             throw new ClientException(BaseErrorCode.PHONE_VERIFY_ERROR);
         }
 

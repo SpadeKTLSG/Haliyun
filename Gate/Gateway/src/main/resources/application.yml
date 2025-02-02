@@ -114,8 +114,8 @@ spring:
     # Gateway todo
     gateway:
       routes:
-        - id: Guest-service
-          uri: lb://Guest
+        - id: guest-service
+          uri: lb://guest
           predicates:
             - Path=/Guest/**
 

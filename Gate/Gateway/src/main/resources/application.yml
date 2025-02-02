@@ -111,6 +111,14 @@ spring:
         dashboard: ${infrastructure.sentinel.host}:${infrastructure.sentinel.port} # Sentinel 控制台地址
         clientIp: 127.0.0.1
 
+    # Gateway todo
+    gateway:
+      routes:
+        - id: Guest-service
+          uri: lb://Guest
+          predicates:
+            - Path=/Guest/**
+
 
 
   servlet:

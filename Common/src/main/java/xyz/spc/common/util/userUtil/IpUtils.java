@@ -11,7 +11,7 @@ import java.net.UnknownHostException;
 /**
  * 获取IP方法
  */
-public class IpUtils {
+public final class IpUtils {
     public final static String REGX_0_255 = "(25[0-5]|2[0-4]\\d|1\\d{2}|[1-9]\\d|\\d)";
     // 匹配 ip
     public final static String REGX_IP = "((" + REGX_0_255 + "\\.){3}" + REGX_0_255 + ")";

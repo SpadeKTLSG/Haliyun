@@ -1,6 +1,7 @@
 package xyz.spc.serve.auxiliary.config.web.compo;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.http.HttpMethod;
@@ -9,8 +10,9 @@ import org.springframework.web.client.RestTemplate;
 import static xyz.spc.serve.auxiliary.config.web.WebAutoConfiguration.INITIALIZE_PATH;
 
 /**
- * 初始化
+ * 初始化 DispatcherServlet 处理器
  */
+@Slf4j
 @RequiredArgsConstructor
 public final class InitializeDispatcherServletHandler implements CommandLineRunner {
 

@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
                 .map(FieldError::getDefaultMessage)
                 .orElse(StrUtil.EMPTY);
         log.error("[{}] {} [ex] {}", request.getMethod(), getUrl(request), exceptionStr);
-        return Results.failure(ErrorCode.CLIENT_ERROR.code(), exceptionStr);
+        return Results.failure(ErrorCode.CLIENT_ERROR.getCode(), exceptionStr);
     }
 
     /**
@@ -45,6 +45,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = {AbstractException.class})
     public Result abstractException(HttpServletRequest request, AbstractException ex) {
+        log.debug("自定义异常捕获");
         if (ex.getCause() != null) {
             log.error("[{}] {} [ex] {}", request.getMethod(), request.getRequestURL().toString(), ex, ex.getCause());
             return Results.failure(ex);
@@ -61,6 +62,7 @@ public class GlobalExceptionHandler {
         log.error("[{}] {} ", request.getMethod(), getUrl(request), throwable);
         return Results.failure();
     }
+
 
     private String getUrl(HttpServletRequest request) {
         if (StringUtils.isEmpty(request.getQueryString())) {

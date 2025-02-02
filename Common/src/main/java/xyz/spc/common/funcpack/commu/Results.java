@@ -33,8 +33,8 @@ public final class Results {
      */
     public static Result<Void> failure() {
         return new Result<Void>()
-                .setCode(ErrorCode.SERVICE_ERROR.code())
-                .setMessage(ErrorCode.SERVICE_ERROR.message());
+                .setCode(ErrorCode.SERVICE_ERROR.getCode())
+                .setMessage(ErrorCode.SERVICE_ERROR.getMessage());
     }
 
     /**
@@ -42,9 +42,9 @@ public final class Results {
      */
     public static Result<Void> failure(AbstractException abstractException) {
         String errorCode = Optional.ofNullable(abstractException.getErrorCode())
-                .orElse(ErrorCode.SERVICE_ERROR.code());
+                .orElse(ErrorCode.SERVICE_ERROR.getCode());
         String errorMessage = Optional.ofNullable(abstractException.getErrorMessage())
-                .orElse(ErrorCode.SERVICE_ERROR.message());
+                .orElse(ErrorCode.SERVICE_ERROR.getMessage());
         return new Result<Void>()
                 .setCode(errorCode)
                 .setMessage(errorMessage);

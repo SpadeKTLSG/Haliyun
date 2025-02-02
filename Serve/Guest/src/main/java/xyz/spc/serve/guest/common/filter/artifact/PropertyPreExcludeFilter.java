@@ -1,4 +1,4 @@
-package xyz.spc.serve.auxiliary.common.filter.artifact;
+package xyz.spc.serve.guest.common.filter.artifact;
 
 
 import com.alibaba.fastjson.serializer.SimplePropertyPreFilter;

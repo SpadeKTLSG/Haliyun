@@ -39,7 +39,7 @@ public class UsersControl implements UsersApi {
         }
         return Result.success(mes);
     }
-    //http://localhost:10003/Guest/users/code?phone=15985785169
+    //http://localhost:10000/Guest/users/code?phone=15985785169
 
     public Result login() {
         return null;

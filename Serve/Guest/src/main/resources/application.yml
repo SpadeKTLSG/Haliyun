@@ -111,6 +111,18 @@ spring:
         clientIp: 127.0.0.1
 
 
+    # Feign
+    openfeign:
+      okhttp:
+        enabled: true
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 5000
+            logger-level: full
+
+
 
 
   servlet:
@@ -154,7 +166,7 @@ logging:
     xyz.spc:
       DEBUG
     org.springframework:
-      DEBUG
+      INFO
 
   pattern:
     dateformat: mm:ss.SSS

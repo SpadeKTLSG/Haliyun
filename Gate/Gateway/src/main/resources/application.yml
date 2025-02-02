@@ -111,13 +111,25 @@ spring:
         dashboard: ${infrastructure.sentinel.host}:${infrastructure.sentinel.port} # Sentinel 控制台地址
         clientIp: 127.0.0.1
 
-    # Gateway todo
+    # Feign
+    openfeign:
+      okhttp:
+        enabled: true
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 5000
+            logger-level: full
+
+    # Gateway
     gateway:
       routes:
         - id: guest-service
           uri: lb://guest
           predicates:
             - Path=/Guest/**
+
 
 
 
@@ -140,6 +152,7 @@ spring:
 
 
 mybatis-plus:
+
   global-config:
     banner: false
 
@@ -160,7 +173,7 @@ logging:
     xyz.spc:
       DEBUG
     org.springframework.cloud.gateway:
-      DEBUG
+      INFO
 
   pattern:
     dateformat: mm:ss.SSS
@@ -181,7 +194,6 @@ springdoc:
 
   swagger-ui:
     path: doc.html
-
 
 
 

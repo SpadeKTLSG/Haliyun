@@ -1,4 +1,4 @@
-package xyz.spc.serve.auxiliary.common.interceptor.repeatSubmit;
+package xyz.spc.serve.guest.common.interceptor.repeat;
 
 
 import com.alibaba.fastjson.JSON;
@@ -7,10 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import xyz.spc.common.annotation.RepeatSubmit;
 import xyz.spc.common.constant.redisKey.SysCacheKey;
+import xyz.spc.common.funcpack.repeat.RepeatSubmitInterceptor;
 import xyz.spc.common.util.stringUtil.StringUtils;
 import xyz.spc.common.util.webUtil.HttpHelper;
-import xyz.spc.serve.auxiliary.common.filter.artifact.RepeatedlyRequestWrapper;
 import xyz.spc.serve.auxiliary.config.redis.RedisCache;
+import xyz.spc.serve.guest.common.filter.artifact.RepeatedlyRequestWrapper;
 
 import java.util.HashMap;
 import java.util.Map;

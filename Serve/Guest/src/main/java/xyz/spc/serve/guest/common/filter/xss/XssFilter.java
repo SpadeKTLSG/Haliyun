@@ -1,7 +1,7 @@
-package xyz.spc.serve.auxiliary.common.filter.xss;
+package xyz.spc.serve.guest.common.filter.xss;
 
 
-import xyz.spc.serve.auxiliary.common.filter.xss.compo.XssHttpServletRequestWrapper;
+import xyz.spc.serve.guest.common.filter.xss.compo.XssHttpServletRequestWrapper;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

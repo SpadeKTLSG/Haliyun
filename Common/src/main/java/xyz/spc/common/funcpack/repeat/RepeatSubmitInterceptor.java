@@ -1,10 +1,9 @@
-package xyz.spc.serve.auxiliary.common.interceptor.repeatSubmit;
+package xyz.spc.common.funcpack.repeat;
 
 
 import com.alibaba.fastjson.JSON;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import xyz.spc.common.annotation.RepeatSubmit;
@@ -16,7 +15,6 @@ import java.lang.reflect.Method;
 /**
  * 防止重复提交拦截器
  */
-@Component
 public abstract class RepeatSubmitInterceptor implements HandlerInterceptor {
 
     @Override

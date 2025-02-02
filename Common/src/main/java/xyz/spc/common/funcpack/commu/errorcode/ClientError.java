@@ -1,19 +1,19 @@
-package xyz.spc.common.funcpack.commu.exception;
+package xyz.spc.common.funcpack.commu.errorcode;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
- * 基础错误码定义
+ * 客户端错误码定义
  */
 @Getter
 @RequiredArgsConstructor
-public enum ErrorCode {
+public enum ClientError {
 
     //! ========== 一级宏观错误码 客户端错误 ==========
     CLIENT_ERROR("A0000", "用户端错误"),
 
-    // ========== 二级宏观错误码 用户登陆注册的错误 ==========
+    // ========== 二级宏观错误码 用户登陆注册 ==========
     USER_REGISTER_ERROR("A1001", "用户注册错误"),
     USER_NAME_VERIFY_ERROR("A1002", "用户名校验失败"),
     USER_NAME_EXIST_ERROR("A1003", "用户名已存在"),
@@ -36,49 +36,21 @@ public enum ErrorCode {
     USER_ACCOUNT_NOT_EXIST_ERROR("A1020", "用户账号不存在"),
     USER_LOGIN_ERROR("A1021", "用户登陆错误"),
 
-    // ========== 二级宏观错误码 用户权限错误 ==========
+    // ========== 二级宏观错误码 用户权限 ==========
     USER_AUTH_ERROR("A2001", "用户无权限"),
     USER_AUTH_EXPIRED_ERROR("A2002", "用户权限过期"),
     USER_AUTH_UNKOWN_ERROR("A2003", "用户权限未知错误"),
 
-    // ========== 二级宏观错误码 用户请求参数错误 ==========
+    // ========== 二级宏观错误码 用户请求参数 ==========
     USER_PARAM_ERROR("A3001", "用户请求参数错误"),
 
     // ========== 二级宏观错误码 ... ==========
 
 
-    //! ========== 一级宏观错误码 服务端错误 ==========
-    SERVICE_ERROR("B0000", "系统执行出错"),
-
-    // ========== 二级宏观错误码 系统执行超时 ==========
-    SERVICE_TIMEOUT_ERROR("B1001", "系统执行超时"),
-    SERVICE_HIGH_LOAD_ERROR("B1002", "系统高负载"),
-    SERVICE_BREAK_ERROR("B1003", "系统熔断"),
-    SERVICE_DOWN_ERROR("B1004", "系统宕机"),
-    SERVICE_UNKNOW_ERROR("B1005", "系统未知错误"),
-
-    // ========== 二级宏观错误码 系统容灾功能被触发 ==========
-    SERVICE_CIRCUIT_BREAKER_ERROR("B2001", "系统限流"),
-    SERVICE_DEGRADE_ERROR("B2002", "系统降级"),
-    SERVICE_DEGRADE_BREAK_ERROR("B2003", "系统降级熔断"),
-    SERVICE_DEGRADE_DOWN_ERROR("B2004", "系统降级宕机"),
-    SERVICE_DEGRADE_UNKNOW_ERROR("B2005", "系统降级未知错误"),
-
-    // ========== 二级宏观错误码 系统资源异常 ==========
-    SERVICE_RESOURCE_ERROR("B3001", "系统资源异常"),
-    SERVICE_RESOURCE_OUT_ERROR("B3002", "系统资源耗尽"),
-    SERVICE_RESOURCE_NOT_FOUND_ERROR("B3003", "系统资源丢失"),
-
-
-    //! ========== 一级宏观错误码 调用第三方服务出错 ==========
-    REMOTE_ERROR("C0001", "第三方服务出错");
-
-    // ========== 二级宏观错误码 ... ==========
-
+    UNKNOWN_ERROR("A9999", "未知错误");
 
     private final String code;
 
     private final String message;
-
 
 }

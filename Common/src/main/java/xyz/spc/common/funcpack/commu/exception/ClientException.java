@@ -1,6 +1,8 @@
 package xyz.spc.common.funcpack.commu.exception;
 
 
+import xyz.spc.common.funcpack.commu.errorcode.ClientError;
+
 import java.util.Optional;
 
 /**
@@ -8,19 +10,19 @@ import java.util.Optional;
  */
 public class ClientException extends AbstractException {
 
-    public ClientException(ErrorCode errorCode) {
+    public ClientException(ClientError errorCode) {
         this(null, null, errorCode);
     }
 
     public ClientException(String message) {
-        this(message, null, ErrorCode.CLIENT_ERROR);
+        this(message, null, ClientError.CLIENT_ERROR);
     }
 
-    public ClientException(String message, ErrorCode errorCode) {
+    public ClientException(String message, ClientError errorCode) {
         this(message, null, errorCode);
     }
 
-    public ClientException(String message, Throwable throwable, ErrorCode errorCode) {
+    public ClientException(String message, Throwable throwable, ClientError errorCode) {
         super(Optional.ofNullable(message).orElse(errorCode.getMessage()), throwable, errorCode);
     }
 

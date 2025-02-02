@@ -144,8 +144,8 @@ public class UsersFuncImpl implements UsersFunc {
 
 
         //? 2 校验用户是否被锁定了
-        User user = new User();
-
+        User user = new User().fromDO(userDO);
+        if (!user.isNormal()) throw new ClientException("用户已被锁定", ErrorCode.USER_ACCOUNT_BLOCKED_ERROR);
 
         //从redis获取验证码并校验
         String cacheCode = stringRedisTemplate.opsForValue().get(LoginCacheKey.LOGIN_CODE_KEY + phone);

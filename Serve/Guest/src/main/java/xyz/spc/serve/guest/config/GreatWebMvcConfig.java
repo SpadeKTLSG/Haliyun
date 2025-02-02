@@ -15,7 +15,6 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -29,35 +28,35 @@ import java.util.List;
 @Configuration
 @RequiredArgsConstructor
 public class GreatWebMvcConfig implements WebMvcConfigurer {
-
-    /**
-     * 注册自定义拦截器: 用户类型包括管理员端和用户端
-     */
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-
-        log.debug("自定义拦截器启动!");
-
-        String[] ex = {"/admin.html",
-                "/admin/employee/login",
-                "/admin/employee/register",
-                "/admin/employee/code",
-                "/guest.html",
-                "/guest/user/login",
-                "/guest/user/register",
-                "/guest/user/code",
-                "/swagger-ui/**", "/swagger-ui.html", "/doc.html", "/webjars/**", "/swagger-resources/**", "/swagger-ui/**", "/v3/**", "/error"};
-
-/*        //登录拦截器
-        registry.addInterceptor(new GreatLoginInterceptor())
-                .excludePathPatterns(ex).order(1);
-
-        // token刷新拦截器
-        registry.addInterceptor(new GreatTokenRefreshInterceptor(stringRedisTemplate))
-                .addPathPatterns("/**")
-                .excludePathPatterns(ex).order(0);*/
-
-    }
+//
+//    /**
+//     * 自定义拦截器
+//     */
+//    @Override
+//    public void addInterceptors(InterceptorRegistry registry) {
+//
+//        log.debug("自定义拦截器启动!");
+//
+//        String[] ex = {"/admin.html",
+//                "/admin/employee/login",
+//                "/admin/employee/register",
+//                "/admin/employee/code",
+//                "/guest.html",
+//                "/guest/user/login",
+//                "/guest/user/register",
+//                "/guest/user/code",
+//                "/swagger-ui/**", "/swagger-ui.html", "/doc.html", "/webjars/**", "/swagger-resources/**", "/swagger-ui/**", "/v3/**", "/error"};
+//
+///*        //登录拦截器
+//        registry.addInterceptor(new GreatLoginInterceptor())
+//                .excludePathPatterns(ex).order(1);
+//
+//        // token刷新拦截器
+//        registry.addInterceptor(new GreatTokenRefreshInterceptor(stringRedisTemplate))
+//                .addPathPatterns("/**")
+//                .excludePathPatterns(ex).order(0);*/
+//
+//    }
 
 
     /**

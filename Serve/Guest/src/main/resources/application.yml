@@ -152,7 +152,9 @@ logging:
 
   level:
     xyz.spc:
-      DEBUG # todo 暂时全开
+      DEBUG
+    org.springframework:
+      DEBUG
 
   pattern:
     dateformat: mm:ss.SSS

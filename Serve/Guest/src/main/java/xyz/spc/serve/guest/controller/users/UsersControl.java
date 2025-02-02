@@ -13,7 +13,7 @@ import xyz.spc.gate.vo.Guest.users.UserVO;
 import xyz.spc.serve.guest.func.users.UsersFunc;
 
 @Tag(name = "Users", description = "用户合集")
-@RequestMapping("/Guest/users/users")
+@RequestMapping("/Guest/users")
 @RestController
 @RequiredArgsConstructor
 public class UsersControl implements UsersApi {
@@ -39,7 +39,7 @@ public class UsersControl implements UsersApi {
         }
         return Result.success(mes);
     }
-    //http://localhost:10003/Guest/users/users/code?phone=15985785169
+    //http://localhost:10003/Guest/users/code?phone=15985785169
 
     public Result login() {
         return null;
@@ -72,5 +72,5 @@ public class UsersControl implements UsersApi {
     public Result<UserVO> get() {
         return Result.success(usersFunc.get());
     }
-    // http://localhost:10003/Guest/users/users/get
+    // http://localhost:10003/Guest/users/get
 }

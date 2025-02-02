@@ -159,6 +159,8 @@ logging:
   level:
     xyz.spc:
       DEBUG
+    org.springframework.cloud.gateway:
+      DEBUG
 
   pattern:
     dateformat: mm:ss.SSS
@@ -186,9 +188,9 @@ springdoc:
 # 网关白名单路径
 auth:
   exclude-paths:
-    - /Guest/users/users/login
-    - /Guest/users/users/register
-    - /Guest/users/users/code
+    - /Guest/users/login
+    - /Guest/users/register
+    - /Guest/users/code
     - /swagger-ui/**
     - /swagger-ui.html
     - /doc.html

@@ -1,4 +1,4 @@
-package xyz.spc.design;
+package xyz.spc.serve.auxiliary.design;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

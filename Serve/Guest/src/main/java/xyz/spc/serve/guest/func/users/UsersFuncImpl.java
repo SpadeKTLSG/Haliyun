@@ -16,9 +16,9 @@ import xyz.spc.infra.mapper.Guest.users.UserService;
 public class UsersFuncImpl implements UsersFunc {
 
 
-    private final UsersRepo usersRepo; //利用Repo来聚合Service
     //...
-
+    public final UserService userService;
+    private final UsersRepo usersRepo; //利用Repo来聚合Service
 
     @Override
     public void add() {
@@ -39,8 +39,7 @@ public class UsersFuncImpl implements UsersFunc {
     public UserVO get() {
         User userModel = User.builder().id(114514L).build();
         UserDO userDO = userModel.toDO();
-        UserService temp = usersRepo.getUserService();
-        temp.getById(userDO);
+        userService.getById(userDO);
 //        userDO = usersRepo.userService.getById(userDO);
         System.out.println("get! ");
         return null;

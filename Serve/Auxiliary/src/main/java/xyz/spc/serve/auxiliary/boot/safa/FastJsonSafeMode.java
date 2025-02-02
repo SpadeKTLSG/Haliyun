@@ -1,4 +1,4 @@
-package xyz.spc.boot.safa;
+package xyz.spc.serve.auxiliary.boot.safa;
 
 import org.springframework.beans.factory.InitializingBean;
 

@@ -1,4 +1,4 @@
-package xyz.spc.boot.init;
+package xyz.spc.serve.auxiliary.boot.init;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

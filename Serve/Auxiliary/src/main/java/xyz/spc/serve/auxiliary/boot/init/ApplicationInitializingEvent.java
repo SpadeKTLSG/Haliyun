@@ -1,4 +1,4 @@
-package xyz.spc.boot.init;
+package xyz.spc.serve.auxiliary.boot.init;
 
 import org.springframework.context.ApplicationEvent;
 

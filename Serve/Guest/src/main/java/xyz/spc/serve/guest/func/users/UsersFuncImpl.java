@@ -1,5 +1,9 @@
 package xyz.spc.serve.guest.func.users;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.lang.UUID;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,12 +14,13 @@ import xyz.spc.common.funcpack.commu.exception.ClientException;
 import xyz.spc.common.funcpack.commu.exception.ErrorCode;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
+import xyz.spc.domain.dos.Guest.users.UserDetailDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
 
-import java.util.Optional;
-import java.util.Set;
+import javax.security.auth.login.AccountNotFoundException;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -112,6 +117,43 @@ public class UsersFuncImpl implements UsersFunc {
 
     private String loginByAccountPhone(UserDTO userDTO, HttpSession session) {
         //? 目前暂时只选择此方式
+
+        //校验手机号 + 对应UserDetail字段 (id/account联表)
+        String phone = userDTO.getPhone();
+        if (!PhoneUtil.isMatches(phone, true)) throw new ClientException(ErrorCode.PHONE_VERIFY_ERROR);
+
+        //根据用户名查询用户 | 根据手机号查询用户, 这里综合使用
+
+        //去找手机号对应的用户详情DO
+        LambdaQueryWrapper<UserDetailDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(UserDetailDO::getPhone, phone);
+        UserDetailDO userDetailDO = Optional.ofNullable(usersRepo.userDetailService.getOne(queryWrapper)).orElseThrow(
+                () -> new AccountNotFoundException("手机号未注册")
+        );
+
+
+        //从redis获取验证码并校验
+        String cacheCode = stringRedisTemplate.opsForValue().get(RedisConstant.LOGIN_CODE_KEY_GUEST + phone);
+        String code = userDTO.getCode();
+        if (cacheCode == null || !cacheCode.equals(code)) throw new InvalidInputException(MessageConstant.CODE_INVALID);
+
+
+        User user = guestRepo.findByAccount(userDTO.getAccount());
+        if (user == null) throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
+
+        //判断是否被锁定了
+        UserFunc userFunc = userFuncService.getById(user.getId());
+        if (Objects.equals(userFunc.getStatus(), UserFunc.BLOCK)) throw new BlockActionException(MessageConstant.ACCOUNT_LOCKED);
+
+
+        // 使用用户Account作为salt生成token
+        String token = UUID.fromString(user.getAccount()).toString(true);
+        Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(), CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
+
+        // 存储
+        String tokenKey = RedisConstant.LOGIN_USER_KEY_GUEST + token;
+        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
+        stringRedisTemplate.expire(tokenKey, RedisConstant.LOGIN_USER_TTL_GUEST, TimeUnit.MINUTES);
 
     }
 

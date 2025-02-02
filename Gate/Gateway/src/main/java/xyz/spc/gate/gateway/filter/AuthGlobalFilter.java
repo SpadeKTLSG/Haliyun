@@ -1,6 +1,7 @@
 package xyz.spc.gate.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -14,11 +15,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+import xyz.spc.common.constant.HttpStatusCT;
 import xyz.spc.common.constant.redisKey.LoginCacheKey;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
 import xyz.spc.common.funcpack.commu.exception.ErrorCode;
+import xyz.spc.gate.dto.Guest.users.UserDTO;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
@@ -65,21 +69,36 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         } catch (Exception e) {
             log.error(e.getMessage());
             ServerHttpResponse response = exchange.getResponse();
-            response.setRawStatusCode(401);
+            response.setRawStatusCode(HttpStatusCT.UNAUTHORIZED); //401
             return response.setComplete();
         }
 
         //? 由于前端页面根据用户类型展示不同的页面, 所以这里不需要判断用户类型, 只需要判断用户是否登陆即可
 
-        //基于TOKEN获取redis中的用户JSON
+        //基于TOKEN获取redis中的用户Map对象
         String key = LoginCacheKey.LOGIN_USER_ACCOUNT_KEY + token;
-//        UserDTO userDTO = Optional.of(stringRedisTemplate.opsForHash().entries(key)).orElseThrow(() -> new ClientException("网络异常, 请重新登陆"));
-        String userDto = Optional.ofNullable(stringRedisTemplate.opsForValue().get(key)).orElseThrow(() -> new ClientException("网络异常, 请重新登陆"));
 
+        //获取Map
+        Map<Object, Object> userDtoMap = Optional.ofNullable(stringRedisTemplate.opsForHash().entries(key)).orElseThrow(() -> new ClientException("网络异常, 请重新登陆"));
+
+        //还原为UserDTO
+        UserDTO userDto = UserDTO.builder()
+                .id((Long) userDtoMap.get("id"))
+                .groupId((Long) userDtoMap.get("groupId"))
+                .admin((Integer) userDtoMap.get("admin"))
+                .status((Integer) userDtoMap.get("status"))
+                .loginType((Integer) userDtoMap.get("loginType"))
+                .account((String) userDtoMap.get("account"))
+                .password((String) userDtoMap.get("password"))
+                .build();
+
+        //打为JSON字符串
+
+        String dtoJson = JSONUtil.toJsonStr(userDto);
 
         //传递在请求头的自定义DTO (JSON)
 
-        ServerWebExchange ex = exchange.mutate().request(a -> a.header("userDto", userDto)).build();
+        ServerWebExchange ex = exchange.mutate().request(a -> a.header("userDto", dtoJson)).build();
         return chain.filter(ex);
     }
 

@@ -35,6 +35,7 @@ public enum ClientError {
     USER_ACCOUNT_DELETED_ERROR("A1019", "用户账号已删除"),
     USER_ACCOUNT_NOT_EXIST_ERROR("A1020", "用户账号不存在"),
     USER_LOGIN_ERROR("A1021", "用户登陆错误"),
+    USER_CODE_ERROR("A1022", "用户验证码错误"),
 
     // ========== 二级宏观错误码 用户权限 ==========
     USER_AUTH_ERROR("A2001", "用户无权限"),

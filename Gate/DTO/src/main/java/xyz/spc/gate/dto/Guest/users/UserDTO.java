@@ -31,4 +31,9 @@ public class UserDTO extends BaseDTO {
      * 手机号
      */
     private String phone;
+
+    /**
+     * 验证码
+     */
+    private String code;
 }

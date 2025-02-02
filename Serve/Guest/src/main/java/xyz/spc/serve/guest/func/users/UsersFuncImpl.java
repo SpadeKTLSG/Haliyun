@@ -13,6 +13,7 @@ import xyz.spc.common.constant.LoginCommonCT;
 import xyz.spc.common.constant.redisKey.LoginCacheKey;
 import xyz.spc.common.funcpack.commu.errorcode.ClientError;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
+import xyz.spc.common.util.stringUtil.StringUtil;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
 import xyz.spc.domain.dos.Guest.users.UserDO;
@@ -127,7 +128,9 @@ public class UsersFuncImpl implements UsersFunc {
         //! 校验 todo 责任链模式
         //? 1 校验手机号格式
         String phone = userDTO.getPhone();
-        if (!PhoneUtil.isMatches(phone, true)) throw new ClientException(ClientError.PHONE_VERIFY_ERROR);
+        if (!PhoneUtil.isMatches(phone, true)) {
+            throw new ClientException(ClientError.PHONE_VERIFY_ERROR);
+        }
 
 
         //查找手机号关联用户 : 去找手机号对应的用户详情DO todo : 抽取到DAO(Service)区域
@@ -145,18 +148,17 @@ public class UsersFuncImpl implements UsersFunc {
 
         //? 2 校验用户是否被锁定了
         User user = new User().fromDO(userDO);
-        if (!user.isNormal()) throw new ClientException("用户已被锁定", ClientError.USER_ACCOUNT_BLOCKED_ERROR);
+        if (!user.isNormal()) {
+            throw new ClientException(ClientError.USER_ACCOUNT_BLOCKED_ERROR);
+        }
 
-        //从redis获取验证码并校验
+        //? 3 从redis获取验证码并校验
         String cacheCode = stringRedisTemplate.opsForValue().get(LoginCacheKey.LOGIN_CODE_KEY + phone);
         String code = userDTO.getCode();
-        if (cacheCode == null || !cacheCode.equals(code)) throw new InvalidInputException(MessageConstant.CODE_INVALID);
+        if (StringUtil.isBlank(cacheCode) || !cacheCode.equals(code)) throw new ClientException(ClientError.USER_CODE_ERROR);
 
 
-        User user = guestRepo.findByAccount(userDTO.getAccount());
-        if (user == null) throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
-
-
+        //! 生成token
         // 使用用户Account作为salt生成token
         String token = UUID.fromString(user.getAccount()).toString(true);
         // 制作用户信息Map

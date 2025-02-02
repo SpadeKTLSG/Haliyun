@@ -3,13 +3,14 @@ package xyz.spc.serve.guest.common.interceptor.repeat;
 
 import com.alibaba.fastjson.JSON;
 import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import xyz.spc.common.annotation.RepeatSubmit;
 import xyz.spc.common.constant.redisKey.SysCacheKey;
 import xyz.spc.common.funcpack.repeat.RepeatSubmitInterceptor;
 import xyz.spc.common.util.stringUtil.StringUtils;
 import xyz.spc.common.util.webUtil.HttpHelper;
+import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.redis.RedisCache;
 
 import java.util.HashMap;
@@ -20,17 +21,16 @@ import java.util.concurrent.TimeUnit;
  * 重复操作拦截器
  */
 @Component
+@RequiredArgsConstructor
+@SuppressWarnings("unchecked")
 public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
 
-    public final String REPEAT_PARAMS = "repeatParams";
-    public final String REPEAT_TIME = "repeatTime";
+    private final RedisCache redisCache;
 
-    // 令牌自定义标识
-//    @Value("${token.header}")
-//    private String header;
-
-    @Autowired
-    private RedisCache redisCache;
+    // 重复参数 字段
+    private final String REPEAT_PARAMS = "repeatParams";
+    // 重复时间 字段
+    private final String REPEAT_TIME = "repeatTime";
 
 
     @Override
@@ -44,21 +44,16 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
         if (StringUtils.isEmpty(nowParams)) {
             nowParams = JSON.toJSONString(request.getParameterMap());
         }
+
+        // nowData 为当前请求参数
         Map<String, Object> nowDataMap = new HashMap<String, Object>();
         nowDataMap.put(REPEAT_PARAMS, nowParams);
         nowDataMap.put(REPEAT_TIME, System.currentTimeMillis());
-
-        // 请求地址（作为存放cache的key值）
         String url = request.getRequestURI();
+        // 唯一标识（指定key + 请求地址 +  账号）
+        String cacheRepeatKey = SysCacheKey.REPEAT_SUBMIT_KEY + url + UserContext.getUser().getAccount();
 
-        // 唯一值（没有消息头则使用请求地址）
-//        String submitKey = StringUtils.trimToEmpty(request.getHeader(header));
-        //todo
-        String submitKey = null;
-
-        // 唯一标识（指定key + url + 消息头）
-        String cacheRepeatKey = SysCacheKey.REPEAT_SUBMIT_KEY + url + submitKey;
-
+        // sessionObj 为上一次请求的参数
         Object sessionObj = redisCache.getCacheObject(cacheRepeatKey);
         if (sessionObj != null) {
             Map<String, Object> sessionMap = (Map<String, Object>) sessionObj;

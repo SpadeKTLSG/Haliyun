@@ -18,6 +18,7 @@ import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import xyz.spc.common.funcpack.repeat.RepeatSubmitInterceptor;
 import xyz.spc.serve.guest.common.interceptor.login.GreatLoginInterceptor;
 import xyz.spc.serve.guest.common.interceptor.login.GreatTokenRefreshInterceptor;
 
@@ -32,6 +33,11 @@ import java.util.List;
 @RequiredArgsConstructor
 public class GreatWebMvcConfig implements WebMvcConfigurer {
 
+
+    private final GreatLoginInterceptor greatLoginInterceptor;
+    private final GreatTokenRefreshInterceptor greatTokenRefreshInterceptor;
+    private final RepeatSubmitInterceptor repeatSubmitInterceptor;
+
     /**
      * 自定义拦截器
      */
@@ -40,7 +46,7 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
 
         log.debug("自定义拦截器启动!");
 
-        String[] ex = {"/admin.html",
+        String[] exPath = {"/admin.html",
                 "/admin/employee/login",
                 "/admin/employee/register",
                 "/admin/employee/code",
@@ -50,16 +56,21 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
                 "/guest/user/code",
                 "/swagger-ui/**", "/swagger-ui.html", "/doc.html", "/webjars/**", "/swagger-resources/**", "/swagger-ui/**", "/v3/**", "/error"};
 
-        //登录拦截器
-        registry.addInterceptor(new GreatLoginInterceptor())
-                .excludePathPatterns(ex).order(1);
+        //1 登录拦截器
+        registry.addInterceptor(greatLoginInterceptor)
+                .excludePathPatterns(exPath) //排除登录接口
+                .order(0);
 
-        // token刷新拦截器
-        registry.addInterceptor(new GreatTokenRefreshInterceptor(stringRedisTemplate))
+        //2 token刷新拦截器
+        registry.addInterceptor(greatTokenRefreshInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns(ex).order(0);
+                .excludePathPatterns(exPath) //排除登录接口
+                .order(1);
 
-        //todo
+        //3 重复提交拦截器
+        registry.addInterceptor(repeatSubmitInterceptor)
+                .addPathPatterns("/**") //对所有请求都进行拦截
+                .order(2);
     }
 
 

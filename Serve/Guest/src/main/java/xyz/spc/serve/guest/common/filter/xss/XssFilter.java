@@ -1,13 +1,14 @@
 package xyz.spc.serve.guest.common.filter.xss;
 
 
-import xyz.spc.serve.guest.common.filter.xss.compo.XssHttpServletRequestWrapper;
-
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+/**
+ * xss过滤器
+ */
 @WebFilter(urlPatterns = "/*")
 public class XssFilter implements Filter {
 

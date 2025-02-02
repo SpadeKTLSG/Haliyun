@@ -11,22 +11,18 @@ import xyz.spc.common.funcpack.repeat.RepeatSubmitInterceptor;
 import xyz.spc.common.util.stringUtil.StringUtils;
 import xyz.spc.common.util.webUtil.HttpHelper;
 import xyz.spc.serve.auxiliary.config.redis.RedisCache;
-import xyz.spc.serve.guest.common.filter.artifact.RepeatedlyRequestWrapper;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- * 判断请求url和数据是否和上一次相同，
- * 如果和上次相同，则是重复提交表单。 有效时间为10秒内。
- * <p>
- * todo 注册到MVC配置
+ * 重复操作拦截器
  */
 @Component
 public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
-    public final String REPEAT_PARAMS = "repeatParams";
 
+    public final String REPEAT_PARAMS = "repeatParams";
     public final String REPEAT_TIME = "repeatTime";
 
     // 令牌自定义标识

@@ -1,5 +1,7 @@
 package xyz.spc.common.annotation;
 
+import xyz.spc.common.constant.SystemCommonCT;
+
 import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;
 
@@ -14,7 +16,7 @@ public @interface RepeatSubmit {
     /**
      * 间隔时间(ms)，小于此时间视为重复提交
      */
-    int interval() default 5000;
+    int interval() default SystemCommonCT.SAME_URL_DATA_TIME;
 
     /**
      * 锁定时间单位，默认毫秒
@@ -25,5 +27,5 @@ public @interface RepeatSubmit {
     /**
      * 提示消息
      */
-    String message() default "不允许重复提交，请稍候再试";
+    String message() default "太快了哦, 请稍候再试!";
 }

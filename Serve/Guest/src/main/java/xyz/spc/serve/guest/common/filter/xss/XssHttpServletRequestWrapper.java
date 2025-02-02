@@ -1,4 +1,4 @@
-package xyz.spc.serve.guest.common.filter.xss.compo;
+package xyz.spc.serve.guest.common.filter.xss;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;
@@ -15,7 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * XSS过滤处理 - Hutool
+ * XSS过滤处理 Wrapper
  */
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
@@ -79,7 +79,7 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
     @Override
     public ServletInputStream getInputStream() throws IOException {
         InputStream in = super.getInputStream();
-        StringBuffer body = new StringBuffer();
+        StringBuilder body = new StringBuilder();
         InputStreamReader reader = new InputStreamReader(in, StandardCharsets.UTF_8);
         BufferedReader buffer = new BufferedReader(reader);
         String line = buffer.readLine();

@@ -4,10 +4,12 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.util.Objects;
@@ -15,14 +17,11 @@ import java.util.concurrent.TimeUnit;
 
 
 @Slf4j
+@Component
+@RequiredArgsConstructor
 public class GreatTokenRefreshInterceptor implements HandlerInterceptor {
 
-
     private final StringRedisTemplate stringRedisTemplate;
-
-    public GreatTokenRefreshInterceptor(StringRedisTemplate stringRedisTemplate) {
-        this.stringRedisTemplate = stringRedisTemplate;
-    }
 
 
     @Override

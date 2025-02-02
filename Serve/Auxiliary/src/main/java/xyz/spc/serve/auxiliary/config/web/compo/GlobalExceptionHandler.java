@@ -31,12 +31,16 @@ public class GlobalExceptionHandler {
     @SneakyThrows
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public Result validExceptionHandler(HttpServletRequest request, MethodArgumentNotValidException ex) {
+        log.debug("参数验证异常捕获");
         BindingResult bindingResult = ex.getBindingResult();
         FieldError firstFieldError = CollectionUtil.getFirst(bindingResult.getFieldErrors());
         String exceptionStr = Optional.ofNullable(firstFieldError)
                 .map(FieldError::getDefaultMessage)
                 .orElse(StrUtil.EMPTY);
         log.error("[{}] {} [ex] {}", request.getMethod(), getUrl(request), exceptionStr);
+
+        //DEBUG: 把错误堆栈打出来
+        ex.printStackTrace();
         return Results.failure(ErrorCode.CLIENT_ERROR.getCode(), exceptionStr);
     }
 
@@ -51,6 +55,9 @@ public class GlobalExceptionHandler {
             return Results.failure(ex);
         }
         log.error("[{}] {} [ex] {}", request.getMethod(), request.getRequestURL().toString(), ex.toString());
+
+        //DEBUG: 把错误堆栈打出来
+        ex.printStackTrace();
         return Results.failure(ex);
     }
 
@@ -59,7 +66,11 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = Throwable.class)
     public Result defaultErrorHandler(HttpServletRequest request, Throwable throwable) {
+        log.debug("未捕获异常捕获");
         log.error("[{}] {} ", request.getMethod(), getUrl(request), throwable);
+
+        //DEBUG: 把错误堆栈打出来
+        throwable.printStackTrace();
         return Results.failure();
     }
 

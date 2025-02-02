@@ -46,7 +46,6 @@ public class GreatTokenRefreshInterceptor implements HandlerInterceptor {
         String saved_info = request.getHeader("saved_info");
         if (StrUtil.isBlank(saved_info) || StrUtil.isBlank(token)) {
             throw new ServiceException(ErrorCode.SERVICE_ERROR);
-
         }
 
         if (token.startsWith("Bearer")) { //去除Postman产生的Bearer前缀

@@ -1,8 +1,6 @@
 package xyz.spc.domain.model.Guest.users;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
 import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.domain.model.BaseModel;
@@ -35,24 +33,18 @@ public class User extends BaseModel {
      * 状态 (0正常, 1停用, 2封禁)
      */
     private Integer status;
-
     /**
      * 登陆方式 (0账号密码 1手机验证码 2邮箱验证码)
      */
     private Integer loginType;
-
     /**
      * 账号 (唯一)
      */
     private String account;
-
     /**
      * 密码
      */
     private String password;
-
-
-    //? 转换器
 
     public UserDO toDO() {
         UserDO tmp = UserDO.builder()
@@ -93,7 +85,7 @@ public class User extends BaseModel {
     }
 
 
-    //! 基础信息
+    //? 转换器
 
     public boolean isAdmin() {
         return admin == 0;
@@ -101,6 +93,29 @@ public class User extends BaseModel {
 
     public boolean isNormal() {
         return status == 0;
+    }
+
+
+    //! 基础信息
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum Status {
+        NORMAL(0, "正常"),
+        STOP(1, "停用"),
+        BAN(2, "封禁");
+        public final Integer code;
+        public final String desc;
+    }
+
+    @Getter
+    @RequiredArgsConstructor
+    public enum LoginType {
+        ACCOUNT_PASSWORD(0, "账号密码"),
+        PHONE_CODE(1, "手机验证码"),
+        EMAIL_CODE(2, "邮箱验证码");
+        public final Integer code;
+        public final String desc;
     }
 
 

@@ -1,5 +1,8 @@
 package xyz.spc.serve.guest.func.users;
 
+import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.bean.copier.CopyOptions;
+import cn.hutool.core.lang.UUID;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,11 +13,13 @@ import xyz.spc.common.funcpack.commu.exception.ClientException;
 import xyz.spc.common.funcpack.commu.exception.ErrorCode;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
-import xyz.spc.domain.dos.Guest.users.UserDO;
-import xyz.spc.domain.model.Guest.users.User;
-import xyz.spc.gate.vo.Guest.users.UserVO;
+import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
 
+import javax.security.auth.login.AccountNotFoundException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -26,31 +31,6 @@ public class UsersFuncImpl implements UsersFunc {
 
     private final StringRedisTemplate stringRedisTemplate;
     private final UsersRepo usersRepo;
-
-
-    @Override
-    public void add() {
-        System.out.println("add");
-    }
-
-    @Override
-    public void delete() {
-        System.out.println("delete");
-    }
-
-    @Override
-    public void update() {
-        System.out.println("update");
-    }
-
-    @Override
-    public UserVO get() {
-        User userModel = User.builder().id(114514L).build();
-        UserDO userDO = userModel.toDO();
-        userDO = usersRepo.userService.getById(userDO);
-        System.out.println("get! ");
-        return null;
-    }
 
 
     @Override
@@ -116,6 +96,40 @@ public class UsersFuncImpl implements UsersFunc {
         stringRedisTemplate.opsForZSet().add(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, System.currentTimeMillis() + "", System.currentTimeMillis());
 
         return code; //调试环境: 返回验证码; 可选择使用邮箱工具类发送验证码
+    }
+
+    @Override
+    public String login(UserDTO userDTO, HttpSession session) {
+
+
+        // 确定登陆方式
+        Integer login_type = userDTO.getLoginType();
+
+        //从redis获取验证码并校验
+        String cacheCode = stringRedisTemplate.opsForValue().get(RedisConstant.LOGIN_CODE_KEY_GUEST + phone);
+        String code = userLoginDTO.getCode();
+        if (cacheCode == null || !cacheCode.equals(code)) throw new InvalidInputException(MessageConstant.CODE_INVALID);
+
+        //根据用户名查询用户
+        User user = guestRepo.findByAccount(userLoginDTO.getAccount());
+        if (user == null) throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
+
+        //判断是否被锁定了
+        UserFunc userFunc = userFuncService.getById(user.getId());
+        if (Objects.equals(userFunc.getStatus(), UserFunc.BLOCK)) throw new BlockActionException(MessageConstant.ACCOUNT_LOCKED);
+
+
+        // 随机生成token，作为登录令牌
+        String token = UUID.randomUUID().toString(true);
+        UserLocalDTO userDTO = BeanUtil.copyProperties(user, UserLocalDTO.class);
+        Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(), CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
+
+        // 存储
+        String tokenKey = RedisConstant.LOGIN_USER_KEY_GUEST + token;
+        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
+        stringRedisTemplate.expire(tokenKey, RedisConstant.LOGIN_USER_TTL_GUEST, TimeUnit.MINUTES);
+
+        return token;
     }
 
 }

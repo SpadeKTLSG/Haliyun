@@ -1,20 +1,17 @@
 package xyz.spc.serve.guest.func.users;
 
 import jakarta.servlet.http.HttpSession;
-import xyz.spc.gate.vo.Guest.users.UserVO;
+import xyz.spc.gate.dto.Guest.users.UserDTO;
 
 public interface UsersFunc {
-
-    void add();
-
-    void delete();
-
-    void update();
-
-    UserVO get();
 
     /**
      * 发送手机验证码
      */
     String sendCode(String phone, HttpSession session);
+
+    /**
+     * 登录
+     */
+    String login(UserDTO userDTO, HttpSession session);
 }

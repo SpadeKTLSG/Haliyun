@@ -1,9 +1,7 @@
 package xyz.spc.domain.dos.Guest.users;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
 import xyz.spc.domain.dos.BaseDO;
 
@@ -12,6 +10,8 @@ import xyz.spc.domain.dos.BaseDO;
 @Builder
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 @TableName("user")
 public class UserDO extends BaseDO {
 

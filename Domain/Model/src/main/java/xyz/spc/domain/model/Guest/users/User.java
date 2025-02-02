@@ -1,8 +1,6 @@
 package xyz.spc.domain.model.Guest.users;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
 import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.domain.model.BaseModel;
@@ -15,6 +13,8 @@ import xyz.spc.gate.dto.Guest.users.UserDTO;
 @Builder
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class User extends BaseModel {
 
     /**

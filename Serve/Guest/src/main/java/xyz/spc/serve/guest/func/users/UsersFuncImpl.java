@@ -9,18 +9,23 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.constant.LoginCommonCT;
 import xyz.spc.common.constant.redisKey.LoginCacheKey;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
 import xyz.spc.common.funcpack.commu.exception.ErrorCode;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
+import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.domain.dos.Guest.users.UserDetailDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
 
 import javax.security.auth.login.AccountNotFoundException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 
@@ -83,7 +88,7 @@ public class UsersFuncImpl implements UsersFunc {
         //? 生成策略
 
         //删除之前的验证码
-        Set<String> keys = stringRedisTemplate.keys(LoginCacheKey.LOGIN_CODE_KEY + phone + "*"); //删除之前的验证码
+        Set<String> keys = stringRedisTemplate.keys(LoginCacheKey.LOGIN_CODE_KEY + phone + "*"); //删除之前这部手机产生的验证码
         if (keys != null) {
             stringRedisTemplate.delete(keys);
         }
@@ -117,23 +122,33 @@ public class UsersFuncImpl implements UsersFunc {
 
     private String loginByAccountPhone(UserDTO userDTO, HttpSession session) {
         //? 目前暂时只选择此方式
+        //note: 根据用户名查询用户 | 根据手机号查询用户, 这里后者
 
-        //校验手机号 + 对应UserDetail字段 (id/account联表)
+        //! 校验 todo 责任链模式
+        //? 1 校验手机号格式
         String phone = userDTO.getPhone();
         if (!PhoneUtil.isMatches(phone, true)) throw new ClientException(ErrorCode.PHONE_VERIFY_ERROR);
 
-        //根据用户名查询用户 | 根据手机号查询用户, 这里综合使用
 
-        //去找手机号对应的用户详情DO
+        //查找手机号关联用户 : 去找手机号对应的用户详情DO todo : 抽取到DAO(Service)区域
         LambdaQueryWrapper<UserDetailDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserDetailDO::getPhone, phone);
         UserDetailDO userDetailDO = Optional.ofNullable(usersRepo.userDetailService.getOne(queryWrapper)).orElseThrow(
                 () -> new AccountNotFoundException("手机号未注册")
         );
 
+        //利用UserDetailDO的id去查找UserDO
+        LambdaQueryWrapper<UserDO> userQueryWrapper = new LambdaQueryWrapper<>();
+        userQueryWrapper.eq(UserDO::getId, userDetailDO.getId());
+        UserDO userDO = usersRepo.userService.getOne(userQueryWrapper);
+
+
+        //? 2 校验用户是否被锁定了
+        User user = new User();
+
 
         //从redis获取验证码并校验
-        String cacheCode = stringRedisTemplate.opsForValue().get(RedisConstant.LOGIN_CODE_KEY_GUEST + phone);
+        String cacheCode = stringRedisTemplate.opsForValue().get(LoginCacheKey.LOGIN_CODE_KEY + phone);
         String code = userDTO.getCode();
         if (cacheCode == null || !cacheCode.equals(code)) throw new InvalidInputException(MessageConstant.CODE_INVALID);
 
@@ -141,19 +156,16 @@ public class UsersFuncImpl implements UsersFunc {
         User user = guestRepo.findByAccount(userDTO.getAccount());
         if (user == null) throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
 
-        //判断是否被锁定了
-        UserFunc userFunc = userFuncService.getById(user.getId());
-        if (Objects.equals(userFunc.getStatus(), UserFunc.BLOCK)) throw new BlockActionException(MessageConstant.ACCOUNT_LOCKED);
-
 
         // 使用用户Account作为salt生成token
         String token = UUID.fromString(user.getAccount()).toString(true);
+        // 制作用户信息Map
         Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(), CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
 
         // 存储
-        String tokenKey = RedisConstant.LOGIN_USER_KEY_GUEST + token;
+        String tokenKey = LoginCacheKey.LOGIN_USER_KEY + token;
         stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
-        stringRedisTemplate.expire(tokenKey, RedisConstant.LOGIN_USER_TTL_GUEST, TimeUnit.MINUTES);
+        stringRedisTemplate.expire(tokenKey, LoginCommonCT.LOGIN_USER_TTL, TimeUnit.MINUTES);
 
     }
 

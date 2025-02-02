@@ -1,8 +1,6 @@
 package xyz.spc.gate.dto.Guest.users;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import lombok.experimental.Accessors;
 import xyz.spc.gate.dto.BaseDTO;
 
@@ -10,6 +8,8 @@ import xyz.spc.gate.dto.BaseDTO;
 @Builder
 @EqualsAndHashCode(callSuper = true)
 @Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserDTO extends BaseDTO {
 
 

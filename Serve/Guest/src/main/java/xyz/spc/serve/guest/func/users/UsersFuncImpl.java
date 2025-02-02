@@ -1,8 +1,5 @@
 package xyz.spc.serve.guest.func.users;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.lang.UUID;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,13 +10,11 @@ import xyz.spc.common.funcpack.commu.exception.ClientException;
 import xyz.spc.common.funcpack.commu.exception.ErrorCode;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
+import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
 
-import javax.security.auth.login.AccountNotFoundException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -101,35 +96,36 @@ public class UsersFuncImpl implements UsersFunc {
     @Override
     public String login(UserDTO userDTO, HttpSession session) {
 
+        Integer login_type = Optional.ofNullable(userDTO.getLoginType()).orElseThrow(
+                () -> new ClientException("登陆方式不能为空", ErrorCode.USER_REGISTER_ERROR)
+        );
 
         // 确定登陆方式
-        Integer login_type = userDTO.getLoginType();
-
-        //从redis获取验证码并校验
-        String cacheCode = stringRedisTemplate.opsForValue().get(RedisConstant.LOGIN_CODE_KEY_GUEST + phone);
-        String code = userLoginDTO.getCode();
-        if (cacheCode == null || !cacheCode.equals(code)) throw new InvalidInputException(MessageConstant.CODE_INVALID);
-
-        //根据用户名查询用户
-        User user = guestRepo.findByAccount(userLoginDTO.getAccount());
-        if (user == null) throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
-
-        //判断是否被锁定了
-        UserFunc userFunc = userFuncService.getById(user.getId());
-        if (Objects.equals(userFunc.getStatus(), UserFunc.BLOCK)) throw new BlockActionException(MessageConstant.ACCOUNT_LOCKED);
-
-
-        // 随机生成token，作为登录令牌
-        String token = UUID.randomUUID().toString(true);
-        UserLocalDTO userDTO = BeanUtil.copyProperties(user, UserLocalDTO.class);
-        Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(), CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
-
-        // 存储
-        String tokenKey = RedisConstant.LOGIN_USER_KEY_GUEST + token;
-        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
-        stringRedisTemplate.expire(tokenKey, RedisConstant.LOGIN_USER_TTL_GUEST, TimeUnit.MINUTES);
-
-        return token;
+        return switch (login_type) {
+            case User.LOGIN_TYPE_ACCOUNT -> loginByAccount(userDTO, session);
+            case User.LOGIN_TYPE_PHONE -> loginByPhone(userDTO, session);
+            case User.LOGIN_TYPE_EMAIL -> loginByEmail(userDTO, session);
+            case User.LOGIN_TYPE_ACCOUNT_PHONE -> loginByAccountPhone(userDTO, session);
+            default -> throw new ClientException("登陆方式不正确", ErrorCode.USER_REGISTER_ERROR);
+        };
     }
+
+    private String loginByAccountPhone(UserDTO userDTO, HttpSession session) {
+        //? 目前暂时只选择此方式
+
+    }
+
+    private String loginByEmail(UserDTO userDTO, HttpSession session) {
+        throw new ClientException("暂不支持邮箱登陆", ErrorCode.USER_LOGIN_ERROR);
+    }
+
+    private String loginByPhone(UserDTO userDTO, HttpSession session) {
+        throw new ClientException("暂不支持手机验证码登陆", ErrorCode.USER_LOGIN_ERROR);
+    }
+
+    private String loginByAccount(UserDTO userDTO, HttpSession session) {
+        throw new ClientException("暂不支持账号密码登陆", ErrorCode.USER_LOGIN_ERROR);
+    }
+
 
 }

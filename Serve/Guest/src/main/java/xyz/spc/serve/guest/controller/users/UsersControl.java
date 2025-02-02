@@ -13,6 +13,8 @@ import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.remote.Guest.users.UsersApi;
 import xyz.spc.serve.guest.func.users.UsersFunc;
 
+import javax.security.auth.login.AccountNotFoundException;
+
 @Tag(name = "Users", description = "用户合集")
 @RequestMapping("/Guest/users")
 @RestController
@@ -46,7 +48,7 @@ public class UsersControl implements UsersApi {
     @PostMapping("/login")
     @Operation(summary = "登录")
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
-    public Result<String> loginG(@RequestBody UserDTO userDTO, HttpSession session) {
+    public Result<String> loginG(@RequestBody UserDTO userDTO, HttpSession session) throws AccountNotFoundException {
 
         String token = usersFunc.login(userDTO, session);
 

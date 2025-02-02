@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpSession;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import xyz.spc.common.funcpack.commu.Result;
-import xyz.spc.gate.vo.Guest.users.UserVO;
 
 public interface UsersApi {
 
@@ -18,17 +17,5 @@ public interface UsersApi {
     @Operation(summary = "登陆验证码")
     @Parameters(@Parameter(name = "phone", description = "手机号", required = true))
     Result<String> getLoginCode(@RequestParam("phone") String phone, HttpSession session);
-
-    void add();
-
-
-    void delete();
-
-
-    void update();
-
-
-    Result<UserVO> get();
-
 
 }

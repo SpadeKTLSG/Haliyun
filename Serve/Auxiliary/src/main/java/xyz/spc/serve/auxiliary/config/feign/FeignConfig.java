@@ -6,7 +6,7 @@ import feign.RequestInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import xyz.spc.common.funcpack.commu.exception.ErrorCode;
+import xyz.spc.common.funcpack.commu.errorcode.ServerError;
 import xyz.spc.common.funcpack.commu.exception.ServiceException;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 
@@ -31,7 +31,7 @@ public class FeignConfig {
         return template -> {
 
             if (UserContext.getUser() == null || UserContext.getUser().getId() == null) {
-                throw new ServiceException(ErrorCode.SERVICE_RESOURCE_ERROR);
+                throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
             }
             // 放入请求头中传递给下游微服务
             String userAllInfo = JSONUtil.toJsonStr(UserContext.getUser());

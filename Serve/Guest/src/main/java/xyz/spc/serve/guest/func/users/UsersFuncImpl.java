@@ -11,8 +11,8 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import xyz.spc.common.constant.LoginCommonCT;
 import xyz.spc.common.constant.redisKey.LoginCacheKey;
+import xyz.spc.common.funcpack.commu.errorcode.ClientError;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
-import xyz.spc.common.funcpack.commu.exception.ErrorCode;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
 import xyz.spc.domain.dos.Guest.users.UserDO;
@@ -82,7 +82,7 @@ public class UsersFuncImpl implements UsersFunc {
 
         //校验手机号
         if (!PhoneUtil.isMatches(phone, true)) {
-            throw new ClientException(ErrorCode.PHONE_VERIFY_ERROR);
+            throw new ClientException(ClientError.PHONE_VERIFY_ERROR);
         }
 
         //? 生成策略
@@ -104,10 +104,10 @@ public class UsersFuncImpl implements UsersFunc {
     }
 
     @Override
-    public String login(UserDTO userDTO, HttpSession session) {
+    public String login(UserDTO userDTO, HttpSession session) throws AccountNotFoundException {
 
         Integer login_type = Optional.ofNullable(userDTO.getLoginType()).orElseThrow(
-                () -> new ClientException("登陆方式不能为空", ErrorCode.USER_REGISTER_ERROR)
+                () -> new ClientException("登陆方式不能为空", ClientError.USER_REGISTER_ERROR)
         );
 
         // 确定登陆方式
@@ -116,18 +116,18 @@ public class UsersFuncImpl implements UsersFunc {
             case User.LOGIN_TYPE_PHONE -> loginByPhone(userDTO, session);
             case User.LOGIN_TYPE_EMAIL -> loginByEmail(userDTO, session);
             case User.LOGIN_TYPE_ACCOUNT_PHONE -> loginByAccountPhone(userDTO, session);
-            default -> throw new ClientException("登陆方式不正确", ErrorCode.USER_REGISTER_ERROR);
+            default -> throw new ClientException("登陆方式不正确", ClientError.USER_REGISTER_ERROR);
         };
     }
 
-    private String loginByAccountPhone(UserDTO userDTO, HttpSession session) {
+    private String loginByAccountPhone(UserDTO userDTO, HttpSession session) throws AccountNotFoundException {
         //? 目前暂时只选择此方式
         //note: 根据用户名查询用户 | 根据手机号查询用户, 这里后者
 
         //! 校验 todo 责任链模式
         //? 1 校验手机号格式
         String phone = userDTO.getPhone();
-        if (!PhoneUtil.isMatches(phone, true)) throw new ClientException(ErrorCode.PHONE_VERIFY_ERROR);
+        if (!PhoneUtil.isMatches(phone, true)) throw new ClientException(ClientError.PHONE_VERIFY_ERROR);
 
 
         //查找手机号关联用户 : 去找手机号对应的用户详情DO todo : 抽取到DAO(Service)区域
@@ -145,7 +145,7 @@ public class UsersFuncImpl implements UsersFunc {
 
         //? 2 校验用户是否被锁定了
         User user = new User().fromDO(userDO);
-        if (!user.isNormal()) throw new ClientException("用户已被锁定", ErrorCode.USER_ACCOUNT_BLOCKED_ERROR);
+        if (!user.isNormal()) throw new ClientException("用户已被锁定", ClientError.USER_ACCOUNT_BLOCKED_ERROR);
 
         //从redis获取验证码并校验
         String cacheCode = stringRedisTemplate.opsForValue().get(LoginCacheKey.LOGIN_CODE_KEY + phone);
@@ -166,19 +166,19 @@ public class UsersFuncImpl implements UsersFunc {
         String tokenKey = LoginCacheKey.LOGIN_USER_KEY + token;
         stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
         stringRedisTemplate.expire(tokenKey, LoginCommonCT.LOGIN_USER_TTL, TimeUnit.MINUTES);
-
+        return token;
     }
 
     private String loginByEmail(UserDTO userDTO, HttpSession session) {
-        throw new ClientException("暂不支持邮箱登陆", ErrorCode.USER_LOGIN_ERROR);
+        throw new ClientException("暂不支持邮箱登陆", ClientError.USER_LOGIN_ERROR);
     }
 
     private String loginByPhone(UserDTO userDTO, HttpSession session) {
-        throw new ClientException("暂不支持手机验证码登陆", ErrorCode.USER_LOGIN_ERROR);
+        throw new ClientException("暂不支持手机验证码登陆", ClientError.USER_LOGIN_ERROR);
     }
 
     private String loginByAccount(UserDTO userDTO, HttpSession session) {
-        throw new ClientException("暂不支持账号密码登陆", ErrorCode.USER_LOGIN_ERROR);
+        throw new ClientException("暂不支持账号密码登陆", ClientError.USER_LOGIN_ERROR);
     }
 
 

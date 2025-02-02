@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import xyz.spc.common.funcpack.commu.Result;
 import xyz.spc.common.funcpack.commu.Results;
+import xyz.spc.common.funcpack.commu.errorcode.ClientError;
 import xyz.spc.common.funcpack.commu.exception.AbstractException;
-import xyz.spc.common.funcpack.commu.exception.ErrorCode;
 
 import java.util.Optional;
 
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler {
 
         //DEBUG: 把错误堆栈打出来
         ex.printStackTrace();
-        return Results.failure(ErrorCode.CLIENT_ERROR.getCode(), exceptionStr);
+        return Results.failure(ClientError.CLIENT_ERROR.getCode(), exceptionStr);
     }
 
     /**

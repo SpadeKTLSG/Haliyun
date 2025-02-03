@@ -1,4 +1,4 @@
-package xyz.spc.serve.guest.common.filter.xss;
+package xyz.spc.serve.auxiliary.common.filter.xss;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HtmlUtil;

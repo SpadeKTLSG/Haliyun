@@ -1,4 +1,4 @@
-package xyz.spc.serve.guest.common.interceptor.repeat;
+package xyz.spc.serve.auxiliary.common.interceptor.repeat;
 
 
 import com.alibaba.fastjson.JSON;

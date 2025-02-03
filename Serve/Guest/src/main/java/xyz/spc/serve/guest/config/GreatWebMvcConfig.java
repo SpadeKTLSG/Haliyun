@@ -34,6 +34,15 @@ import java.util.List;
 public class GreatWebMvcConfig implements WebMvcConfigurer {
 
 
+    private final String[] exICPath = {
+            //登录/code
+            "/Guest/users/login",
+            "/Guest/users/register",
+            "/Guest/users/code",
+            "/favicon.ico", "/Guest.html", //浏览器页面
+            "/initialize/dispatcher-servlet", //初始化请求
+            "/swagger-ui/**", "/swagger-ui.html", "/doc.html", "/webjars/**", "/swagger-resources/**", "/swagger-ui/**", "/v3/**", "/error"};
+
     private final GreatLoginInterceptor greatLoginInterceptor;
     private final GreatTokenRefreshInterceptor greatTokenRefreshInterceptor;
     private final RepeatSubmitInterceptor repeatSubmitInterceptor;
@@ -44,32 +53,23 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
 
-        log.debug("自定义拦截器启动!");
-
-        String[] exPath = {
-                //登录/code
-                "/Guest/users/login",
-                "/Guest/users/register",
-                "/Guest/users/code",
-                "/favicon.ico", "/Guest.html", //浏览器页面
-                "/initialize/dispatcher-servlet", //初始化请求
-                "/swagger-ui/**", "/swagger-ui.html", "/doc.html", "/webjars/**", "/swagger-resources/**", "/swagger-ui/**", "/v3/**", "/error"};
-
         //1 登录拦截器
         registry.addInterceptor(greatLoginInterceptor)
-                .excludePathPatterns(exPath) //排除登录接口
+                .excludePathPatterns(exICPath) //排除登录接口
                 .order(0);
 
         //2 token刷新拦截器
         registry.addInterceptor(greatTokenRefreshInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns(exPath) //排除登录接口
+                .excludePathPatterns(exICPath) //排除登录接口
                 .order(1);
 
         //3 重复提交拦截器
         registry.addInterceptor(repeatSubmitInterceptor)
                 .addPathPatterns("/**") //对所有请求都进行拦截
                 .order(2);
+
+        log.debug("自定义拦截器启动!");
     }
 
 
@@ -85,6 +85,7 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
         fastJsonHttpMessageConverter.setFastJsonConfig(fastJsonConfig);
         converters.add(1, new ByteArrayHttpMessageConverter());// 默认第1个转换器是ByteArrayHttpMessageConverter，处理byte[]数据的转换(springdoc问题)
         converters.add(2, fastJsonHttpMessageConverter);// 添加FastJson的转换器, 放在第2个位置
+        log.debug("消息转换器配置 init");
     }
 
 
@@ -97,6 +98,8 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/swagger-ui.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
+        registry.addResourceHandler("/v3/**").addResourceLocations("classpath:/META-INF/resources/webjars/springdoc-openapi-ui/");
+        log.debug("静态资源映射 init");
     }
 
     /**
@@ -111,6 +114,7 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
             connector.setProperty("relaxedPathChars", "<>[\\]^`{|}%[]");
             connector.setProperty("relaxedQueryChars", "<>[\\]^`{|}%[]");
         });
+        log.debug("Tomcat Servlet Web 服务器工厂 init");
         return webServerFactory;
     }
 
@@ -130,7 +134,8 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
         // 添加映射路径, 应用到所有请求
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
-        // 返回新的CorsFilter
+
+        log.debug("跨域配置 init");
         return new CorsFilter(source);
     }
 }

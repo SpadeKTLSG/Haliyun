@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import xyz.spc.common.constant.LoginCommonCT;
@@ -17,6 +16,7 @@ import xyz.spc.common.funcpack.commu.errorcode.ServerError;
 import xyz.spc.common.funcpack.commu.exception.ServiceException;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
+import xyz.spc.serve.auxiliary.config.redis.RedisCacheGeneral;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class GreatTokenRefreshInterceptor implements HandlerInterceptor {
 
-    private final StringRedisTemplate stringRedisTemplate;
+    private final RedisCacheGeneral rcg;
 
 
     @Override
@@ -55,7 +55,7 @@ public class GreatTokenRefreshInterceptor implements HandlerInterceptor {
         UserDTO user = Optional.ofNullable(JSONUtil.toBean(saved_info, UserDTO.class)).orElseThrow(() -> new ServiceException("用户存储信息转换失败", ServerError.SERVICE_ERROR));
 
         //刷新token有效期
-        stringRedisTemplate.expire(LoginCacheKey.LOGIN_USER_KEY + user.getAccount(), LoginCommonCT.LOGIN_USER_TTL, TimeUnit.MINUTES);
+        rcg.expire(LoginCacheKey.LOGIN_USER_KEY + user.getAccount(), LoginCommonCT.LOGIN_USER_TTL, TimeUnit.MINUTES);
         UserContext.setUser(user);
 
         log.debug("登陆Haliyun用户JSON: " + saved_info);

@@ -11,7 +11,7 @@ import xyz.spc.common.funcpack.repeat.RepeatSubmitInterceptor;
 import xyz.spc.common.util.stringUtil.StringUtils;
 import xyz.spc.common.util.webUtil.HttpHelper;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
-import xyz.spc.serve.auxiliary.config.redis.RedisCache;
+import xyz.spc.serve.auxiliary.config.redis.RedisCacheGeneral;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 @SuppressWarnings("unchecked")
 public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
 
-    private final RedisCache redisCache;
+    private final RedisCacheGeneral redisCacheGeneral;
 
     // 重复参数 字段
     private final String REPEAT_PARAMS = "repeatParams";
@@ -54,7 +54,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
         String cacheRepeatKey = SysCacheKey.REPEAT_SUBMIT_KEY + url + UserContext.getUser().getAccount();
 
         // sessionObj 为上一次请求的参数
-        Object sessionObj = redisCache.getCacheObject(cacheRepeatKey);
+        Object sessionObj = redisCacheGeneral.getCacheObject(cacheRepeatKey);
         if (sessionObj != null) {
             Map<String, Object> sessionMap = (Map<String, Object>) sessionObj;
             if (sessionMap.containsKey(url)) {
@@ -66,7 +66,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
         }
         Map<String, Object> cacheMap = new HashMap<String, Object>();
         cacheMap.put(url, nowDataMap);
-        redisCache.setCacheObject(cacheRepeatKey, cacheMap, annotation.interval(), TimeUnit.MILLISECONDS);
+        redisCacheGeneral.setCacheObject(cacheRepeatKey, cacheMap, annotation.interval(), TimeUnit.MILLISECONDS);
         return false;
     }
 

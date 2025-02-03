@@ -11,11 +11,11 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
- * spring redis 工具类
- **/
+ * spring redis 工具箱 (通用)
+ */
 @SuppressWarnings(value = {"unchecked", "rawtypes"})
 @Component
-public class RedisCache {
+public class RedisCacheGeneral {
 
     @Autowired
     public RedisTemplate redisTemplate;
@@ -62,7 +62,7 @@ public class RedisCache {
      * @return true=设置成功；false=设置失败
      */
     public boolean expire(final String key, final long timeout, final TimeUnit unit) {
-        return redisTemplate.expire(key, timeout, unit);
+        return Boolean.TRUE.equals(redisTemplate.expire(key, timeout, unit));
     }
 
     /**
@@ -86,7 +86,7 @@ public class RedisCache {
     }
 
     /**
-     * 获得缓存的基本对象。
+     * 获得缓存的基本对象
      *
      * @param key 缓存键值
      * @return 缓存键值对应的数据
@@ -102,14 +102,13 @@ public class RedisCache {
      * @param key
      */
     public boolean deleteObject(final String key) {
-        return redisTemplate.delete(key);
+        return Boolean.TRUE.equals(redisTemplate.delete(key));
     }
 
     /**
      * 删除集合对象
      *
      * @param collection 多个对象
-     * @return
      */
     public boolean deleteObject(final Collection collection) {
         return redisTemplate.delete(collection) > 0;
@@ -155,9 +154,6 @@ public class RedisCache {
 
     /**
      * 获得缓存的set
-     *
-     * @param key
-     * @return
      */
     public <T> Set<T> getCacheSet(final String key) {
         return redisTemplate.opsForSet().members(key);
@@ -177,9 +173,6 @@ public class RedisCache {
 
     /**
      * 获得缓存的Map
-     *
-     * @param key
-     * @return
      */
     public <T> Map<String, T> getCacheMap(final String key) {
         return redisTemplate.opsForHash().entries(key);
@@ -238,5 +231,29 @@ public class RedisCache {
      */
     public Collection<String> keys(final String pattern) {
         return redisTemplate.keys(pattern);
+    }
+
+    /**
+     * 获得过去时间内 ZSet 对象数量计数
+     *
+     * @param key          键
+     * @param oneMinuteAgo 过去时间
+     * @param now          现在时间
+     */
+    public long getCacheZSetCount(final String key, long oneMinuteAgo, long now) {
+        return redisTemplate.opsForZSet().count(key, oneMinuteAgo, now);
+    }
+
+    /**
+     * 添加Set并设置过期时间
+     *
+     * @param key      键
+     * @param value    值
+     * @param timeout  过期时间
+     * @param timeUnit 时间单位
+     */
+    public void addCacheZSetStringSetExpire(String key, String value, long timeout, TimeUnit timeUnit) {
+        redisTemplate.opsForSet().add(key, value);
+        redisTemplate.expire(key, timeout, timeUnit);
     }
 }

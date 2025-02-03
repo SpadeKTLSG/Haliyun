@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import xyz.spc.common.constant.LoginCommonCT;
 import xyz.spc.common.constant.redisKey.LoginCacheKey;
@@ -23,6 +22,7 @@ import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
+import xyz.spc.serve.auxiliary.config.redis.RedisCacheGeneral;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.HashMap;
@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class UsersFuncImpl implements UsersFunc {
 
-    private final StringRedisTemplate stringRedisTemplate;
+    private final RedisCacheGeneral rcg;
     private final UsersRepo usersRepo;
 
 
@@ -46,39 +46,36 @@ public class UsersFuncImpl implements UsersFunc {
 
         //? 限流策略
         // 1. 判断是否在一级限制条件内
-        Boolean oneLevelLimit = stringRedisTemplate.opsForSet().isMember(LoginCacheKey.ONE_LEVERLIMIT_KEY + phone, "1");
-
+        Boolean oneLevelLimit = rcg.hasKey(LoginCacheKey.ONE_LEVERLIMIT_KEY + phone);
         if (oneLevelLimit != null && oneLevelLimit) {
             return "!您需要等5分钟后再请求";
         }
 
         // 2. 判断是否在二级限制条件内
-        Boolean twoLevelLimit = stringRedisTemplate.opsForSet().isMember(LoginCacheKey.TWO_LEVERLIMIT_KEY + phone, "1");
-
+        Boolean twoLevelLimit = rcg.hasKey(LoginCacheKey.TWO_LEVERLIMIT_KEY + phone);
         if (twoLevelLimit != null && twoLevelLimit) {
             return "!您需要等20分钟后再请求";
         }
 
         // 3. 检查过去1分钟内发送验证码的次数
         long oneMinuteAgo = System.currentTimeMillis() - 60 * 1000;
-        long count_oneminute = stringRedisTemplate.opsForZSet().count(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, oneMinuteAgo, System.currentTimeMillis());
+        long count_oneminute = rcg.getCacheZSetCount(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, oneMinuteAgo, System.currentTimeMillis());
         if (count_oneminute >= 1) {
             return "!距离上次发送时间不足1分钟, 请1分钟后重试";
         }
 
         // 4. 检查发送验证码的次数
         long fiveMinutesAgo = System.currentTimeMillis() - 5 * 60 * 1000;
-        long count_fiveminute = stringRedisTemplate.opsForZSet().count(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, fiveMinutesAgo, System.currentTimeMillis());
+        long count_fiveminute = rcg.getCacheZSetCount(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, fiveMinutesAgo, System.currentTimeMillis());
 
-        if (count_fiveminute % 3 == 2 && count_fiveminute > 5) {
-            stringRedisTemplate.opsForSet().add(LoginCacheKey.TWO_LEVERLIMIT_KEY + phone, "1");
-            stringRedisTemplate.expire(LoginCacheKey.TWO_LEVERLIMIT_KEY + phone, 20, TimeUnit.MINUTES);
-            return "!请求过于频繁, 请20分钟后再请求"; // 发送了8, 11, 14, ...次，进入二级限制
-
-        } else if (count_fiveminute == 5) {
-            stringRedisTemplate.opsForSet().add(LoginCacheKey.ONE_LEVERLIMIT_KEY + phone, "1");
-            stringRedisTemplate.expire(LoginCacheKey.ONE_LEVERLIMIT_KEY + phone, 5, TimeUnit.MINUTES);
+        if (count_fiveminute == 5) {
+            rcg.addCacheZSetStringSetExpire(LoginCacheKey.ONE_LEVERLIMIT_KEY + phone, "1", 5, TimeUnit.MINUTES);
             return "!5分钟内您已经发送了5次, 请等待5分钟后重试";  // 过去5分钟内已经发送了5次，进入一级限制
+        }
+        if (count_fiveminute > 5) {
+            rcg.addCacheZSetStringSetExpire(LoginCacheKey.TWO_LEVERLIMIT_KEY + phone, "1", 20, TimeUnit.MINUTES);
+            return "!请求过于频繁, 请20分钟后再请求"; // 进入二级限制
+
         }
 
         //? 校验策略
@@ -91,17 +88,16 @@ public class UsersFuncImpl implements UsersFunc {
         //? 生成策略
 
         //删除之前的验证码
-        Set<String> keys = stringRedisTemplate.keys(LoginCacheKey.LOGIN_CODE_KEY + phone + "*"); //删除之前这部手机产生的验证码
+        Set<String> keys = (Set<String>) rcg.keys(LoginCacheKey.LOGIN_CODE_KEY + phone + "*");
         if (keys != null) {
-            stringRedisTemplate.delete(keys);
+            rcg.deleteObject(keys);
         }
-
 
         //生成验证码
         String code = codeUtil.achieveCode(); //自定义工具类生成验证码
-        stringRedisTemplate.opsForValue().set(LoginCacheKey.LOGIN_CODE_KEY + phone, code, LoginCacheKey.LOGIN_CODE_TTL_GUEST, TimeUnit.MINUTES);
+        rcg.setCacheObject(LoginCacheKey.LOGIN_CODE_KEY + phone, code, Math.toIntExact(LoginCacheKey.LOGIN_CODE_TTL_GUEST), TimeUnit.MINUTES);
         // 更新发送时间和次数
-        stringRedisTemplate.opsForZSet().add(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, System.currentTimeMillis() + "", System.currentTimeMillis());
+        rcg.addCacheZSetStringSetExpire(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, System.currentTimeMillis() + "", System.currentTimeMillis(), TimeUnit.MILLISECONDS);
 
         return code; //调试环境: 返回验证码; 可选择使用邮箱工具类发送验证码
     }
@@ -128,7 +124,7 @@ public class UsersFuncImpl implements UsersFunc {
     public Boolean logout() {
         //清除登陆Token
         String tokenKey = LoginCacheKey.LOGIN_USER_KEY + UserContext.getUser().getAccount();
-        return stringRedisTemplate.delete(tokenKey);
+        return rcg.deleteObject(tokenKey);
     }
 
     private String loginByAccountPhone(UserDTO userDTO, HttpSession session) throws AccountNotFoundException {
@@ -169,7 +165,7 @@ public class UsersFuncImpl implements UsersFunc {
         }
 
         //? 4 从redis获取验证码并校验
-        String cacheCode = stringRedisTemplate.opsForValue().get(LoginCacheKey.LOGIN_CODE_KEY + phone);
+        String cacheCode = rcg.getCacheObject(LoginCacheKey.LOGIN_CODE_KEY + phone);
         String code = userDTO.getCode();
         if (StringUtil.isBlank(cacheCode) || !cacheCode.equals(code)) throw new ClientException(ClientError.USER_CODE_ERROR);
 
@@ -193,9 +189,10 @@ public class UsersFuncImpl implements UsersFunc {
         // 存储用户信息到redis
         String tokenKey = LoginCacheKey.LOGIN_USER_KEY + userDTO.getAccount();
 
-        stringRedisTemplate.delete(tokenKey);// 移除之前该用户的的token
-        stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
-        stringRedisTemplate.expire(tokenKey, LoginCommonCT.LOGIN_USER_TTL, TimeUnit.MINUTES);
+
+        rcg.deleteObject(tokenKey);
+        rcg.setCacheMap(tokenKey, userMap);
+        rcg.expire(tokenKey, LoginCommonCT.LOGIN_USER_TTL, TimeUnit.MINUTES);
         return token;
     }
 

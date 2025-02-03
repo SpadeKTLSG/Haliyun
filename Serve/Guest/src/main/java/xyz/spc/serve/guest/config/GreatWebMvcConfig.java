@@ -120,15 +120,13 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
     @Bean
     public CorsFilter corsFilter() {
         CorsConfiguration config = new CorsConfiguration();
+
         config.setAllowCredentials(true); //允许发送Cookie信息
-        // 设置访问源地址
-        config.addAllowedOriginPattern("*");
-        // 设置访问源请求头
-        config.addAllowedHeader("*");
-        // 设置访问源请求方法
-        config.addAllowedMethod("*");
-        // 有效期 1800秒
-        config.setMaxAge(1800L);
+        config.addAllowedOriginPattern("*"); // 设置访问源地址
+        config.addAllowedHeader("*"); // 设置访问源请求头
+        config.addAllowedMethod("*"); // 设置访问源请求方法
+        config.setMaxAge(1800L);   // 有效期 1800秒
+
         // 添加映射路径, 应用到所有请求
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);

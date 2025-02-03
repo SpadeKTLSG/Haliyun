@@ -7,13 +7,16 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.funcpack.commu.Result;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
+import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.guest.func.users.UsersFunc;
 
 import javax.security.auth.login.AccountNotFoundException;
 
+@Slf4j
 @Tag(name = "Users", description = "用户合集")
 @RequestMapping("/Guest/users")
 @RestController
@@ -62,8 +65,9 @@ public class UsersControl {
     @Operation(summary = "登出")
     @Parameters(@Parameter(name = "无", description = "无", required = true))
     public Result<String> logoutG() {
-        usersFunc.logout();
-        return Result.success("用户已登出");
+
+        log.debug(UserContext.getUA() + "已登出");
+        return usersFunc.logout() ? Result.success("用户已登出") : Result.fail("用户登出失败");
     }
     //http://localhost:10000/Guest/users/logout
 

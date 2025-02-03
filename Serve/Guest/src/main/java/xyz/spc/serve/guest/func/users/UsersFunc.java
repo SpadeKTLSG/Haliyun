@@ -20,5 +20,5 @@ public interface UsersFunc {
     /**
      * 登出
      */
-    void logout();
+    Boolean logout();
 }

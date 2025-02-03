@@ -125,12 +125,10 @@ public class UsersFuncImpl implements UsersFunc {
     }
 
     @Override
-    public void logout() {
+    public Boolean logout() {
         //清除登陆Token
         String tokenKey = LoginCacheKey.LOGIN_USER_KEY + UserContext.getUser().getAccount();
-        stringRedisTemplate.delete(tokenKey);
-
-        log.debug(UserContext.getUA() + "已登出");
+        return stringRedisTemplate.delete(tokenKey);
     }
 
     private String loginByAccountPhone(UserDTO userDTO, HttpSession session) throws AccountNotFoundException {

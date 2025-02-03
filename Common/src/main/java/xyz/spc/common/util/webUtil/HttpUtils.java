@@ -2,6 +2,7 @@ package xyz.spc.common.util.webUtil;
 
 
 import lombok.extern.slf4j.Slf4j;
+import xyz.spc.common.constant.HttpStatusCT;
 import xyz.spc.common.util.stringUtil.Constants;
 import xyz.spc.common.util.stringUtil.StringUtils;
 
@@ -16,6 +17,16 @@ import java.security.cert.X509Certificate;
  */
 @Slf4j
 public class HttpUtils {
+
+    /**
+     * 是否为http(s)://开头
+     *
+     * @param link 链接
+     * @return 结果
+     */
+    public static boolean ishttp(String link) {
+        return StringUtils.startsWithAny(link, HttpStatusCT.HTTP, HttpStatusCT.HTTPS);
+    }
 
     /**
      * URL编码

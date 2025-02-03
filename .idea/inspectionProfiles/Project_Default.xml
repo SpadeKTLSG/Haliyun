@@ -11,6 +11,8 @@
       <option name="customHeaders">
         <set>
           <option value="account" />
+          <option value="Access-Control-Expose-Headers" />
+          <option value="download-filename" />
         </set>
       </option>
     </inspection_tool>

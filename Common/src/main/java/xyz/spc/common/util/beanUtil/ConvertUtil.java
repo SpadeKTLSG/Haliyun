@@ -1,18 +1,24 @@
-package xyz.spc.common.util.stringUtil;
+package xyz.spc.common.util.beanUtil;
 
 import org.apache.commons.lang3.ArrayUtils;
+import xyz.spc.common.util.fileUtil.CharsetUtil;
+import xyz.spc.common.util.stringUtil.StringUtils;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * 类型转换器
  */
-public class Convert {
+public class ConvertUtil {
+
     /**
      * 转换为字符串<br>
      * 如果给定的值为null，或者转换失败，返回默认值<br>
@@ -138,6 +144,7 @@ public class Convert {
         if (value instanceof Number) {
             return ((Number) value).shortValue();
         }
+
         final String valueStr = toStr(value, null);
         if (StringUtils.isEmpty(valueStr)) {
             return defaultValue;
@@ -638,7 +645,7 @@ public class Convert {
      * @return 字符串
      */
     public static String utf8Str(Object obj) {
-        return str(obj, CharsetKit.CHARSET_UTF_8);
+        return str(obj, CharsetUtil.CHARSET_UTF_8);
     }
 
     /**
@@ -810,37 +817,48 @@ public class Convert {
         return returnString;
     }
 
+
     /**
-     * 数字金额大写转换 先写个完整的然后将如零拾替换成零
+     * 字符串转set
      *
-     * @param n 数字
-     * @return 中文大写数字
+     * @param str 字符串
+     * @param sep 分隔符
+     * @return set集合
      */
-    public static String digitUppercase(double n) {
-        String[] fraction = {"角", "分"};
-        String[] digit = {"零", "壹", "贰", "叁", "肆", "伍", "陆", "柒", "捌", "玖"};
-        String[][] unit = {{"元", "万", "亿"}, {"", "拾", "佰", "仟"}};
+    public static Set<String> str2Set(String str, String sep) {
+        return new HashSet<>(str2List(str, sep, true, false));
+    }
 
-        String head = n < 0 ? "负" : "";
-        n = Math.abs(n);
-
-        String s = "";
-        for (int i = 0; i < fraction.length; i++) {
-            s += (digit[(int) (Math.floor(n * 10 * Math.pow(10, i)) % 10)] + fraction[i]).replaceAll("(零.)+", "");
+    /**
+     * 字符串转list
+     *
+     * @param str         字符串
+     * @param sep         分隔符
+     * @param filterBlank 过滤纯空白
+     * @param trim        去掉首尾空白
+     * @return list集合
+     */
+    public static List<String> str2List(String str, String sep, boolean filterBlank, boolean trim) {
+        List<String> list = new ArrayList<String>();
+        if (StringUtils.isEmpty(str)) {
+            return list;
         }
-        if (s.length() < 1) {
-            s = "整";
-        }
-        int integerPart = (int) Math.floor(n);
 
-        for (int i = 0; i < unit[0].length && integerPart > 0; i++) {
-            String p = "";
-            for (int j = 0; j < unit[1].length && n > 0; j++) {
-                p = digit[integerPart % 10] + unit[1][j] + p;
-                integerPart = integerPart / 10;
+        // 过滤空白字符串
+        if (filterBlank && StringUtils.isBlank(str)) {
+            return list;
+        }
+        String[] split = str.split(sep);
+        for (String string : split) {
+            if (filterBlank && StringUtils.isBlank(string)) {
+                continue;
             }
-            s = p.replaceAll("(零.)*零$", "").replaceAll("^$", "零") + unit[0][i] + s;
+            if (trim) {
+                string = string.trim();
+            }
+            list.add(string);
         }
-        return head + s.replaceAll("(零.)*零元", "元").replaceFirst("(零.)+", "").replaceAll("(零.)+", "零").replaceAll("^整$", "零元整");
+
+        return list;
     }
 }

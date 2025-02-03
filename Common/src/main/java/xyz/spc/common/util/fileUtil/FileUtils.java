@@ -194,6 +194,31 @@ public final class FileUtils {
 
 
     /**
+     * 获取文件后缀
+     *
+     * @param src 文件路径/名称 文件路径 C:\Users\Public\Pictures\Sample Pictures\test.jpg
+     * @return 如果文件后缀 jpg
+     */
+    public static String getFileExt(String src) {
+        String filename = src.substring(src.lastIndexOf(File.separator) + 1);// 获取到文件名
+
+        return filename.substring(filename.lastIndexOf(".") + 1);
+    }
+
+    /**
+     * 获取文件名称，不带文件后缀部分
+     *
+     * @param src 文件路径 C:\Users\Public\Pictures\Sample Pictures\test.jpg
+     * @return 文件名称 不带文件后缀 test
+     */
+    public static String getFileName(String src) {
+        String filename = src.substring(src.lastIndexOf(File.separator) + 1);// 获取到文件名
+
+        return filename.substring(0, filename.lastIndexOf("."));
+    }
+
+
+    /**
      * 转换为美化的文件大小
      */
     public static String toButifSize(double size) {

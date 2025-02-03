@@ -1,4 +1,6 @@
-package xyz.spc.common.util.stringUtil;
+package xyz.spc.common.util.fileUtil;
+
+import xyz.spc.common.util.stringUtil.StringUtils;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -6,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * 字符集工具类
  */
-public class CharsetKit {
+public final class CharsetUtil {
     /**
      * ISO-8859-1
      */

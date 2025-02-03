@@ -7,4 +7,13 @@ public interface SystemSpecialCT {
      */
     String INITIALIZE_BETTER_PATH = "/initialize/dispatcher-servlet";
 
+    /**
+     * UTF-8 字符集
+     */
+    String UTF8 = "UTF-8";
+
+    /**
+     * GBK 字符集
+     */
+    String GBK = "GBK";
 }

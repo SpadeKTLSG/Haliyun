@@ -30,4 +30,8 @@ public interface SystemCommonCT {
      */
     String DOWNLOAD_DEFAULT_PATH = "D:\\download";
 
+    /**
+     * 文件上传失败重试次数
+     */
+    Integer UPDATE_FAIL_RETRY = 3;
 }

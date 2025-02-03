@@ -4,6 +4,23 @@ package xyz.spc.common.constant;
  * 返回状态码
  */
 public interface HttpStatusCT {
+
+    /**
+     * www主域
+     */
+    String WWW = "www.";
+
+    /**
+     * http请求前缀
+     */
+    String HTTP = "http://";
+
+    /**
+     * https请求前缀
+     */
+    String HTTPS = "https://";
+
+
     /**
      * 操作成功
      */

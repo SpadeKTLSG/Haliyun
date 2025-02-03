@@ -126,6 +126,7 @@ public class UsersFuncImpl implements UsersFunc {
         //note: 根据用户名查询用户 | 根据手机号查询用户, 这里后者
 
         //! 校验 todo 责任链模式
+
         //? 1 校验手机号格式
         String phone = userDTO.getPhone();
         if (!PhoneUtil.isMatches(phone, true)) {
@@ -152,13 +153,18 @@ public class UsersFuncImpl implements UsersFunc {
             throw new ClientException(ClientError.USER_ACCOUNT_BLOCKED_ERROR);
         }
 
-        //? 3 从redis获取验证码并校验
+        //? 3 密码校验
+        if (!user.getPassword().equals(userDTO.getPassword())) {
+            throw new ClientException(ClientError.USER_PASSWORD_ERROR);
+        }
+
+        //? 4 从redis获取验证码并校验
         String cacheCode = stringRedisTemplate.opsForValue().get(LoginCacheKey.LOGIN_CODE_KEY + phone);
         String code = userDTO.getCode();
         if (StringUtil.isBlank(cacheCode) || !cacheCode.equals(code)) throw new ClientException(ClientError.USER_CODE_ERROR);
 
 
-        //! 生成token
+        //! 登陆
         // 使用用户Account作为salt生成token
         String token = UUID.fromString(user.getAccount()).toString(true);
         // 制作用户信息Map

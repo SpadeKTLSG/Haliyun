@@ -55,7 +55,7 @@ public class GreatTokenRefreshInterceptor implements HandlerInterceptor {
         UserDTO user = Optional.ofNullable(JSONUtil.toBean(saved_info, UserDTO.class)).orElseThrow(() -> new ServiceException("用户存储信息转换失败", ServerError.SERVICE_ERROR));
 
         //刷新token有效期
-        stringRedisTemplate.expire(LoginCacheKey.LOGIN_USER_KEY + token, LoginCommonCT.LOGIN_USER_TTL, TimeUnit.MINUTES);
+        stringRedisTemplate.expire(LoginCacheKey.LOGIN_USER_KEY + user.getAccount(), LoginCommonCT.LOGIN_USER_TTL, TimeUnit.MINUTES);
         UserContext.setUser(user);
 
         log.debug("登陆Haliyun用户JSON: " + saved_info);

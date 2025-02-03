@@ -7,7 +7,6 @@ public interface LoginCacheKey {
 
     /**
      * 登录 TOKEN Key前缀
-     * <p>单机状态下默认清理掉所有的登陆TOKEN</p>
      */
     String LOGIN_USER_KEY = "guest:login:token:";
 

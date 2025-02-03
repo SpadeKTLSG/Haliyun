@@ -41,70 +41,102 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        //note: 网关的过滤不做Redis刷新token操作, 只做token的校验 + TL的传递
 
+        // 白名单路径
         ServerHttpRequest request = exchange.getRequest();
-        if (isExclude(request.getPath().toString())) { // 判断是否是白名单路径
+        if (isExclude(request.getPath().toString())) {
             return chain.filter(exchange);
         }
 
-        // 获取请求头中自定义token + (Postman相关处理)
-        List<String> headers = Optional.ofNullable(request.getHeaders().get("authorization")).orElseThrow();
-        String token = headers.get(0);
-        if (StrUtil.isBlank(token)) {
-            throw new ClientException("请求头中没有鉴权字段", ClientError.USER_REGISTER_ERROR);
-        }
-
-        // 获取请求头中用户 account
-        List<String> accounts = Optional.ofNullable(request.getHeaders().get("account")).orElseThrow();
-        String account = accounts.get(0);
-        if (StrUtil.isBlank(account)) {
-            throw new ClientException("请求头中没有用户账号", ClientError.USER_REGISTER_ERROR);
-        }
-
-        // 去除Postman产生的Bearer前缀
+        //note: 网关的过滤不做Redis刷新token操作, 只做token的校验 + TL的传递
         try {
+            // 获取请求头中自定义token + (Postman相关处理)
+            List<String> headers = Optional.ofNullable(request.getHeaders().get("authorization")).orElseThrow();
+            String token = headers.get(0);
+            if (StrUtil.isBlank(token)) {
+                throw new ClientException("请求头中没有鉴权字段", ClientError.USER_REGISTER_ERROR);
+            }
+
+            // 获取请求头中用户 account
+            List<String> accounts = Optional.ofNullable(request.getHeaders().get("account")).orElseThrow();
+            String account = accounts.get(0);
+            if (StrUtil.isBlank(account)) {
+                throw new ClientException("请求头中没有用户账号", ClientError.USER_REGISTER_ERROR);
+            }
+
+            // 去除Postman产生的Bearer前缀
+
             if (token.startsWith("Bearer ")) {
                 token = token.substring(7);
             }
+
+
+            //note: 由于前端页面根据用户类型展示不同的页面, 所以这里不需要判断用户类型, 只需要判断用户是否登陆即可
+
+            //基于TOKEN获取redis中的用户DTO Map对象
+            String key = LoginCacheKey.LOGIN_USER_KEY + account;
+
+            //获取存储的Map
+            Map<Object, Object> userDtoMap = Optional.of(stringRedisTemplate.opsForHash().entries(key)).orElseThrow(() -> new ClientException("网络异常, 请重新登陆"));
+
+            //校验token + account正确性
+            if (!token.equals(userDtoMap.get("token")) || !account.equals(userDtoMap.get("account"))) {
+                throw new ClientException(ClientError.NOT_LOGIN_ERROR);
+            }
+
+            //还原UserDTO打为JSON字符串并传递. 后续的服务可以直接获取到UserDTO对象作为TL
+
+            UserDTO.UserDTOBuilder userDtoBuilder = UserDTO.builder();
+
+            Optional.ofNullable(userDtoMap.get("id"))
+                    .map(Object::toString)
+                    .map(Long::parseLong)
+                    .ifPresent(userDtoBuilder::id);
+
+            Optional.ofNullable(userDtoMap.get("groupId"))
+                    .map(Object::toString)
+                    .map(Long::parseLong)
+                    .ifPresent(userDtoBuilder::groupId);
+
+            Optional.ofNullable(userDtoMap.get("admin"))
+                    .map(Object::toString)
+                    .map(Integer::parseInt)
+                    .ifPresent(userDtoBuilder::admin);
+
+            Optional.ofNullable(userDtoMap.get("status"))
+                    .map(Object::toString)
+                    .map(Integer::parseInt)
+                    .ifPresent(userDtoBuilder::status);
+
+            Optional.ofNullable(userDtoMap.get("loginType"))
+                    .map(Object::toString)
+                    .map(Integer::parseInt)
+                    .ifPresent(userDtoBuilder::loginType);
+
+            Optional.ofNullable(userDtoMap.get("account"))
+                    .map(Object::toString)
+                    .ifPresent(userDtoBuilder::account);
+
+            Optional.ofNullable(userDtoMap.get("password"))
+                    .map(Object::toString)
+                    .ifPresent(userDtoBuilder::password);
+
+            Optional.ofNullable(userDtoMap.get("phone"))
+                    .map(Object::toString)
+                    .ifPresent(userDtoBuilder::phone);
+
+            UserDTO userDto = userDtoBuilder.build();
+
+            String dtoJson = JSONUtil.toJsonStr(userDto);
+            ServerWebExchange ex = exchange.mutate().request(a -> a.header("userDto", dtoJson)).build();
+            return chain.filter(ex);
+
         } catch (Exception e) {
             log.error(e.getMessage());
             ServerHttpResponse response = exchange.getResponse();
             response.setRawStatusCode(HttpStatusCT.UNAUTHORIZED); //401
             return response.setComplete();
         }
-
-
-        //note: 由于前端页面根据用户类型展示不同的页面, 所以这里不需要判断用户类型, 只需要判断用户是否登陆即可
-
-        //基于TOKEN获取redis中的用户DTO Map对象
-        String key = LoginCacheKey.LOGIN_USER_ACCOUNT_KEY + account;
-
-        //获取存储的Map
-        Map<Object, Object> userDtoMap = Optional.of(stringRedisTemplate.opsForHash().entries(key)).orElseThrow(() -> new ClientException("网络异常, 请重新登陆"));
-
-        //校验token + account正确性
-        if (!token.equals(userDtoMap.get("token")) || !account.equals(userDtoMap.get("account"))) {
-            throw new ClientException(ClientError.NOT_LOGIN_ERROR);
-        }
-
-        //还原UserDTO打为JSON字符串并传递. 后续的服务可以直接获取到UserDTO对象作为TL
-        UserDTO userDto = UserDTO.builder()
-                .id((Long) userDtoMap.get("id"))
-                .groupId((Long) userDtoMap.get("groupId"))
-                .admin((Integer) userDtoMap.get("admin"))
-                .status((Integer) userDtoMap.get("status"))
-                .loginType((Integer) userDtoMap.get("loginType"))
-                .account((String) userDtoMap.get("account"))
-                .password((String) userDtoMap.get("password"))
-                .phone((String) userDtoMap.get("phone"))
-//                .code((String) userDtoMap.get("code"))
-//                .token((String) userDtoMap.get("token"))
-                .build();
-
-        String dtoJson = JSONUtil.toJsonStr(userDto);
-        ServerWebExchange ex = exchange.mutate().request(a -> a.header("userDto", dtoJson)).build();
-        return chain.filter(ex);
     }
 
     private boolean isExclude(String antPath) {

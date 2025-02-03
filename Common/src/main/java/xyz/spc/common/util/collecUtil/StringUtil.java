@@ -1,18 +1,17 @@
-package xyz.spc.common.util.stringUtil;
+package xyz.spc.common.util.collecUtil;
 
 
 import cn.hutool.core.text.StrFormatter;
-import org.springframework.util.AntPathMatcher;
 
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static cn.hutool.core.text.CharSequenceUtil.containsIgnoreCase;
+import static cn.hutool.core.text.CharSequenceUtil.trim;
+import static xyz.spc.common.util.webUtil.HttpsUtil.isMatch;
 
 /**
  * String 工具类
@@ -29,7 +28,7 @@ public final class StringUtil {
     public static final String SLASH = "/";
     public static final String BACKSLASH = "\\";
     public static final String EMPTY = "";
-    private static final String NULLSTR = "";
+    public static final String NULLSTR = "";
     public static final String CRLF = "\r\n";
     public static final String NEWLINE = "\n";
     public static final String UNDERLINE = "_";
@@ -41,7 +40,7 @@ public final class StringUtil {
     public static final String HTML_LT = "&lt;";
     public static final String HTML_GT = "&gt;";
 
-    private static final String SEPARATOR = "_";
+    public static final String SEPARATOR = "_";
     public static final String DELIM_START = "{";
     public static final String DELIM_END = "}";
     public static final String EMPTY_JSON = "{}";
@@ -223,9 +222,8 @@ public final class StringUtil {
         return str.getBytes(Charset.forName(charset));
     }
 
-    /***
+    /**
      * 判断 String 是否int
-     *
      */
     public static boolean isInteger(String input) {
         Matcher mer = Pattern.compile("^[+-]?[0-9]+$").matcher(input);
@@ -250,7 +248,7 @@ public final class StringUtil {
      *
      * @param str string类型的数组
      */
-    public static Long[] stringTOLongArray(String[] str) {
+    public static Long[] stringToLongArray(String[] str) {
         Long[] array = new Long[str.length];
         for (int i = 0; i < str.length; i++) {
             array[i] = Long.parseLong(str[i]);
@@ -263,7 +261,7 @@ public final class StringUtil {
      */
     public static boolean isNull(String src) {
 
-        return src == null || src.length() == 0 || src.trim().length() == 0;
+        return src == null || src.isEmpty() || src.trim().isEmpty();
     }
 
     /**
@@ -370,84 +368,6 @@ public final class StringUtil {
 
 
     /**
-     * 判断给定的collection列表中是否包含数组array 判断给定的数组array中是否包含给定的元素value
-     *
-     * @param collection 给定的集合
-     * @param array      给定的数组
-     * @return boolean 结果
-     */
-    public static boolean containsAny(Collection<String> collection, String... array) {
-        if (isEmpty(collection) || isEmpty(array)) {
-            return false;
-        } else {
-            for (String str : array) {
-                if (collection.contains(str)) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    }
-
-    /**
-     * 查找指定字符串是否包含指定字符串列表中的任意一个字符串同时串忽略大小写
-     *
-     * @param cs                  指定字符串
-     * @param searchCharSequences 需要检查的字符串数组
-     * @return 是否包含任意一个字符串
-     */
-    public static boolean containsAnyIgnoreCase(CharSequence cs, CharSequence... searchCharSequences) {
-        if (isEmpty((String) cs) || isEmpty(searchCharSequences)) {
-            return false;
-        }
-        for (CharSequence testStr : searchCharSequences) {
-            if (containsIgnoreCase(cs, testStr)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 驼峰转下划线命名
-     */
-    public static String toUnderScoreCase(String str) {
-        if (str == null) {
-            return null;
-        }
-        StringBuilder sb = new StringBuilder();
-        // 前置字符是否大写
-        boolean preCharIsUpperCase = true;
-        // 当前字符是否大写
-        boolean curreCharIsUpperCase = true;
-        // 下一字符是否大写
-        boolean nexteCharIsUpperCase = true;
-        for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
-            if (i > 0) {
-                preCharIsUpperCase = Character.isUpperCase(str.charAt(i - 1));
-            } else {
-                preCharIsUpperCase = false;
-            }
-
-            curreCharIsUpperCase = Character.isUpperCase(c);
-
-            if (i < (str.length() - 1)) {
-                nexteCharIsUpperCase = Character.isUpperCase(str.charAt(i + 1));
-            }
-
-            if (preCharIsUpperCase && curreCharIsUpperCase && !nexteCharIsUpperCase) {
-                sb.append(SEPARATOR);
-            } else if ((i != 0 && !preCharIsUpperCase) && curreCharIsUpperCase) {
-                sb.append(SEPARATOR);
-            }
-            sb.append(Character.toLowerCase(c));
-        }
-
-        return sb.toString();
-    }
-
-    /**
      * 是否包含字符串
      *
      * @param str  验证字符串
@@ -465,64 +385,6 @@ public final class StringUtil {
         return false;
     }
 
-    /**
-     * 将下划线大写方式命名的字符串转换为驼峰式。如果转换前的下划线大写方式命名的字符串为空，则返回空字符串。 例如：HELLO_WORLD->HelloWorld
-     *
-     * @param name 转换前的下划线大写方式命名的字符串
-     * @return 转换后的驼峰式命名的字符串
-     */
-    public static String convertToCamelCase(String name) {
-        StringBuilder result = new StringBuilder();
-        // 快速检查
-        if (name == null || name.isEmpty()) {
-            // 没必要转换
-            return "";
-        } else if (!name.contains("_")) {
-            // 不含下划线，仅将首字母大写
-            return name.substring(0, 1).toUpperCase() + name.substring(1);
-        }
-        // 用下划线将原始字符串分割
-        String[] camels = name.split("_");
-        for (String camel : camels) {
-            // 跳过原始字符串中开头、结尾的下换线或双重下划线
-            if (camel.isEmpty()) {
-                continue;
-            }
-            // 首字母大写
-            result.append(camel.substring(0, 1).toUpperCase());
-            result.append(camel.substring(1).toLowerCase());
-        }
-        return result.toString();
-    }
-
-    /**
-     * 驼峰式命名法
-     * 例如：user_name->userName
-     */
-    public static String toCamelCase(String s) {
-        if (s == null) {
-            return null;
-        }
-        if (s.indexOf(SEPARATOR) == -1) {
-            return s;
-        }
-        s = s.toLowerCase();
-        StringBuilder sb = new StringBuilder(s.length());
-        boolean upperCase = false;
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-
-            if (c == SEPARATOR.charAt(0)) {
-                upperCase = true;
-            } else if (upperCase) {
-                sb.append(Character.toUpperCase(c));
-                upperCase = false;
-            } else {
-                sb.append(c);
-            }
-        }
-        return sb.toString();
-    }
 
     /**
      * 查找指定字符串是否匹配指定字符串列表中的任意一个字符串
@@ -532,7 +394,7 @@ public final class StringUtil {
      * @return 是否匹配
      */
     public static boolean matches(String str, List<String> strs) {
-        if (isEmpty(str) || isEmpty(strs)) {
+        if (isEmpty(str) || isEmpty(strs.toString())) {
             return false;
         }
         for (String pattern : strs) {
@@ -543,25 +405,6 @@ public final class StringUtil {
         return false;
     }
 
-    /**
-     * 判断url是否与规则配置:
-     * ? 表示单个字符;
-     * * 表示一层路径内的任意字符串，不可跨层级;
-     * ** 表示任意层路径;
-     *
-     * @param pattern 匹配规则
-     * @param url     需要匹配的url
-     * @return
-     */
-    public static boolean isMatch(String pattern, String url) {
-        AntPathMatcher matcher = new AntPathMatcher();
-        return matcher.match(pattern, url);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> T cast(Object obj) {
-        return (T) obj;
-    }
 
     /**
      * 数字左边补齐0，使之达到指定长度。注意，如果数字转换为字符串后，长度大于size，则只保留 最后size个字符。
@@ -587,17 +430,13 @@ public final class StringUtil {
         if (s != null) {
             final int len = s.length();
             if (s.length() <= size) {
-                for (int i = size - len; i > 0; i--) {
-                    sb.append(c);
-                }
+                sb.append(String.valueOf(c).repeat(size - len));
                 sb.append(s);
             } else {
                 return s.substring(len - size, len);
             }
         } else {
-            for (int i = size; i > 0; i--) {
-                sb.append(c);
-            }
+            sb.append(String.valueOf(c).repeat(Math.max(0, size)));
         }
         return sb.toString();
     }

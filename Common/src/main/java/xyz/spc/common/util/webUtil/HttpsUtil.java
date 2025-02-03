@@ -2,8 +2,8 @@ package xyz.spc.common.util.webUtil;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.AntPathMatcher;
 import xyz.spc.common.constant.HttpStatusCT;
-import xyz.spc.common.util.stringUtil.Constants;
 import xyz.spc.common.util.stringUtil.StringUtils;
 
 import javax.net.ssl.*;
@@ -13,10 +13,25 @@ import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 
 /**
- * http 工具类
+ * http/https 工具类
  */
 @Slf4j
-public class HttpUtils {
+public class HttpsUtil {
+
+    /**
+     * 判断url是否与规则配置
+     * ? 表示单个字符;
+     * * 表示一层路径内的任意字符串，不可跨层级;
+     * ** 表示任意层路径;
+     *
+     * @param pattern 匹配规则
+     * @param url     需要匹配的url
+     */
+    public static boolean isMatch(String pattern, String url) {
+        AntPathMatcher matcher = new AntPathMatcher();
+        return matcher.match(pattern, url);
+    }
+
 
     /**
      * 是否为http(s)://开头
@@ -61,7 +76,7 @@ public class HttpUtils {
      * @return 所代表远程资源的响应结果
      */
     public static String sendGet(String url, String param) {
-        return sendGet(url, param, Constants.UTF8);
+        return sendGet(url, param, StandardCharsets.UTF_8.toString());
     }
 
     /**

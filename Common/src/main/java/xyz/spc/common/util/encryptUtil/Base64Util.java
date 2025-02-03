@@ -1,6 +1,8 @@
 package xyz.spc.common.util.encryptUtil;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
+import java.util.Base64;
 
 /**
  * Base64工具类
@@ -48,6 +50,9 @@ public final class Base64Util {
         lookUpBase64Alphabet[62] = '+';
         lookUpBase64Alphabet[63] = '/';
     }
+
+
+    //! 下面是自定义的Base64编解码的方法
 
     /**
      * 判断是否是空白字符
@@ -252,4 +257,38 @@ public final class Base64Util {
         }
         return newSize;
     }
+
+    //! 下面是使用JDK自带的Base64编解码的方法
+
+    /**
+     * Base64编码
+     */
+    public static String encodeBase64(byte[] bytes) {
+        return Base64.getEncoder().encodeToString(bytes);
+    }
+
+    /**
+     * Base64解码
+     */
+    public static byte[] decodeBase64(String str) {
+        return Base64.getDecoder().decode(str);
+    }
+
+    /**
+     * Base64编码
+     */
+    public static String encodeUTF8StringBase64(String str) {
+        return Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
+    }
+
+    /**
+     * Base64解码
+     */
+    public static String decodeUTF8StringBase64(String str) {
+
+        byte[] bytes = Base64.getDecoder().decode(str);
+        return new String(bytes, StandardCharsets.UTF_8);
+    }
+
+
 }

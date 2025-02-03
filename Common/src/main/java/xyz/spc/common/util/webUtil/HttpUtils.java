@@ -1,25 +1,36 @@
 package xyz.spc.common.util.webUtil;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import xyz.spc.common.util.stringUtil.Constants;
 import xyz.spc.common.util.stringUtil.StringUtils;
 
 import javax.net.ssl.*;
 import java.io.*;
-import java.net.ConnectException;
-import java.net.SocketTimeoutException;
-import java.net.URL;
-import java.net.URLConnection;
+import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 
 /**
- * 通用http发送方法
+ * http 工具类
  */
+@Slf4j
 public class HttpUtils {
-    private static final Logger log = LoggerFactory.getLogger(HttpUtils.class);
+
+    /**
+     * URL编码
+     */
+    public static String encodeURL(String url) {
+        return URLEncoder.encode(url, StandardCharsets.UTF_8);
+    }
+
+    /**
+     * URL解码
+     */
+    public static String decodeURL(String url) {
+        return URLDecoder.decode(url, StandardCharsets.UTF_8);
+    }
+
 
     /**
      * 向指定 URL 发送GET方法的请求

@@ -9,8 +9,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class HDFSUtil1 {
+/**
+ * HDFS工具类
+ * <p>测试使用, 真正的操作会封装DAO层</p>
+ */
+public class HDFSUtil {
+
+    /**
+     * HDFS地址
+     */
     private static final String hdfsURL = "hdfs://localhost:9000";
+
+
+    /**
+     * conf
+     */
     private static final Configuration conf;
 
     static {
@@ -18,11 +31,14 @@ public class HDFSUtil1 {
         conf.set("fs.defaultFS", hdfsURL);
     }
 
-    // 从HDFS上下载文件
+    /**
+     * 从HDFS上下载文件
+     */
     public static void downloadFromHDFS(String remoteFile, String localFile) throws Exception {
         FileSystem fs = FileSystem.get(conf);
         Path remotePath = new Path(remoteFile);
         boolean b = FileUtil.copy(fs, remotePath, new File(localFile), false, conf);
+
         if (b) {
             System.out.println("文件下载成功！");
         } else {
@@ -32,25 +48,34 @@ public class HDFSUtil1 {
         fs.close();
     }
 
-    // 上传文件到HDFS
+    /**
+     * 上传文件到HDFS
+     */
     public static void uploadToHDFS(String localfile, String remotefile) throws Exception {
         FileSystem fs = FileSystem.get(conf);
         Path remotePath = new Path(remotefile);
         Path localPath = new Path(localfile);
+
         fs.copyFromLocalFile(localPath, remotePath);
+
         fs.close();
     }
 
-    // 创建HDFS文件夹
+    /**
+     * 创建HDFS文件夹
+     */
     public static void createDirFromHDFS(String remoteDir) throws Exception {
         FileSystem fs = FileSystem.get(conf);
         Path remotePath = new Path(remoteDir);
-        //调用mkdirs函数创建目录
+
         fs.mkdirs(remotePath);
+
         fs.close();
     }
 
-    // 删除文件和文件夹
+    /**
+     * 删除文件和文件夹
+     */
     public static void deleteFromHDFS(String remoteDir) throws Exception {
         FileSystem fs = FileSystem.get(conf);
         // 构建完整的HDFS路径
@@ -66,12 +91,16 @@ public class HDFSUtil1 {
 
     }
 
-    // 重命名文件
+    /**
+     * 重命名文件
+     */
     public static void renameFromHDFS(String oldName, String newName) throws Exception {
         FileSystem fs = FileSystem.get(conf);
         Path hdfsOldName = new Path(oldName);
         Path hdfsNewName = new Path(newName);
+
         boolean b = fs.rename(hdfsOldName, hdfsNewName);
+
         if (b) {
             System.out.println("重命名成功!");
         } else
@@ -79,19 +108,22 @@ public class HDFSUtil1 {
         fs.close();
     }
 
-    // 查看文件夹
+    /**
+     * 查看文件夹
+     */
     public static void ListHDFSDir(String remoteDir) throws Exception {
         FileSystem fs = FileSystem.get(conf);
         Path dirPath = new Path(remoteDir);
-        /*递归获取目录下的所有文件*/
+
+        //递归获取目录下的所有文件
         RemoteIterator<LocatedFileStatus> remoteIterator = fs.listFiles(dirPath, true);
-        /*输出每个文件的信息*/
+
         while (remoteIterator.hasNext()) {
             FileStatus s = remoteIterator.next();
             System.out.println("路径: " + s.getPath().toString());
             System.out.println("权限: " + s.getPermission().toString());
             System.out.println("大小: " + s.getLen());
-            /*返回的是时间戳,转化为时间日期格式*/
+            //返回的是时间戳,转化为时间日期格式
             Long timeStamp = s.getModificationTime();
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String date = format.format(timeStamp);
@@ -101,14 +133,15 @@ public class HDFSUtil1 {
         fs.close();
     }
 
-    // 列出文件
+    /**
+     * 列出文件
+     */
     public static List<String> listRemoteFiles(String remoteDir) throws Exception {
         List<String> remoteFileNameList = new ArrayList<>();
         FileSystem fs = FileSystem.get(conf);
         Path dirPath = new Path(remoteDir);
-        /*递归获取目录下的所有文件*/
+
         RemoteIterator<LocatedFileStatus> remoteIterator = fs.listFiles(dirPath, true);
-        /*输出每个文件的信息*/
         while (remoteIterator.hasNext()) {
             FileStatus s = remoteIterator.next();
             String fileName = s.getPath().getName();
@@ -118,11 +151,15 @@ public class HDFSUtil1 {
         return remoteFileNameList;
     }
 
-    // 列出文件夹
+    /**
+     * 列出文件夹
+     */
     public static List<String> listRemoteDir(String remoteDir) throws Exception {
         List<String> remoteDirList = new ArrayList<>();
         FileSystem fs = FileSystem.get(conf);
         Path dirPath = new Path(remoteDir);
+
+
         FileStatus[] fileStatus = fs.listStatus(dirPath);
         for (FileStatus file : fileStatus) {
             if (file.isDirectory()) {
@@ -133,16 +170,20 @@ public class HDFSUtil1 {
                 remoteDirList.add(file.getPath().toString());
             }
         }
+
         fs.close();
         return remoteDirList;
     }
 
 
-    // 移动文件夹
+    /**
+     * 移动文件夹
+     */
     public static void moveDirFromHDFS(String oldPath, String newPath) throws Exception {
         FileSystem fs = FileSystem.get(conf);
         Path hdfsOldName = new Path(oldPath);
         Path hdfsNewName = new Path(newPath);
+
         fs.rename(hdfsOldName, hdfsNewName);
         fs.close();
     }

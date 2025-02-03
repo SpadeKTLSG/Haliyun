@@ -1,6 +1,5 @@
-package xyz.spc.common.funcpack.uuid;
+package xyz.spc.common.util.sysUtil;
 
-import xyz.spc.common.util.sysUtil.DateUtils;
 import xyz.spc.common.util.stringUtil.StringUtils;
 
 import java.util.concurrent.atomic.AtomicInteger;
@@ -8,7 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * 序列生成类
  */
-public class Seq {
+public class SeqUtil {
     // 通用序列类型
     public static final String commSeqType = "COMMON";
 

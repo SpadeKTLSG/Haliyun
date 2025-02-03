@@ -1,9 +1,5 @@
 package xyz.spc.common.util.beanUtil;
 
-/**
- * @author Danny
- * @date 2022-03-22
- */
 
 import com.alibaba.cloud.commons.lang.StringUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -15,7 +11,9 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class JsonUtil {
+@SuppressWarnings({"all"})
+public final class JsonUtil {
+
     private static JsonUtil jsonUtil;
 
     //直接实例化该对象

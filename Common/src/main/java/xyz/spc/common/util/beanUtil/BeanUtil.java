@@ -16,8 +16,9 @@ import static com.github.dozermapper.core.loader.api.TypeMappingOptions.mapNull;
 /**
  * 对象属性复制工具类
  */
+@SuppressWarnings({"all"})
 @NoArgsConstructor(access = lombok.AccessLevel.PRIVATE)
-public class BeanUtil {
+public final class BeanUtil {
 
 
     protected static Mapper BEAN_MAPPER_BUILDER;

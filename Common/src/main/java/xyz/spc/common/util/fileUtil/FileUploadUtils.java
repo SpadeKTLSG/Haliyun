@@ -5,10 +5,10 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
-import xyz.spc.common.funcpack.uuid.Seq;
 import xyz.spc.common.util.stringUtil.Constants;
 import xyz.spc.common.util.stringUtil.StringUtils;
 import xyz.spc.common.util.sysUtil.DateUtils;
+import xyz.spc.common.util.sysUtil.SeqUtil;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 /**
- * 文件上传工具类 todo 抽取常量
+ * 文件上传工具类
  */
 public class FileUploadUtils {
 
@@ -98,9 +98,9 @@ public class FileUploadUtils {
      */
     public static String extractFilename(MultipartFile file, boolean isDatePath) {
         if (isDatePath) {
-            return StringUtils.format("{}/{}_{}.{}", DateUtils.datePath(), FilenameUtils.getBaseName(file.getOriginalFilename()), Seq.getId(Seq.uploadSeqType), getExtension(file));
+            return StringUtils.format("{}/{}_{}.{}", DateUtils.datePath(), FilenameUtils.getBaseName(file.getOriginalFilename()), SeqUtil.getId(SeqUtil.uploadSeqType), getExtension(file));
         }
-        return StringUtils.format("{}_{}.{}", FilenameUtils.getBaseName(file.getOriginalFilename()), Seq.getId(Seq.uploadSeqType), getExtension(file));
+        return StringUtils.format("{}_{}.{}", FilenameUtils.getBaseName(file.getOriginalFilename()), SeqUtil.getId(SeqUtil.uploadSeqType), getExtension(file));
     }
 
 

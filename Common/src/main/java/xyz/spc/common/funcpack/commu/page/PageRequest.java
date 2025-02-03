@@ -7,7 +7,6 @@ import xyz.spc.common.constant.SysRespCT;
  * 分页请求对象
  */
 @Data
-
 public class PageRequest {
 
     /**

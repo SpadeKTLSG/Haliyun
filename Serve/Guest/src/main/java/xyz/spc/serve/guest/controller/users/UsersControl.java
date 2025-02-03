@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.funcpack.commu.Result;
+import xyz.spc.common.funcpack.xss.Xss;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.guest.func.users.UsersFunc;
@@ -35,6 +36,7 @@ public class UsersControl {
     @GetMapping("code")
     @Operation(summary = "登陆验证码")
     @Parameters(@Parameter(name = "phone", description = "手机号", required = true))
+    @Xss(message = "手机号不能包含脚本字符")
     public Result<String> getLoginCode(@RequestParam("phone") String phone, HttpSession session) {
 
         String code = usersFunc.sendCode(phone, session);

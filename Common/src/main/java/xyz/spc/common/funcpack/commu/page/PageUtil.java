@@ -1,9 +1,8 @@
-package xyz.spc.common.util.beanUtil;
+package xyz.spc.common.funcpack.commu.page;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import xyz.spc.common.funcpack.commu.page.PageRequest;
-import xyz.spc.common.funcpack.commu.page.PageResponse;
+import xyz.spc.common.util.beanUtil.BeanUtil;
 
 import java.util.List;
 import java.util.function.Function;
@@ -62,7 +61,6 @@ public final class PageUtil {
     /**
      * {@link IPage} build to {@link PageResponse}
      */
-
     private static PageResponse buildConventionPage(IPage iPage) {
         return PageResponse.builder()
                 .current(iPage.getCurrent())

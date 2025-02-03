@@ -1,7 +1,7 @@
 package xyz.spc.common.constant.mq;
 
 /**
- * RabbitMQ常量
+ * RabbitMQ基础组件
  */
 public interface BasicMQCompo {
 

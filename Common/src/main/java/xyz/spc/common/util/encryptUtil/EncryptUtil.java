@@ -6,44 +6,54 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+/**
+ * 加密工具类
+ */
 public class EncryptUtil {
 
+    /**
+     * Base64编码
+     */
     public static String encodeBase64(byte[] bytes) {
-        String encoded = Base64.getEncoder().encodeToString(bytes);
-        return encoded;
+        return Base64.getEncoder().encodeToString(bytes);
     }
 
+    /**
+     * Base64解码
+     */
     public static byte[] decodeBase64(String str) {
-        byte[] bytes = null;
-        bytes = Base64.getDecoder().decode(str);
-        return bytes;
+        return Base64.getDecoder().decode(str);
     }
 
+    /**
+     * Base64编码
+     */
     public static String encodeUTF8StringBase64(String str) {
-        String encoded = null;
-        encoded = Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
-        return encoded;
-
+        return Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
     }
 
+    /**
+     * Base64解码
+     */
     public static String decodeUTF8StringBase64(String str) {
-        String decoded = null;
+
         byte[] bytes = Base64.getDecoder().decode(str);
-        decoded = new String(bytes, StandardCharsets.UTF_8);
-        return decoded;
+        return new String(bytes, StandardCharsets.UTF_8);
     }
 
+    /**
+     * URL编码
+     */
     public static String encodeURL(String url) {
-        String encoded = null;
-        encoded = URLEncoder.encode(url, StandardCharsets.UTF_8);
-        return encoded;
+        return URLEncoder.encode(url, StandardCharsets.UTF_8);
     }
 
 
+    /**
+     * URL解码
+     */
     public static String decodeURL(String url) {
-        String decoded = null;
-        decoded = URLDecoder.decode(url, StandardCharsets.UTF_8);
-        return decoded;
+        return URLDecoder.decode(url, StandardCharsets.UTF_8);
     }
 
 }

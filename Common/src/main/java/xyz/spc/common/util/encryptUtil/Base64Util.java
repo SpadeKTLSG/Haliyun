@@ -1,9 +1,12 @@
 package xyz.spc.common.util.encryptUtil;
 
+import java.util.Arrays;
+
 /**
  * Base64工具类
  */
-public final class Base64 {
+public final class Base64Util {
+
     static private final int BASELENGTH = 128;
     static private final int LOOKUPLENGTH = 64;
     static private final int TWENTYFOURBITGROUP = 24;
@@ -16,9 +19,7 @@ public final class Base64 {
     static final private char[] lookUpBase64Alphabet = new char[LOOKUPLENGTH];
 
     static {
-        for (int i = 0; i < BASELENGTH; ++i) {
-            base64Alphabet[i] = -1;
-        }
+        Arrays.fill(base64Alphabet, (byte) -1);
         for (int i = 'Z'; i >= 'A'; i--) {
             base64Alphabet[i] = (byte) (i - 'A');
         }
@@ -48,23 +49,32 @@ public final class Base64 {
         lookUpBase64Alphabet[63] = '/';
     }
 
+    /**
+     * 判断是否是空白字符
+     */
     private static boolean isWhiteSpace(char octect) {
         return (octect == 0x20 || octect == 0xd || octect == 0xa || octect == 0x9);
     }
 
+    /**
+     * 判断是否是等号
+     */
     private static boolean isPad(char octect) {
         return (octect == PAD);
     }
 
+    /**
+     * 判断是否是数据
+     */
     private static boolean isData(char octect) {
-        return (octect < BASELENGTH && base64Alphabet[octect] != -1);
+        return (octect >= BASELENGTH || base64Alphabet[octect] == -1);
     }
 
     /**
-     * Encodes hex octects into Base64
+     * Encodes hex octects into Base64Util
      *
      * @param binaryData Array containing binaryData
-     * @return Encoded Base64 array
+     * @return Encoded Base64Util array
      */
     public static String encode(byte[] binaryData) {
         if (binaryData == null) {
@@ -133,10 +143,7 @@ public final class Base64 {
     }
 
     /**
-     * Decodes Base64 data into octects
-     *
-     * @param encoded string containing Base64 data
-     * @return Array containind decoded data.
+     * 将Base64数据解码为原始byte数据
      */
     public static byte[] decode(String encoded) {
         if (encoded == null) {
@@ -168,8 +175,8 @@ public final class Base64 {
 
         for (; i < numberQuadruple - 1; i++) {
 
-            if (!isData((d1 = base64Data[dataIndex++])) || !isData((d2 = base64Data[dataIndex++]))
-                    || !isData((d3 = base64Data[dataIndex++])) || !isData((d4 = base64Data[dataIndex++]))) {
+            if (isData((d1 = base64Data[dataIndex++])) || isData((d2 = base64Data[dataIndex++]))
+                    || isData((d3 = base64Data[dataIndex++])) || isData((d4 = base64Data[dataIndex++]))) {
                 return null;
             } // if found "no data" just return null
 
@@ -183,7 +190,7 @@ public final class Base64 {
             decodedData[encodedIndex++] = (byte) (b3 << 6 | b4);
         }
 
-        if (!isData((d1 = base64Data[dataIndex++])) || !isData((d2 = base64Data[dataIndex++]))) {
+        if (isData((d1 = base64Data[dataIndex++])) || isData((d2 = base64Data[dataIndex++]))) {
             return null;// if found "no data" just return null
         }
 
@@ -192,7 +199,7 @@ public final class Base64 {
 
         d3 = base64Data[dataIndex++];
         d4 = base64Data[dataIndex++];
-        if (!isData((d3)) || !isData((d4))) {// Check if they are PAD characters
+        if (isData((d3)) || isData((d4))) {// Check if they are PAD characters
             if (isPad(d3) && isPad(d4)) {
                 if ((b2 & 0xf) != 0)// last 4 bits should be zero
                 {
@@ -228,10 +235,7 @@ public final class Base64 {
     }
 
     /**
-     * remove WhiteSpace from MIME containing encoded Base64 data.
-     *
-     * @param data the byte array of base64 data (with WS)
-     * @return the new length
+     * 从base64数据中移除空白字符
      */
     private static int removeWhiteSpace(char[] data) {
         if (data == null) {

@@ -152,10 +152,10 @@ public final class RSAUtil {
         PrivateKey privateKey = keyPair.getPrivate();
 
         System.out.println("-----------------publicKey--------------------- ");
-        System.out.println(Base64.encode(publicKey.getEncoded()));
+        System.out.println(Base64Util.encode(publicKey.getEncoded()));
 
         System.out.println("-----------------privateKey--------------------- ");
-        System.out.println(Base64.encode(privateKey.getEncoded()));*/
+        System.out.println(Base64Util.encode(privateKey.getEncoded()));*/
 
 
         String content = "加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890加密原文1234567890";

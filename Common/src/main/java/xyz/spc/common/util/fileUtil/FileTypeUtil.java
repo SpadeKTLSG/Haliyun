@@ -7,7 +7,8 @@ import java.io.File;
 /**
  * 文件类型工具类
  */
-public class FileTypeUtils {
+public final class FileTypeUtil {
+
     /**
      * 获取文件类型
      * <p>

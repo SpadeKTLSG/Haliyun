@@ -4,6 +4,7 @@ package xyz.spc.common.util.fileUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.spc.common.constant.SystemCommonCT;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
 import xyz.spc.common.util.stringUtil.Constants;
 import xyz.spc.common.util.stringUtil.StringUtils;
@@ -19,22 +20,7 @@ import java.util.Objects;
 /**
  * 文件上传工具类
  */
-public class FileUploadUtils {
-
-    /**
-     * 默认大小 100M
-     */
-    public static final long DEFAULT_MAX_SIZE = 99999L * 1024 * 1024;
-
-    /**
-     * 默认的文件名最大长度 100
-     */
-    public static final int DEFAULT_FILE_NAME_LENGTH = 100;
-
-    /**
-     * 默认用户上传的文件路径
-     */
-    private static final String UPLOAD_DEFAULT_PATH = "D:\\upload";
+public final class UploadUtil {
 
 
     /**
@@ -42,11 +28,10 @@ public class FileUploadUtils {
      *
      * @param file 上传的文件
      * @return 文件名称
-     * @throws Exception
      */
     public static String upload(MultipartFile file) throws IOException {
         try {
-            return upload(UPLOAD_DEFAULT_PATH, true, file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION, null);
+            return upload(SystemCommonCT.UPLOAD_DEFAULT_PATH, true, file, MimeTypeUtil.DEFAULT_ALLOWED_EXTENSION, null);
         } catch (Exception e) {
             throw new IOException(e.getMessage(), e);
         }
@@ -58,11 +43,10 @@ public class FileUploadUtils {
      * @param baseDir 相对应用的基目录
      * @param file    上传的文件
      * @return 文件名称
-     * @throws IOException
      */
     public static String upload(String baseDir, boolean isDatePath, MultipartFile file, String fileName) throws IOException {
         try {
-            return upload(baseDir, isDatePath, file, MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION, fileName);
+            return upload(baseDir, isDatePath, file, MimeTypeUtil.DEFAULT_ALLOWED_EXTENSION, fileName);
         } catch (Exception e) {
             throw new IOException(e.getMessage(), e);
         }
@@ -80,8 +64,8 @@ public class FileUploadUtils {
      */
     public static String upload(String baseDir, boolean isDatePath, MultipartFile file, String[] allowedExtension, String fileName) throws IOException {
         int fileNamelength = Objects.requireNonNull(file.getOriginalFilename()).length();
-        if (fileNamelength > FileUploadUtils.DEFAULT_FILE_NAME_LENGTH) {
-            throw new ClientException(String.valueOf(FileUploadUtils.DEFAULT_FILE_NAME_LENGTH));
+        if (fileNamelength > SystemCommonCT.DEFAULT_FILE_NAME_LENGTH) {
+            throw new ClientException(String.valueOf(SystemCommonCT.DEFAULT_FILE_NAME_LENGTH));
         }
 
         assertAllowed(file, allowedExtension);
@@ -124,28 +108,29 @@ public class FileUploadUtils {
         return Constants.RESOURCE_PREFIX + "/" + currentDir + "/" + fileName;
     }
 
+
     /**
      * 文件大小校验
      */
     public static void assertAllowed(MultipartFile file, String[] allowedExtension) throws ClientException {
         long size = file.getSize();
-        if (size > DEFAULT_MAX_SIZE) {
-            throw new ClientException(" " + DEFAULT_MAX_SIZE / 1024 / 1024 + "is Maximum");
+        if (size > SystemCommonCT.DEFAULT_MAX_SIZE) {
+            throw new ClientException(" " + SystemCommonCT.DEFAULT_MAX_SIZE / 1024 / 1024 + "is Maximum");
         }
 
         String extension = getExtension(file);
         if (allowedExtension != null && !isAllowedExtension(extension, allowedExtension)) {
-            if (allowedExtension == MimeTypeUtils.IMAGE_EXTENSION) {
+            if (allowedExtension == MimeTypeUtil.IMAGE_EXTENSION) {
                 throw new ClientException("ONLY" + Arrays.toString(allowedExtension) + "is allowed");
-            } else if (allowedExtension == MimeTypeUtils.FLASH_EXTENSION) {
+            } else if (allowedExtension == MimeTypeUtil.FLASH_EXTENSION) {
                 throw new ClientException("ONLY" + Arrays.toString(allowedExtension) + "is allowed");
-            } else if (allowedExtension == MimeTypeUtils.MEDIA_EXTENSION) {
+            } else if (allowedExtension == MimeTypeUtil.MEDIA_EXTENSION) {
                 throw new ClientException("ONLY" + Arrays.toString(allowedExtension) + "is allowed");
-            } else if (allowedExtension == MimeTypeUtils.VIDEO_EXTENSION) {
+            } else if (allowedExtension == MimeTypeUtil.VIDEO_EXTENSION) {
                 throw new ClientException("ONLY" + Arrays.toString(allowedExtension) + "is allowed");
-            } else if (allowedExtension == MimeTypeUtils.DOC_EXTENSION) {
+            } else if (allowedExtension == MimeTypeUtil.DOC_EXTENSION) {
                 throw new ClientException("ONLY" + Arrays.toString(allowedExtension) + "is allowed");
-            } else if (allowedExtension == MimeTypeUtils.COMPRESS_EXTENSION) {
+            } else if (allowedExtension == MimeTypeUtil.COMPRESS_EXTENSION) {
                 throw new ClientException("ONLY" + Arrays.toString(allowedExtension) + "is allowed");
             }
         }
@@ -172,7 +157,7 @@ public class FileUploadUtils {
     public static String getExtension(MultipartFile file) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
         if (StringUtils.isEmpty(extension)) {
-            extension = MimeTypeUtils.getExtension(Objects.requireNonNull(file.getContentType()));
+            extension = MimeTypeUtil.getExtension(Objects.requireNonNull(file.getContentType()));
         }
         return extension;
     }

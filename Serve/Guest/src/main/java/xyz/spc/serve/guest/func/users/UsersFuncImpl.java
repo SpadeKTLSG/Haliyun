@@ -178,7 +178,7 @@ public class UsersFuncImpl implements UsersFunc {
         // 使用用户Account作为MD5 salt生成token
         String key = user.getAccount();
         String text = UUID.randomUUID(false).toString();
-        String token = MD5Util.enryptionByKey(text, key);
+        String token = MD5Util.enryption(text, key);
 
         // 制作用户信息Map (去除密码code加入Token)
         userDTO.setPassword(null);

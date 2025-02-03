@@ -4,6 +4,8 @@ package xyz.spc.common.util.encryptUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 
+import java.io.*;
+
 /**
  * MD5加密工具类
  */
@@ -50,6 +52,50 @@ public final class MD5Util {
      */
     public static boolean verification(String target, String md5, String key) {
         return md5.equals(enryption(target, key));
+    }
+
+
+    /*
+     * 根据文件内容获取MD5:
+     * 第一步获取文件的byte信息，
+     * 第二步通过MessageDigest类进行MD5加密，
+     * 第三步转换成16进制的MD5码值
+     */
+
+    //根据文件获取文件MD5
+    public static String getFileMD5(File file) {
+        String s = null;
+
+        try {
+            s = getFileMD5(new FileInputStream(file));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return s;
+    }
+
+    //根据文件流获取文件MD5
+    public static String getFileMD5(FileInputStream fis) {
+        String s = null;
+        try {
+            s = DigestUtils.md5Hex(fis);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return s;
+    }
+
+    //根据输入流获取文件MD5
+    public static String getFileMD5(InputStream fis) {
+        String s = null;
+        try {
+            s = DigestUtils.md5Hex(fis);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return s;
     }
 
 }

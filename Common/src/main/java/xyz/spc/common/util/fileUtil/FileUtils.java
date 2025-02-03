@@ -2,8 +2,8 @@ package xyz.spc.common.util.fileUtil;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import xyz.spc.common.constant.SystemCommonCT;
 import xyz.spc.common.funcpack.uuid.IdUtils;
-import xyz.spc.common.util.stringUtil.StringUtils;
 import xyz.spc.common.util.sysUtil.DateUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,11 +11,16 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 
 /**
  * 文件处理工具类
  */
-public class FileUtils {
+public final class FileUtils {
+
+    /**
+     * 文件名正则表达式
+     */
     public static String FILENAME_PATTERN = "[a-zA-Z0-9_\\-\\|\\.\\u4e00-\\u9fa5]+";
 
     /**
@@ -23,7 +28,6 @@ public class FileUtils {
      *
      * @param filePath 文件路径
      * @param os       输出流
-     * @return
      */
     public static void writeBytes(String filePath, OutputStream os) throws IOException {
         FileInputStream fis = null;
@@ -54,8 +58,7 @@ public class FileUtils {
      * @throws IOException IO异常
      */
     public static String writeImportBytes(byte[] data) throws IOException {
-//        return writeBytes(data, RuoYiConfig.getImportPath());
-        return null;
+        return writeBytes(data, SystemCommonCT.DOWNLOAD_DEFAULT_PATH);
     }
 
     /**
@@ -68,24 +71,24 @@ public class FileUtils {
      */
     public static String writeBytes(byte[] data, String uploadDir) throws IOException {
         FileOutputStream fos = null;
-        String pathName = "";
+        String pathName;
         try {
             String extension = getFileExtendName(data);
             pathName = DateUtils.datePath() + "/" + IdUtils.fastUUID() + "." + extension;
-            File file = FileUploadUtils.getAbsoluteFile(uploadDir, pathName);
+            File file = UploadUtil.getAbsoluteFile(uploadDir, pathName);
             fos = new FileOutputStream(file);
             fos.write(data);
         } finally {
             IOUtils.close(fos);
         }
-        return FileUploadUtils.getPathFileName(uploadDir, pathName);
+        return UploadUtil.getPathFileName(uploadDir, pathName);
     }
 
     /**
      * 删除文件
      *
      * @param filePath 文件
-     * @return
+     * @return 结果
      */
     public static boolean deleteFile(String filePath) {
         boolean flag = false;
@@ -98,56 +101,14 @@ public class FileUtils {
     }
 
     /**
-     * 文件名称验证
-     *
-     * @param filename 文件名称
-     * @return true 正常 false 非法
-     */
-    public static boolean isValidFilename(String filename) {
-        return filename.matches(FILENAME_PATTERN);
-    }
-
-    /**
-     * 检查文件是否可下载
-     *
-     * @param resource 需要下载的文件
-     * @return true 正常 false 非法
-     */
-    public static boolean checkAllowDownload(String resource) {
-        // 禁止目录上跳级别
-        return !StringUtils.contains(resource, "..");
-
-        // 检查允许下载的文件规则
-//        return ArrayUtils.contains(MimeTypeUtils.DEFAULT_ALLOWED_EXTENSION, FileTypeUtils.getFileType(resource));
-
-        // 不在允许下载的文件规则
-    }
-
-    /**
-     * 下载文件名重新编码
+     * 下载文件名重新编码 UTF-8
      *
      * @param request  请求对象
      * @param fileName 文件名
      * @return 编码后的文件名
      */
-    public static String setFileDownloadHeader(HttpServletRequest request, String fileName) throws UnsupportedEncodingException {
-        final String agent = request.getHeader("USER-AGENT");
-        String filename = fileName;
-        if (agent.contains("MSIE")) {
-            // IE浏览器
-            filename = URLEncoder.encode(filename, StandardCharsets.UTF_8);
-            filename = filename.replace("+", " ");
-        } else if (agent.contains("Firefox")) {
-            // 火狐浏览器
-            filename = new String(fileName.getBytes(), "ISO8859-1");
-        } else if (agent.contains("Chrome")) {
-            // google浏览器
-            filename = URLEncoder.encode(filename, StandardCharsets.UTF_8);
-        } else {
-            // 其它浏览器
-            filename = URLEncoder.encode(filename, StandardCharsets.UTF_8);
-        }
-        return filename;
+    public static String setFileDownloadHeader(HttpServletRequest request, String fileName) {
+        return URLEncoder.encode(fileName, StandardCharsets.UTF_8);
     }
 
     /**
@@ -182,6 +143,7 @@ public class FileUtils {
         return encode.replaceAll("\\+", "%20");
     }
 
+
     /**
      * 获取图像后缀
      *
@@ -203,8 +165,9 @@ public class FileUtils {
         return strFileExtendName;
     }
 
+
     /**
-     * 获取文件名称 /profile/upload/2022/04/16/ruoyi.png -- ruoyi.png
+     * 获从文件全限定名中的文件名称 (带后缀类型)
      *
      * @param fileName 路径名称
      * @return 没有文件路径的名称
@@ -220,16 +183,44 @@ public class FileUtils {
     }
 
     /**
-     * 获取不带后缀文件名称 /profile/upload/2022/04/16/ruoyi.png -- ruoyi
+     * 获取不带后缀文件名称
      *
      * @param fileName 路径名称
      * @return 没有文件路径和后缀的名称
      */
     public static String getNameNotSuffix(String fileName) {
-        if (fileName == null) {
-            return null;
+        return fileName == null ? null : FilenameUtils.getBaseName(fileName);
+    }
+
+
+    /**
+     * 转换为美化的文件大小
+     */
+    public static String toButifSize(double size) {
+        String sizeStr = "";
+        int level = 0;
+        while (size > 1024) {
+            size = size / 1024.0;
+            level++;
         }
-        String baseName = FilenameUtils.getBaseName(fileName);
-        return baseName;
+        sizeStr = switch (level) {
+            case 0 -> "B";
+            case 1 -> "KB";
+            case 2 -> "MB";
+            case 3 -> "GB";
+            case 4 -> "TB";
+            case 5 -> "PB";
+            default -> sizeStr;
+        };
+
+        sizeStr = new DecimalFormat("######0.00").format(size) + sizeStr;
+        return sizeStr;
+    }
+
+    /**
+     * 转化为GB单位大小
+     */
+    public static float toGBSize(long size) {
+        return (float) size / 1024 / 1024 / 1024;
     }
 }

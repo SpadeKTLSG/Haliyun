@@ -1,4 +1,4 @@
-package xyz.spc.common.util.mathUtil;
+package xyz.spc.common.util.collecUtil;
 
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -10,7 +10,7 @@ import java.util.Map;
  * 断言工具类
  */
 @SuppressWarnings("all")
-public class Assert {
+public final class Assert {
 
     public static void isTrue(boolean expression, String message) {
         if (!expression) {

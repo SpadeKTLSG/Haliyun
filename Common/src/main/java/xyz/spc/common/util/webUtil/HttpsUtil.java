@@ -2,21 +2,26 @@ package xyz.spc.common.util.webUtil;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.util.AntPathMatcher;
 import xyz.spc.common.constant.HttpStatusCT;
-import xyz.spc.common.util.stringUtil.StringUtils;
+import xyz.spc.common.util.collecUtil.StringUtil;
 
 import javax.net.ssl.*;
+import javax.servlet.ServletRequest;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.security.cert.X509Certificate;
 
+import static xyz.spc.common.util.sysUtil.CharsetUtil.UTF_8;
+
 /**
  * http/https 工具类
  */
 @Slf4j
-public class HttpsUtil {
+public final class HttpsUtil {
 
     /**
      * 判断url是否与规则配置
@@ -65,7 +70,7 @@ public class HttpsUtil {
      * @return 所代表远程资源的响应结果
      */
     public static String sendGet(String url) {
-        return sendGet(url, StringUtils.EMPTY);
+        return sendGet(url, StringUtil.EMPTY);
     }
 
     /**
@@ -76,7 +81,7 @@ public class HttpsUtil {
      * @return 所代表远程资源的响应结果
      */
     public static String sendGet(String url, String param) {
-        return sendGet(url, param, StandardCharsets.UTF_8.toString());
+        return sendGet(url, param, UTF_8);
     }
 
     /**
@@ -91,7 +96,7 @@ public class HttpsUtil {
         StringBuilder result = new StringBuilder();
         BufferedReader in = null;
         try {
-            String urlNameString = StringUtils.isNotBlank(param) ? url + "?" + param : url;
+            String urlNameString = StringUtil.isNotBlank(param) ? url + "?" + param : url;
             log.info("sendGet - {}", urlNameString);
             URL realUrl = new URL(urlNameString);
             URLConnection connection = realUrl.openConnection();
@@ -179,6 +184,13 @@ public class HttpsUtil {
         return result.toString();
     }
 
+    /**
+     * 向指定 URL 发送POST方法的请求, 但使用SSL
+     *
+     * @param url   发送请求的 URL
+     * @param param 请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
+     * @return 所代表远程资源的响应结果
+     */
     public static String sendSSLPost(String url, String param) {
         StringBuilder result = new StringBuilder();
         String urlNameString = url + "?" + param;
@@ -203,7 +215,7 @@ public class HttpsUtil {
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             String ret = "";
             while ((ret = br.readLine()) != null) {
-                if (ret != null && !"".equals(ret.trim())) {
+                if (!ret.trim().isEmpty()) {
                     result.append(new String(ret.getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8));
                 }
             }
@@ -220,6 +232,32 @@ public class HttpsUtil {
             log.error("调用HttpsUtil.sendSSLPost Exception, url=" + url + ",param=" + param, e);
         }
         return result.toString();
+    }
+
+    /**
+     * 获取请求Body
+     */
+    public static String getBodyString(ServletRequest request) {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader reader = null;
+        try (InputStream inputStream = request.getInputStream()) {
+            reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+            String line = "";
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+        } catch (IOException e) {
+            log.warn("getBodyString出现问题！");
+        } finally {
+            if (reader != null) {
+                try {
+                    reader.close();
+                } catch (IOException e) {
+                    log.error(ExceptionUtils.getMessage(e));
+                }
+            }
+        }
+        return sb.toString();
     }
 
     private static class TrustAnyTrustManager implements X509TrustManager {

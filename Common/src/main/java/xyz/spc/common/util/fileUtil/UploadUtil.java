@@ -8,14 +8,14 @@ import org.springframework.web.multipart.MultipartFile;
 import xyz.spc.common.constant.SystemCommonCT;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
 import xyz.spc.common.util.collecUtil.StringUtil;
-import xyz.spc.common.util.sysUtil.DateUtils;
-import xyz.spc.common.util.sysUtil.SeqUtil;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Objects;
+
+import static xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil.nextId;
 
 /**
  * 文件上传工具类
@@ -31,7 +31,7 @@ public final class UploadUtil {
      */
     public static String upload(MultipartFile file) throws IOException {
         try {
-            return upload(SystemCommonCT.UPLOAD_DEFAULT_PATH, true, file, MimeTypeUtil.DEFAULT_ALLOWED_EXTENSION, null);
+            return upload(SystemCommonCT.UPLOAD_DEFAULT_PATH, file, MimeTypeUtil.DEFAULT_ALLOWED_EXTENSION, null);
         } catch (Exception e) {
             throw new IOException(e.getMessage(), e);
         }
@@ -44,9 +44,9 @@ public final class UploadUtil {
      * @param file    上传的文件
      * @return 文件名称
      */
-    public static String upload(String baseDir, boolean isDatePath, MultipartFile file, String fileName) throws IOException {
+    public static String upload(String baseDir, MultipartFile file, String fileName) throws IOException {
         try {
-            return upload(baseDir, isDatePath, file, MimeTypeUtil.DEFAULT_ALLOWED_EXTENSION, fileName);
+            return upload(baseDir, file, MimeTypeUtil.DEFAULT_ALLOWED_EXTENSION, fileName);
         } catch (Exception e) {
             throw new IOException(e.getMessage(), e);
         }
@@ -62,7 +62,7 @@ public final class UploadUtil {
      * @throws FileSizeLimitExceededException 超出最大大小/文件名太长
      * @throws IOException                    读写文件出错时
      */
-    public static String upload(String baseDir, boolean isDatePath, MultipartFile file, String[] allowedExtension, String fileName) throws IOException {
+    public static String upload(String baseDir, MultipartFile file, String[] allowedExtension, String fileName) throws IOException {
         int fileNamelength = Objects.requireNonNull(file.getOriginalFilename()).length();
         if (fileNamelength > SystemCommonCT.DEFAULT_FILE_NAME_LENGTH) {
             throw new ClientException(String.valueOf(SystemCommonCT.DEFAULT_FILE_NAME_LENGTH));
@@ -70,7 +70,7 @@ public final class UploadUtil {
 
         assertAllowed(file, allowedExtension);
 
-        if (StringUtil.isBlank(fileName)) fileName = extractFilename(file, isDatePath);
+        if (StringUtil.isBlank(fileName)) fileName = extractFilename(file);
 
         String absPath = getAbsoluteFile(baseDir, fileName).getAbsolutePath();
         file.transferTo(Paths.get(absPath));
@@ -80,11 +80,9 @@ public final class UploadUtil {
     /**
      * 编码文件名
      */
-    public static String extractFilename(MultipartFile file, boolean isDatePath) {
-        if (isDatePath) {
-            return StringUtils.format("{}/{}_{}.{}", DateUtils.datePath(), FilenameUtils.getBaseName(file.getOriginalFilename()), SeqUtil.getId(SeqUtil.uploadSeqType), getExtension(file));
-        }
-        return StringUtils.format("{}_{}.{}", FilenameUtils.getBaseName(file.getOriginalFilename()), SeqUtil.getId(SeqUtil.uploadSeqType), getExtension(file));
+    public static String extractFilename(MultipartFile file) {
+
+        return StringUtils.format("{}_{}.{}", FilenameUtils.getBaseName(file.getOriginalFilename()), nextId(), getExtension(file));
     }
 
 

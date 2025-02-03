@@ -5,11 +5,12 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import xyz.spc.common.util.beanUtil.ConvertUtil;
-import xyz.spc.common.util.stringUtil.StringUtils;
+import xyz.spc.common.util.collecUtil.StringUtil;
 
 import java.io.IOException;
 import java.net.URLDecoder;
@@ -22,7 +23,7 @@ import java.util.Map;
 /**
  * 客户端工具类
  */
-public class ServletUtils {
+public final class ServletUtil {
     /**
      * 获取String参数
      */
@@ -150,12 +151,12 @@ public class ServletUtils {
         }
 
         String uri = request.getRequestURI();
-        if (StringUtils.inStringIgnoreCase(uri, ".json", ".xml")) {
+        if (StringUtil.inStringIgnoreCase(uri, ".json", ".xml")) {
             return true;
         }
 
         String ajax = request.getParameter("__ajax");
-        return StringUtils.inStringIgnoreCase(ajax, "json", "xml");
+        return StringUtil.inStringIgnoreCase(ajax, "json", "xml");
     }
 
     /**

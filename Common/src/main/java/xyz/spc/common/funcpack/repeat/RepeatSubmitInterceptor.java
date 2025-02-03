@@ -8,7 +8,7 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import xyz.spc.common.annotation.RepeatSubmit;
 import xyz.spc.common.funcpack.commu.Result;
-import xyz.spc.common.util.webUtil.ServletUtils;
+import xyz.spc.common.util.webUtil.ServletUtil;
 
 import java.lang.reflect.Method;
 
@@ -25,7 +25,7 @@ public abstract class RepeatSubmitInterceptor implements HandlerInterceptor {
             if (annotation != null) {
                 if (this.isRepeatSubmit(request, annotation)) {
                     Result<Object> ajaxResult = Result.fail(annotation.message());
-                    ServletUtils.renderString(response, JSON.toJSONString(ajaxResult));
+                    ServletUtil.renderString(response, JSON.toJSONString(ajaxResult));
                     return false;
                 }
             }

@@ -1,4 +1,4 @@
-package xyz.spc.common.util.beanUtil;
+package xyz.spc.common.util.collecUtil;
 
 
 import com.alibaba.cloud.commons.lang.StringUtils;

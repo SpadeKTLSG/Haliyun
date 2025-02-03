@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 import xyz.spc.common.annotation.RepeatSubmit;
 import xyz.spc.common.constant.redisKey.SysCacheKey;
 import xyz.spc.common.funcpack.repeat.RepeatSubmitInterceptor;
-import xyz.spc.common.util.stringUtil.StringUtils;
-import xyz.spc.common.util.webUtil.HttpHelper;
+import xyz.spc.common.util.collecUtil.StringUtil;
+import xyz.spc.common.util.webUtil.HttpsUtil;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.redis.RedisCacheGeneral;
 
@@ -37,11 +37,11 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
     public boolean isRepeatSubmit(HttpServletRequest request, RepeatSubmit annotation) {
         String nowParams = "";
         if (request instanceof RepeatedlyRequestWrapper repeatedlyRequest) {
-            nowParams = HttpHelper.getBodyString(repeatedlyRequest);
+            nowParams = HttpsUtil.getBodyString(repeatedlyRequest);
         }
 
         // body参数为空，获取Parameter的数据
-        if (StringUtils.isEmpty(nowParams)) {
+        if (StringUtil.isEmpty(nowParams)) {
             nowParams = JSON.toJSONString(request.getParameterMap());
         }
 

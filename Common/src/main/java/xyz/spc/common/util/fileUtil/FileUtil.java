@@ -4,7 +4,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import xyz.spc.common.constant.SystemCommonCT;
 import xyz.spc.common.funcpack.uuid.IdUtils;
-import xyz.spc.common.util.sysUtil.DateUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,6 +11,8 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+
+import static xyz.spc.common.util.sysUtil.DateUtil.getCurrDate;
 
 /**
  * 文件处理工具类
@@ -74,7 +75,7 @@ public final class FileUtil {
         String pathName;
         try {
             String extension = getFileExtendName(data);
-            pathName = DateUtils.datePath() + "/" + IdUtils.fastUUID() + "." + extension;
+            pathName = getCurrDate() + "/" + IdUtils.fastUUID() + "." + extension;
             File file = UploadUtil.getAbsoluteFile(uploadDir, pathName);
             fos = new FileOutputStream(file);
             fos.write(data);

@@ -1,8 +1,7 @@
 package xyz.spc.serve.guest.common.interceptor.repeat;
 
 
-import xyz.spc.common.util.stringUtil.Constants;
-import xyz.spc.common.util.webUtil.HttpHelper;
+import xyz.spc.common.util.webUtil.HttpsUtil;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
@@ -15,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 
+import static xyz.spc.common.constant.SystemSpecialCT.UTF8;
+
 /**
  * 构建可重复读取inputStream的request
  */
@@ -24,10 +25,10 @@ public class RepeatedlyRequestWrapper extends HttpServletRequestWrapper {
 
     public RepeatedlyRequestWrapper(HttpServletRequest request, ServletResponse response) throws IOException {
         super(request);
-        request.setCharacterEncoding(Constants.UTF8);
-        response.setCharacterEncoding(Constants.UTF8);
+        request.setCharacterEncoding(UTF8);
+        response.setCharacterEncoding(UTF8);
 
-        body = HttpHelper.getBodyString(request).getBytes(StandardCharsets.UTF_8);
+        body = HttpsUtil.getBodyString(request).getBytes(StandardCharsets.UTF_8);
     }
 
     @Override

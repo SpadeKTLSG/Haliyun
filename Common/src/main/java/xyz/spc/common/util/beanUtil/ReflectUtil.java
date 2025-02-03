@@ -1,10 +1,10 @@
 package xyz.spc.common.util.beanUtil;
 
+import cn.hutool.core.date.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
-import xyz.spc.common.util.sysUtil.DateUtils;
 
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
@@ -422,7 +422,7 @@ public final class ReflectUtil {
                     } else if (cs[i] == Float.class) {
                         args[i] = ConvertUtil.toFloat(args[i]);
                     } else if (cs[i] == Date.class) {
-                        args[i] = DateUtils.parseDate(args[i]);
+                        args[i] = DateUtil.parseDate((CharSequence) args[i]);
                     } else if (cs[i] == boolean.class || cs[i] == Boolean.class) {
                         args[i] = ConvertUtil.toBool(args[i]);
                     }

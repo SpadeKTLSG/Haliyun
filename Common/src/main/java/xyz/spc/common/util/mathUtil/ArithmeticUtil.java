@@ -6,7 +6,8 @@ import java.math.RoundingMode;
 /**
  * 用于高精确处理常用的数学运算
  */
-public class ArithmeticUtil {
+public final class ArithmeticUtil {
+
     //默认除法运算精度
     private static final int DEF_DIV_SCALE = 10;
 

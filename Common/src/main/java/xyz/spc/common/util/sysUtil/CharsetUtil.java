@@ -1,4 +1,4 @@
-package xyz.spc.common.util.fileUtil;
+package xyz.spc.common.util.sysUtil;
 
 
 import org.apache.commons.lang3.StringUtils;

@@ -31,6 +31,8 @@
  */
 package xyz.spc.common.util.fileUtil;
 
+import lombok.Getter;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -46,9 +48,9 @@ import java.util.Objects;
  *
  * @author Thiago Gutenberg Carvalho da Costa
  */
-public final class NioHelper {
+public final class NioUtil {
 
-    private NioHelper() {
+    private NioUtil() {
         // supress the default constructor
         // for not instantiability
         throw new AssertionError();
@@ -252,12 +254,7 @@ public final class NioHelper {
         if (isFolder(dir)) {
 
             // directory filter
-            DirectoryStream.Filter<Path> filter = new DirectoryStream.Filter<Path>() {
-                @Override
-                public boolean accept(Path path) throws IOException {
-                    return Files.isDirectory(path);
-                }
-            };
+            DirectoryStream.Filter<Path> filter = Files::isDirectory;
 
             try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(dir, filter)) {
                 return directoryStream.iterator().hasNext();
@@ -364,8 +361,7 @@ public final class NioHelper {
             FileTreeSearch fileTreeSearch = new FileTreeSearch(target, mode, ignoreCase);
             Files.walkFileTree(path, fileTreeSearch);
 
-            List<Path> paths = fileTreeSearch.getFoundPaths();
-            return Collections.unmodifiableList(paths);
+            return fileTreeSearch.getFoundPaths();
         }
         throw new IllegalArgumentException("The provided path is not a directory");
     }
@@ -385,6 +381,7 @@ public final class NioHelper {
     /**
      * File Tree Size Visitor Inner Class Implementation.
      */
+    @Getter
     private static class FileTreeSize extends SimpleFileVisitor<Path> {
 
         private long totalSize;
@@ -395,9 +392,6 @@ public final class NioHelper {
             return FileVisitResult.CONTINUE;
         }
 
-        public long getTotalSize() {
-            return totalSize;
-        }
     }
 
     /**

@@ -2,7 +2,6 @@ package xyz.spc.serve.guest.func.users;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import cn.hutool.core.lang.UUID;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +12,8 @@ import xyz.spc.common.constant.LoginCommonCT;
 import xyz.spc.common.constant.redisKey.LoginCacheKey;
 import xyz.spc.common.funcpack.commu.errorcode.ClientError;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
+import xyz.spc.common.funcpack.uuid.UUID;
+import xyz.spc.common.util.encryptUtil.MD5Util;
 import xyz.spc.common.util.stringUtil.StringUtil;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
@@ -165,10 +166,17 @@ public class UsersFuncImpl implements UsersFunc {
 
 
         //! 登陆
-        // 使用用户Account作为salt生成token
-        String token = UUID.fromString(user.getAccount()).toString(true);
-        // 制作用户信息Map
-        Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(), CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> fieldValue.toString()));
+        // 使用用户Account作为MD5 salt生成token
+        String key = user.getAccount();
+        String text = UUID.randomUUID(false).toString();
+        String token = MD5Util.enryptionByKey(text, key);
+
+        // 制作用户信息Map (去除密码)
+        Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
+                CopyOptions.create()
+                        .setIgnoreNullValue(true)
+                        .setFieldValueEditor((fieldName, fieldValue) -> fieldValue == null || fieldValue == "password" ? null : fieldValue.toString())
+        );
 
         // 存储
         String tokenKey = LoginCacheKey.LOGIN_USER_KEY + token;

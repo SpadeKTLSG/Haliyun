@@ -39,7 +39,7 @@ public class UsersControl implements UsersApi {
         String code = usersFunc.sendCode(phone, session);
 
         if (code.startsWith("!")) {//如果是!开头的字符串，说明发送失败
-            return Result.fail(code.substring(1));
+            return Result.fail("发送失败");
         }
         return Result.success(code);
     }

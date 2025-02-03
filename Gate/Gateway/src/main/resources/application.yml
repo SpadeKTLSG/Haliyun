@@ -173,7 +173,7 @@ logging:
     xyz.spc:
       DEBUG
     org.springframework.cloud.gateway:
-      INFO
+      DEBUG
 
   pattern:
     dateformat: mm:ss.SSS

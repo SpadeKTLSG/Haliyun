@@ -35,4 +35,9 @@ public class UserDTO extends BaseDTO {
      * 验证码
      */
     private String code;
+
+    /**
+     * Token
+     */
+    private String token;
 }

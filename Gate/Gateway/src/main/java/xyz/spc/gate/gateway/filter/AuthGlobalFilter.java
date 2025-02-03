@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.apache.commons.lang3.ObjectUtils.isEmpty;
-
 /**
  * 网关全局过滤器
  */
@@ -43,7 +41,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        //网关的过滤不做Redis刷新token操作, 只做token的校验 + TL的传递
+        //note: 网关的过滤不做Redis刷新token操作, 只做token的校验 + TL的传递
 
         ServerHttpRequest request = exchange.getRequest();
         if (isExclude(request.getPath().toString())) { // 判断是否是白名单路径
@@ -51,17 +49,20 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         }
 
         // 获取请求头中自定义token + (Postman相关处理)
-        String token;
-        List<String> headers = request.getHeaders().get("authorization");
-        if (isEmpty(headers)) {
-            throw new ClientException("请求头中没有鉴权字段", ClientError.USER_REGISTER_ERROR);
-        }
-        token = headers.get(0);
+        List<String> headers = Optional.ofNullable(request.getHeaders().get("authorization")).orElseThrow();
+        String token = headers.get(0);
         if (StrUtil.isBlank(token)) {
             throw new ClientException("请求头中没有鉴权字段", ClientError.USER_REGISTER_ERROR);
         }
 
-        //去除Postman产生的Bearer前缀
+        // 获取请求头中用户 account
+        List<String> accounts = Optional.ofNullable(request.getHeaders().get("account")).orElseThrow();
+        String account = accounts.get(0);
+        if (StrUtil.isBlank(account)) {
+            throw new ClientException("请求头中没有用户账号", ClientError.USER_REGISTER_ERROR);
+        }
+
+        // 去除Postman产生的Bearer前缀
         try {
             if (token.startsWith("Bearer ")) {
                 token = token.substring(7);
@@ -73,15 +74,21 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             return response.setComplete();
         }
 
-        //? 由于前端页面根据用户类型展示不同的页面, 所以这里不需要判断用户类型, 只需要判断用户是否登陆即可
 
-        //基于TOKEN获取redis中的用户Map对象
-        String key = LoginCacheKey.LOGIN_USER_ACCOUNT_KEY + token;
+        //note: 由于前端页面根据用户类型展示不同的页面, 所以这里不需要判断用户类型, 只需要判断用户是否登陆即可
 
-        //获取Map
-        Map<Object, Object> userDtoMap = Optional.ofNullable(stringRedisTemplate.opsForHash().entries(key)).orElseThrow(() -> new ClientException("网络异常, 请重新登陆"));
+        //基于TOKEN获取redis中的用户DTO Map对象
+        String key = LoginCacheKey.LOGIN_USER_ACCOUNT_KEY + account;
 
-        //还原为UserDTO
+        //获取存储的Map
+        Map<Object, Object> userDtoMap = Optional.of(stringRedisTemplate.opsForHash().entries(key)).orElseThrow(() -> new ClientException("网络异常, 请重新登陆"));
+
+        //校验token + account正确性
+        if (!token.equals(userDtoMap.get("token")) || !account.equals(userDtoMap.get("account"))) {
+            throw new ClientException(ClientError.NOT_LOGIN_ERROR);
+        }
+
+        //还原UserDTO打为JSON字符串并传递. 后续的服务可以直接获取到UserDTO对象作为TL
         UserDTO userDto = UserDTO.builder()
                 .id((Long) userDtoMap.get("id"))
                 .groupId((Long) userDtoMap.get("groupId"))
@@ -90,14 +97,12 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
                 .loginType((Integer) userDtoMap.get("loginType"))
                 .account((String) userDtoMap.get("account"))
                 .password((String) userDtoMap.get("password"))
+                .phone((String) userDtoMap.get("phone"))
+//                .code((String) userDtoMap.get("code"))
+//                .token((String) userDtoMap.get("token"))
                 .build();
 
-        //打为JSON字符串
-
         String dtoJson = JSONUtil.toJsonStr(userDto);
-
-        //传递在请求头的自定义DTO (JSON)
-
         ServerWebExchange ex = exchange.mutate().request(a -> a.header("userDto", dtoJson)).build();
         return chain.filter(ex);
     }

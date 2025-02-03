@@ -182,8 +182,9 @@ public class UsersFuncImpl implements UsersFunc {
         String text = UUID.randomUUID(false).toString();
         String token = MD5Util.enryptionByKey(text, key);
 
-        // 制作用户信息Map (去除密码)
+        // 制作用户信息Map (去除密码加入Token)
         userDTO.setPassword(null);
+        userDTO.setToken(token);
         Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
                 CopyOptions.create()
                         .setIgnoreNullValue(true)

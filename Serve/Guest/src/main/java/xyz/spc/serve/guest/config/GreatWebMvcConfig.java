@@ -47,10 +47,13 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
         log.debug("自定义拦截器启动!");
 
         String[] exPath = {
+                //登录/code
                 "/Guest/users/login",
                 "/Guest/users/register",
                 "/Guest/users/code",
-                "/Guest.html", "/swagger-ui/**", "/swagger-ui.html", "/doc.html", "/webjars/**", "/swagger-resources/**", "/swagger-ui/**", "/v3/**", "/error"};
+                "/favicon.ico", "/Guest.html", //浏览器页面
+                "/initialize/dispatcher-servlet", //初始化请求
+                "/swagger-ui/**", "/swagger-ui.html", "/doc.html", "/webjars/**", "/swagger-resources/**", "/swagger-ui/**", "/v3/**", "/error"};
 
         //1 登录拦截器
         registry.addInterceptor(greatLoginInterceptor)

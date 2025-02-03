@@ -7,6 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.retry.annotation.EnableRetry;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 /**
@@ -23,6 +24,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableDiscoveryClient //开启服务发现
 @EnableScheduling //开启定时任务
 @EnableAspectJAutoProxy() //开启AspectJ
+@EnableRetry //开启重试
 public class GuestAPP {
     public static void main(String[] args) {
         SpringApplication.run(GuestAPP.class, args);

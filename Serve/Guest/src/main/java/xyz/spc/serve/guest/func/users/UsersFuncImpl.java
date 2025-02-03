@@ -172,14 +172,17 @@ public class UsersFuncImpl implements UsersFunc {
         String token = MD5Util.enryptionByKey(text, key);
 
         // 制作用户信息Map (去除密码)
+        userDTO.setPassword(null);
         Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
                 CopyOptions.create()
                         .setIgnoreNullValue(true)
-                        .setFieldValueEditor((fieldName, fieldValue) -> fieldValue == null || fieldValue == "password" ? null : fieldValue.toString())
+                        .setFieldValueEditor((fieldName, fieldValue) -> fieldValue == null ? null : fieldValue.toString())
         );
 
-        // 存储
-        String tokenKey = LoginCacheKey.LOGIN_USER_KEY + token;
+        // 存储用户信息到redis
+        String tokenKey = LoginCacheKey.LOGIN_USER_KEY + userDTO.getAccount();
+
+        stringRedisTemplate.delete(tokenKey);// 移除之前该用户的的token
         stringRedisTemplate.opsForHash().putAll(tokenKey, userMap);
         stringRedisTemplate.expire(tokenKey, LoginCommonCT.LOGIN_USER_TTL, TimeUnit.MINUTES);
         return token;

@@ -61,4 +61,6 @@ public class RabbitMQConfig {
         retryTemplate.setBackOffPolicy(backOffPolicy);
         return retryTemplate;
     }
+
+    //usage: rabbitTemplate.convertAndSend(BasicMQCompo.RETRY_EXCHANGE, "", message);
 }

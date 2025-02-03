@@ -18,15 +18,22 @@ import javax.sql.DataSource;
 public class DruidConfig {
 
 
+    /**
+     * 设置Druid属性
+     */
     @PostConstruct
-    public void setProperties() {   //解决druid 日志报错：discard long time none received connection:xxx
-        System.setProperty("druid.mysql.usePingMethod", "false");
+    public void setProperties() {
+        log.debug("设置Druid属性");
+        System.setProperty("druid.mysql.usePingMethod", "false"); //解决druid 日志报错：discard long time none received connection:xxx
     }
 
-
+    /**
+     * 配置Druid数据源
+     */
     @ConfigurationProperties(prefix = "spring.datasource")
     @Bean
-    public DataSource druidDataSource() { //自定义的 Druid数据源添加到容器
+    public DataSource druidDataSource() {
+        log.debug("配置Druid数据源");
         return new DruidDataSource();
     }
 }

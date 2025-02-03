@@ -21,7 +21,7 @@ public class RabbitMQTopicConfig {
      * 队列
      */
     @Bean
-    public Queue myQueue() {
+    public Queue haliQueue() {
         return new Queue(RabbitMQConstant.QUEUE);
     }
 
@@ -29,7 +29,7 @@ public class RabbitMQTopicConfig {
      * 交换机
      */
     @Bean
-    public FanoutExchange easyExchange() {
+    public FanoutExchange haliExchange() {
         return new FanoutExchange(RabbitMQConstant.EXCHANGE);
     }
 
@@ -38,7 +38,7 @@ public class RabbitMQTopicConfig {
      */
     @Bean
     public Binding binding() {
-        return BindingBuilder.bind(myQueue()).to(easyExchange());
+        return BindingBuilder.bind(haliQueue()).to(haliExchange());
     }
 
 }

@@ -1,4 +1,4 @@
-package xyz.spc.serve.auxiliary.boot;
+package xyz.spc.serve.auxiliary.config.boot;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

@@ -20,14 +20,16 @@ public class FeignConfig {
 
     @Bean
     public Logger.Level logLevel() {
-        return Logger.Level.BASIC;
+        log.debug("配置Feign日志级别为FULL");
+        return Logger.Level.FULL;
     }
 
     /**
-     * 传递all用户信息(管理/顾客)到下游微服务
+     * 传递all用户信息到下游微服务
      */
     @Bean
     public RequestInterceptor allHolderRequestInterceptor() {
+        log.debug("配置传递all用户信息到下游微服务");
         return template -> {
 
             if (UserContext.getUser() == null || UserContext.getUser().getId() == null) {

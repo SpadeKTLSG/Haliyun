@@ -8,11 +8,11 @@ public interface RabbitMQConstant {
     /**
      * 队列名称
      */
-    String QUEUE = "seckill";
+    String QUEUE = "haliyun_basic_queue";
 
     /**
      * 交换机名称
      */
-    String EXCHANGE = "seckill";
+    String EXCHANGE = "haliyun_basic_exchange";
 
 }

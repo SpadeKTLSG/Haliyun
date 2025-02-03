@@ -64,7 +64,8 @@ public class RedisConfig {
 
 
         template.afterPropertiesSet(); // 初始化操作
-//        template.setEnableTransactionSupport(true); // 开启事务支持
+
+        log.debug("RedisTemplate配置完成");
         return template;
     }
 
@@ -76,6 +77,7 @@ public class RedisConfig {
         DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
         redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/limit.lua")));
         redisScript.setResultType(Long.class);
+        log.debug("限流脚本配置完成");
         return redisScript;
     }
 
@@ -106,7 +108,7 @@ public class RedisConfig {
                         // 配置同步修改或删除 put/evict
                         .transactionAware()
                         .build();
-
+        log.debug("CacheManager配置完成");
         return redisCacheManager;
     }
 

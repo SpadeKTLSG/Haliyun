@@ -1,4 +1,4 @@
-package xyz.spc.serve.auxiliary.boot.safa;
+package xyz.spc.serve.auxiliary.config.boot.safa;
 
 import org.springframework.beans.factory.InitializingBean;
 
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.InitializingBean;
 public class FastJsonSafeMode implements InitializingBean {
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         System.setProperty("fastjson2.parser.safeMode", "true");
     }
 }

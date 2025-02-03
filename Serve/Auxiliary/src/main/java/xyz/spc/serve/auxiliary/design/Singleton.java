@@ -2,6 +2,7 @@ package xyz.spc.serve.auxiliary.design;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
@@ -9,6 +10,7 @@ import java.util.function.Supplier;
 /**
  * 单例对象容器
  */
+@Slf4j
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class Singleton {
 

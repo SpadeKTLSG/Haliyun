@@ -233,27 +233,5 @@ public class RedisCacheGeneral {
         return redisTemplate.keys(pattern);
     }
 
-    /**
-     * 获得过去时间内 ZSet 对象数量计数
-     *
-     * @param key          键
-     * @param oneMinuteAgo 过去时间
-     * @param now          现在时间
-     */
-    public long getCacheZSetCount(final String key, long oneMinuteAgo, long now) {
-        return redisTemplate.opsForZSet().count(key, oneMinuteAgo, now);
-    }
 
-    /**
-     * 添加Set并设置过期时间
-     *
-     * @param key      键
-     * @param value    值
-     * @param timeout  过期时间
-     * @param timeUnit 时间单位
-     */
-    public void addCacheZSetStringSetExpire(String key, String value, long timeout, TimeUnit timeUnit) {
-        redisTemplate.opsForSet().add(key, value);
-        redisTemplate.expire(key, timeout, timeUnit);
-    }
 }

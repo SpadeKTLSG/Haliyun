@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import xyz.spc.common.constant.LoginCommonCT;
 import xyz.spc.common.constant.redisKey.LoginCacheKey;
@@ -37,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class UsersFuncImpl implements UsersFunc {
 
+    private final RedisTemplate<Object, Object> redisTemplate;
     private final RedisCacheGeneral rcg;
     private final UsersRepo usersRepo;
 
@@ -59,21 +61,23 @@ public class UsersFuncImpl implements UsersFunc {
 
         // 3. 检查过去1分钟内发送验证码的次数
         long oneMinuteAgo = System.currentTimeMillis() - 60 * 1000;
-        long count_oneminute = rcg.getCacheZSetCount(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, oneMinuteAgo, System.currentTimeMillis());
+        long count_oneminute = redisTemplate.opsForZSet().count(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, oneMinuteAgo, System.currentTimeMillis());
         if (count_oneminute >= 1) {
             return "!距离上次发送时间不足1分钟, 请1分钟后重试";
         }
 
         // 4. 检查发送验证码的次数
         long fiveMinutesAgo = System.currentTimeMillis() - 5 * 60 * 1000;
-        long count_fiveminute = rcg.getCacheZSetCount(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, fiveMinutesAgo, System.currentTimeMillis());
+        long count_fiveminute = redisTemplate.opsForZSet().count(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, fiveMinutesAgo, System.currentTimeMillis());
 
         if (count_fiveminute == 5) {
-            rcg.addCacheZSetStringSetExpire(LoginCacheKey.ONE_LEVERLIMIT_KEY + phone, "1", 5, TimeUnit.MINUTES);
+            redisTemplate.opsForSet().add(LoginCacheKey.ONE_LEVERLIMIT_KEY + phone, "1");
+            redisTemplate.expire(LoginCacheKey.ONE_LEVERLIMIT_KEY + phone, 5, TimeUnit.MINUTES);
             return "!5分钟内您已经发送了5次, 请等待5分钟后重试";  // 过去5分钟内已经发送了5次，进入一级限制
         }
         if (count_fiveminute > 5) {
-            rcg.addCacheZSetStringSetExpire(LoginCacheKey.TWO_LEVERLIMIT_KEY + phone, "1", 20, TimeUnit.MINUTES);
+            redisTemplate.opsForSet().add(LoginCacheKey.TWO_LEVERLIMIT_KEY + phone, "1");
+            redisTemplate.expire(LoginCacheKey.TWO_LEVERLIMIT_KEY + phone, 20, TimeUnit.MINUTES);
             return "!请求过于频繁, 请20分钟后再请求"; // 进入二级限制
 
         }
@@ -97,7 +101,7 @@ public class UsersFuncImpl implements UsersFunc {
         String code = codeUtil.achieveCode(); //自定义工具类生成验证码
         rcg.setCacheObject(LoginCacheKey.LOGIN_CODE_KEY + phone, code, Math.toIntExact(LoginCacheKey.LOGIN_CODE_TTL_GUEST), TimeUnit.MINUTES);
         // 更新发送时间和次数
-        rcg.addCacheZSetStringSetExpire(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, System.currentTimeMillis() + "", System.currentTimeMillis(), TimeUnit.MILLISECONDS);
+        redisTemplate.opsForZSet().add(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, System.currentTimeMillis() + "", System.currentTimeMillis());
 
         return code; //调试环境: 返回验证码; 可选择使用邮箱工具类发送验证码
     }

@@ -129,6 +129,12 @@ spring:
           uri: lb://guest
           predicates:
             - Path=/Guest/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 100000 # 每秒允许的请求数 : 十万
+                redis-rate-limiter.burstCapacity: 200000 # 突发请求的最大数量: 二十万
+                key-resolver: "#{@ipKeyResolver}" # 使用IP地址作为限流的key, 创建一个Limit Config
 
 
 

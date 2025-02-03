@@ -1,9 +1,9 @@
 package xyz.spc.common.constant;
 
 /**
- * 系统响应常量
+ * 系统请求响应常量
  */
-public interface SysRespCT {
+public interface ReqRespCT {
 
 
     String SUCCESS_CODE = "0";

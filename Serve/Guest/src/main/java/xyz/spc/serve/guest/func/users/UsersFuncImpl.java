@@ -11,7 +11,7 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import xyz.spc.common.constant.LoginCommonCT;
-import xyz.spc.common.constant.redisKey.LoginCacheKey;
+import xyz.spc.common.constant.redis.LoginCacheKey;
 import xyz.spc.common.funcpack.commu.errorcode.ClientError;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
 import xyz.spc.common.funcpack.commu.exception.ServiceException;

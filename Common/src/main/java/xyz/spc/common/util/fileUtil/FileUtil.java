@@ -2,7 +2,7 @@ package xyz.spc.common.util.fileUtil;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import xyz.spc.common.constant.SystemCommonCT;
+import xyz.spc.common.constant.UploadDownloadCT;
 import xyz.spc.common.funcpack.uuid.IdUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,7 +59,7 @@ public final class FileUtil {
      * @throws IOException IO异常
      */
     public static String writeImportBytes(byte[] data) throws IOException {
-        return writeBytes(data, SystemCommonCT.DOWNLOAD_DEFAULT_PATH);
+        return writeBytes(data, UploadDownloadCT.DOWNLOAD_DEFAULT_PATH);
     }
 
     /**

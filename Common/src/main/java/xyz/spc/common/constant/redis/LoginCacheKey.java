@@ -1,4 +1,4 @@
-package xyz.spc.common.constant.redisKey;
+package xyz.spc.common.constant.redis;
 
 /**
  * 登录 Cache Key

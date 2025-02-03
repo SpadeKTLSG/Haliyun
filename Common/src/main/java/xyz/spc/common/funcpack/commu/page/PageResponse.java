@@ -2,7 +2,7 @@ package xyz.spc.common.funcpack.commu.page;
 
 import lombok.Builder;
 import lombok.Data;
-import xyz.spc.common.constant.SysRespCT;
+import xyz.spc.common.constant.ReqRespCT;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -39,7 +39,7 @@ public class PageResponse<T> implements Serializable {
     private List<T> records;
 
     public PageResponse(long current) {
-        this(current, SysRespCT.DEFAULT_PAGE_SIZE, 0);
+        this(current, ReqRespCT.DEFAULT_PAGE_SIZE, 0);
     }
 
     public PageResponse(long current, long size) {

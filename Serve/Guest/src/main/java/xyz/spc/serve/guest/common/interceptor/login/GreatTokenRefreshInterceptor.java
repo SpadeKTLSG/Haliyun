@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import xyz.spc.common.constant.LoginCommonCT;
-import xyz.spc.common.constant.redisKey.LoginCacheKey;
+import xyz.spc.common.constant.redis.LoginCacheKey;
 import xyz.spc.common.funcpack.commu.errorcode.ServerError;
 import xyz.spc.common.funcpack.commu.exception.ServiceException;
 import xyz.spc.gate.dto.Guest.users.UserDTO;

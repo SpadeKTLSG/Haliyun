@@ -6,7 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import xyz.spc.common.annotation.RepeatSubmit;
-import xyz.spc.common.constant.redisKey.SysCacheKey;
+import xyz.spc.common.constant.redis.SysCacheKey;
 import xyz.spc.common.funcpack.repeat.RepeatSubmitInterceptor;
 import xyz.spc.common.util.collecUtil.StringUtil;
 import xyz.spc.common.util.webUtil.HttpsUtil;

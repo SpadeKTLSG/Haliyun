@@ -3,7 +3,7 @@ package xyz.spc.common.funcpack.commu;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import xyz.spc.common.constant.SysRespCT;
+import xyz.spc.common.constant.ReqRespCT;
 
 import java.io.Serializable;
 
@@ -33,16 +33,16 @@ public class Result<T> implements Serializable {
     //? 成功
 
     public static <T> Result<T> success() {
-        return success(null, SysRespCT.SUCCESS_MESSAGE);
+        return success(null, ReqRespCT.SUCCESS_MESSAGE);
     }
 
     public static <T> Result<T> success(T data) {
-        return success(data, SysRespCT.SUCCESS_MESSAGE);
+        return success(data, ReqRespCT.SUCCESS_MESSAGE);
     }
 
     public static <T> Result<T> success(T data, String message) {
         Result<T> Result = new Result<>();
-        Result.setCode(SysRespCT.SUCCESS_CODE);
+        Result.setCode(ReqRespCT.SUCCESS_CODE);
         Result.setMessage(message);
         Result.setData(data);
         return Result;
@@ -52,7 +52,7 @@ public class Result<T> implements Serializable {
     //? 失败
 
     public static <T> Result<T> fail() {
-        return fail(SysRespCT.FAIL_MESSAGE, null);
+        return fail(ReqRespCT.FAIL_MESSAGE, null);
     }
 
     public static <T> Result<T> fail(String message) {
@@ -61,7 +61,7 @@ public class Result<T> implements Serializable {
 
     public static <T> Result<T> fail(String message, T data) {
         Result<T> Result = new Result<>();
-        Result.setCode(SysRespCT.FAIL_CODE);
+        Result.setCode(ReqRespCT.FAIL_CODE);
         Result.setMessage(message);
         Result.setData(data);
         return Result;
@@ -69,7 +69,7 @@ public class Result<T> implements Serializable {
 
 
     public boolean isSuccess() {
-        return SysRespCT.SUCCESS_CODE.equals(code);
+        return ReqRespCT.SUCCESS_CODE.equals(code);
     }
 
 

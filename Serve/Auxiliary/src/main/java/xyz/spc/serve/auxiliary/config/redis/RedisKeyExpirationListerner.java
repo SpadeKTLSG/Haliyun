@@ -6,7 +6,7 @@ import org.springframework.data.redis.connection.Message;
 import org.springframework.data.redis.listener.KeyExpirationEventMessageListener;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.stereotype.Component;
-import xyz.spc.common.constant.redisKey.LoginCacheKey;
+import xyz.spc.common.constant.redis.LoginCacheKey;
 
 
 /**

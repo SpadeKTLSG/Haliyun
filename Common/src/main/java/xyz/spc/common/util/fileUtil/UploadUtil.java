@@ -5,7 +5,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.hadoop.util.StringUtils;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.web.multipart.MultipartFile;
-import xyz.spc.common.constant.SystemCommonCT;
+import xyz.spc.common.constant.UploadDownloadCT;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
 import xyz.spc.common.util.collecUtil.StringUtil;
 
@@ -31,7 +31,7 @@ public final class UploadUtil {
      */
     public static String upload(MultipartFile file) throws IOException {
         try {
-            return upload(SystemCommonCT.UPLOAD_DEFAULT_PATH, file, MimeTypeUtil.DEFAULT_ALLOWED_EXTENSION, null);
+            return upload(UploadDownloadCT.UPLOAD_DEFAULT_PATH, file, MimeTypeUtil.DEFAULT_ALLOWED_EXTENSION, null);
         } catch (Exception e) {
             throw new IOException(e.getMessage(), e);
         }
@@ -64,8 +64,8 @@ public final class UploadUtil {
      */
     public static String upload(String baseDir, MultipartFile file, String[] allowedExtension, String fileName) throws IOException {
         int fileNamelength = Objects.requireNonNull(file.getOriginalFilename()).length();
-        if (fileNamelength > SystemCommonCT.DEFAULT_FILE_NAME_LENGTH) {
-            throw new ClientException(String.valueOf(SystemCommonCT.DEFAULT_FILE_NAME_LENGTH));
+        if (fileNamelength > UploadDownloadCT.DEFAULT_FILE_NAME_LENGTH) {
+            throw new ClientException(String.valueOf(UploadDownloadCT.DEFAULT_FILE_NAME_LENGTH));
         }
 
         assertAllowed(file, allowedExtension);
@@ -112,8 +112,8 @@ public final class UploadUtil {
      */
     public static void assertAllowed(MultipartFile file, String[] allowedExtension) throws ClientException {
         long size = file.getSize();
-        if (size > SystemCommonCT.DEFAULT_MAX_SIZE) {
-            throw new ClientException(" " + SystemCommonCT.DEFAULT_MAX_SIZE / 1024 / 1024 + "is Maximum");
+        if (size > UploadDownloadCT.DEFAULT_MAX_SIZE) {
+            throw new ClientException(" " + UploadDownloadCT.DEFAULT_MAX_SIZE / 1024 / 1024 + "is Maximum");
         }
 
         String extension = getExtension(file);

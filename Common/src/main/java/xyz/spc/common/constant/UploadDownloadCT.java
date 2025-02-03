@@ -3,7 +3,7 @@ package xyz.spc.common.constant;
 /**
  * 系统常量
  */
-public interface SystemCommonCT {
+public interface UploadDownloadCT {
 
     /**
      * 判断重复请求的时间间隔 (s)
@@ -11,7 +11,7 @@ public interface SystemCommonCT {
     int SAME_URL_DATA_TIME = 1;
 
     /**
-     * 默认最大大小 500M
+     * 默认上传文件最大大小 500M
      */
     long DEFAULT_MAX_SIZE = 99999L * 1024 * 1024 * 5;
 

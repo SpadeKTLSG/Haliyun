@@ -16,7 +16,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import xyz.spc.common.constant.HttpStatusCT;
-import xyz.spc.common.constant.redisKey.LoginCacheKey;
+import xyz.spc.common.constant.redis.LoginCacheKey;
 import xyz.spc.common.funcpack.commu.errorcode.ClientError;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
 import xyz.spc.gate.dto.Guest.users.UserDTO;

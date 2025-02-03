@@ -7,7 +7,7 @@ import org.springframework.amqp.core.FanoutExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import xyz.spc.common.constant.mqEntity.RabbitMQConstant;
+import xyz.spc.common.constant.mq.BasicMQCompo;
 
 
 /**
@@ -22,7 +22,7 @@ public class RabbitMQTopicConfig {
      */
     @Bean
     public Queue haliQueue() {
-        return new Queue(RabbitMQConstant.QUEUE);
+        return new Queue(BasicMQCompo.BASIC_QUEUE);
     }
 
     /**
@@ -30,7 +30,7 @@ public class RabbitMQTopicConfig {
      */
     @Bean
     public FanoutExchange haliExchange() {
-        return new FanoutExchange(RabbitMQConstant.EXCHANGE);
+        return new FanoutExchange(BasicMQCompo.BASIC_EXCHANGE);
     }
 
     /**

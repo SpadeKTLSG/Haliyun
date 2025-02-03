@@ -1,4 +1,4 @@
-package xyz.spc.common.constant.redisKey;
+package xyz.spc.common.constant.redis;
 
 /**
  * System Cache key

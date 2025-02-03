@@ -1,6 +1,6 @@
 package xyz.spc.common.annotation;
 
-import xyz.spc.common.constant.SystemCommonCT;
+import xyz.spc.common.constant.UploadDownloadCT;
 
 import java.lang.annotation.*;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +16,7 @@ public @interface RepeatSubmit {
     /**
      * 间隔时间(ms)，小于此时间视为重复提交
      */
-    int interval() default SystemCommonCT.SAME_URL_DATA_TIME;
+    int interval() default UploadDownloadCT.SAME_URL_DATA_TIME;
 
     /**
      * 锁定时间单位，默认毫秒

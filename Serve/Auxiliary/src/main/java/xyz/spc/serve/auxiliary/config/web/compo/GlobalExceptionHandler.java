@@ -12,7 +12,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import xyz.spc.common.funcpack.commu.Result;
-import xyz.spc.common.funcpack.commu.Results;
 import xyz.spc.common.funcpack.commu.errorcode.ClientError;
 import xyz.spc.common.funcpack.commu.exception.AbstractException;
 
@@ -41,7 +40,7 @@ public class GlobalExceptionHandler {
 
         //DEBUG: 把错误堆栈打出来
         ex.printStackTrace();
-        return Results.failure(ClientError.CLIENT_ERROR.getCode(), exceptionStr);
+        return Result.fail(ClientError.CLIENT_ERROR.getCode(), exceptionStr);
     }
 
     /**
@@ -52,13 +51,13 @@ public class GlobalExceptionHandler {
         log.debug("自定义异常捕获");
         if (ex.getCause() != null) {
             log.error("[{}] {} [ex] {}", request.getMethod(), request.getRequestURL().toString(), ex, ex.getCause());
-            return Results.failure(ex);
+            return Result.fail(String.valueOf(ex));
         }
         log.error("[{}] {} [ex] {}", request.getMethod(), request.getRequestURL().toString(), ex.toString());
 
         //DEBUG: 把错误堆栈打出来
         ex.printStackTrace();
-        return Results.failure(ex);
+        return Result.fail(String.valueOf(ex));
     }
 
     /**
@@ -71,7 +70,7 @@ public class GlobalExceptionHandler {
 
         //DEBUG: 把错误堆栈打出来
         throwable.printStackTrace();
-        return Results.failure();
+        return Result.fail();
     }
 
 

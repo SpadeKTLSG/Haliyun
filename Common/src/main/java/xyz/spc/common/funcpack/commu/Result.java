@@ -3,6 +3,7 @@ package xyz.spc.common.funcpack.commu;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
+import xyz.spc.common.constant.SysRespCT;
 
 import java.io.Serializable;
 
@@ -13,14 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Accessors(chain = true)
 public class Result<T> implements Serializable {
-    /**
-     * 正确返回码 / -1
-     */
-    public static final String SUCCESS_CODE = "0";
-    /**
-     * 正确返回消息 / fail
-     */
-    public static final String SUCCESS_MESSAGE = "success";
+
 
     /**
      * 返回码
@@ -35,57 +29,47 @@ public class Result<T> implements Serializable {
      */
     private T data;
 
-    public static <T> Result<T> success() {
-        return success(SUCCESS_MESSAGE);
-    }
 
     //? 成功
 
-    public static <T> Result<T> success(String message) {
-        return success(message, null);
+    public static <T> Result<T> success() {
+        return success(null, SysRespCT.SUCCESS_MESSAGE);
     }
 
     public static <T> Result<T> success(T data) {
-        return success(SUCCESS_MESSAGE, data);
+        return success(data, SysRespCT.SUCCESS_MESSAGE);
     }
 
-    public static <T> Result<T> success(String message, T data) {
+    public static <T> Result<T> success(T data, String message) {
         Result<T> Result = new Result<>();
-        Result.setCode(SUCCESS_CODE);
+        Result.setCode(SysRespCT.SUCCESS_CODE);
         Result.setMessage(message);
         Result.setData(data);
         return Result;
-    }
-
-    public static <T> Result<T> fail() {
-        return fail("fail");
     }
 
 
     //? 失败
 
+    public static <T> Result<T> fail() {
+        return fail(SysRespCT.FAIL_MESSAGE, null);
+    }
+
     public static <T> Result<T> fail(String message) {
-        return fail("-1", message);
+        return fail(message, null);
     }
 
     public static <T> Result<T> fail(String message, T data) {
-        return fail("-1", message, data);
-    }
-
-    public static <T> Result<T> fail(String code, String message) {
-        return fail(code, message, null);
-    }
-
-    public static <T> Result<T> fail(String code, String message, T data) {
         Result<T> Result = new Result<>();
-        Result.setCode(code);
+        Result.setCode(SysRespCT.FAIL_CODE);
         Result.setMessage(message);
         Result.setData(data);
         return Result;
     }
 
+
     public boolean isSuccess() {
-        return SUCCESS_CODE.equals(code);
+        return SysRespCT.SUCCESS_CODE.equals(code);
     }
 
 

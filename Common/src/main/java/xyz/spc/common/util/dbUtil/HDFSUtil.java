@@ -13,16 +13,15 @@ import java.util.List;
  * HDFS工具类
  * <p>测试使用, 真正的操作会封装DAO层</p>
  */
-public class HDFSUtil {
+public final class HDFSUtil {
 
     /**
      * HDFS地址
      */
     private static final String hdfsURL = "hdfs://localhost:9000";
 
-
     /**
-     * conf
+     * 配置项
      */
     private static final Configuration conf;
 
@@ -30,6 +29,7 @@ public class HDFSUtil {
         conf = new Configuration();
         conf.set("fs.defaultFS", hdfsURL);
     }
+
 
     /**
      * 从HDFS上下载文件

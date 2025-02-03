@@ -6,7 +6,8 @@ import org.apache.commons.lang3.StringUtils;
 /**
  * sql操作工具类
  */
-public class SqlUtil {
+public final class SqlUtil {
+
     /**
      * 定义常用的 sql关键字
      */

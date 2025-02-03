@@ -7,7 +7,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 /**
  * MD5加密工具类
  */
-public class MD5Util {
+public final class MD5Util {
 
 
     /**

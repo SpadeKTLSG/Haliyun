@@ -1,21 +1,22 @@
 package xyz.spc.serve.auxiliary.config.web.compo;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import static xyz.spc.serve.auxiliary.config.web.WebAutoConfiguration.INITIALIZE_PATH;
+import xyz.spc.common.constant.SystemSpecialCT;
 
 
 /**
  * 初始化 {@link org.springframework.web.servlet.DispatcherServlet}
  */
-@Slf4j(topic = "Initialize DispatcherServlet")
+@Slf4j
 @RestController
 public final class InitializeDispatcherServletController {
 
-    @GetMapping(INITIALIZE_PATH)
+    @GetMapping(SystemSpecialCT.INITIALIZE_BETTER_PATH)
+    @Operation(hidden = true)
     public void initializeDispatcherServlet() {
-        log.info("Initialized the dispatcherServlet to improve the first response time of the interface...");
+        log.debug("初始化 dispatcherServlet 以改进接口的首次响应时间...");
     }
 }

@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.funcpack.commu.Result;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
-import xyz.spc.gate.remote.Guest.users.UsersApi;
 import xyz.spc.serve.guest.func.users.UsersFunc;
 
 import javax.security.auth.login.AccountNotFoundException;
@@ -19,7 +18,7 @@ import javax.security.auth.login.AccountNotFoundException;
 @RequestMapping("/Guest/users")
 @RestController
 @RequiredArgsConstructor
-public class UsersControl implements UsersApi {
+public class UsersControl {
 
     private final UsersFunc usersFunc;
 
@@ -30,7 +29,6 @@ public class UsersControl implements UsersApi {
     /**
      * 获取登陆验证码
      */
-    @Override
     @GetMapping("code")
     @Operation(summary = "登陆验证码")
     @Parameters(@Parameter(name = "phone", description = "手机号", required = true))
@@ -58,6 +56,16 @@ public class UsersControl implements UsersApi {
         return Result.success(token);
     }
     //http://localhost:10000/Guest/users/login
+
+
+    @DeleteMapping("/logout")
+    @Operation(summary = "登出")
+    @Parameters(@Parameter(name = "无", description = "无", required = true))
+    public Result<String> logoutG() {
+        usersFunc.logout();
+        return Result.success("用户已登出");
+    }
+    //http://localhost:10000/Guest/users/logout
 
 
     //! ADD

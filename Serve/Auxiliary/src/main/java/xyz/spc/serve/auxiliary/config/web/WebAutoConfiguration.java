@@ -18,8 +18,6 @@ import xyz.spc.serve.auxiliary.config.web.compo.InitializeDispatcherServletHandl
 @Component
 public class WebAutoConfiguration {
 
-    public final static String INITIALIZE_PATH = "/initialize/dispatcher-servlet";
-
     @Bean
     @ConditionalOnMissingBean
     public GlobalExceptionHandler globalExceptionHandler() {

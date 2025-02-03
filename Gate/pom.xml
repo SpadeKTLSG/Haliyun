@@ -17,8 +17,6 @@
 
     <modules>
         <module>Gateway</module>
-        <module>Remote</module>
-        <module>Api</module>
         <module>DTO</module>
         <module>VO</module>
     </modules>

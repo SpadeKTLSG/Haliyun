@@ -22,6 +22,7 @@ import xyz.spc.domain.dos.Guest.users.UserDetailDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
+import xyz.spc.serve.auxiliary.common.context.UserContext;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.HashMap;
@@ -105,6 +106,7 @@ public class UsersFuncImpl implements UsersFunc {
         return code; //调试环境: 返回验证码; 可选择使用邮箱工具类发送验证码
     }
 
+
     @Override
     public String login(UserDTO userDTO, HttpSession session) throws AccountNotFoundException {
 
@@ -120,6 +122,15 @@ public class UsersFuncImpl implements UsersFunc {
             case User.LOGIN_TYPE_ACCOUNT_PHONE -> loginByAccountPhone(userDTO, session);
             default -> throw new ClientException("登陆方式不正确", ClientError.USER_REGISTER_ERROR);
         };
+    }
+
+    @Override
+    public void logout() {
+        //清除登陆Token
+        String tokenKey = LoginCacheKey.LOGIN_USER_KEY + UserContext.getUser().getAccount();
+        stringRedisTemplate.delete(tokenKey);
+
+        log.debug(UserContext.getUA() + "已登出");
     }
 
     private String loginByAccountPhone(UserDTO userDTO, HttpSession session) throws AccountNotFoundException {

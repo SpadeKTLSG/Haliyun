@@ -16,4 +16,9 @@ public interface UsersFunc {
      * 登录
      */
     String login(UserDTO userDTO, HttpSession session) throws AccountNotFoundException;
+
+    /**
+     * 登出
+     */
+    void logout();
 }

@@ -30,6 +30,8 @@
     <option name="ignoredFiles">
       <set>
         <option value="$PROJECT_DIR$/Domain/DAO/pom.xml" />
+        <option value="$PROJECT_DIR$/Gate/Api/pom.xml" />
+        <option value="$PROJECT_DIR$/Gate/Remote/pom.xml" />
       </set>
     </option>
   </component>

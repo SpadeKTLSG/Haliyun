@@ -16,7 +16,7 @@ import java.text.DecimalFormat;
 /**
  * 文件处理工具类
  */
-public final class FileUtils {
+public final class FileUtil {
 
     /**
      * 文件名正则表达式

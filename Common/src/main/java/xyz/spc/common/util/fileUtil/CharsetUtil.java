@@ -1,6 +1,7 @@
 package xyz.spc.common.util.fileUtil;
 
-import xyz.spc.common.util.stringUtil.StringUtils;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;

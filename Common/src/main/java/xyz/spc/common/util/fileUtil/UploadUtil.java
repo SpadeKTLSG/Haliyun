@@ -2,12 +2,12 @@ package xyz.spc.common.util.fileUtil;
 
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.hadoop.util.StringUtils;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.spc.common.constant.SystemCommonCT;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
-import xyz.spc.common.util.stringUtil.Constants;
-import xyz.spc.common.util.stringUtil.StringUtils;
+import xyz.spc.common.util.collecUtil.StringUtil;
 import xyz.spc.common.util.sysUtil.DateUtils;
 import xyz.spc.common.util.sysUtil.SeqUtil;
 
@@ -70,7 +70,7 @@ public final class UploadUtil {
 
         assertAllowed(file, allowedExtension);
 
-        if (StringUtils.isBlank(fileName)) fileName = extractFilename(file, isDatePath);
+        if (StringUtil.isBlank(fileName)) fileName = extractFilename(file, isDatePath);
 
         String absPath = getAbsoluteFile(baseDir, fileName).getAbsolutePath();
         file.transferTo(Paths.get(absPath));
@@ -104,8 +104,8 @@ public final class UploadUtil {
 
     public static String getPathFileName(String uploadDir, String fileName) throws IOException {
         int dirLastIndex = uploadDir.length() + 1;
-        String currentDir = StringUtils.substring(uploadDir, dirLastIndex);
-        return Constants.RESOURCE_PREFIX + "/" + currentDir + "/" + fileName;
+        String currentDir = org.apache.commons.lang3.StringUtils.substring(uploadDir, dirLastIndex);
+        return currentDir + "/" + fileName;
     }
 
 
@@ -156,7 +156,7 @@ public final class UploadUtil {
      */
     public static String getExtension(MultipartFile file) {
         String extension = FilenameUtils.getExtension(file.getOriginalFilename());
-        if (StringUtils.isEmpty(extension)) {
+        if (StringUtil.isEmpty(extension)) {
             extension = MimeTypeUtil.getExtension(Objects.requireNonNull(file.getContentType()));
         }
         return extension;

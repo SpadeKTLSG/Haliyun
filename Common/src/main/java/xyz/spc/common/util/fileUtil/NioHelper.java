@@ -29,7 +29,7 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  * #L%
  */
-package xyz.spc.common.util.ioUtil;
+package xyz.spc.common.util.fileUtil;
 
 import java.io.IOException;
 import java.io.InputStream;

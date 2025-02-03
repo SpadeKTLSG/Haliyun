@@ -1,4 +1,4 @@
-package xyz.spc.common.util.ioUtil;
+package xyz.spc.common.util.fileUtil;
 
 import lombok.extern.slf4j.Slf4j;
 

@@ -46,6 +46,8 @@ public final class StringUtil {
     public static final String EMPTY_JSON = "{}";
 
 
+    public static final Pattern CHINESE_PATTERN = Pattern.compile("[\\u4e00-\\u9fa5]");
+
     /**
      * 字符串是否为空白 空白的定义如下： <br>
      * 1、为null <br>
@@ -439,5 +441,18 @@ public final class StringUtil {
             sb.append(String.valueOf(c).repeat(Math.max(0, size)));
         }
         return sb.toString();
+    }
+
+    /**
+     * 判断字符串是否包含中文
+     *
+     * @param str 字符串
+     * @return 是否包含中文
+     */
+    public static boolean isContainsChinese(String str) {
+        if (str == null || str.isEmpty()) {
+            return false;
+        }
+        return CHINESE_PATTERN.matcher(str).find();
     }
 }

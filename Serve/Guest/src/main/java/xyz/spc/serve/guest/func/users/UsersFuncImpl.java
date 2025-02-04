@@ -10,9 +10,11 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.common.constant.LoginCommonCT;
 import xyz.spc.common.constant.redis.LoginCacheKey;
 import xyz.spc.common.funcpack.commu.errorcode.ClientError;
+import xyz.spc.common.funcpack.commu.exception.AbstractException;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
 import xyz.spc.common.funcpack.commu.exception.ServiceException;
 import xyz.spc.common.funcpack.uuid.UUID;
@@ -112,11 +114,25 @@ public class UsersFuncImpl implements UsersFunc {
 
 
     @Override
+    @Transactional(rollbackFor = AbstractException.class)
     public String login(UserDTO userDTO) throws AccountNotFoundException {
+
 
         Integer login_type = Optional.ofNullable(userDTO.getLoginType()).orElseThrow(
                 () -> new ClientException("登陆方式不能为空", ClientError.USER_REGISTER_ERROR)
         );
+
+        //! 登陆高并发受理测试 todo
+        //如果requestNo不存在则返回1,如果已经存在,则会返回（requestNo已存在个数+1）
+        String requestNOKey = LoginCacheKey.LOGIN_REQUEST_ONLY_KEY + userDTO.getAccount();
+        Long count = redisTemplate.opsForValue().increment(requestNOKey, 1);
+
+        if (count != null && count == 1) {
+            redisTemplate.expire(requestNOKey, 30, TimeUnit.SECONDS); // Set requestNo validity period to 5 seconds
+        } else { //已有线程在执行该操作，直接返回“正在处理”
+            throw new ClientException("系统正在处理", ClientError.USER_LOGIN_ERROR);
+        }
+
 
         // 确定登陆方式
         return switch (login_type) {

@@ -14,20 +14,18 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Component
 public class TokenBucketRateLimiter {
 
-    @Autowired
-    RedissonClient redissonClient;
-
     private final int bucketCapacity; // 令牌桶的容量
     private final AtomicInteger tokens; // 当前令牌数
     private final int refillRate; // 令牌生成速率（每秒生成的令牌数）
     private long nextRefillTime; // 下次生成令牌的时间
     private final RLock lock; // 分布式锁
 
-    public TokenBucketRateLimiter() {
-        this(RateBucketCT.DEFAULT_CAPACITY, RateBucketCT.DEFAULT_RATE);
+    @Autowired
+    public TokenBucketRateLimiter(RedissonClient redissonClient) {
+        this(redissonClient, RateBucketCT.DEFAULT_CAPACITY, RateBucketCT.DEFAULT_RATE);
     }
 
-    public TokenBucketRateLimiter(int bucketCapacity, int refillRate) {
+    public TokenBucketRateLimiter(RedissonClient redissonClient, int bucketCapacity, int refillRate) {
         this.bucketCapacity = bucketCapacity;
         this.refillRate = refillRate;
         this.tokens = new AtomicInteger(bucketCapacity);

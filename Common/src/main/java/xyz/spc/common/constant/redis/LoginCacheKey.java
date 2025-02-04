@@ -11,7 +11,7 @@ public interface LoginCacheKey {
     String LOGIN_USER_KEY = "guest:login:token:";
 
     /**
-     * 登陆用户DTO实体前缀
+     * 登陆用户DTO实体前缀 todo
      */
     String LOGIN_USER_DTO_KEY = "sysCache:login_user:dto:";
 
@@ -59,5 +59,8 @@ public interface LoginCacheKey {
      */
     String TWO_LEVERLIMIT_KEY = "limit:twolevel:";
 
-
+    /**
+     * 登录请求唯一性Key前缀 ( + 用户账号)
+     */
+    String LOGIN_REQUEST_ONLY_KEY = "sysCache:login_request_only:";
 }

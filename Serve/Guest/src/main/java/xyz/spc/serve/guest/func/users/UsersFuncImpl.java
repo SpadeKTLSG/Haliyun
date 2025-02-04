@@ -118,17 +118,15 @@ public class UsersFuncImpl implements UsersFunc {
     public String login(UserDTO userDTO) throws AccountNotFoundException {
 
 
-        Integer login_type = Optional.ofNullable(userDTO.getLoginType()).orElseThrow(
-                () -> new ClientException("登陆方式不能为空", ClientError.USER_REGISTER_ERROR)
-        );
+        Integer login_type = Optional.ofNullable(userDTO.getLoginType()).orElseThrow(() -> new ClientException("登陆方式不能为空", ClientError.USER_REGISTER_ERROR));
 
-        //! 登陆高并发受理测试 todo
+        //登陆受理(控制并发)
         //如果requestNo不存在则返回1,如果已经存在,则会返回（requestNo已存在个数+1）
         String requestNOKey = LoginCacheKey.LOGIN_REQUEST_ONLY_KEY + userDTO.getAccount();
         Long count = redisTemplate.opsForValue().increment(requestNOKey, 1);
 
-        if (count != null && count == 1) {
-            redisTemplate.expire(requestNOKey, 30, TimeUnit.SECONDS); // Set requestNo validity period to 5 seconds
+        if (count != null && count == 1) { //第一次请求, 放行并设置5s操作窗口
+            redisTemplate.expire(requestNOKey, 5, TimeUnit.SECONDS); //  5s内只能请求一次登陆
         } else { //已有线程在执行该操作，直接返回“正在处理”
             throw new ClientException("系统正在处理", ClientError.USER_LOGIN_ERROR);
         }
@@ -167,9 +165,7 @@ public class UsersFuncImpl implements UsersFunc {
         //查找手机号关联用户 : 去找手机号对应的用户详情DO todo : 抽取到DAO(Service)区域
         LambdaQueryWrapper<UserDetailDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(UserDetailDO::getPhone, phone);
-        UserDetailDO userDetailDO = Optional.ofNullable(usersRepo.userDetailService.getOne(queryWrapper)).orElseThrow(
-                () -> new AccountNotFoundException("手机号未注册")
-        );
+        UserDetailDO userDetailDO = Optional.ofNullable(usersRepo.userDetailService.getOne(queryWrapper)).orElseThrow(() -> new AccountNotFoundException("手机号未注册"));
 
         //利用UserDetailDO的id去查找UserDO
         //todo  特种写法 1 手动创建, 但是用w -> and一层嵌套
@@ -177,9 +173,7 @@ public class UsersFuncImpl implements UsersFunc {
         userQueryWrapper.and(w -> w.eq(UserDO::getId, userDetailDO.getId())); //好劲的写法
         UserDO userDO = usersRepo.userService.getOne(userQueryWrapper);*/
 
-        UserDO userDO = usersRepo.userService.getOne(
-                Wrappers.lambdaQuery(UserDO.class)
-                        .eq(UserDO::getId, userDetailDO.getId())  //使用Wrappers.lambdaQuery直接创建, 统一写法
+        UserDO userDO = usersRepo.userService.getOne(Wrappers.lambdaQuery(UserDO.class).eq(UserDO::getId, userDetailDO.getId())  //使用Wrappers.lambdaQuery直接创建, 统一写法
         );
 
         //todo 抽取Repo的 Wrapper集群示例 之后用Class的方式封装通过id查询的方法, 加上联表方法
@@ -226,11 +220,7 @@ public class UsersFuncImpl implements UsersFunc {
         userDTO.setPassword(null);
         userDTO.setCode(null);
         userDTO.setToken(token);
-        Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(),
-                CopyOptions.create()
-                        .setIgnoreNullValue(true)
-                        .setFieldValueEditor((fieldName, fieldValue) -> fieldValue == null ? null : fieldValue.toString())
-        );
+        Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(), CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> fieldValue == null ? null : fieldValue.toString()));
 
         // 存储用户信息到redis
         String tokenKey = LoginCacheKey.LOGIN_USER_KEY + userDTO.getAccount();

@@ -6,6 +6,8 @@ import feign.RequestInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import xyz.spc.common.funcpack.commu.errorcode.ServerError;
+import xyz.spc.common.funcpack.commu.exception.ServiceException;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 
 /**
@@ -32,7 +34,7 @@ public class FeignConfig {
 
             if (UserContext.getUser() == null || UserContext.getUser().getId() == null) {
                 log.debug("用户未登录, 不能使用Feign调用");
-//                throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
+                throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
             }
             // 放入请求头中传递给下游微服务
             String userAllInfo = JSONUtil.toJsonStr(UserContext.getUser());

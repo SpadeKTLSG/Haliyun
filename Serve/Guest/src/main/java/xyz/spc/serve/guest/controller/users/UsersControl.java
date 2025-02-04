@@ -41,9 +41,7 @@ public class UsersControl {
     @Operation(summary = "登陆验证码")
     @Parameters(@Parameter(name = "phone", description = "手机号", required = true))
     @SentinelResource(value = SentinelPath.GET_LOGIN_CODE_PATH, blockHandler = "getLoginCodeBlockHandlerMethod", blockHandlerClass = CustomBlockHandler.class)
-    public Result<String> getLoginCode(
-            @Xss(message = "手机号不能包含脚本字符") @RequestParam("phone") String phone
-    ) {
+    public Result<String> getLoginCode(@Xss(message = "手机号不能包含脚本字符") @RequestParam("phone") String phone) {
 
         String code = usersFunc.sendCode(phone);
 
@@ -85,12 +83,11 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/logout
 
-    //Test Feign
-    @GetMapping("/register")
-    public Result<String> getLoginCodeBlockHandlerMethod(String phone) {
-        return usersClient.getLoginCode(phone);
-    }
-    //http://localhost:10000/Guest/users/register
+    /**
+     * 注册
+     */
+    //todo
+
 
     //! ADD
 

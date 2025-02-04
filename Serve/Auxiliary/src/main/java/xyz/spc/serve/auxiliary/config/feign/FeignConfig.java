@@ -6,8 +6,6 @@ import feign.RequestInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import xyz.spc.common.funcpack.commu.errorcode.ServerError;
-import xyz.spc.common.funcpack.commu.exception.ServiceException;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 
 /**
@@ -25,15 +23,16 @@ public class FeignConfig {
     }
 
     /**
-     * 传递all用户信息到下游微服务
+     * Feign配置传递用户信息到下游微服务
      */
     @Bean
     public RequestInterceptor allHolderRequestInterceptor() {
-        log.debug("配置传递all用户信息到下游微服务");
+        log.debug("Feign配置传递用户信息到下游微服务");
         return template -> {
 
             if (UserContext.getUser() == null || UserContext.getUser().getId() == null) {
-                throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
+                log.debug("用户未登录, 不能使用Feign调用");
+//                throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
             }
             // 放入请求头中传递给下游微服务
             String userAllInfo = JSONUtil.toJsonStr(UserContext.getUser());

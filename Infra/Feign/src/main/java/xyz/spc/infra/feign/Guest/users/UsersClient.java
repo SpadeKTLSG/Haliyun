@@ -13,6 +13,6 @@ public interface UsersClient {
     /**
      * 获取手机验证码
      */
-    @GetMapping(BASE_URL + "code")
+    @GetMapping(BASE_URL + "/code")
     Result<String> getLoginCode(@RequestParam("phone") String phone);
 }

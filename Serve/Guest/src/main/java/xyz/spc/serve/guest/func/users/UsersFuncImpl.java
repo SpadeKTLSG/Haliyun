@@ -3,6 +3,7 @@ package xyz.spc.serve.guest.func.users;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -156,10 +157,32 @@ public class UsersFuncImpl implements UsersFunc {
         );
 
         //利用UserDetailDO的id去查找UserDO
-        LambdaQueryWrapper<UserDO> userQueryWrapper = new LambdaQueryWrapper<>();
-        userQueryWrapper.eq(UserDO::getId, userDetailDO.getId());
-        UserDO userDO = usersRepo.userService.getOne(userQueryWrapper);
+        //todo  特种写法 1 手动创建, 但是用w -> and一层嵌套
+/*        LambdaQueryWrapper<UserDO> userQueryWrapper = new LambdaQueryWrapper<>();
+        userQueryWrapper.and(w -> w.eq(UserDO::getId, userDetailDO.getId())); //好劲的写法
+        UserDO userDO = usersRepo.userService.getOne(userQueryWrapper);*/
 
+        UserDO userDO = usersRepo.userService.getOne(
+                Wrappers.lambdaQuery(UserDO.class)
+                        .eq(UserDO::getId, userDetailDO.getId())  //使用Wrappers.lambdaQuery直接创建, 统一写法
+        );
+
+        //todo 抽取Repo的 Wrapper集群示例 之后用Class的方式封装通过id查询的方法, 加上联表方法
+        /*LambdaQueryWrapper<RegionDO> queryWrapper = switch (requestParam.getQueryType()) {
+            case 0 -> Wrappers.lambdaQuery(RegionDO.class)
+                    .eq(RegionDO::getPopularFlag, FlagEnum.TRUE.code());
+            case 1 -> Wrappers.lambdaQuery(RegionDO.class)
+                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.A_E.getSpells());
+            case 2 -> Wrappers.lambdaQuery(RegionDO.class)
+                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.F_J.getSpells());
+            case 3 -> Wrappers.lambdaQuery(RegionDO.class)
+                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.K_O.getSpells());
+            case 4 -> Wrappers.lambdaQuery(RegionDO.class)
+                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.P_T.getSpells());
+            case 5 -> Wrappers.lambdaQuery(RegionDO.class)
+                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.U_Z.getSpells());
+            default -> throw new ClientException("查询失败，请检查查询参数是否正确");
+        };*/
 
         //? 2 校验用户是否被锁定了
         User user = new User().fromDO(userDO);

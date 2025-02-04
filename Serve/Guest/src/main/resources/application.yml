@@ -103,6 +103,7 @@ spring:
 
     # Sentinel
     sentinel:
+      web-context-unify: false # 关闭context整合
       enabled: true # 是否开启。默认为 true 开启
       eager: true # 是否饥饿加载。默认为 false 关闭
       transport:

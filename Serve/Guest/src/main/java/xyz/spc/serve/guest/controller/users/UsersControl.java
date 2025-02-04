@@ -40,8 +40,10 @@ public class UsersControl {
     @Operation(summary = "登陆验证码")
     @Parameters(@Parameter(name = "phone", description = "手机号", required = true))
     @SentinelResource(value = SentinelPath.GET_LOGIN_CODE_PATH, blockHandler = "getLoginCodeBlockHandlerMethod", blockHandlerClass = CustomBlockHandler.class)
-    @Xss(message = "手机号不能包含脚本字符")
-    public Result<String> getLoginCode(@RequestParam("phone") String phone, HttpSession session) {
+    public Result<String> getLoginCode(
+            @Xss(message = "手机号不能包含脚本字符") @RequestParam("phone") String phone,
+            HttpSession session
+    ) {
 
         String code = usersFunc.sendCode(phone, session);
 

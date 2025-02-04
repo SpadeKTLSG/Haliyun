@@ -1,8 +1,12 @@
 package xyz.spc.gate.dto;
 
 import lombok.Data;
-import xyz.spc.common.pojo.BasePOJO;
+import lombok.EqualsAndHashCode;
+import xyz.spc.common.funcpack.pojo.BasePOJO;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class BaseDTO extends BasePOJO {
+
+
 }

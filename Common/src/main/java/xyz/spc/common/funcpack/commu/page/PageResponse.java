@@ -2,6 +2,7 @@ package xyz.spc.common.funcpack.commu.page;
 
 import lombok.Builder;
 import lombok.Data;
+import xyz.spc.common.constant.ReqRespCT;
 
 import java.io.Serializable;
 import java.util.Collections;
@@ -16,7 +17,6 @@ import java.util.stream.Collectors;
 @Builder
 public class PageResponse<T> implements Serializable {
 
-    public static final long PAGE_SIZE = 10L;
 
     /**
      * 当前页
@@ -26,7 +26,7 @@ public class PageResponse<T> implements Serializable {
     /**
      * 每页显示条数
      */
-    private Long size = PAGE_SIZE;
+    private Long size;
 
     /**
      * 总数
@@ -36,7 +36,11 @@ public class PageResponse<T> implements Serializable {
     /**
      * 查询数据列表
      */
-    private List<T> records = Collections.emptyList();
+    private List<T> records;
+
+    public PageResponse(long current) {
+        this(current, ReqRespCT.DEFAULT_PAGE_SIZE, 0);
+    }
 
     public PageResponse(long current, long size) {
         this(current, size, 0);
@@ -46,7 +50,7 @@ public class PageResponse<T> implements Serializable {
         this(current, size, total, Collections.emptyList());
     }
 
-    public PageResponse(Long current, Long size, Long total, List<T> records) {
+    public PageResponse(long current, long size, long total, List<T> records) {
         if (current > 1) {
             this.current = current;
         }

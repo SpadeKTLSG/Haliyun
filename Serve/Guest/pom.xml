@@ -18,9 +18,34 @@
     </properties>
 
     <dependencies>
+
         <dependency>
             <groupId>xyz.spc.serve.auxiliary</groupId>
             <artifactId>Auxiliary</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.spc.infra.mapper</groupId>
+            <artifactId>Mapper</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.spc.domain.model</groupId>
+            <artifactId>Model</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.spc.infra.repo</groupId>
+            <artifactId>Repo</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.spc.infra.special</groupId>
+            <artifactId>Special</artifactId>
             <version>3.0.0-RELEASE</version>
             <scope>compile</scope>
         </dependency>

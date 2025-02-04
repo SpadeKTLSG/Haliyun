@@ -10,33 +10,13 @@ spring:
     active: dev
 
   main:
-    web-application-type: reactive # 使用响应式编程(网关与MVC冲突)
+    web-application-type: reactive # 使用响应式编程 (网关与MVC冲突)
     allow-circular-references: true # 允许循环引用
     allow-bean-definition-overriding: true # 允许覆盖bean定义
     lazy-initialization: false # 关闭懒加载, 防止组件失效
 
-  cloud:
-    nacos:
-      discovery:
-        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port} # nacos发现地址
-      config:
-        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port} # nacos配置中心地址
-
-    sentinel:
-      enabled: true # 是否开启。默认为 true 开启
-      eager: true # 是否饥饿加载。默认为 false 关闭
-      transport:
-        port: 9990
-        dashboard: ${infrastructure.sentinel.host}:${infrastructure.sentinel.port} # Sentinel 控制台地址
-        clientIp: 127.0.0.1
 
 
-  #文件上传
-  servlet:
-    multipart:
-      max-file-size: 500MB
-      max-request-size: 500MB
-      enabled: true
   # MySQL
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -103,18 +83,81 @@ spring:
         max-interval: 10000ms
         multiplier: 1
 
+  cloud:
+    # Nacos
+    nacos:
+      # 服务发现
+      discovery:
+        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+        group: DEFAULT_GROUP
+
+      # 配置中心
+      config:
+        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+        file-extension: yaml
+        refresh-enabled: true
+        group: DEFAULT_GROUP
+        shared-configs:
+          - data-id: server.general-${spring.profiles.active}.yaml # 服务通用配置
+            group: DEFAULT_GROUP
+            refresh: true
+
+    # Sentinel
+    sentinel:
+      enabled: true # 是否开启。默认为 true 开启
+      eager: true # 是否饥饿加载。默认为 false 关闭
+      transport:
+        port: 9990 # Gateway No 0
+        dashboard: ${infrastructure.sentinel.host}:${infrastructure.sentinel.port} # Sentinel 控制台地址
+        clientIp: 127.0.0.1
+
+    # Feign
+    openfeign:
+      okhttp:
+        enabled: true
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 5000
+            logger-level: full
+
+    # Gateway
+    gateway:
+      routes:
+        - id: guest-service
+          uri: lb://guest
+          predicates:
+            - Path=/Guest/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 100000 # 每秒允许的请求数 : 十万
+                redis-rate-limiter.burstCapacity: 200000 # 突发请求的最大数量: 二十万
+                key-resolver: "#{@ipKeyResolver}" # 使用IP地址作为限流的key, 创建一个Limit Config
 
 
-  #时间格式
+
+
+  servlet:
+    # 文件上传
+    multipart:
+      max-file-size: 500MB
+      max-request-size: 500MB
+      enabled: true
+
+
+
   jackson:
+    # 时间格式
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
-    default-property-inclusion: non_null # JSON处理时忽略空字段
+
+    # JSON处理时忽略空字段
+    default-property-inclusion: non_null
 
 
 mybatis-plus:
-  # todo
-  mapper-locations: classpath*:src/main/java/xyz/spc/infra/mapper/Guest/mapper/*Mapper.xml  # MyBatis Mapper所对应的XML文件位置
 
   global-config:
     banner: false
@@ -129,13 +172,14 @@ mybatis-plus-join:
   banner: false
 
 
-
 # 日志配置
 logging:
 
   level:
     xyz.spc:
-      DEBUG # todo 暂时全开
+      DEBUG
+    org.springframework.cloud.gateway:
+      DEBUG
 
   pattern:
     dateformat: mm:ss.SSS
@@ -159,18 +203,12 @@ springdoc:
 
 
 
-
 # 网关白名单路径
 auth:
   exclude-paths:
-    - /admin.html
-    - /admin/employee/login
-    - /admin/employee/register
-    - /admin/employee/code
-    - /guest.html
-    - /guest/user/login
-    - /guest/user/register
-    - /guest/user/code
+    - /Guest/users/login
+    - /Guest/users/register
+    - /Guest/users/code
     - /swagger-ui/**
     - /swagger-ui.html
     - /doc.html
@@ -178,4 +216,3 @@ auth:
     - /swagger-resources/**
     - /v3/**
     - /error
-

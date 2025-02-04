@@ -12,9 +12,8 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import xyz.spc.common.funcpack.commu.Result;
-import xyz.spc.common.funcpack.commu.Results;
+import xyz.spc.common.funcpack.commu.errorcode.ClientError;
 import xyz.spc.common.funcpack.commu.exception.AbstractException;
-import xyz.spc.common.funcpack.commu.exception.errorcode.BaseErrorCode;
 
 import java.util.Optional;
 
@@ -31,13 +30,17 @@ public class GlobalExceptionHandler {
     @SneakyThrows
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
     public Result validExceptionHandler(HttpServletRequest request, MethodArgumentNotValidException ex) {
+        log.debug("参数验证异常捕获");
         BindingResult bindingResult = ex.getBindingResult();
         FieldError firstFieldError = CollectionUtil.getFirst(bindingResult.getFieldErrors());
         String exceptionStr = Optional.ofNullable(firstFieldError)
                 .map(FieldError::getDefaultMessage)
                 .orElse(StrUtil.EMPTY);
         log.error("[{}] {} [ex] {}", request.getMethod(), getUrl(request), exceptionStr);
-        return Results.failure(BaseErrorCode.CLIENT_ERROR.code(), exceptionStr);
+
+        //DEBUG: 把错误堆栈打出来
+        ex.printStackTrace();
+        return Result.fail(ClientError.CLIENT_ERROR.getCode(), exceptionStr);
     }
 
     /**
@@ -45,12 +48,16 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = {AbstractException.class})
     public Result abstractException(HttpServletRequest request, AbstractException ex) {
+        log.debug("自定义异常捕获");
         if (ex.getCause() != null) {
             log.error("[{}] {} [ex] {}", request.getMethod(), request.getRequestURL().toString(), ex, ex.getCause());
-            return Results.failure(ex);
+            return Result.fail(String.valueOf(ex));
         }
         log.error("[{}] {} [ex] {}", request.getMethod(), request.getRequestURL().toString(), ex.toString());
-        return Results.failure(ex);
+
+        //DEBUG: 把错误堆栈打出来
+        ex.printStackTrace();
+        return Result.fail(String.valueOf(ex));
     }
 
     /**
@@ -58,9 +65,14 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = Throwable.class)
     public Result defaultErrorHandler(HttpServletRequest request, Throwable throwable) {
+        log.debug("未捕获异常捕获");
         log.error("[{}] {} ", request.getMethod(), getUrl(request), throwable);
-        return Results.failure();
+
+        //DEBUG: 把错误堆栈打出来
+        throwable.printStackTrace();
+        return Result.fail();
     }
+
 
     private String getUrl(HttpServletRequest request) {
         if (StringUtils.isEmpty(request.getQueryString())) {

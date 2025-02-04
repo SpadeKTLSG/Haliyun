@@ -34,6 +34,12 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-gateway</artifactId>
         </dependency>
+        <dependency>
+            <groupId>xyz.spc.gate.dto</groupId>
+            <artifactId>DTO</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

@@ -1,24 +1,19 @@
 package xyz.spc.common.util.sysUtil;
 
-import com.alibaba.fastjson.JSONObject;
-import xyz.spc.common.funcpack.commu.Result;
-
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
- * 系统工具、获取系统的一些信息
- *
- * @author Sandeepin
- * 2017/11/9 0009
+ * 系统工具
  */
-public class SystemUtil {
+public final class SystemUtil {
 
-    // 判断操作系统是否为Windows
+    /**
+     * 获取系统类型
+     */
     public static boolean isWindows() {
         return System.getProperty("os.name").toLowerCase().startsWith("win");
     }
+
 
     /**
      * 获取当前文件夹占用空间，单位GB，2位小数
@@ -49,14 +44,15 @@ public class SystemUtil {
         return dirlength;
     }
 
-    // 获取当前磁盘总空间和剩余空间 单位GB
-    public static Result<Object> getDiskSpaceSize(String fileRootPath) {
+
+    /**
+     * 获取当前Path磁盘总空间和剩余空间 单位GB
+     */
+    public static String getDiskSpaceSize(String fileRootPath) {
         File file = new File(fileRootPath);
         String totalSpace = String.valueOf(file.getTotalSpace() / 1024 / 1024 / 1024);
         String freeSpace = String.valueOf(file.getFreeSpace() / 1024 / 1024 / 1024);
-        Map<String, String> spaceMap = new HashMap<>();
-        spaceMap.put("totalSpace", totalSpace);
-        spaceMap.put("freeSpace", freeSpace);
-        return Result.success(JSONObject.toJSONString(spaceMap));
+
+        return "总空间：" + totalSpace + "GB" + " 剩余空间：" + freeSpace + "GB";
     }
 }

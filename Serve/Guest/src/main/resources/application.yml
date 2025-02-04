@@ -1,7 +1,6 @@
 server:
   port: 10003 # Guest No 3
 
-
 spring:
 
   application:
@@ -81,42 +80,97 @@ spring:
         max-interval: 10000ms
         multiplier: 1
 
-  # Nacos
-  cloud:
-    nacos:
-      discovery:
-        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port} # nacos发现地址
-      config:
-        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port} # nacos配置中心地址
 
+  cloud:
+    # Nacos
+    nacos:
+      # 服务发现
+      discovery:
+        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+        group: DEFAULT_GROUP
+
+      # 配置中心
+      config:
+        server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+        file-extension: yaml
+        refresh-enabled: true
+        group: DEFAULT_GROUP
+        shared-configs:
+          - data-id: server.general-${spring.profiles.active}.yaml # 服务通用配置
+            group: DEFAULT_GROUP
+            refresh: true
+
+    # Sentinel
     sentinel:
+      web-context-unify: false # 关闭context整合
       enabled: true # 是否开启。默认为 true 开启
       eager: true # 是否饥饿加载。默认为 false 关闭
       transport:
-        port: 9993
+        port: 9993  # Guest No 3
         dashboard: ${infrastructure.sentinel.host}:${infrastructure.sentinel.port} # Sentinel 控制台地址
         clientIp: 127.0.0.1
+      datasource:
+        flow:
+          nacos:
+            server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+            dataId: ${spring.application.name}-flow-rules-${spring.profiles.active}.yaml
+            groupId: DEFAULT_GROUP
+            rule-type: flow
+        degrade:
+          nacos:
+            server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+            dataId: ${spring.application.name}-degrade-rules-${spring.profiles.active}.yaml
+            groupId: DEFAULT_GROUP
+            rule-type: degrade
+        authority:
+          nacos:
+            server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+            dataId: ${spring.application.name}-authority-rules-${spring.profiles.active}.yaml
+            groupId: DEFAULT_GROUP
+            rule-type: authority
+        param-flow:
+          nacos:
+            server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+            dataId: ${spring.application.name}-param-flow-rules-${spring.profiles.active}.yaml
+            groupId: DEFAULT_GROUP
+            rule-type: param-flow
+
+
+    # Feign
+    openfeign:
+      okhttp:
+        enabled: true
+      client:
+        config:
+          default:
+            connect-timeout: 5000
+            read-timeout: 5000
+            logger-level: full
 
 
 
-  #文件上传
+
   servlet:
+    # 文件上传
     multipart:
       max-file-size: 500MB
       max-request-size: 500MB
       enabled: true
 
 
-  #时间格式
+
   jackson:
+    # 时间格式
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8
-    default-property-inclusion: non_null # JSON处理时忽略空字段
+
+    # JSON处理时忽略空字段
+    default-property-inclusion: non_null
 
 
 mybatis-plus:
-  # todo
-  mapper-locations: classpath*:src/main/java/xyz/spc/infra/mapper/Guest/mapper/*Mapper.xml  # MyBatis Mapper所对应的XML文件位置
+
+  mapper-locations: classpath*:/Infra/Mapper/src/main/resources/mapper/*Mapper.xml
 
   global-config:
     banner: false
@@ -135,20 +189,12 @@ logging:
 
   level:
     xyz.spc:
-      DEBUG # todo 暂时全开
+      DEBUG
+    org.springframework:
+      INFO
 
   pattern:
     dateformat: mm:ss.SSS
-
-
-
-# 关闭心跳监控
-management:
-  health:
-    redis:
-      enabled: false
-    rabbit:
-      enabled: false
 
 
 # springdoc
@@ -156,4 +202,13 @@ springdoc:
 
   swagger-ui:
     path: doc.html
+
+# 高并发
+multi:
+  # 线程池
+  threadpool:
+    core-pool-size: 16
+    max-pool-size: 32
+    queue-capacity: 512
+    keep-alive-seconds: 60
 

@@ -2,7 +2,8 @@ package xyz.spc.common.funcpack.commu.exception;
 
 import lombok.Getter;
 import org.springframework.util.StringUtils;
-import xyz.spc.common.funcpack.commu.exception.errorcode.IErrorCode;
+import xyz.spc.common.funcpack.commu.errorcode.ClientError;
+import xyz.spc.common.funcpack.commu.errorcode.ServerError;
 
 import java.util.Optional;
 
@@ -16,11 +17,16 @@ public abstract class AbstractException extends RuntimeException {
 
     public final String errorMessage;
 
-    public AbstractException(String message, Throwable throwable, IErrorCode errorCode) {
+    public AbstractException(String message, Throwable throwable, ClientError errorCode) {
         super(message, throwable);
-        this.errorCode = errorCode.code();
-        this.errorMessage = Optional.ofNullable(StringUtils.hasLength(message) ? message : null).orElse(errorCode.message());
+        this.errorCode = errorCode.getCode();
+        this.errorMessage = Optional.ofNullable(StringUtils.hasLength(message) ? message : null).orElse(errorCode.getMessage());
     }
 
-    public abstract void cast(String message);
+    public AbstractException(String message, Throwable throwable, ServerError errorCode) {
+        super(message, throwable);
+        this.errorCode = errorCode.getCode();
+        this.errorMessage = Optional.ofNullable(StringUtils.hasLength(message) ? message : null).orElse(errorCode.getMessage());
+    }
+
 }

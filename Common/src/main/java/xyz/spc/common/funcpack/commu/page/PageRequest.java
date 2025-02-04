@@ -1,12 +1,12 @@
 package xyz.spc.common.funcpack.commu.page;
 
 import lombok.Data;
+import xyz.spc.common.constant.ReqRespCT;
 
 /**
  * 分页请求对象
  */
 @Data
-
 public class PageRequest {
 
     /**
@@ -17,5 +17,5 @@ public class PageRequest {
     /**
      * 每页显示条数
      */
-    private Long size = 10L;
+    private Long size = ReqRespCT.DEFAULT_PAGE_SIZE;
 }

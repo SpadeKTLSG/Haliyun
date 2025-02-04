@@ -1,15 +1,13 @@
 package xyz.spc.common.annotation;
 
 
-import xyz.spc.common.constant.CacheConstants;
-import xyz.spc.common.enums.LimitType;
+import xyz.spc.common.constant.redis.SysCacheKey;
+import xyz.spc.common.enums.LimitTypeEnum;
 
 import java.lang.annotation.*;
 
 /**
  * 限流注解
- *
- * @author ruoyi
  */
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -18,7 +16,7 @@ public @interface RateLimiter {
     /**
      * 限流key
      */
-    String key() default CacheConstants.RATE_LIMIT_KEY;
+    String key() default SysCacheKey.RATE_LIMIT_KEY;
 
     /**
      * 限流时间,单位秒
@@ -33,5 +31,5 @@ public @interface RateLimiter {
     /**
      * 限流类型
      */
-    LimitType limitType() default LimitType.DEFAULT;
+    LimitTypeEnum limitType() default LimitTypeEnum.DEFAULT;
 }

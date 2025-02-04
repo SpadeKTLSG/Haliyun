@@ -1,8 +1,23 @@
 package xyz.spc.gate.vo;
 
 import lombok.Data;
-import xyz.spc.common.pojo.BasePOJO;
+import lombok.EqualsAndHashCode;
+import xyz.spc.common.funcpack.pojo.BasePOJO;
+
+import java.time.LocalDateTime;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class BaseVO extends BasePOJO {
+
+    /**
+     * 创建时间
+     */
+    private LocalDateTime createTime;
+
+    /**
+     * 修改时间
+     */
+    private LocalDateTime updateTime;
+
 }

@@ -6,12 +6,25 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
+import org.springframework.retry.annotation.EnableRetry;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
-@EnableFeignClients(basePackages = "xyz.spc.infra.feign.Group") //开启Feign客户端
-@EnableDiscoveryClient //开启服务发现
-@SpringBootApplication
-@MapperScan("xyz.spc.infra") //扫描Mapper接口
+/**
+ * 客户服务启动类
+ */
 @Slf4j
+@MapperScan({"xyz.spc.infra.mapper"})
+@SpringBootApplication(scanBasePackages = {
+        "xyz.spc.serve.guest",
+        "xyz.spc.serve.auxiliary",
+        "xyz.spc.infra"
+})
+@EnableFeignClients(basePackages = "xyz.spc.infra.feign")
+@EnableDiscoveryClient //开启服务发现
+@EnableScheduling //开启定时任务
+@EnableAspectJAutoProxy() //开启AspectJ
+@EnableRetry //开启重试
 public class GuestAPP {
     public static void main(String[] args) {
         SpringApplication.run(GuestAPP.class, args);

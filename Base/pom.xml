@@ -28,17 +28,21 @@
 
         <!--DBs-->
         <mysql-connector-java.version>8.3.0</mysql-connector-java.version>
-        <mybatis-plus.version>3.5.7</mybatis-plus.version>
-        <mybatis-plus-join.version>1.5.2</mybatis-plus-join.version>
+        <mybatis.version>3.0.3</mybatis.version>
+        <mybatis-plus.version>3.5.5</mybatis-plus.version>
+        <mybatis-plus-join.version>1.5.0</mybatis-plus-join.version>
         <druid.version>1.2.8</druid.version>
         <redis.version>3.33.0</redis.version>
+        <hdfs.version>3.4.0</hdfs.version>
 
         <!--kits-->
+        <mapstruct.version>1.5.3.Final</mapstruct.version>
         <hutool.version>5.8.26</hutool.version>
         <jwt.version>0.12.3</jwt.version>
         <commons-beanutils.version>1.9.4</commons-beanutils.version>
         <springdoc.version>2.0.4</springdoc.version>
         <dozer-core.version>6.5.2</dozer-core.version>
+        <threadlocal.version>2.12.4</threadlocal.version>
     </properties>
 
     <modules>
@@ -61,6 +65,7 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <!--Fix dependencies collision-->
             <dependency>
                 <groupId>org.codehaus.woodstox</groupId>
                 <artifactId>stax2-api</artifactId>
@@ -129,10 +134,24 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-openfeign</artifactId>
         </dependency>
+        <!--负载均衡器-->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+        <!--OK http 连接池 -->
+        <dependency>
+            <groupId>io.github.openfeign</groupId>
+            <artifactId>feign-okhttp</artifactId>
+        </dependency>
         <!--sentinel-->
         <dependency>
             <groupId>com.alibaba.cloud</groupId>
             <artifactId>spring-cloud-starter-alibaba-sentinel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.csp</groupId>
+            <artifactId>sentinel-datasource-nacos</artifactId>
         </dependency>
         <!--aspectj切面-->
         <dependency>
@@ -144,6 +163,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
+        <!--重试-->
+        <dependency>
+            <groupId>org.springframework.retry</groupId>
+            <artifactId>spring-retry</artifactId>
+        </dependency>
 
         <!--DB-->
         <!--MySQL-->
@@ -152,11 +176,23 @@
             <artifactId>mysql-connector-j</artifactId>
             <version>${mysql-connector-java.version}</version>
         </dependency>
+        <!--Mybatis-->
+        <dependency>
+            <groupId>org.mybatis</groupId>
+            <artifactId>mybatis-spring</artifactId>
+            <version>${mybatis.version}</version>
+        </dependency>
         <!--MPJ-->
         <dependency>
             <groupId>com.baomidou</groupId>
             <artifactId>mybatis-plus-boot-starter</artifactId>
             <version>${mybatis-plus.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mybatis</groupId>
+                    <artifactId>mybatis-spring</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.yulichang</groupId>
@@ -172,10 +208,15 @@
 
         <!--redis-->
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.redisson</groupId>
             <artifactId>redisson-spring-boot-starter</artifactId>
             <version>${redis.version}</version>
         </dependency>
+
 
         <!--RabbitMQ-->
         <dependency>
@@ -187,7 +228,7 @@
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>
-            <version>3.4.0</version>
+            <version>${hdfs.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-io</groupId>
@@ -210,7 +251,7 @@
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-hdfs</artifactId>
-            <version>3.4.0</version>
+            <version>${hdfs.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-io</groupId>
@@ -225,7 +266,7 @@
         <dependency>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-client</artifactId>
-            <version>3.4.0</version>
+            <version>${hdfs.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>commons-io</groupId>
@@ -237,26 +278,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.hbase</groupId>-->
-        <!--            <artifactId>hbase-client</artifactId>-->
-        <!--            <version>2.4.9</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.hbase</groupId>-->
-        <!--            <artifactId>hbase-server</artifactId>-->
-        <!--            <version>2.4.9</version>-->
-        <!--        </dependency>-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.apache.hbase</groupId>-->
-        <!--            <artifactId>hbase-spring-boot-starter</artifactId>-->
-        <!--            <version>release</version>-->
-        <!--        </dependency>-->
-
 
         <!--kits工具类-->
-        <!--日志-->
-
         <!--lombok-->
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -304,6 +327,26 @@
             </exclusions>
         </dependency>
 
+        <!--MapStruct转换器-->
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--ThreadLocal-->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>transmittable-thread-local</artifactId>
+            <version>${threadlocal.version}</version>
+        </dependency>
+
         <!-- websocket-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -333,68 +376,5 @@
             </exclusions>
         </dependency>
     </dependencies>
-
-
-    <build>
-        <resources>
-
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.yml</include>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-            <resource>
-                <directory>src/main/resources</directory>
-                <includes>
-                    <include>**/*.yml</include>
-                    <include>**/*.properties</include>
-                    <include>**/*.xml</include>
-                </includes>
-                <filtering>false</filtering>
-            </resource>
-            <resource>
-                <directory>lib</directory>
-                <includes>
-                    <include>**/*.jar</include>
-                </includes>
-            </resource>
-        </resources>
-
-        <plugins>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>${maven.compiler.plugin.version}</version>
-                <configuration>
-                    <excludes>
-                        <exclude>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                        </exclude>
-                    </excludes>
-                    <source>${java.version}</source>
-                    <target>${java.version}</target>
-                    <encoding>${project.build.sourceEncoding}</encoding>
-                    <parameters>true</parameters>
-                </configuration>
-            </plugin>
-
-
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <layers>
-                        <enabled>true</enabled>
-                    </layers>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

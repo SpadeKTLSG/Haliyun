@@ -19,6 +19,7 @@
         <module>Mapper</module>
         <module>Special</module>
         <module>Feign</module>
+        <module>Repo</module>
     </modules>
 
     <properties>

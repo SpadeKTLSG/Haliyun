@@ -1,6 +1,7 @@
 package xyz.spc.serve.guest.controller.users;
 
 import cn.hutool.core.util.StrUtil;
+import com.alibaba.csp.sentinel.annotation.SentinelResource;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
@@ -9,10 +10,12 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import xyz.spc.common.constant.sentinel.SentinelPath;
 import xyz.spc.common.funcpack.commu.Result;
 import xyz.spc.common.funcpack.xss.Xss;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
+import xyz.spc.serve.auxiliary.config.senti.CustomBlockHandler;
 import xyz.spc.serve.guest.func.users.UsersFunc;
 
 import javax.security.auth.login.AccountNotFoundException;
@@ -36,6 +39,11 @@ public class UsersControl {
     @GetMapping("code")
     @Operation(summary = "登陆验证码")
     @Parameters(@Parameter(name = "phone", description = "手机号", required = true))
+    @SentinelResource(
+            value = SentinelPath.GET_LOGIN_CODE_PATH,
+            blockHandler = "getLoginCodeBlockHandlerMethod",
+            blockHandlerClass = CustomBlockHandler.class
+    )
     @Xss(message = "手机号不能包含脚本字符")
     public Result<String> getLoginCode(@RequestParam("phone") String phone, HttpSession session) {
 

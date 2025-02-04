@@ -216,4 +216,3 @@ auth:
     - /swagger-resources/**
     - /v3/**
     - /error
-

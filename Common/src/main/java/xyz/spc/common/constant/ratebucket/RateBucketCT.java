@@ -1,4 +1,4 @@
-package xyz.spc.common.funcpack.ratebucket;
+package xyz.spc.common.constant.ratebucket;
 
 public interface RateBucketCT {
 

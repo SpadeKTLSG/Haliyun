@@ -1,14 +1,21 @@
-package xyz.spc.common.funcpack.ratebucket;
+package xyz.spc.serve.auxiliary.config.ratebucket;
 
-import org.redisson.Redisson;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.redisson.config.Config;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import xyz.spc.common.constant.ratebucket.RateBucketCT;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+@Slf4j
+@Component
 public class TokenBucketRateLimiter {
+
+    @Autowired
+    RedissonClient redissonClient;
 
     private final int bucketCapacity; // 令牌桶的容量
     private final AtomicInteger tokens; // 当前令牌数
@@ -16,11 +23,11 @@ public class TokenBucketRateLimiter {
     private long nextRefillTime; // 下次生成令牌的时间
     private final RLock lock; // 分布式锁
 
-    public TokenBucketRateLimiter(RedissonClient redissonClient) {
-        this(RateBucketCT.DEFAULT_CAPACITY, RateBucketCT.DEFAULT_RATE, redissonClient);
+    public TokenBucketRateLimiter() {
+        this(RateBucketCT.DEFAULT_CAPACITY, RateBucketCT.DEFAULT_RATE);
     }
 
-    public TokenBucketRateLimiter(int bucketCapacity, int refillRate, RedissonClient redissonClient) {
+    public TokenBucketRateLimiter(int bucketCapacity, int refillRate) {
         this.bucketCapacity = bucketCapacity;
         this.refillRate = refillRate;
         this.tokens = new AtomicInteger(bucketCapacity);
@@ -28,10 +35,18 @@ public class TokenBucketRateLimiter {
         this.lock = redissonClient.getLock("tokenBucketLock");
     }
 
+    /**
+     * 尝试获取令牌
+     */
     public boolean tryAcquire() {
         return tryAcquire(1);
     }
 
+    /**
+     * 尝试获取令牌
+     *
+     * @param permits 令牌数
+     */
     public boolean tryAcquire(int permits) {
         try {
             if (lock.tryLock(500, 10000, TimeUnit.MILLISECONDS)) {
@@ -67,29 +82,6 @@ public class TokenBucketRateLimiter {
                     tokens.set(bucketCapacity);
                 }
                 nextRefillTime = nowTime;
-            }
-        }
-    }
-
-    public static void main(String[] args) {
-        Config config = new Config();
-        config.useSingleServer().setAddress("redis://4").setPassword("23");
-
-        RedissonClient redissonClient = Redisson.create(config);
-
-        TokenBucketRateLimiter rateLimiter = new TokenBucketRateLimiter(5, 2, redissonClient);
-
-        for (int i = 0; i < 100; i++) {
-            boolean allowed = rateLimiter.tryAcquire();
-            if (!allowed) {
-                System.out.println("请求 " + i + " 被拒绝");
-            } else {
-                System.out.println("请求 " + i + " 获得令牌，允许通过");
-            }
-            try {
-                Thread.sleep(200); // 模拟请求间隔
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
             }
         }
     }

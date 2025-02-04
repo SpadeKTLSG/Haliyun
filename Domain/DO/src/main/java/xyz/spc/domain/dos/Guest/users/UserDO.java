@@ -21,11 +21,6 @@ public class UserDO extends BaseDO {
     private Long id;
 
     /**
-     * 群组id
-     */
-    private Long groupId;
-
-    /**
      * 是否是管理 0否
      */
     private Integer admin;

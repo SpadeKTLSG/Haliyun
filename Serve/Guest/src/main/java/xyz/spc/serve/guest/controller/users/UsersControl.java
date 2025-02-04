@@ -6,11 +6,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.constant.sentinel.SentinelPath;
 import xyz.spc.common.funcpack.commu.Result;
+import xyz.spc.common.funcpack.validate.Guest.UsersValiGroups;
 import xyz.spc.common.funcpack.xss.Xss;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.feign.Guest.users.UsersClient;
@@ -38,10 +41,15 @@ public class UsersControl {
      * 获取手机验证码
      */
     @GetMapping("code")
-    @Operation(summary = "登陆验证码")
+    @Operation(summary = "验证码")
     @Parameters(@Parameter(name = "phone", description = "手机号", required = true))
     @SentinelResource(value = SentinelPath.GET_LOGIN_CODE_PATH, blockHandler = "getLoginCodeBlockHandlerMethod", blockHandlerClass = CustomBlockHandler.class)
-    public Result<String> getLoginCode(@Xss(message = "手机号不能包含脚本字符") @RequestParam("phone") String phone) {
+    public Result<String> getCode(
+            @RequestParam("phone")
+            @Xss(message = "手机号不能包含脚本字符")
+            @NotNull(message = "手机号不能为空")
+            String phone
+    ) {
 
         String code = usersFunc.sendCode(phone);
 
@@ -59,7 +67,11 @@ public class UsersControl {
     @PostMapping("/login")
     @Operation(summary = "登录")
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
-    public Result<String> loginG(@RequestBody UserDTO userDTO) throws AccountNotFoundException {
+    public Result<String> login(
+            @RequestBody
+            @Validated({UsersValiGroups.Login.class}) //登陆校验组
+            UserDTO userDTO
+    ) throws AccountNotFoundException {
 
         String token = usersFunc.login(userDTO);
 
@@ -76,8 +88,7 @@ public class UsersControl {
     @DeleteMapping("/logout")
     @Operation(summary = "登出")
     @Parameters(@Parameter(name = "无", description = "无", required = true))
-    public Result<String> logoutG() {
-
+    public Result<String> logout() {
         log.debug(UserContext.getUA() + "已登出");
         return usersFunc.logout() ? Result.success("用户已登出") : Result.fail("用户登出失败");
     }

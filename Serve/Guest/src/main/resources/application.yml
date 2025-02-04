@@ -1,7 +1,6 @@
 server:
   port: 10003 # Guest No 3
 
-
 spring:
 
   application:
@@ -203,4 +202,5 @@ springdoc:
 
   swagger-ui:
     path: doc.html
+
 

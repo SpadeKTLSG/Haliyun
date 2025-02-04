@@ -6,12 +6,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RLock;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.common.constant.LoginCommonCT;
 import xyz.spc.common.constant.redis.LoginCacheKey;
 import xyz.spc.common.funcpack.commu.errorcode.ClientError;
@@ -218,7 +216,8 @@ public class UsersFuncImpl implements UsersFunc {
         throw new ClientException("暂不支持账号密码登陆", ClientError.USER_LOGIN_ERROR);
     }
 
-    @Transactional(rollbackFor = Exception.class, timeout = 30)
+    //todo 加锁注册 + 事务回滚示例
+//    @Transactional(rollbackFor = Exception.class, timeout = 30)
 //    public void register(UserRegisterReqDTO requestParam) {
 //        if (!hasUsername(requestParam.getUsername())) {
 //            throw new ClientException(USER_NAME_EXIST);

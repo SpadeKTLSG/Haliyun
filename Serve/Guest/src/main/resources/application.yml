@@ -203,4 +203,12 @@ springdoc:
   swagger-ui:
     path: doc.html
 
+# 高并发
+multi:
+  # 线程池
+  threadpool:
+    core-pool-size: 16
+    max-pool-size: 32
+    queue-capacity: 512
+    keep-alive-seconds: 60
 

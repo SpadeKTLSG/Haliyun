@@ -1,6 +1,7 @@
 package xyz.spc.gate.dto.Guest.users;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.Accessors;
 import xyz.spc.common.funcpack.validate.Guest.UsersValiGroups;
@@ -13,17 +14,16 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDTO extends BaseDTO {
-
-    @NotEmpty(groups = {UsersValiGroups.Login.class}, message = "登陆用户id不能为空")
+    
     private Long id;
 
-    @NotEmpty(groups = {UsersValiGroups.Login.class}, message = "登陆用户类型不能为空")
+    @NotNull(groups = {UsersValiGroups.Login.class}, message = "登陆用户类型不能为空")
     private Integer admin;
 
-    @NotEmpty(groups = {UsersValiGroups.Login.class}, message = "登陆用户状态不能为空")
+    @NotNull(groups = {UsersValiGroups.Login.class}, message = "登陆用户状态不能为空")
     private Integer status;
 
-    @NotEmpty(groups = {UsersValiGroups.Login.class}, message = "登陆方式不能为空")
+    @NotNull(groups = {UsersValiGroups.Login.class}, message = "登陆方式不能为空")
     private Integer loginType;
 
     @NotEmpty(groups = {UsersValiGroups.Login.class}, message = "登陆账号不能为空")

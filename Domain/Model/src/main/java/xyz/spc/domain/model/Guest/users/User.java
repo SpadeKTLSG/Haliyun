@@ -62,7 +62,6 @@ public class User extends BaseModel {
     public UserDO toDO() {
         UserDO tmp = UserDO.builder()
                 .id(id)
-                .groupId(groupId)
                 .admin(admin)
                 .status(status)
                 .loginType(loginType)
@@ -80,7 +79,6 @@ public class User extends BaseModel {
     public User fromDO(UserDO userDO) {
         User tmp = User.builder()
                 .id(userDO.getId())
-                .groupId(userDO.getGroupId())
                 .admin(userDO.getAdmin())
                 .status(userDO.getStatus())
                 .loginType(userDO.getLoginType())
@@ -98,7 +96,6 @@ public class User extends BaseModel {
     public UserDTO toDTO() {
         UserDTO tmp = UserDTO.builder()
                 .id(id)
-                .groupId(groupId)
                 .admin(admin)
                 .status(status)
                 .loginType(loginType)
@@ -112,7 +109,6 @@ public class User extends BaseModel {
     public User fromDTO(UserDTO userDTO) {
         User tmp = User.builder()
                 .id(userDTO.getId())
-                .groupId(userDTO.getGroupId())
                 .admin(userDTO.getAdmin())
                 .status(userDTO.getStatus())
                 .loginType(userDTO.getLoginType())

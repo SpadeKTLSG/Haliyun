@@ -93,11 +93,6 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
                     .map(Long::parseLong)
                     .ifPresent(userDtoBuilder::id);
 
-            Optional.ofNullable(userDtoMap.get("groupId"))
-                    .map(Object::toString)
-                    .map(Long::parseLong)
-                    .ifPresent(userDtoBuilder::groupId);
-
             Optional.ofNullable(userDtoMap.get("admin"))
                     .map(Object::toString)
                     .map(Integer::parseInt)

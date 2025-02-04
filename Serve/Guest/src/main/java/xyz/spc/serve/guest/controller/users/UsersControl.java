@@ -69,7 +69,7 @@ public class UsersControl {
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
     public Result<String> login(
             @RequestBody
-            @Validated({UsersValiGroups.Login.class}) //登陆校验组
+            @Validated({UsersValiGroups.Login.class}) //登陆校验组, 减少Service层校验
             UserDTO userDTO
     ) throws AccountNotFoundException {
 

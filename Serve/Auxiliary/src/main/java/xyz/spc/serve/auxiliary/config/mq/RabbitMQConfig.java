@@ -1,6 +1,5 @@
 package xyz.spc.serve.auxiliary.config.mq;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
@@ -19,10 +18,7 @@ import xyz.spc.common.constant.mq.SystemMQCT;
 @Slf4j
 @EnableRabbit
 @Configuration
-@RequiredArgsConstructor
 public class RabbitMQConfig {
-
-    private final RetryTemplate retryTemplate;
 
     /**
      * RabbitMQ模板
@@ -30,7 +26,7 @@ public class RabbitMQConfig {
     @Bean
     public RabbitTemplate rabbitTemplate(CachingConnectionFactory connectionFactory) {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
-        rabbitTemplate.setRetryTemplate(retryTemplate); // 设置重试模板
+        rabbitTemplate.setRetryTemplate(retryTemplate()); // 设置重试模板
 
         log.debug("RabbitTemplate已配置");
         return rabbitTemplate;

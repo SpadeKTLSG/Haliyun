@@ -34,16 +34,12 @@ public class UsersControl {
     //! Func
 
     /**
-     * 获取登陆验证码
+     * 获取手机验证码
      */
     @GetMapping("code")
     @Operation(summary = "登陆验证码")
     @Parameters(@Parameter(name = "phone", description = "手机号", required = true))
-    @SentinelResource(
-            value = SentinelPath.GET_LOGIN_CODE_PATH,
-            blockHandler = "getLoginCodeBlockHandlerMethod",
-            blockHandlerClass = CustomBlockHandler.class
-    )
+    @SentinelResource(value = SentinelPath.GET_LOGIN_CODE_PATH, blockHandler = "getLoginCodeBlockHandlerMethod", blockHandlerClass = CustomBlockHandler.class)
     @Xss(message = "手机号不能包含脚本字符")
     public Result<String> getLoginCode(@RequestParam("phone") String phone, HttpSession session) {
 
@@ -56,6 +52,10 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/code?phone=15985785169
 
+
+    /**
+     * 登录
+     */
     @PostMapping("/login")
     @Operation(summary = "登录")
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
@@ -70,7 +70,9 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/login
 
-
+    /**
+     * 登出
+     */
     @DeleteMapping("/logout")
     @Operation(summary = "登出")
     @Parameters(@Parameter(name = "无", description = "无", required = true))

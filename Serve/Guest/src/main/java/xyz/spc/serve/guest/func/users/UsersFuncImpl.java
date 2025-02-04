@@ -4,7 +4,6 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -49,7 +48,7 @@ public class UsersFuncImpl implements UsersFunc {
 
     @Override
     @Retryable(retryFor = ServiceException.class, backoff = @Backoff(delay = 1000, multiplier = 1.5)) //重试策略, 通常在依赖外部服务时使用
-    public String sendCode(String phone, HttpSession session) {
+    public String sendCode(String phone) {
 
         //? 限流策略
         // 1. 判断是否在一级限制条件内
@@ -113,7 +112,7 @@ public class UsersFuncImpl implements UsersFunc {
 
 
     @Override
-    public String login(UserDTO userDTO, HttpSession session) throws AccountNotFoundException {
+    public String login(UserDTO userDTO) throws AccountNotFoundException {
 
         Integer login_type = Optional.ofNullable(userDTO.getLoginType()).orElseThrow(
                 () -> new ClientException("登陆方式不能为空", ClientError.USER_REGISTER_ERROR)
@@ -121,10 +120,10 @@ public class UsersFuncImpl implements UsersFunc {
 
         // 确定登陆方式
         return switch (login_type) {
-            case User.LOGIN_TYPE_ACCOUNT -> loginByAccount(userDTO, session);
-            case User.LOGIN_TYPE_PHONE -> loginByPhone(userDTO, session);
-            case User.LOGIN_TYPE_EMAIL -> loginByEmail(userDTO, session);
-            case User.LOGIN_TYPE_ACCOUNT_PHONE -> loginByAccountPhone(userDTO, session);
+            case User.LOGIN_TYPE_ACCOUNT -> loginByAccount(userDTO);
+            case User.LOGIN_TYPE_PHONE -> loginByPhone(userDTO);
+            case User.LOGIN_TYPE_EMAIL -> loginByEmail(userDTO);
+            case User.LOGIN_TYPE_ACCOUNT_PHONE -> loginByAccountPhone(userDTO);
             default -> throw new ClientException("登陆方式不正确", ClientError.USER_REGISTER_ERROR);
         };
     }
@@ -136,7 +135,7 @@ public class UsersFuncImpl implements UsersFunc {
         return rcg.deleteObject(tokenKey);
     }
 
-    private String loginByAccountPhone(UserDTO userDTO, HttpSession session) throws AccountNotFoundException {
+    private String loginByAccountPhone(UserDTO userDTO) throws AccountNotFoundException {
         //? 目前暂时只选择此方式
         //note: 根据用户名查询用户 | 根据手机号查询用户, 这里后者
 
@@ -227,15 +226,15 @@ public class UsersFuncImpl implements UsersFunc {
         return token;
     }
 
-    private String loginByEmail(UserDTO userDTO, HttpSession session) {
+    private String loginByEmail(UserDTO userDTO) {
         throw new ClientException("暂不支持邮箱登陆", ClientError.USER_LOGIN_ERROR);
     }
 
-    private String loginByPhone(UserDTO userDTO, HttpSession session) {
+    private String loginByPhone(UserDTO userDTO) {
         throw new ClientException("暂不支持手机验证码登陆", ClientError.USER_LOGIN_ERROR);
     }
 
-    private String loginByAccount(UserDTO userDTO, HttpSession session) {
+    private String loginByAccount(UserDTO userDTO) {
         throw new ClientException("暂不支持账号密码登陆", ClientError.USER_LOGIN_ERROR);
     }
 

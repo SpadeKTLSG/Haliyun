@@ -6,7 +6,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +13,7 @@ import xyz.spc.common.constant.sentinel.SentinelPath;
 import xyz.spc.common.funcpack.commu.Result;
 import xyz.spc.common.funcpack.xss.Xss;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
+import xyz.spc.infra.feign.Guest.users.UsersClient;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.senti.CustomBlockHandler;
 import xyz.spc.serve.guest.func.users.UsersFunc;
@@ -28,6 +28,7 @@ import javax.security.auth.login.AccountNotFoundException;
 public class UsersControl {
 
     private final UsersFunc usersFunc;
+    private final UsersClient usersClient;
 
     //! Client
 
@@ -41,11 +42,10 @@ public class UsersControl {
     @Parameters(@Parameter(name = "phone", description = "手机号", required = true))
     @SentinelResource(value = SentinelPath.GET_LOGIN_CODE_PATH, blockHandler = "getLoginCodeBlockHandlerMethod", blockHandlerClass = CustomBlockHandler.class)
     public Result<String> getLoginCode(
-            @Xss(message = "手机号不能包含脚本字符") @RequestParam("phone") String phone,
-            HttpSession session
+            @Xss(message = "手机号不能包含脚本字符") @RequestParam("phone") String phone
     ) {
 
-        String code = usersFunc.sendCode(phone, session);
+        String code = usersFunc.sendCode(phone);
 
         if (code.startsWith("!")) {//如果是!开头的字符串，说明发送失败
             return Result.fail(code.substring(1));
@@ -61,9 +61,9 @@ public class UsersControl {
     @PostMapping("/login")
     @Operation(summary = "登录")
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
-    public Result<String> loginG(@RequestBody UserDTO userDTO, HttpSession session) throws AccountNotFoundException {
+    public Result<String> loginG(@RequestBody UserDTO userDTO) throws AccountNotFoundException {
 
-        String token = usersFunc.login(userDTO, session);
+        String token = usersFunc.login(userDTO);
 
         if (StrUtil.isBlank(token)) {
             return Result.fail("登录失败");
@@ -85,6 +85,12 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/logout
 
+    //Test Feign
+    @GetMapping("/register")
+    public Result<String> getLoginCodeBlockHandlerMethod(String phone) {
+        return usersClient.getLoginCode(phone);
+    }
+    //http://localhost:10000/Guest/users/register
 
     //! ADD
 

@@ -121,13 +121,25 @@ public class User extends BaseModel {
 
     //! 基础信息
 
+    /**
+     * 是否是管理员
+     */
     public boolean isAdmin() {
         return admin == 0;
     }
 
+    /**
+     * 是否正常
+     */
     public boolean isNormal() {
         return status == 0;
     }
 
+    /**
+     * 密码是否正确
+     */
+    public boolean passwordEquals(String password) {
+        return this.password.equals(password);
+    }
 
 }

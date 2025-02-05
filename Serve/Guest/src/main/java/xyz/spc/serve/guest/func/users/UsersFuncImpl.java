@@ -150,21 +150,13 @@ public class UsersFuncImpl implements UsersFunc {
     }
 
     private String loginByAccountPhone(UserDTO userDTO) throws AccountNotFoundException {
-        //? 目前暂时只选择此方式
-        //note: 根据用户名查询用户 | 根据手机号查询用户, 这里后者
+        //? 目前暂时只选择此方式 note: 根据用户名查询用户 | 根据手机号查询用户, 这里后者
 
-        //! 校验 todo 责任链模式
-
-        //? 1 校验手机号格式
-        String phone = userDTO.getPhone();
-        if (!PhoneUtil.isMatches(phone, true)) {
-            throw new ClientException(ClientError.PHONE_VERIFY_ERROR);
-        }
-
+        //! 校验 (责任链初体验)
 
         //查找手机号关联用户 : 去找手机号对应的用户详情DO todo : 抽取到DAO(Service)区域
         LambdaQueryWrapper<UserDetailDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserDetailDO::getPhone, phone);
+        queryWrapper.eq(UserDetailDO::getPhone, userDTO.getPhone());
         UserDetailDO userDetailDO = Optional.ofNullable(usersRepo.userDetailService.getOne(queryWrapper)).orElseThrow(() -> new AccountNotFoundException("手机号未注册"));
 
         //利用UserDetailDO的id去查找UserDO
@@ -193,42 +185,42 @@ public class UsersFuncImpl implements UsersFunc {
             default -> throw new ClientException("查询失败，请检查查询参数是否正确");
         };*/
 
-        //? 2 校验用户是否被锁定了
+        // DO -> Model
         User user = new User().fromDO(userDO);
+
+        //? 2 校验用户状态
+
         if (!user.isNormal()) {
             throw new ClientException(ClientError.USER_ACCOUNT_BLOCKED_ERROR);
         }
 
-        //? 3 密码校验
-        if (!user.getPassword().equals(userDTO.getPassword())) {
+        //? 3 DB密码校验
+        if (!user.passwordEquals(userDTO.getPassword())) {
             throw new ClientException(ClientError.USER_PASSWORD_ERROR);
         }
 
-        //? 4 从redis获取验证码并校验
-        String cacheCode = rcg.getCacheObject(LoginCacheKey.LOGIN_CODE_KEY + phone);
+        //? 4 redis验证码校验
+        String cacheCode = rcg.getCacheObject(LoginCacheKey.LOGIN_CODE_KEY + userDTO.getPhone());
         String code = userDTO.getCode();
-        if (StringUtil.isBlank(cacheCode) || !cacheCode.equals(code)) throw new ClientException(ClientError.USER_CODE_ERROR);
+        if (StringUtil.isBlank(cacheCode) || !cacheCode.equals(code)) {
+            throw new ClientException(ClientError.USER_CODE_ERROR);
+        }
 
 
         //! 登陆
-        // 使用用户Account作为MD5 salt生成token
-        String key = user.getAccount();
-        String text = UUID.randomUUID(false).toString();
-        String token = MD5Util.enryption(text, key);
+        //1 使用用户Account作为MD5 salt生成token
+        String token = MD5Util.enryption(UUID.randomUUID(false).toString(), user.getAccount());
 
-        // 制作用户信息Map (去除密码code加入Token)
-        userDTO.setPassword(null);
-        userDTO.setCode(null);
-        userDTO.setToken(token);
+        //2 制作用户信息Map (去除密码code加入Token)
+        userDTO.setPassword(null).setCode(null).setToken(token);
         Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(), CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> fieldValue == null ? null : fieldValue.toString()));
 
-        // 存储用户信息到redis
+        //3 存储用户信息到redis
         String tokenKey = LoginCacheKey.LOGIN_USER_KEY + userDTO.getAccount();
-
-
         rcg.deleteObject(tokenKey);
         rcg.setCacheMap(tokenKey, userMap);
         rcg.expire(tokenKey, LoginCommonCT.LOGIN_USER_TTL, TimeUnit.MINUTES);
+
         return token;
     }
 

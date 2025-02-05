@@ -39,6 +39,7 @@ public class UserDTO extends BaseDTO {
     /**
      * 手机号
      */
+    @Pattern(regexp = "^1[3-9]\\d{9}$", groups = {UsersValiGroups.Login.class}, message = "手机号格式不正确") //手机号格式校验: 1开头的11位数字
     @NotEmpty(groups = {UsersValiGroups.Login.class}, message = "登陆手机号不能为空")
     private String phone;
 

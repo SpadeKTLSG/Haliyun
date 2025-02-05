@@ -15,11 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  */
 @Slf4j
 @MapperScan({"xyz.spc.infra.mapper"})
-@SpringBootApplication(scanBasePackages = {
-        "xyz.spc.serve.guest",
-        "xyz.spc.serve.auxiliary",
-        "xyz.spc.infra"
-})
+@SpringBootApplication(scanBasePackages = {"xyz.spc.serve.guest", "xyz.spc.serve.auxiliary", "xyz.spc.infra.*"})
 @EnableFeignClients(basePackages = "xyz.spc.infra.feign")
 @EnableDiscoveryClient //开启服务发现
 @EnableScheduling //开启定时任务

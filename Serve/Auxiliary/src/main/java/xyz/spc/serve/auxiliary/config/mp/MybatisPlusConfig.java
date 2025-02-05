@@ -1,11 +1,14 @@
 package xyz.spc.serve.auxiliary.config.mp;
 
 import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.github.yulichang.autoconfigure.consumer.MybatisPlusJoinPropertiesConsumer;
+import com.github.yulichang.injector.MPJSqlInjector;
+import com.github.yulichang.interceptor.MPJInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.springframework.context.annotation.Bean;
@@ -66,16 +69,26 @@ public class MybatisPlusConfig {
     }
 
     /**
+     * 关联SqlSessionFactory与GlobalConfig
+     * 设置mybatis 拦截器
      * MP需要替换SqlSessionFactory
+     * issue: <a href="https://mybatis-plus-join.github.io/pages/problem.html">...</a>
      */
+    @Bean
     @Primary
-    @Bean("db1SqlSessionFactory")
-    public SqlSessionFactory db1SqlSessionFactory(DataSource dataSource) throws Exception {
-        MybatisSqlSessionFactoryBean b1 = new MybatisSqlSessionFactoryBean();
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
+        MybatisSqlSessionFactoryBean sessionFactory = new MybatisSqlSessionFactoryBean();
         log.debug("SqlSessionFactory创建 | \"dataSourceLyz\" + dataSource.toString()");
-        b1.setDataSource(dataSource);
-        b1.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:/Infra/Mapper/src/main/resources/mapper/*.xml"));
+        sessionFactory.setDataSource(dataSource);
+        // 关联SqlSessionFactory与GlobalConfig
+        GlobalConfig globalConfig = new GlobalConfig();
+        globalConfig.setSqlInjector(new MPJSqlInjector());
+        sessionFactory.setGlobalConfig(globalConfig);
+        sessionFactory.setMapperLocations(new PathMatchingResourcePatternResolver().getResources("classpath*:/Infra/Mapper/src/main/resources/mapper/*.xml"));
+        // MPJ feature 添加拦截器 MPJInterceptor需要放在最后面
+        sessionFactory.setPlugins(new MPJInterceptor()); //MPJ拦截器sessionFactory.setPlugins(new MPJInterceptor());
 
-        return b1.getObject();
+        // 其他配置 略
+        return sessionFactory.getObject();
     }
 }

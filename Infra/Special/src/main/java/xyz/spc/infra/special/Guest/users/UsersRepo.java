@@ -11,6 +11,9 @@ import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.domain.dos.Guest.users.UserDetailDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
+import xyz.spc.infra.mapper.Guest.users.UserDetailMapper;
+import xyz.spc.infra.mapper.Guest.users.UserFuncMapper;
+import xyz.spc.infra.mapper.Guest.users.UserMapper;
 import xyz.spc.infra.repo.Guest.users.UserDetailService;
 import xyz.spc.infra.repo.Guest.users.UserFuncService;
 import xyz.spc.infra.repo.Guest.users.UserService;
@@ -24,8 +27,11 @@ import xyz.spc.infra.repo.Guest.users.UserService;
 public class UsersRepo {
 
     public final UserService userService;
+    public final UserMapper userMapper;
     public final UserDetailService userDetailService;
+    public final UserDetailMapper userDetailMapper;
     public final UserFuncService userFuncService;
+    public final UserFuncMapper userFuncMapper;
 
 
     public User getUserByUserDTO(UserDTO userDTO, UserDTO.UserDTOField field) throws ClientException {
@@ -37,16 +43,19 @@ public class UsersRepo {
             case account -> userService.getOne(Wrappers.lambdaQuery(UserDO.class).eq(UserDO::getAccount, userDTO.getAccount()));
             //通过用户DTO的phone查找用户DO, 需要联表查询或者查两次
             case phone ->
-                //MPJ版本 联表查询 note: MySQL升级至8.X最新版后, 推荐采用联表以提升性能
-                    userService.getOne(new MPJLambdaWrapper<UserDO>()
-                            .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId)
-                            .eq(UserDetailDO::getPhone, userDTO.getPhone())
-                            .selectAll(UserDO.class));
-
-            //通过用户详情DO的id查找用户DO:MP版本
+                //通过用户详情DO的id查找用户DO:MP版本
                     /*userService.getById(userDetailService.getOne(Wrappers.lambdaQuery(UserDetailDO.class) // 查找手机号对应的用户详情DO
                                     .eq(UserDetailDO::getPhone, userDTO.getPhone()))
                             .getId());*/
+                //我只讲一次:
+                //MPJ版本 联表查询 note: MySQL升级至8.X最新版后, 推荐采用联表以提升性能
+                    userMapper.selectJoinOne(UserDO.class, new MPJLambdaWrapper<UserDO>()
+                            .selectAll(UserDO.class)
+                            //.select(UserDetailDO::getId, UserDetailDO::getPhone) //下面处理关联和业务的字段可以不查
+                            .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId) //联表类和对应字段
+                            .eq(UserDetailDO::getPhone, userDTO.getPhone()) //业务条件
+                    );
+
 
             default -> throw new ClientException(ClientError.USER_ACCOUNT_NOT_EXIST_ERROR);
         };

@@ -15,25 +15,21 @@
  * limitations under the License.
  */
 
-package xyz.spc.serve.auxiliary.config.design.chain;
+package xyz.spc.serve.guest.handle.users;
 
-import org.springframework.core.Ordered;
+
+import xyz.spc.domain.model.Guest.users.User;
+import xyz.spc.gate.dto.Guest.users.UserDTO;
+import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainHandler;
+import xyz.spc.serve.guest.common.enums.UsersChainMarkEnum;
 
 /**
- * 抽象业务责任链组件
+ * 用户登录责任链过滤器
  */
-public interface AbstractChainHandler<T, Y> extends Ordered {
+public interface UserLoginChainFilter<T extends User, Y extends UserDTO> extends AbstractChainHandler<T, Y> {
 
-    /**
-     * 执行责任链逻辑
-     *
-     * @param o1 参数1
-     * @param o2 参数2
-     */
-    void handler(T o1, Y o2);
-
-    /**
-     * @return 责任链组件标识
-     */
-    String mark();
+    @Override
+    default String mark() {
+        return UsersChainMarkEnum.USER_LOGIN_FILTER.name();
+    }
 }

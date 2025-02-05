@@ -28,7 +28,9 @@ import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
+import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
 import xyz.spc.serve.auxiliary.config.redis.RedisCacheGeneral;
+import xyz.spc.serve.guest.common.enums.UsersChainMarkEnum;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.HashMap;
@@ -43,9 +45,22 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class UsersFuncImpl implements UsersFunc {
 
+    /**
+     * Repo
+     */
+    private final UsersRepo usersRepo;
+
+    /**
+     * 责任链
+     */
+    private final AbstractChainContext<User, UserDTO> abstractChainContext;
+
+
+    /**
+     * 中间件
+     */
     private final RedisTemplate<Object, Object> redisTemplate;
     private final RedisCacheGeneral rcg;
-    private final UsersRepo usersRepo;
 
 
     @Override
@@ -187,12 +202,9 @@ public class UsersFuncImpl implements UsersFunc {
 
         // DO -> Model
         User user = new User().fromDO(userDO);
+        // 责任链执行
 
-        //? 2 校验用户状态
-
-        if (!user.isNormal()) {
-            throw new ClientException(ClientError.USER_ACCOUNT_BLOCKED_ERROR);
-        }
+        abstractChainContext.handler(UsersChainMarkEnum.USER_LOGIN_FILTER.name(), user, userDTO);
 
         //? 3 DB密码校验
         if (!user.passwordEquals(userDTO.getPassword())) {

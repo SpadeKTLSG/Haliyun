@@ -21,6 +21,7 @@ package xyz.spc.serve.auxiliary.config.design;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
 import xyz.spc.serve.auxiliary.config.boot.ApplicationBaseAutoConfiguration;
 import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
 
@@ -28,15 +29,16 @@ import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
  * 设计模式自动装配
  */
 @Slf4j
+@Component
 @ImportAutoConfiguration(ApplicationBaseAutoConfiguration.class)
-public class DesignPatternAutoConfiguration<T> {
+public class DesignPatternAutoConfiguration<T, Y> {
 
 
     /**
      * 责任链上下文
      */
     @Bean
-    public AbstractChainContext<T> abstractChainContext() {
+    public AbstractChainContext<T, Y> abstractChainContext() {
         log.debug("责任链上下文装载成功");
         return new AbstractChainContext<>();
     }

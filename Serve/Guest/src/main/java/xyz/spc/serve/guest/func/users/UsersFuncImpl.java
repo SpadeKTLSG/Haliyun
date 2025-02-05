@@ -202,8 +202,8 @@ public class UsersFuncImpl implements UsersFunc {
 
         // DO -> Model
         User user = new User().fromDO(userDO);
-        // 责任链执行
 
+        // 责任链执行
         abstractChainContext.handler(UsersChainMarkEnum.USER_LOGIN_FILTER.name(), user, userDTO);
 
         //? 3 DB密码校验

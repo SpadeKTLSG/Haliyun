@@ -21,6 +21,7 @@ import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.Ordered;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import xyz.spc.common.funcpack.commu.exception.ServiceException;
 import xyz.spc.serve.auxiliary.config.boot.ApplicationContextHolder;
@@ -35,6 +36,7 @@ import java.util.stream.Collectors;
  * 抽象责任链上下文
  */
 @Slf4j
+@Component
 public final class AbstractChainContext<T, Y> implements CommandLineRunner {
 
     /**
@@ -50,12 +52,13 @@ public final class AbstractChainContext<T, Y> implements CommandLineRunner {
      * @param o2   参数2
      */
     public void handler(String mark, T o1, Y o2) {
+        log.debug("责任链组件: {} 开始执行", mark);
         List<AbstractChainHandler<T, Y>> abstractChainHandlers = abstractChainHandlerContainer.get(mark);
         if (CollectionUtils.isEmpty(abstractChainHandlers)) {
             throw new ServiceException(String.format("[%s] Chain of Responsibility ID is undefined.", mark));
         }
         abstractChainHandlers.forEach(each -> each.handler(o1, o2));
-        log.debug("责任链组件执行完毕");
+        log.debug("责任链组件: {} 执行完毕", mark);
     }
 
     /**
@@ -63,8 +66,7 @@ public final class AbstractChainContext<T, Y> implements CommandLineRunner {
      */
     @Override
     public void run(String... args) {
-        Map<String, AbstractChainHandler> chainFilterMap = ApplicationContextHolder
-                .getBeansOfType(AbstractChainHandler.class);
+        Map<String, AbstractChainHandler> chainFilterMap = ApplicationContextHolder.getBeansOfType(AbstractChainHandler.class);
         chainFilterMap.forEach((beanName, bean) -> {
             List<AbstractChainHandler<T, Y>> abstractChainHandlers = abstractChainHandlerContainer.get(bean.mark());
             if (CollectionUtils.isEmpty(abstractChainHandlers)) {

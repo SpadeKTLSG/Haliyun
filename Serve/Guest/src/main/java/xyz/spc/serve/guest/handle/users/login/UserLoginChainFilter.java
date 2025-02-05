@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package xyz.spc.serve.guest.handle.users;
+package xyz.spc.serve.guest.handle.users.login;
 
 
 import xyz.spc.domain.model.Guest.users.User;

@@ -18,7 +18,6 @@ import xyz.spc.common.funcpack.commu.exception.AbstractException;
 import xyz.spc.common.funcpack.commu.exception.ClientException;
 import xyz.spc.common.funcpack.commu.exception.ServiceException;
 import xyz.spc.common.funcpack.uuid.UUID;
-import xyz.spc.common.util.collecUtil.StringUtil;
 import xyz.spc.common.util.encryptUtil.MD5Util;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
@@ -147,7 +146,7 @@ public class UsersFuncImpl implements UsersFunc {
         }
 
 
-        // 确定登陆方式
+        // 确定登陆方式: 手动策略模式
         return switch (login_type) {
             case User.LOGIN_TYPE_ACCOUNT -> loginByAccount(userDTO);
             case User.LOGIN_TYPE_PHONE -> loginByPhone(userDTO);
@@ -206,19 +205,6 @@ public class UsersFuncImpl implements UsersFunc {
         // 责任链执行
         abstractChainContext.handler(UsersChainMarkEnum.USER_LOGIN_FILTER.name(), user, userDTO);
 
-        //? 3 DB密码校验
-        if (!user.passwordEquals(userDTO.getPassword())) {
-            throw new ClientException(ClientError.USER_PASSWORD_ERROR);
-        }
-
-        //? 4 redis验证码校验
-        String cacheCode = rcg.getCacheObject(LoginCacheKey.LOGIN_CODE_KEY + userDTO.getPhone());
-        String code = userDTO.getCode();
-        if (StringUtil.isBlank(cacheCode) || !cacheCode.equals(code)) {
-            throw new ClientException(ClientError.USER_CODE_ERROR);
-        }
-
-
         //! 登陆
         //1 使用用户Account作为MD5 salt生成token
         String token = MD5Util.enryption(UUID.randomUUID(false).toString(), user.getAccount());
@@ -237,15 +223,15 @@ public class UsersFuncImpl implements UsersFunc {
     }
 
     private String loginByEmail(UserDTO userDTO) {
-        throw new ClientException("暂不支持邮箱登陆", ClientError.USER_LOGIN_ERROR);
+        throw new ClientException("暂不支持通过邮箱登陆, 敬请期待", ClientError.USER_LOGIN_ERROR);
     }
 
     private String loginByPhone(UserDTO userDTO) {
-        throw new ClientException("暂不支持手机验证码登陆", ClientError.USER_LOGIN_ERROR);
+        throw new ClientException("安全原因, 暂不支持仅手机验证码登陆", ClientError.USER_LOGIN_ERROR);
     }
 
     private String loginByAccount(UserDTO userDTO) {
-        throw new ClientException("暂不支持账号密码登陆", ClientError.USER_LOGIN_ERROR);
+        throw new ClientException("安全原因, 暂不支持仅账号密码登陆", ClientError.USER_LOGIN_ERROR);
     }
 
     //todo 加锁注册 + 事务回滚示例

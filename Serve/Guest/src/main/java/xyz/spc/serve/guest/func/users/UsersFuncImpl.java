@@ -2,8 +2,6 @@ package xyz.spc.serve.guest.func.users;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,8 +19,6 @@ import xyz.spc.common.funcpack.uuid.UUID;
 import xyz.spc.common.util.encryptUtil.MD5Util;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
-import xyz.spc.domain.dos.Guest.users.UserDO;
-import xyz.spc.domain.dos.Guest.users.UserDetailDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
@@ -163,51 +159,17 @@ public class UsersFuncImpl implements UsersFunc {
         return rcg.deleteObject(tokenKey);
     }
 
-    private String loginByAccountPhone(UserDTO userDTO) throws AccountNotFoundException {
+    private String loginByAccountPhone(UserDTO userDTO) {
         //? 目前暂时只选择此方式 note: 根据用户名查询用户 | 根据手机号查询用户, 这里后者
 
-        //! 校验 (责任链初体验)
+        //! DB取Model
+        User user = usersRepo.getUserByUserDTO(userDTO, UserDTO.UserDTOField.phone);
 
-        //查找手机号关联用户 : 去找手机号对应的用户详情DO todo : 抽取到DAO(Service)区域
-        LambdaQueryWrapper<UserDetailDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserDetailDO::getPhone, userDTO.getPhone());
-        UserDetailDO userDetailDO = Optional.ofNullable(usersRepo.userDetailService.getOne(queryWrapper)).orElseThrow(() -> new AccountNotFoundException("手机号未注册"));
-
-        //利用UserDetailDO的id去查找UserDO
-        //todo  特种写法 1 手动创建, 但是用w -> and一层嵌套
-/*        LambdaQueryWrapper<UserDO> userQueryWrapper = new LambdaQueryWrapper<>();
-        userQueryWrapper.and(w -> w.eq(UserDO::getId, userDetailDO.getId())); //好劲的写法
-        UserDO userDO = usersRepo.userService.getOne(userQueryWrapper);*/
-
-        UserDO userDO = usersRepo.userService.getOne(Wrappers.lambdaQuery(UserDO.class).eq(UserDO::getId, userDetailDO.getId())  //使用Wrappers.lambdaQuery直接创建, 统一写法
-        );
-
-        //todo 抽取Repo的 Wrapper集群示例 之后用Class的方式封装通过id查询的方法, 加上联表方法
-        /*LambdaQueryWrapper<RegionDO> queryWrapper = switch (requestParam.getQueryType()) {
-            case 0 -> Wrappers.lambdaQuery(RegionDO.class)
-                    .eq(RegionDO::getPopularFlag, FlagEnum.TRUE.code());
-            case 1 -> Wrappers.lambdaQuery(RegionDO.class)
-                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.A_E.getSpells());
-            case 2 -> Wrappers.lambdaQuery(RegionDO.class)
-                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.F_J.getSpells());
-            case 3 -> Wrappers.lambdaQuery(RegionDO.class)
-                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.K_O.getSpells());
-            case 4 -> Wrappers.lambdaQuery(RegionDO.class)
-                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.P_T.getSpells());
-            case 5 -> Wrappers.lambdaQuery(RegionDO.class)
-                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.U_Z.getSpells());
-            default -> throw new ClientException("查询失败，请检查查询参数是否正确");
-        };*/
-
-        // DO -> Model
-        return new User().fromDO(userDO);
-        User user = usersRepo.getUserByUserDTO(UserDTO, UserDTOField.PHONE);
-
-        // 责任链执行
+        //! 落库校验 (责任链)
         abstractChainContext.handler(UsersChainMarkEnum.USER_LOGIN_FILTER.name(), user, userDTO);
 
-        //! 登陆
-        //1 使用用户Account作为MD5 salt生成token
+        //! 登陆业务
+        //1 Account作为MD5 salt生成token
         String token = MD5Util.enryption(UUID.randomUUID(false).toString(), user.getAccount());
 
         //2 制作用户信息Map (去除密码code加入Token)
@@ -224,7 +186,7 @@ public class UsersFuncImpl implements UsersFunc {
     }
 
     private String loginByEmail(UserDTO userDTO) {
-        throw new ClientException("用户暂不支持通过邮箱登陆, 敬请期待", ClientError.USER_LOGIN_ERROR);
+        throw new ClientException("暂不支持邮箱登陆, 敬请期待", ClientError.USER_LOGIN_ERROR);
     }
 
     private String loginByPhone(UserDTO userDTO) {
@@ -238,7 +200,7 @@ public class UsersFuncImpl implements UsersFunc {
         if (userDTO.getAdmin() == 0) {
             throw new ClientException("安全原因, 用户暂不支持仅账号密码登陆", ClientError.USER_LOGIN_ERROR);
         }
-
+        throw new ClientException("安全原因, 管理员暂不支持仅账号密码登陆", ClientError.USER_LOGIN_ERROR);
     }
 
     //todo 加锁注册 + 事务回滚示例

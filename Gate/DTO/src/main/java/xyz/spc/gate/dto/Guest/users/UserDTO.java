@@ -53,4 +53,17 @@ public class UserDTO extends BaseDTO {
      * Token
      */
     private String token;
+
+
+    public enum UserDTOField {
+        id,
+        admin,
+        status,
+        loginType,
+        account,
+        password,
+        phone,
+        code,
+        token
+    }
 }

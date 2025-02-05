@@ -124,7 +124,7 @@ public class UsersFuncImpl implements UsersFunc {
 
 
     @Override
-    @Transactional(rollbackFor = AbstractException.class)
+    @Transactional(rollbackFor = AbstractException.class, timeout = 30)
     public String login(UserDTO userDTO) throws AccountNotFoundException {
 
 
@@ -203,12 +203,8 @@ public class UsersFuncImpl implements UsersFunc {
         throw new ClientException("安全原因, 管理员暂不支持仅账号密码登陆", ClientError.USER_LOGIN_ERROR);
     }
 
-    //todo 加锁注册 + 事务回滚示例
-//    @Transactional(rollbackFor = Exception.class, timeout = 30)
-//    public void register(UserRegisterReqDTO requestParam) {
-//        if (!hasUsername(requestParam.getUsername())) {
-//            throw new ClientException(USER_NAME_EXIST);
-//        }
+
+    //  加锁注册流程
 //        RLock lock = redissonClient.getLock(LOCK_USER_REGISTER_KEY + requestParam.getUsername());
 //        if (!lock.tryLock()) {
 //            throw new ClientException(USER_NAME_EXIST);
@@ -225,6 +221,6 @@ public class UsersFuncImpl implements UsersFunc {
 //        } finally {
 //            lock.unlock();
 //        }
-//    }
+
 
 }

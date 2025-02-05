@@ -212,3 +212,20 @@ multi:
     queue-capacity: 512
     keep-alive-seconds: 60
 
+
+# actuator (检查项目运行情况)
+management:
+
+  server:
+    port: 11003 # Guest No 3
+    base-path: /sys # 端点信息接口使用的端口
+
+  # 端点
+  endpoint:
+    health:
+      show-details: always # 健康情况设置为"always"可以显示硬盘使用情况和线程情况
+
+  endpoints:
+    web:
+      exposure: # 设置端点暴露的哪些内容, 设置"*"代表暴露所有可访问的端点
+        include: '*'

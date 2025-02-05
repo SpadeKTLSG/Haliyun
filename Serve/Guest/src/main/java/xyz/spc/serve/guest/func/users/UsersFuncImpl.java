@@ -200,7 +200,8 @@ public class UsersFuncImpl implements UsersFunc {
         };*/
 
         // DO -> Model
-        User user = new User().fromDO(userDO);
+        return new User().fromDO(userDO);
+        User user = usersRepo.getUserByUserDTO(UserDTO, UserDTOField.PHONE);
 
         // 责任链执行
         abstractChainContext.handler(UsersChainMarkEnum.USER_LOGIN_FILTER.name(), user, userDTO);
@@ -223,15 +224,21 @@ public class UsersFuncImpl implements UsersFunc {
     }
 
     private String loginByEmail(UserDTO userDTO) {
-        throw new ClientException("暂不支持通过邮箱登陆, 敬请期待", ClientError.USER_LOGIN_ERROR);
+        throw new ClientException("用户暂不支持通过邮箱登陆, 敬请期待", ClientError.USER_LOGIN_ERROR);
     }
 
     private String loginByPhone(UserDTO userDTO) {
-        throw new ClientException("安全原因, 暂不支持仅手机验证码登陆", ClientError.USER_LOGIN_ERROR);
+        if (userDTO.getAdmin() == 0) {
+            throw new ClientException("安全原因, 用户暂不支持仅手机验证码登陆", ClientError.USER_LOGIN_ERROR);
+        }
+        throw new ClientException("安全原因, 管理员暂不支持仅手机验证码登陆", ClientError.USER_LOGIN_ERROR);
     }
 
     private String loginByAccount(UserDTO userDTO) {
-        throw new ClientException("安全原因, 暂不支持仅账号密码登陆", ClientError.USER_LOGIN_ERROR);
+        if (userDTO.getAdmin() == 0) {
+            throw new ClientException("安全原因, 用户暂不支持仅账号密码登陆", ClientError.USER_LOGIN_ERROR);
+        }
+
     }
 
     //todo 加锁注册 + 事务回滚示例

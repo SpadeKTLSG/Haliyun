@@ -6,9 +6,9 @@ package xyz.spc.serve.auxiliary.config.ratelimit;
 
 public enum LimitTypeEnum {
     /**
-     * 默认策略全局限流
+     * 用户TL限流 (本质上是User的UA : Account)
      */
-    DEFAULT,
+    TL,
 
     /**
      * 根据请求者IP进行限流

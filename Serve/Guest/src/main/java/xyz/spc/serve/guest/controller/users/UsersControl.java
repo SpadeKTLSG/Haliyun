@@ -18,6 +18,7 @@ import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.feign.Guest.users.UsersClient;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.log.MLog;
+import xyz.spc.serve.auxiliary.config.ratelimit.RateLimiter;
 import xyz.spc.serve.auxiliary.config.senti.CustomBlockHandler;
 import xyz.spc.serve.auxiliary.config.senti.SentinelPath;
 import xyz.spc.serve.guest.func.users.UsersFunc;
@@ -66,6 +67,7 @@ public class UsersControl {
     /**
      * 登录
      */
+    @RateLimiter(value = 1) //限流 = 1
     @PostMapping("/login")
     @Operation(summary = "登录")
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))

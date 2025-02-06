@@ -4,6 +4,7 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RBloomFilter;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -56,7 +57,7 @@ public class UsersFuncImpl implements UsersFunc {
      */
     private final RedisTemplate<Object, Object> redisTemplate;
     private final RedisCacheGeneral rcg;
-
+    private final RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
 
     @Override
     @Retryable(retryFor = ServiceException.class, backoff = @Backoff(delay = 1000, multiplier = 1.5)) //重试策略, 通常在依赖外部服务时使用
@@ -222,5 +223,11 @@ public class UsersFuncImpl implements UsersFunc {
 //            lock.unlock();
 //        }
 
+
+    //register
+    //    public Boolean hasUsername(String username) {
+    //        return !userRegisterCachePenetrationBloomFilter.contains(username);
+    //    }
+    //userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
 
 }

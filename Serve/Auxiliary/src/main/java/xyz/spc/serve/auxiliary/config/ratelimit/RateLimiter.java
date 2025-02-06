@@ -1,9 +1,10 @@
 package xyz.spc.serve.auxiliary.config.ratelimit;
 
 
-import xyz.spc.common.constant.SysCacheKey;
+import org.springframework.core.annotation.AliasFor;
 
 import java.lang.annotation.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 限流注解
@@ -12,23 +13,39 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface RateLimiter {
+
+    /**
+     * 默认请求次数
+     */
+    long DEFAULT_REQUEST_COUNT = 1000;
+
     /**
      * 限流key
      */
-    String key() default SysCacheKey.RATE_LIMIT_KEY;
+    String key() default "";
 
     /**
-     * 限流时间,单位秒
+     * 超时时长, 默认1分钟
      */
-    int time() default 60;
+    long timeout() default 1;
 
     /**
-     * 限流次数
+     * max 最大请求数
      */
-    int count() default 100;
+    @AliasFor("max") long value() default DEFAULT_REQUEST_COUNT;
 
     /**
-     * 限流类型
+     * 超时时间单位, 默认 分钟
      */
-    LimitTypeEnum limitType() default LimitTypeEnum.DEFAULT;
+    TimeUnit timeUnit() default TimeUnit.MINUTES;
+
+    /**
+     * max 最大请求数
+     */
+    @AliasFor("value") long max() default DEFAULT_REQUEST_COUNT;
+
+    /**
+     * 限流类型 - 需要判断进行针对性处理. 默认 TL
+     */
+    LimitTypeEnum limitType() default LimitTypeEnum.TL;
 }

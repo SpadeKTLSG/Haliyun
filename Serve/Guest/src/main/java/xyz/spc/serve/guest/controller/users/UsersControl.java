@@ -70,7 +70,6 @@ public class UsersControl {
     /**
      * 登录
      */
-    @RateLimiter(value = 1, timeout = 5, limitType = LimitTypeEnum.IP, timeUnit = TimeUnit.SECONDS) //限流 = 1 QPS; 超时 = 2 min; Base on IP
     @PostMapping("/login")
     @Operation(summary = "登录")
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
@@ -99,6 +98,7 @@ public class UsersControl {
     /**
      * 注册
      */
+    @RateLimiter(value = 1, timeout = 5, limitType = LimitTypeEnum.IP, timeUnit = TimeUnit.SECONDS) //限流 = 1 QPS; 超时 = 2 min; Base on IP
     @PostMapping("/register")
     @Operation(summary = "注册")
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))

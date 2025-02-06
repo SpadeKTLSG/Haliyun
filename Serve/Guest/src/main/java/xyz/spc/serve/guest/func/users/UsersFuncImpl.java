@@ -5,6 +5,8 @@ import cn.hutool.core.bean.copier.CopyOptions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -20,6 +22,7 @@ import xyz.spc.common.funcpack.uuid.UUID;
 import xyz.spc.common.util.encryptUtil.MD5Util;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
+import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
@@ -57,6 +60,7 @@ public class UsersFuncImpl implements UsersFunc {
      */
     private final RedisTemplate<Object, Object> redisTemplate;
     private final RedisCacheGeneral rcg;
+    private final RedissonClient redissonClient;
     private final RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
 
     @Override
@@ -208,33 +212,39 @@ public class UsersFuncImpl implements UsersFunc {
 
     @Override
     public boolean register(UserDTO userDTO) {
-        return false;
+
+        // Control已做限流
+        // 校验: 确认验证码 + 登陆手机号 匹配
+
+
+        // 校验: 账户是否已存在
+
+        // 加锁注册业务流程
+        RLock lock = redissonClient.getLock(LOCK_USER_REGISTER_KEY + requestParam.getUsername());
+        if (!lock.tryLock()) {
+            throw new ClientException(USER_NAME_EXIST);
+        }
+        try {
+            int inserted = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
+            if (inserted < 1) {
+                throw new ClientException(USER_SAVE_ERROR);
+            }
+            groupService.saveGroup(requestParam.getUsername(), "默认分组");
+            userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
+        } catch (DuplicateKeyException ex) {
+            throw new ClientException(USER_EXIST);
+        } finally {
+            lock.unlock();
+        }
 
 
     }
-    //  加锁注册流程
-//        RLock lock = redissonClient.getLock(LOCK_USER_REGISTER_KEY + requestParam.getUsername());
-//        if (!lock.tryLock()) {
-//            throw new ClientException(USER_NAME_EXIST);
-//        }
-//        try {
-//            int inserted = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
-//            if (inserted < 1) {
-//                throw new ClientException(USER_SAVE_ERROR);
-//            }
-//            groupService.saveGroup(requestParam.getUsername(), "默认分组");
-//            userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
-//        } catch (DuplicateKeyException ex) {
-//            throw new ClientException(USER_EXIST);
-//        } finally {
-//            lock.unlock();
-//        }
 
 
     //register
     //    public Boolean hasUsername(String username) {
     //        return !userRegisterCachePenetrationBloomFilter.contains(username);
     //    }
-    //userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
+
 
 }

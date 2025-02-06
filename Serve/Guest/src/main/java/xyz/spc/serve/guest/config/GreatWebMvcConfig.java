@@ -19,8 +19,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.spc.common.funcpack.repeat.RepeatSubmitInterceptor;
-import xyz.spc.serve.guest.common.interceptor.login.GreatLoginInterceptor;
-import xyz.spc.serve.guest.common.interceptor.login.GreatTokenRefreshInterceptor;
+import xyz.spc.serve.auxiliary.common.interceptor.login.GreatLoginInterceptor;
+import xyz.spc.serve.auxiliary.common.interceptor.login.GreatTokenRefreshInterceptor;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;

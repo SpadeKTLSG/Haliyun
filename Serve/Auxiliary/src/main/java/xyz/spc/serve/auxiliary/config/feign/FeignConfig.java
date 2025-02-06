@@ -6,8 +6,8 @@ import feign.RequestInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import xyz.spc.common.funcpack.commu.errorcode.ServerError;
-import xyz.spc.common.funcpack.commu.exception.ServiceException;
+import xyz.spc.common.funcpack.errorcode.ServerError;
+import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 
 /**

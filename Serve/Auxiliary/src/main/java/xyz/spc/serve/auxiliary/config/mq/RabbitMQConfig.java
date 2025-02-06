@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.retry.backoff.ExponentialBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
-import xyz.spc.common.constant.mq.SystemMQCT;
 
 
 /**

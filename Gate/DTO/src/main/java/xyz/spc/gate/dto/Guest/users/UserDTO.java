@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import lombok.experimental.Accessors;
-import xyz.spc.common.annotation.NotChinese;
-import xyz.spc.common.funcpack.validate.Guest.UsersValiGroups;
+import xyz.spc.common.constant.Guest.UsersValiGroups;
+import xyz.spc.common.funcpack.validate.NotChinese;
 import xyz.spc.gate.dto.BaseDTO;
 
 @Data

@@ -6,7 +6,7 @@ import org.apache.hadoop.util.StringUtils;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.spc.common.constant.UploadDownloadCT;
-import xyz.spc.common.funcpack.commu.exception.ClientException;
+import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.common.util.collecUtil.StringUtil;
 
 import java.io.File;

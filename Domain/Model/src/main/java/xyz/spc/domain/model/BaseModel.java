@@ -2,7 +2,7 @@ package xyz.spc.domain.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import xyz.spc.common.funcpack.pojo.BasePOJO;
+import xyz.spc.common.funcpack.BasePOJO;
 
 import java.time.LocalDateTime;
 

@@ -5,7 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.Version;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import xyz.spc.common.funcpack.pojo.BasePOJO;
+import xyz.spc.common.funcpack.BasePOJO;
 
 import java.time.LocalDateTime;
 

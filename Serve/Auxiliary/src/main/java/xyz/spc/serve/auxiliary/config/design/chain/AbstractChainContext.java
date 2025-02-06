@@ -23,7 +23,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import xyz.spc.common.funcpack.commu.exception.ServiceException;
+import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.serve.auxiliary.config.boot.ApplicationContextHolder;
 
 import java.util.ArrayList;

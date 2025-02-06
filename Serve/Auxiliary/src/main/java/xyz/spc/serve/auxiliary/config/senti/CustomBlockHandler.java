@@ -3,7 +3,7 @@ package xyz.spc.serve.auxiliary.config.senti;
 
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import lombok.extern.slf4j.Slf4j;
-import xyz.spc.common.funcpack.commu.Result;
+import xyz.spc.common.funcpack.Result;
 
 /**
  * 自定义流控策略

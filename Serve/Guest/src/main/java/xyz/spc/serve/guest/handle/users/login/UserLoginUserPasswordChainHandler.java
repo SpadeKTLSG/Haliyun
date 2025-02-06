@@ -1,8 +1,8 @@
 package xyz.spc.serve.guest.handle.users.login;
 
 import org.springframework.stereotype.Component;
-import xyz.spc.common.funcpack.commu.errorcode.ClientError;
-import xyz.spc.common.funcpack.commu.exception.ClientException;
+import xyz.spc.common.funcpack.errorcode.ClientError;
+import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 

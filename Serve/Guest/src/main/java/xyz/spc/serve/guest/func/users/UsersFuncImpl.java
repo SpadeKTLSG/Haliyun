@@ -160,6 +160,7 @@ public class UsersFuncImpl implements UsersFunc {
         return rcg.deleteObject(tokenKey);
     }
 
+
     private String loginByAccountPhone(UserDTO userDTO) {
         //? 目前暂时只选择此方式 note: 根据用户名查询用户 | 根据手机号查询用户, 这里后者
 
@@ -205,6 +206,12 @@ public class UsersFuncImpl implements UsersFunc {
     }
 
 
+    @Override
+    public boolean register(UserDTO userDTO) {
+        return false;
+
+
+    }
     //  加锁注册流程
 //        RLock lock = redissonClient.getLock(LOCK_USER_REGISTER_KEY + requestParam.getUsername());
 //        if (!lock.tryLock()) {

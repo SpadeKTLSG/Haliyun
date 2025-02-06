@@ -25,6 +25,7 @@ import xyz.spc.serve.auxiliary.config.senti.SentinelPath;
 import xyz.spc.serve.guest.func.users.UsersFunc;
 
 import javax.security.auth.login.AccountNotFoundException;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @MLog
@@ -54,7 +55,6 @@ public class UsersControl {
             @NotNull(message = "手机号不能为空")
             String phone
     ) {
-
         String code = usersFunc.sendCode(phone);
 
         if (code.startsWith("!")) {//如果是!开头的字符串，说明发送失败
@@ -68,7 +68,7 @@ public class UsersControl {
     /**
      * 登录
      */
-    @RateLimiter(value = 1, timeout = 2, limitType = LimitTypeEnum.IP) //限流 = 1 QPS; 超时 = 2 min; Base on IP
+    @RateLimiter(value = 1, timeout = 5, limitType = LimitTypeEnum.IP, timeUnit = TimeUnit.SECONDS) //限流 = 1 QPS; 超时 = 2 min; Base on IP
     @PostMapping("/login")
     @Operation(summary = "登录")
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
@@ -77,13 +77,8 @@ public class UsersControl {
             @Validated({UsersValiGroups.Login.class}) //登陆校验组, 减少Service层校验
             UserDTO userDTO
     ) throws AccountNotFoundException {
-
         String token = usersFunc.login(userDTO);
-
-        if (StrUtil.isBlank(token)) {
-            return Result.fail("登录失败");
-        }
-        return Result.success(token);
+        return StrUtil.isBlank(token) ? Result.fail("登录失败") : Result.success(token);
     }
     //http://localhost:10000/Guest/users/login
 
@@ -102,7 +97,16 @@ public class UsersControl {
     /**
      * 注册
      */
+    @PostMapping("/register")
+    @Operation(summary = "注册")
+    @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
+    public Result<String> register(
+            @RequestBody
+            UserDTO userDTO) {
 
+        return usersFunc.register(userDTO) ? Result.success("注册成功") : Result.fail("注册失败");
+    }
+    //http://localhost:10000/Guest/users/register
 
     //! ADD
 

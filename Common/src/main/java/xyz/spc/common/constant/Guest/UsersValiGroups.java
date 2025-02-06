@@ -12,4 +12,10 @@ public final class UsersValiGroups extends ValidationBasicGroups {
      */
     public interface Login {
     }
+
+    /**
+     * 注册组
+     */
+    public interface Register {
+    }
 }

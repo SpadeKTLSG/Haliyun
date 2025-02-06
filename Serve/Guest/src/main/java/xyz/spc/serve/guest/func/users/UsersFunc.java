@@ -20,4 +20,9 @@ public interface UsersFunc {
      * 登出
      */
     Boolean logout();
+
+    /**
+     * 注册
+     */
+    boolean register(UserDTO userDTO);
 }

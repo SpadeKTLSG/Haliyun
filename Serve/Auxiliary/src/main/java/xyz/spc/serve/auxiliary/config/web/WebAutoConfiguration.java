@@ -8,6 +8,7 @@ import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import xyz.spc.serve.auxiliary.config.log.MLogPrintAspect;
 import xyz.spc.serve.auxiliary.config.web.compo.GlobalExceptionHandler;
 import xyz.spc.serve.auxiliary.config.web.compo.InitializeDispatcherServletController;
 import xyz.spc.serve.auxiliary.config.web.compo.InitializeDispatcherServletHandler;
@@ -52,5 +53,12 @@ public class WebAutoConfiguration {
     public InitializeDispatcherServletHandler initializeDispatcherServletHandler(RestTemplate simpleRestTemplate, ConfigurableEnvironment configurableEnvironment) {
         log.debug("DispatcherServlet处理器初始化器装配完成");
         return new InitializeDispatcherServletHandler(simpleRestTemplate, configurableEnvironment);
+    }
+
+
+    @Bean
+    public MLogPrintAspect mLogPrintAspect() {
+        log.debug("MLog打印切面装配完成");
+        return new MLogPrintAspect();
     }
 }

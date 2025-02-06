@@ -8,7 +8,7 @@ import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.common.util.collecUtil.StringUtil;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
-import xyz.spc.serve.auxiliary.config.redis.RedisCacheGeneral;
+import xyz.spc.serve.auxiliary.config.redis.tool.RedisCacheGeneral;
 
 /**
  * 用户登录校验验证码责任链处理器

@@ -1,4 +1,4 @@
-package xyz.spc.serve.auxiliary.config.redis;
+package xyz.spc.serve.auxiliary.config.redis.compo;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.NotNull;

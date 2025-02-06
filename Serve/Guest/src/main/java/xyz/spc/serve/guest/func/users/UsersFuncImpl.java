@@ -24,7 +24,7 @@ import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
-import xyz.spc.serve.auxiliary.config.redis.RedisCacheGeneral;
+import xyz.spc.serve.auxiliary.config.redis.tool.RedisCacheGeneral;
 import xyz.spc.serve.guest.common.enums.UsersChainMarkEnum;
 
 import javax.security.auth.login.AccountNotFoundException;

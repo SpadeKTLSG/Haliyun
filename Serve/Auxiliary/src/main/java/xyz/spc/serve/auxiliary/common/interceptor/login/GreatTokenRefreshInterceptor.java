@@ -16,7 +16,7 @@ import xyz.spc.common.funcpack.errorcode.ServerError;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
-import xyz.spc.serve.auxiliary.config.redis.RedisCacheGeneral;
+import xyz.spc.serve.auxiliary.config.redis.tool.RedisCacheGeneral;
 
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;

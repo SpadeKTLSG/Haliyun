@@ -1,5 +1,7 @@
-package xyz.spc.serve.auxiliary.config.redis;
+package xyz.spc.serve.auxiliary.config.redis.tool;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.BoundSetOperations;
 import org.springframework.data.redis.core.HashOperations;
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 /**
  * spring redis 工具箱 (通用)
@@ -19,6 +22,22 @@ public class RedisCacheGeneral {
 
     @Autowired
     public RedisTemplate redisTemplate;
+
+
+    /**
+     * 构建缓存标识
+     */
+    public static String buildKey(String... keys) {
+        Stream.of(keys).forEach(each -> Optional.ofNullable(Strings.emptyToNull(each)).orElseThrow(() -> new RuntimeException("构建缓存 key 不允许为空")));
+        return Joiner.on("_").join(keys);
+    }
+
+    /**
+     * 判断结果是否为空或空的字符串
+     */
+    public static boolean isNullOrBlank(Object cacheVal) {
+        return cacheVal == null || (cacheVal instanceof String && Strings.isNullOrEmpty((String) cacheVal));
+    }
 
     /**
      * 缓存基本的对象，Integer、String、实体类等

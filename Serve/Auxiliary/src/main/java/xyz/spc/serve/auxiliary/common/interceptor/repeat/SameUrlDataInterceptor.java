@@ -11,7 +11,7 @@ import xyz.spc.common.funcpack.repeat.RepeatSubmitInterceptor;
 import xyz.spc.common.util.collecUtil.StringUtil;
 import xyz.spc.common.util.webUtil.HttpsUtil;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
-import xyz.spc.serve.auxiliary.config.redis.RedisCacheGeneral;
+import xyz.spc.serve.auxiliary.config.redis.tool.RedisCacheGeneral;
 
 import java.util.HashMap;
 import java.util.Map;

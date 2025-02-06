@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RedissonClient;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -12,10 +13,13 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
+import xyz.spc.serve.auxiliary.config.redis.compo.StringRedisTemplateProxy;
+import xyz.spc.serve.auxiliary.config.redis.core.RedisDistributedProperties;
 
 import java.time.Duration;
 import java.util.Objects;
@@ -64,6 +68,15 @@ public class RedisConfig {
 
         log.debug("RedisTemplate配置完成");
         return template;
+    }
+
+
+    /**
+     * 配置StringRedisTemplateProxy
+     */
+    @Bean
+    public StringRedisTemplateProxy stringRedisTemplateProxy(StringRedisTemplate stringRedisTemplate, RedisDistributedProperties redisProperties, RedissonClient redissonClient) {
+        return new StringRedisTemplateProxy(stringRedisTemplate, redisProperties, redissonClient);
     }
 
 

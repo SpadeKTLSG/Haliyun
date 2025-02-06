@@ -19,4 +19,14 @@ public interface LoginCommonCT {
      * 验证码过期时间
      */
     Long LOGIN_CODE_TTL_GUEST = 1800L; // 30分钟
+
+    /**
+     * 密码输入错误次数限制
+     */
+    Long PWD_ERR_CNT_LIMIT = 5L;
+
+    /**
+     * 密码输错记录时间 (DAY)
+     */
+    Long PWD_ERR_CNT_FREEZE_TIME = 1L; // 1天
 }

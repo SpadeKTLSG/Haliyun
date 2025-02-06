@@ -221,27 +221,28 @@ public class UsersFuncImpl implements UsersFunc {
             throw new ClientException(ClientError.USER_CODE_ERROR);
         }
 
-        // 校验: 账户 Account是否已存在 - 已通过唯一索引保证, 这里用布隆再来一次校验
+        // 校验: 账户 Account是否已存在 - 已通过唯一索引保证, 这里用布隆再来一次校验, 因为可能存在数据库生成不及时导致冲突
         if (userRegisterCachePenetrationBloomFilter.contains(userDTO.getAccount())) {
             throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
         }
 
         // 加锁注册业务流程
-        RLock lock = redissonClient.getLock(LOCK_USER_REGISTER_KEY + requestParam.getUsername());
+        RLock lock = redissonClient.getLock(LoginCacheKey.REGISTER_REQUEST_ONLY_KEY + userDTO.getAccount());
         if (!lock.tryLock()) {
+            // 没抢到锁就意味着可能是其他人来注册同样的名字了
             throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
         }
         try {
-
-
-            userRegisterCachePenetrationBloomFilter.add(userDTO.getAccount());
+            usersRepo.addUser(userDTO);
         } catch (ClientException ex) {
             throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
         } finally {
+            //成功注册需要添加到布隆过滤器
+            userRegisterCachePenetrationBloomFilter.add(userDTO.getAccount());
             lock.unlock();
         }
 
-
+        return true;
     }
 
 

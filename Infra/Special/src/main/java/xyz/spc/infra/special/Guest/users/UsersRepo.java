@@ -4,11 +4,17 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import xyz.spc.common.constant.Guest.users.LoginCommonCT;
 import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.exception.ClientException;
+import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
+import xyz.spc.common.funcpack.uuid.IdUtil;
 import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.domain.dos.Guest.users.UserDetailDO;
+import xyz.spc.domain.dos.Guest.users.UserFuncDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.mapper.Guest.users.UserDetailMapper;
@@ -21,6 +27,7 @@ import xyz.spc.infra.repo.Guest.users.UserService;
 /**
  * 用户Repo
  */
+@Slf4j
 @Service
 @Data
 @RequiredArgsConstructor
@@ -62,4 +69,46 @@ public class UsersRepo {
         return new User().fromDO(tmp);
     }
 
+
+    /**
+     * 添加用户
+     */
+    @Transactional(rollbackFor = Exception.class, timeout = 15)
+    public void addUser(UserDTO userDTO) {
+
+        boolean isAdmin = userDTO.getAdmin() != 0;
+        // 管理员注册需要额外的校验 todo: 使用一张贵宾表来记录信息. 需要时候去拉
+
+        // 注册插入三张表, 生成统一ID
+        Long id = SnowflakeIdUtil.nextId();
+
+        //? 插入 UserDO
+        UserDO userDO = UserDO.builder()
+                .id(id)
+                .admin(isAdmin ? 1 : 0)
+                .loginType(User.LOGIN_TYPE_ACCOUNT_PHONE)
+                .account(userDTO.getAccount())
+                .password(userDTO.getPassword()) //todo 未来做密码加密存库
+                .build();
+        userService.save(userDO);
+
+        //? 插入 UserDetailDO
+        UserDetailDO userDetailDO = UserDetailDO.builder()
+                .id(id)
+                .phone(userDTO.getPhone())
+                .area(LoginCommonCT.DEFAULT_REGISTER_LOCATION)
+                .nickname(IdUtil.fastSimpleUUID().substring(0, 12))
+                .introduce(LoginCommonCT.DEFAULT_REGISTER_INTRODUCE)
+                .build();
+        userDetailService.save(userDetailDO);
+
+        //? 插入 UserFuncDO
+        UserFuncDO userFuncDO = UserFuncDO.builder()
+                .id(id)
+                .registerCode(IdUtil.fastSimpleUUID())
+                .build();
+        userFuncService.save(userFuncDO);
+
+        log.debug("用户: {} 注册成功: ", userDTO.getAccount()); //todo, 用户注册后在后台拉异步的记录, 记录用户是第几个用户等功能
+    }
 }

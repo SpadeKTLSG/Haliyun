@@ -3,7 +3,7 @@ package xyz.spc.common.funcpack.uuid;
 /**
  * ID生成器工具类
  */
-public class IdUtils {
+public final class IdUtil {
     /**
      * 获取随机UUID
      *

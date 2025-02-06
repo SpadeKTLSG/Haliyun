@@ -3,7 +3,7 @@ package xyz.spc.common.util.fileUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import xyz.spc.common.constant.UploadDownloadCT;
-import xyz.spc.common.funcpack.uuid.IdUtils;
+import xyz.spc.common.funcpack.uuid.IdUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -75,7 +75,7 @@ public final class FileUtil {
         String pathName;
         try {
             String extension = getFileExtendName(data);
-            pathName = getCurrDate() + "/" + IdUtils.fastUUID() + "." + extension;
+            pathName = getCurrDate() + "/" + IdUtil.fastUUID() + "." + extension;
             File file = UploadUtil.getAbsoluteFile(uploadDir, pathName);
             fos = new FileOutputStream(file);
             fos.write(data);

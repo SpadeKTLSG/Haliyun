@@ -29,4 +29,15 @@ public interface LoginCommonCT {
      * 密码输错记录时间 (DAY)
      */
     Long PWD_ERR_CNT_FREEZE_TIME = 1L; // 1天
+
+
+    /**
+     * 默认注册用户位置
+     */
+    String DEFAULT_REGISTER_LOCATION = "门头沟";
+
+    /**
+     * 默认注册用户介绍
+     */
+    String DEFAULT_REGISTER_INTRODUCE = "这个人很懒，什么都没有留下";
 }

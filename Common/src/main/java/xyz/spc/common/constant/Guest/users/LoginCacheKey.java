@@ -18,29 +18,34 @@ public interface LoginCacheKey {
     /**
      * 验证码Key前缀
      */
-    String LOGIN_CODE_KEY = "guest:login:code:";
+    String LOGIN_CODE_KEY = "Guests:users:login:code:";
 
-    String REGISTER_ONLY_REDISSION_CODE = "sysCache:register_only_redission_code:";
+    /**
+     * 登录请求唯一性Account Key前缀
+     */
+    String LOGIN_REQUEST_ONLY_KEY = "Guests:users:login:login_only:";
+
+    /**
+     * 注册请求唯一性Account Key前缀
+     */
+    String REGISTER_REQUEST_ONLY_KEY = "Guests:users:login:register_only:";
 
     /**
      * 发送验证码时间Key前缀
      */
-    String SENDCODE_SENDTIME_KEY = "sms:sendtime:";
+    String SENDCODE_SENDTIME_KEY = "Guests:users:login:sms:sendtime:";
 
 
     /**
      * 验证码一级限流Key前缀
      */
-    String ONE_LEVERLIMIT_KEY = "limit:onelevel:";
+    String ONE_LEVERLIMIT_KEY = "Guests:users:login:sms:limit:onelevel:";
 
 
     /**
      * 验证码二级限流Key前缀
      */
-    String TWO_LEVERLIMIT_KEY = "limit:twolevel:";
+    String TWO_LEVERLIMIT_KEY = "Guests:users:login:sms:limit:twolevel:";
 
-    /**
-     * 登录请求唯一性Key前缀 ( + 用户账号)
-     */
-    String LOGIN_REQUEST_ONLY_KEY = "sysCache:login_request_only:";
+
 }

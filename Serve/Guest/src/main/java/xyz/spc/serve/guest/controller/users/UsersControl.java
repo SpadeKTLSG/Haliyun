@@ -6,7 +6,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
@@ -52,7 +53,8 @@ public class UsersControl {
     public Result<String> getCode(
             @RequestParam("phone")
             @Xss(message = "手机号不能包含脚本字符")
-            @NotNull(message = "手机号不能为空")
+            @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
+            @NotEmpty(message = "登陆手机号不能为空")
             String phone
     ) {
         String code = usersFunc.sendCode(phone);
@@ -74,7 +76,7 @@ public class UsersControl {
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
     public Result<String> login(
             @RequestBody
-            @Validated({UsersValiGroups.Login.class}) //登陆校验组, 减少Service层校验
+            @Validated({UsersValiGroups.Common.class, UsersValiGroups.Login.class}) //登陆校验组, 减少Service层校验
             UserDTO userDTO
     ) throws AccountNotFoundException {
         String token = usersFunc.login(userDTO);
@@ -102,8 +104,9 @@ public class UsersControl {
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
     public Result<String> register(
             @RequestBody
-            UserDTO userDTO) {
-
+            @Validated({UsersValiGroups.Common.class, UsersValiGroups.Register.class})
+            UserDTO userDTO
+    ) {
         return usersFunc.register(userDTO) ? Result.success("注册成功") : Result.fail("注册失败");
     }
     //http://localhost:10000/Guest/users/register

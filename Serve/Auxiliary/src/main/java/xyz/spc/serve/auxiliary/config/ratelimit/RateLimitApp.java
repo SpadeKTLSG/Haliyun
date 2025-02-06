@@ -95,7 +95,7 @@ public class RateLimitApp {
 
         if (executeTimes == 0) {
             log.warn("【{}】限流器 [规则 = {} ] 在 {} 毫秒内已达到其访问上限: {}", key, limitType, ttl, max);
-            throw new ClientException("系统繁忙，请稍后再试");
+            throw new ClientException("系统繁忙, 请稍后再试");
         } else {
             log.debug("【{}】限流器 [规则 = {} ] 在 {} 毫秒内访问 {} 次", key, limitType, ttl, executeTimes);
         }

@@ -35,7 +35,7 @@ public class UserDTO extends BaseDTO {
     private String account;
 
     @NotChinese(message = "密码不能包含中文")
-    @Pattern(regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$", message = "密码格式不正确")//自定义密码格式校验: 6-16位数字字母组合
+    @Pattern(groups = {UsersValiGroups.Common.class}, regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$", message = "密码格式不正确")//自定义密码格式校验: 6-16位数字字母组合
     @NotEmpty(groups = {UsersValiGroups.Login.class}, message = "登陆密码不能为空")
     @NotEmpty(groups = {UsersValiGroups.Register.class}, message = "注册密码不能为空")
     private String password;
@@ -43,14 +43,16 @@ public class UserDTO extends BaseDTO {
     /**
      * 手机号
      */
-    @Pattern(regexp = "^1[3-9]\\d{9}$", groups = {UsersValiGroups.Login.class}, message = "手机号格式不正确") //手机号格式校验: 1开头的11位数字
+    @Pattern(groups = {UsersValiGroups.Common.class}, regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
     @NotEmpty(groups = {UsersValiGroups.Login.class}, message = "登陆手机号不能为空")
+    @NotEmpty(groups = {UsersValiGroups.Register.class}, message = "注册手机号不能为空")
     private String phone;
 
     /**
      * 验证码
      */
-    @NotEmpty(groups = {UsersValiGroups.Login.class}, message = "登陆验证码不能为空")
+    @NotEmpty(groups = {UsersValiGroups.Login.class}, message = "验证码不能为空")
+    @NotEmpty(groups = {UsersValiGroups.Register.class}, message = "验证码不能为空")
     private String code;
 
     /**

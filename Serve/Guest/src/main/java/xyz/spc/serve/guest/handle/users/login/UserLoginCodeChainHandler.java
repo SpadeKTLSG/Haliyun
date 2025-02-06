@@ -2,7 +2,7 @@ package xyz.spc.serve.guest.handle.users.login;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import xyz.spc.common.constant.Guest.LoginCacheKey;
+import xyz.spc.common.constant.Guest.users.LoginCacheKey;
 import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.common.util.collecUtil.StringUtil;

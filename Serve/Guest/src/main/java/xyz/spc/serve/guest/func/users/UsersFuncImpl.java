@@ -12,17 +12,17 @@ import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import xyz.spc.common.constant.Guest.LoginCacheKey;
-import xyz.spc.common.constant.Guest.LoginCommonCT;
+import xyz.spc.common.constant.Guest.users.LoginCacheKey;
+import xyz.spc.common.constant.Guest.users.LoginCommonCT;
 import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.exception.AbstractException;
 import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.funcpack.uuid.UUID;
+import xyz.spc.common.util.collecUtil.StringUtil;
 import xyz.spc.common.util.encryptUtil.MD5Util;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
-import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
@@ -120,7 +120,7 @@ public class UsersFuncImpl implements UsersFunc {
 
         //生成验证码
         String code = codeUtil.achieveCode(); //自定义工具类生成验证码
-        rcg.setCacheObject(LoginCacheKey.LOGIN_CODE_KEY + phone, code, Math.toIntExact(LoginCacheKey.LOGIN_CODE_TTL_GUEST), TimeUnit.MINUTES);
+        rcg.setCacheObject(LoginCacheKey.LOGIN_CODE_KEY + phone, code, Math.toIntExact(LoginCommonCT.LOGIN_CODE_TTL_GUEST), TimeUnit.MINUTES);
         // 更新发送时间和次数
         redisTemplate.opsForZSet().add(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, System.currentTimeMillis() + "", System.currentTimeMillis());
 
@@ -214,37 +214,35 @@ public class UsersFuncImpl implements UsersFunc {
     public boolean register(UserDTO userDTO) {
 
         // Control已做限流
-        // 校验: 确认验证码 + 登陆手机号 匹配
+        // 校验: 确认验证码
+        String cacheCode = rcg.getCacheObject(LoginCacheKey.LOGIN_CODE_KEY + userDTO.getPhone());
+        String code = userDTO.getCode();
+        if (StringUtil.isBlank(cacheCode) || !cacheCode.equals(code)) {
+            throw new ClientException(ClientError.USER_CODE_ERROR);
+        }
 
-
-        // 校验: 账户是否已存在
+        // 校验: 账户 Account是否已存在 - 已通过唯一索引保证, 这里用布隆再来一次校验
+        if (userRegisterCachePenetrationBloomFilter.contains(userDTO.getAccount())) {
+            throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
+        }
 
         // 加锁注册业务流程
         RLock lock = redissonClient.getLock(LOCK_USER_REGISTER_KEY + requestParam.getUsername());
         if (!lock.tryLock()) {
-            throw new ClientException(USER_NAME_EXIST);
+            throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
         }
         try {
-            int inserted = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
-            if (inserted < 1) {
-                throw new ClientException(USER_SAVE_ERROR);
-            }
-            groupService.saveGroup(requestParam.getUsername(), "默认分组");
-            userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
-        } catch (DuplicateKeyException ex) {
-            throw new ClientException(USER_EXIST);
+
+
+            userRegisterCachePenetrationBloomFilter.add(userDTO.getAccount());
+        } catch (ClientException ex) {
+            throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
         } finally {
             lock.unlock();
         }
 
 
     }
-
-
-    //register
-    //    public Boolean hasUsername(String username) {
-    //        return !userRegisterCachePenetrationBloomFilter.contains(username);
-    //    }
 
 
 }

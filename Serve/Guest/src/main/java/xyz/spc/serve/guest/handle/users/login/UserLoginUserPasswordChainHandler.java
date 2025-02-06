@@ -16,6 +16,8 @@ public class UserLoginUserPasswordChainHandler implements UserLoginChainFilter<U
     @Override
     public void handler(User user, UserDTO userDTO) {
         if (!user.passwordEquals(userDTO.getPassword())) {
+            //密码错误需要记录错误次数
+
             throw new ClientException(ClientError.USER_PASSWORD_ERROR);
         }
     }

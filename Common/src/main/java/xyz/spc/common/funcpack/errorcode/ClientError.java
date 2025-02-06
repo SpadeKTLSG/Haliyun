@@ -37,6 +37,7 @@ public enum ClientError {
     USER_LOGIN_ERROR("A1021", "用户登陆错误"),
     USER_CODE_ERROR("A1022", "用户验证码错误"),
     USER_ACCOUNT_COLLISION("A1022", "用户账号已存在错误"),
+    USER_ADMIN_TYPE_NOT_EQUAL("A1022", "用户账号类型不匹配"),
 
     // ========== 二级宏观错误码 用户权限 ==========
     USER_AUTH_ERROR("A2001", "用户无权限"),

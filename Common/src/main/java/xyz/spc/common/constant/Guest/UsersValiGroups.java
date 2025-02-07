@@ -7,11 +7,6 @@ import xyz.spc.common.funcpack.validate.ValidationBasicGroups;
  */
 public final class UsersValiGroups extends ValidationBasicGroups {
 
-    /**
-     * 公共组
-     */
-    public interface Common {
-    }
 
     /**
      * 登陆组

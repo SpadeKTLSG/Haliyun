@@ -77,7 +77,7 @@ public class UsersRepo {
     public void addUser(UserDTO userDTO) {
 
         boolean isAdmin = userDTO.getAdmin() != 0;
-        // 管理员注册需要额外的校验 todo: 使用一张贵宾表来记录信息. 需要时候去拉
+        // 管理员注册需要额外的校验 使用一张贵宾表来记录信息. 需要时候去拉
 
         // 注册插入三张表, 生成统一ID
         Long id = SnowflakeIdUtil.nextId();
@@ -88,7 +88,7 @@ public class UsersRepo {
                 .admin(isAdmin ? 1 : 0)
                 .loginType(User.LOGIN_TYPE_ACCOUNT_PHONE)
                 .account(userDTO.getAccount())
-                .password(userDTO.getPassword()) //todo 未来做密码加密存库
+                .password(userDTO.getPassword()) //note: 前端做Data加密来保证传输过程的安全, 后端于是不做处理落库
                 .build();
         userService.save(userDO);
 

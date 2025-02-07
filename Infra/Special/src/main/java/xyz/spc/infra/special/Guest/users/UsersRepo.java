@@ -39,8 +39,7 @@ public class UsersRepo {
     public final UserDetailMapper userDetailMapper;
     public final UserFuncService userFuncService;
     public final UserFuncMapper userFuncMapper;
-
-
+    
     public User getUserByUserDTO(UserDTO userDTO, UserDTO.UserDTOField field) throws ClientException {
 
         UserDO tmp = switch (field) {

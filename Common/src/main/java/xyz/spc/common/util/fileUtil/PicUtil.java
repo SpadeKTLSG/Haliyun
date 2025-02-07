@@ -6,6 +6,7 @@ import com.drew.metadata.Directory;
 import com.drew.metadata.Metadata;
 import com.drew.metadata.Tag;
 import com.drew.metadata.exif.ExifSubIFDDirectory;
+import xyz.spc.common.funcpack.exception.ServiceException;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,7 +51,7 @@ public final class PicUtil {
             }
             if (directory.hasErrors()) {
                 for (String error : directory.getErrors()) {
-                    log.error("ERROR: %s", error);
+                    throw new ServiceException("图片读取失败: " + error);
                 }
             }
         }
@@ -76,16 +77,10 @@ public final class PicUtil {
             for (Tag tag : directory.getTags()) {
                 String tagName = tag.getTagName();  //标签名
                 String desc = tag.getDescription(); //标签信息
-                if (tagName.equals("Image Height")) {
-                    map.put("imgHeigh", desc);
-                } else if (tagName.equals("Image Width")) {
-                    map.put("imgWeith", desc);
-                } else if (tagName.equals("Date/Time Original")) {
-                    map.put("time", desc);
-                } else if (tagName.equals("GPS Latitude")) {
-                    map.put("lat", GpsUtil.pointToLatlong(desc));
-                } else if (tagName.equals("GPS Longitude")) {
-                    map.put("lon", GpsUtil.pointToLatlong(desc));
+                switch (tagName) {
+                    case "Image Height" -> map.put("imgHeigh", desc);
+                    case "Image Width" -> map.put("imgWeith", desc);
+                    case "Date/Time Original" -> map.put("time", desc);
                 }
             }
         }

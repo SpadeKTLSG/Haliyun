@@ -24,6 +24,18 @@ import static xyz.spc.common.util.sysUtil.CharsetUtil.UTF_8;
 @Slf4j
 public final class HttpsUtil {
 
+
+    private static final char DELIMITER = '/';
+
+    private static final String DELIMITER_STR = "/";
+
+    private static final String HTTP = "http";
+
+    private static final String HTTP_PROTOCOL = "http://";
+
+    private static final String HTTPS_PROTOCOL = "https://";
+
+
     /**
      * 判断url是否与规则配置
      * ? 表示单个字符;
@@ -304,6 +316,200 @@ public final class HttpsUtil {
         } else {
             return url + "?" + name + "=" + value;
         }
+    }
+
+
+    /**
+     * 获取远程文件大小
+     *
+     * @param url 文件 URL
+     * @return 文件大小
+     */
+    public static Long getRemoteFileSize(String url) throws IOException {
+        URL urlObject = new URL(url);
+        URLConnection conn = urlObject.openConnection();
+        return (long) conn.getContentLength();
+    }
+
+
+    /**
+     * 移除 URL 中的前后的所有 '/'
+     *
+     * @param path 路径
+     * @return 如 path = '/folder1/file1/', 返回 'folder1/file1'
+     * 如 path = '///folder1/file1//', 返回 'folder1/file1'
+     */
+    public static String trimSlashes(String path) {
+        path = trimStartSlashes(path);
+        path = trimEndSlashes(path);
+        return path;
+    }
+
+
+    /**
+     * 移除 URL 中的第一个 '/'
+     *
+     * @param path 路径
+     * @return 如 path = '/folder1/file1', 返回 'folder1/file1'
+     * 如 path = '/folder1/file1', 返回 'folder1/file1'
+     */
+    public static String trimStartSlashes(String path) {
+        if (StrUtil.isEmpty(path)) {
+            return path;
+        }
+
+        while (path.startsWith(DELIMITER_STR)) {
+            path = path.substring(1);
+        }
+
+        return path;
+    }
+
+
+    /**
+     * 移除 URL 中的最后一个 '/'
+     *
+     * @param path 路径
+     * @return 如 path = '/folder1/file1/', 返回 '/folder1/file1'
+     * 如 path = '/folder1/file1///', 返回 '/folder1/file1'
+     */
+    public static String trimEndSlashes(String path) {
+        if (StrUtil.isEmpty(path)) {
+            return path;
+        }
+
+        while (path.endsWith(DELIMITER_STR)) {
+            path = path.substring(0, path.length() - 1);
+        }
+
+        return path;
+    }
+
+
+    /**
+     * 去除路径中所有重复的 '/'
+     *
+     * @param path 路径
+     * @return 如 path = '/folder1//file1/', 返回 '/folder1/file1/'
+     * 如 path = '/folder1////file1///', 返回 '/folder1/file1/'
+     */
+    public static String removeDuplicateSlashes(String path) {
+        if (StrUtil.isEmpty(path)) {
+            return path;
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        // 是否包含 http 或 https 协议信息
+        boolean containProtocol = StrUtil.containsAnyIgnoreCase(path, HTTP_PROTOCOL, HTTPS_PROTOCOL);
+
+        if (containProtocol) {
+            path = trimStartSlashes(path);
+        }
+
+        // 是否包含 http 协议信息
+        boolean startWithHttpProtocol = StrUtil.startWithIgnoreCase(path, HTTP_PROTOCOL);
+        // 是否包含 https 协议信息
+        boolean startWithHttpsProtocol = StrUtil.startWithIgnoreCase(path, HTTPS_PROTOCOL);
+
+        if (startWithHttpProtocol) {
+            sb.append(HTTP_PROTOCOL);
+        } else if (startWithHttpsProtocol) {
+            sb.append(HTTPS_PROTOCOL);
+        }
+
+        for (int i = sb.length(); i < path.length() - 1; i++) {
+            char current = path.charAt(i);
+            char next = path.charAt(i + 1);
+            if (!(current == DELIMITER && next == DELIMITER)) {
+                sb.append(current);
+            }
+        }
+        sb.append(path.charAt(path.length() - 1));
+        return sb.toString();
+    }
+
+
+    /**
+     * 去除路径中所有重复的 '/', 并且去除开头的 '/'
+     *
+     * @param path 路径
+     * @return 如 path = '/folder1//file1/', 返回 'folder1/file1/'
+     * 如 path = '///folder1////file1///', 返回 'folder1/file1/'
+     */
+    public static String removeDuplicateSlashesAndTrimStart(String path) {
+        path = removeDuplicateSlashes(path);
+        path = trimStartSlashes(path);
+        return path;
+    }
+
+
+    /**
+     * 去除路径中所有重复的 '/', 并且去除结尾的 '/'
+     *
+     * @param path 路径
+     * @return 如 path = '/folder1//file1/', 返回 '/folder1/file1'
+     * 如 path = '///folder1////file1///', 返回 '/folder1/file1'
+     */
+    public static String removeDuplicateSlashesAndTrimEnd(String path) {
+        path = removeDuplicateSlashes(path);
+        path = trimEndSlashes(path);
+        return path;
+    }
+
+
+    /**
+     * 拼接 URL，并去除重复的分隔符 '/'，并去除开头的 '/', 但不会影响 http:// 和 https:// 这种头部.
+     *
+     * @param strs 拼接的字符数组
+     * @return 拼接结果
+     */
+    public static String concatTrimStartSlashes(String... strs) {
+        return trimStartSlashes(concat(strs));
+    }
+
+
+    /**
+     * 拼接 URL，并去除重复的分隔符 '/'，并去除结尾的 '/', 但不会影响 http:// 和 https:// 这种头部.
+     *
+     * @param strs 拼接的字符数组
+     * @return 拼接结果
+     */
+    public static String concatTrimEndSlashes(String... strs) {
+        return trimEndSlashes(concat(strs));
+    }
+
+
+    /**
+     * 拼接 URL，并去除重复的分隔符 '/'，并去除开头和结尾的 '/', 但不会影响 http:// 和 https:// 这种头部.
+     *
+     * @param strs 拼接的字符数组
+     * @return 拼接结果
+     */
+    public static String concatTrimSlashes(String... strs) {
+        return trimSlashes(concat(strs));
+    }
+
+
+    /**
+     * 拼接 URL，并去除重复的分隔符 '/'，但不会影响 http:// 和 https:// 这种头部.
+     *
+     * @param strs 拼接的字符数组
+     * @return 拼接结果
+     */
+    public static String concat(String... strs) {
+        StringBuilder sb = new StringBuilder(DELIMITER_STR);
+        for (int i = 0; i < strs.length; i++) {
+            String str = strs[i];
+            if (StrUtil.isEmpty(str)) {
+                continue;
+            }
+            sb.append(str);
+            if (i != strs.length - 1) {
+                sb.append(DELIMITER);
+            }
+        }
+        return removeDuplicateSlashes(sb.toString());
     }
 
 

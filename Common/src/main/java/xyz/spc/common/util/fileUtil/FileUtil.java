@@ -1,5 +1,6 @@
 package xyz.spc.common.util.fileUtil;
 
+import cn.hutool.core.util.NumberUtil;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import xyz.spc.common.constant.UploadDownloadCT;
@@ -72,7 +73,7 @@ public final class FileUtil {
      * @return 目标文件
      * @throws IOException IO异常
      */
-    public static String writeBytes(byte[] data, String uploadDir, String type]) throws IOException {
+    public static String writeBytes(byte[] data, String uploadDir, String type) throws IOException {
         FileOutputStream fos = null;
         String pathName;
         try {
@@ -230,4 +231,21 @@ public final class FileUtil {
     public static float toGBSize(long size) {
         return (float) size / 1024 / 1024 / 1024;
     }
+
+    /**
+     * 将文件大小转换为可读单位
+     *
+     * @param bytes 字节数
+     * @return 文件大小可读单位
+     */
+    public static String bytesToSize(long bytes) {
+        if (bytes == 0) {
+            return "0";
+        }
+        double k = 1024;
+        String[] sizes = new String[]{"B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
+        double i = Math.floor(Math.log(bytes) / Math.log(k));
+        return NumberUtil.round(bytes / Math.pow(k, i), 3) + " " + sizes[(int) i];
+    }
+
 }

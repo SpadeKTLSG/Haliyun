@@ -26,6 +26,8 @@ public @interface MLog {
      * @return 打印结果中是否包含出参，{@link Boolean#TRUE} 打印，{@link Boolean#FALSE} 不打印
      */
     boolean output() default true;
+
+    
 }
 
 

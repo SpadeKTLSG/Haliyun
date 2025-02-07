@@ -14,8 +14,10 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.spc.common.funcpack.exception.AbstractException;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -23,7 +25,7 @@ import java.util.Optional;
 public class MLogPrintAspect {
 
     /**
-     * 打印类或方法上的 {@link MLog}
+     * 打印类或方法上的 {@link MLog}, 并作入库
      */
     @Around("@within(xyz.spc.serve.auxiliary.config.log.MLog) || @annotation(xyz.spc.serve.auxiliary.config.log.MLog)")
     public Object printMLog(ProceedingJoinPoint joinPoint) throws Throwable {
@@ -32,8 +34,12 @@ public class MLogPrintAspect {
 
         String beginTime = DateUtil.now();
         Object result = null;
+        boolean win = true;
         try {
-            result = joinPoint.proceed();
+            result = joinPoint.proceed(); //放行
+        } catch (AbstractException e) {
+            win = false;
+            throw e; //只作记录, 仍然抛出异常
         } finally {
             //对象方法
             Method targetMethod = joinPoint.getTarget().getClass().getDeclaredMethod(methodSignature.getName(), methodSignature.getMethod().getParameterTypes());
@@ -41,33 +47,38 @@ public class MLogPrintAspect {
             MLog logAnnotation = Optional.ofNullable(targetMethod.getAnnotation(MLog.class)).orElse(joinPoint.getTarget().getClass().getAnnotation(MLog.class));
 
             //打印日志
-            if (logAnnotation != null) {
-                MLogPrint logPrint = new MLogPrint();
-                logPrint.setBeginTime(beginTime);
+            Objects.requireNonNull(logAnnotation);
+            MLogPrint logPrint = new MLogPrint();
+            logPrint.setBeginTime(beginTime);
 
-                //开启了打印入参
-                if (logAnnotation.input()) {
-                    logPrint.setInputParams(buildInput(joinPoint));
-                }
-                //开启了打印出参
-                if (logAnnotation.output()) {
-                    logPrint.setOutputParams(result);
-                }
-
-
-                String methodType = "", requestURI = "";
-                try {
-                    ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-                    if (servletRequestAttributes != null) {
-                        methodType = servletRequestAttributes.getRequest().getMethod();
-                    }
-                    if (servletRequestAttributes != null) {
-                        requestURI = servletRequestAttributes.getRequest().getRequestURI();
-                    }
-                } catch (Exception ignored) {
-                }
-                log.debug("[{}] {}, \t executeTime: {}ms, \t info: {}", methodType, requestURI, SystemClock.now() - startTime, JSON.toJSONString(logPrint));
+            //开启了打印入参
+            if (logAnnotation.input()) {
+                logPrint.setInputParams(buildInput(joinPoint));
             }
+            //开启了打印出参
+            if (logAnnotation.output()) {
+                logPrint.setOutputParams(result);
+            }
+
+
+            String methodType = "", requestURI = "";
+            try {
+                ServletRequestAttributes servletRequestAttributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+                if (servletRequestAttributes != null) {
+                    methodType = servletRequestAttributes.getRequest().getMethod();
+                }
+                if (servletRequestAttributes != null) {
+                    requestURI = servletRequestAttributes.getRequest().getRequestURI();
+                }
+            } catch (Exception ignored) {
+            }
+
+            if (win) {
+                log.debug("[Win]:[{}] {}, \t executeTime: {}ms, \t info: {}", methodType, requestURI, SystemClock.now() - startTime, JSON.toJSONString(logPrint));
+            } else {
+                log.warn("[Fail]:[{}] {}, \t executeTime: {}ms, \t info: {}", methodType, requestURI, SystemClock.now() - startTime, JSON.toJSONString(logPrint));
+            }
+
         }
         return result;
     }

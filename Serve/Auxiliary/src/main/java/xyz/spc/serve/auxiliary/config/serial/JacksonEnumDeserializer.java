@@ -39,6 +39,7 @@ public class JacksonEnumDeserializer extends JsonDeserializer<Enum<?>> implement
         if (Objects.isNull(enumType) || !enumType.isEnum()) {
             return null;
         }
+
         String text = jsonParser.getText();
         Method method = StringToEnumConverterFactory.getMethod(clazz);
         Enum<?>[] enumConstants = (Enum<?>[]) enumType.getEnumConstants();

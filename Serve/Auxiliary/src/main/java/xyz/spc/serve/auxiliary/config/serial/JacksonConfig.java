@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,6 +14,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+@Slf4j
 @Configuration
 public class JacksonConfig {
 
@@ -22,18 +24,22 @@ public class JacksonConfig {
      */
     @Bean
     public ObjectMapper objectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
-        // 序列化枚举值为数据库存储值
-        mapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
+
         SimpleModule module = new SimpleModule();
         // 添加时间序列化
         module.addSerializer(LocalDateTime.class, new LocalDateTimeSerializer());
         // 添加时间反序列化
         module.addDeserializer(LocalDateTime.class, new LocalDateTimeDeserializer());
-        // 全局将long转为String
+        // 全局将Long转为String
         module.addSerializer(Long.class, ToStringSerializer.instance);
+
+        ObjectMapper mapper = new ObjectMapper();
+        // 忽略空bean转json错误防止抛错
+        mapper.disable(SerializationFeature.FAIL_ON_EMPTY_BEANS);
+        // 序列化枚举值为数据库存储值
+        mapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
         mapper.registerModule(module);
+        log.debug("JacksonConfig 初始化完成");
         return mapper;
     }
 

@@ -97,6 +97,7 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addFormatters(FormatterRegistry registry) {
         registry.addConverterFactory(new StringToEnumConverterFactory());
+        log.debug("自定义枚举格式化器 init");
     }
 
     /**

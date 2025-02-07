@@ -1,6 +1,7 @@
 package xyz.spc.common.util.webUtil;
 
 
+import cn.hutool.core.util.StrUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -260,6 +261,9 @@ public final class HttpsUtil {
         return sb.toString();
     }
 
+    /**
+     * 信任任何证书
+     */
     private static class TrustAnyTrustManager implements X509TrustManager {
         @Override
         public void checkClientTrusted(X509Certificate[] chain, String authType) {
@@ -275,10 +279,32 @@ public final class HttpsUtil {
         }
     }
 
+    /**
+     * 信任任何主机
+     */
     private static class TrustAnyHostnameVerifier implements HostnameVerifier {
         @Override
         public boolean verify(String hostname, SSLSession session) {
             return true;
         }
     }
+
+
+    /**
+     * 给 url 拼接参数
+     *
+     * @param url   原始 URL
+     * @param name  参数名称
+     * @param value 参数值
+     * @return 拼接后的 URL
+     */
+    public static String concatQueryParam(String url, String name, String value) {
+        if (StrUtil.contains(url, "?")) {
+            return url + "&" + name + "=" + value;
+        } else {
+            return url + "?" + name + "=" + value;
+        }
+    }
+
+
 }

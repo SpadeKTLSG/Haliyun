@@ -55,11 +55,12 @@ public final class FileUtil {
      * 写数据到文件中
      *
      * @param data 数据
+     * @param type 文件类型
      * @return 目标文件
      * @throws IOException IO异常
      */
-    public static String writeImportBytes(byte[] data) throws IOException {
-        return writeBytes(data, UploadDownloadCT.DOWNLOAD_DEFAULT_PATH);
+    public static String writeImportBytes(byte[] data, String type) throws IOException {
+        return writeBytes(data, UploadDownloadCT.DOWNLOAD_DEFAULT_PATH, type);
     }
 
     /**
@@ -67,15 +68,16 @@ public final class FileUtil {
      *
      * @param data      数据
      * @param uploadDir 目标文件
+     * @param type      文件类型
      * @return 目标文件
      * @throws IOException IO异常
      */
-    public static String writeBytes(byte[] data, String uploadDir) throws IOException {
+    public static String writeBytes(byte[] data, String uploadDir, String type]) throws IOException {
         FileOutputStream fos = null;
         String pathName;
         try {
-            String extension = getFileExtendName(data);
-            pathName = getCurrDate() + "/" + IdUtil.fastUUID() + "." + extension;
+            String extension = "." + type;
+            pathName = getCurrDate() + "/" + IdUtil.fastUUID() + extension;
             File file = UploadUtil.getAbsoluteFile(uploadDir, pathName);
             fos = new FileOutputStream(file);
             fos.write(data);
@@ -84,6 +86,7 @@ public final class FileUtil {
         }
         return UploadUtil.getPathFileName(uploadDir, pathName);
     }
+
 
     /**
      * 删除文件
@@ -142,28 +145,6 @@ public final class FileUtil {
     public static String percentEncode(String s) throws UnsupportedEncodingException {
         String encode = URLEncoder.encode(s, StandardCharsets.UTF_8);
         return encode.replaceAll("\\+", "%20");
-    }
-
-
-    /**
-     * 获取图像后缀
-     *
-     * @param photoByte 图像数据
-     * @return 后缀名
-     */
-    public static String getFileExtendName(byte[] photoByte) {
-        String strFileExtendName = "jpg";
-        if ((photoByte[0] == 71) && (photoByte[1] == 73) && (photoByte[2] == 70) && (photoByte[3] == 56)
-                && ((photoByte[4] == 55) || (photoByte[4] == 57)) && (photoByte[5] == 97)) {
-            strFileExtendName = "gif";
-        } else if ((photoByte[6] == 74) && (photoByte[7] == 70) && (photoByte[8] == 73) && (photoByte[9] == 70)) {
-            strFileExtendName = "jpg";
-        } else if ((photoByte[0] == 66) && (photoByte[1] == 77)) {
-            strFileExtendName = "bmp";
-        } else if ((photoByte[1] == 80) && (photoByte[2] == 78) && (photoByte[3] == 71)) {
-            strFileExtendName = "png";
-        }
-        return strFileExtendName;
     }
 
 

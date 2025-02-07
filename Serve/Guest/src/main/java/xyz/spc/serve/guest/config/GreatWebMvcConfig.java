@@ -9,6 +9,7 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -21,6 +22,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.spc.common.funcpack.repeat.RepeatSubmitInterceptor;
 import xyz.spc.serve.auxiliary.common.interceptor.login.GreatLoginInterceptor;
 import xyz.spc.serve.auxiliary.common.interceptor.login.GreatTokenRefreshInterceptor;
+import xyz.spc.serve.auxiliary.config.serial.StringToEnumConverterFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -88,6 +90,14 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
         log.debug("消息转换器配置 init");
     }
 
+
+    /**
+     * 添加自定义枚举格式化器
+     */
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverterFactory(new StringToEnumConverterFactory());
+    }
 
     /**
      * 配置静态资源映射

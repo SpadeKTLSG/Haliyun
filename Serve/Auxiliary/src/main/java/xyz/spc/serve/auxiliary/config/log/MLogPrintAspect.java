@@ -24,6 +24,14 @@ import java.util.Optional;
 @Aspect
 public class MLogPrintAspect {
 
+    //todo 写入数据库, 需要Guide模块
+    //* id
+    //* success    tn    是否成功
+    //* query_type    varchar(10)    请求类型
+    //* route    varchar(256)    请求路径
+    //* execute_time    varchar(256)    计时(自带ms)
+    //* user_account    varchar(128)    用户账户
+
     /**
      * 打印类或方法上的 {@link MLog}, 并作入库
      */

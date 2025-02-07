@@ -38,7 +38,7 @@ public class JacksonConfig {
     }
 
     /**
-     * 序列化
+     * LocalDateTime序列化
      */
     public static class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
         @Override
@@ -49,7 +49,7 @@ public class JacksonConfig {
     }
 
     /**
-     * 反序列化
+     * LocalDateTime反序列化
      */
     public static class LocalDateTimeDeserializer extends JsonDeserializer<LocalDateTime> {
         @Override

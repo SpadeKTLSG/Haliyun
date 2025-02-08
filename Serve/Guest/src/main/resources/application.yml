@@ -4,7 +4,7 @@ server:
 spring:
 
   application:
-    name: guest
+    name: guest-app
 
   profiles:
     active: dev

@@ -4,7 +4,7 @@ server:
 spring:
 
   application:
-    name: gateway
+    name: gateway-app
 
   profiles:
     active: dev
@@ -124,9 +124,20 @@ spring:
 
     # Gateway
     gateway:
+      globalcors: # 全局的跨域处理
+        add-to-simple-url-handler-mapping: true # 解决options请求被拦截问题
+        corsConfigurations:
+          "[/**]":
+            allowedOrigins: "http://localhost:9876" # 允许跨域请求-前端地址
+            allowedMethods: "*" # 允许所有的跨域ajax的请求方式
+            allowedHeaders: "*" # 允许在请求中携带的头信息
+            allowCredentials: true # 是否允许携带cookie
+            maxAge: 3600000 # 这次跨域检测的有效期
+
+
       routes:
         - id: guest-service
-          uri: lb://guest
+          uri: lb://guest-app
           predicates:
             - Path=/Guest/**
           filters:
@@ -135,6 +146,7 @@ spring:
                 redis-rate-limiter.replenishRate: 100000 # 每秒允许的请求数 : 十万
                 redis-rate-limiter.burstCapacity: 200000 # 突发请求的最大数量: 二十万
                 key-resolver: "#{@ipKeyResolver}" # 使用IP地址作为限流的key, 创建一个Limit Config
+
 
 
 

@@ -44,7 +44,7 @@ public class UsersControl {
     //! Func
 
     /**
-     * 获取手机验证码 优先联调
+     * 获取手机验证码
      */
     @GetMapping("code")
     @Operation(summary = "验证码")

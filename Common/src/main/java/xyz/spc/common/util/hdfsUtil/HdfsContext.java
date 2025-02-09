@@ -1,21 +1,33 @@
-package xyz.spc.serve.data.config;
+package xyz.spc.common.util.hdfsUtil;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
 
 import java.io.IOException;
 
-public class HdfsConn {
+/**
+ * HDFS上下文, 存储HDFS配置 (提升至Common模块以便于调用)
+ */
+@Slf4j
+public final class HdfsContext {
+    /**
+     * 文件系统
+     */
     private FileSystem fileSystem = null;
+    /**
+     * 配置
+     */
     private Configuration configuration = null;
 
-    private HdfsConn() {
+    private HdfsContext() {
         try {
             configuration = new Configuration();
             configuration.set("fs.defaultFS", "hdfs://localhost:9000/");
             fileSystem = FileSystem.get(configuration);
+            log.debug("HDFS初始化成功!");
         } catch (IOException e) {
-            e.printStackTrace();
+            log.warn("HDFS初始化失败! :", e);
         }
     }
 
@@ -29,6 +41,6 @@ public class HdfsConn {
 
 
     private static class SingletonHolder {
-        private static final HdfsConn INSTANCE = new HdfsConn();
+        private static final HdfsContext INSTANCE = new HdfsContext();
     }
 }

@@ -120,8 +120,7 @@ public class HdfsApi {
      * @throws InterruptedException
      * @throws HdfsApiException
      */
-    public HdfsApi(Configuration configuration, FileSystem fs, UserGroupInformation ugi)
-            throws IOException, InterruptedException, HdfsApiException {
+    public HdfsApi(Configuration configuration, FileSystem fs, UserGroupInformation ugi) throws IOException, InterruptedException, HdfsApiException {
 
         if (null != configuration) {
             conf = configuration;
@@ -152,10 +151,10 @@ public class HdfsApi {
 
     public static void main(String[] args) throws Exception {
         Configuration conf = new Configuration();
-        conf.set("fs.defaultFS", "hdfs://192.168.142.138:9000");
+        conf.set("fs.defaultFS", "hdfs://localhost:9000");
         URI defaultUri = FileSystem.getDefaultUri(conf);
         System.err.println(defaultUri);
-        HdfsApi api = new HdfsApi("hdfs://192.168.142.138:9000", "root");
+        HdfsApi api = new HdfsApi("hdfs://localhost:9000", "root");
         api.mkdir("AA");
     }
 
@@ -227,8 +226,7 @@ public class HdfsApi {
      * @throws IOException
      * @throws InterruptedException
      */
-    public FSDataOutputStream createFile(final String path, final boolean overwrite)
-            throws IOException, InterruptedException {
+    public FSDataOutputStream createFile(final String path, final boolean overwrite) throws IOException, InterruptedException {
         return execute(new PrivilegedExceptionAction<FSDataOutputStream>() {
             public FSDataOutputStream run() throws Exception {
                 return fs.create(new Path(uri + "/" + path), overwrite);
@@ -261,8 +259,7 @@ public class HdfsApi {
      * @throws InterruptedException
      * @throws IOException
      */
-    public boolean rmdir(final String path, boolean recursive, boolean skiptrash)
-            throws IOException, InterruptedException {
+    public boolean rmdir(final String path, boolean recursive, boolean skiptrash) throws IOException, InterruptedException {
         return execute(new PrivilegedExceptionAction<Boolean>() {
             public Boolean run() {
                 try {
@@ -305,8 +302,7 @@ public class HdfsApi {
      * @throws InterruptedException
      * @throws IOException
      */
-    public List<HDFSFileStatus> getFileList(final String path, PathFilter pathFilter)
-            throws IOException, InterruptedException {
+    public List<HDFSFileStatus> getFileList(final String path, PathFilter pathFilter) throws IOException, InterruptedException {
         return execute(new PrivilegedExceptionAction<List<HDFSFileStatus>>() {
             public List<HDFSFileStatus> run() {
                 ObjectMapper mapper = new ObjectMapper();
@@ -376,8 +372,7 @@ public class HdfsApi {
      * @return
      */
     public String permissionToString(FsPermission p) {
-        return (p == null) ? "default"
-                : "-" + p.getUserAction().SYMBOL + p.getGroupAction().SYMBOL + p.getOtherAction().SYMBOL;
+        return (p == null) ? "default" : "-" + p.getUserAction().SYMBOL + p.getGroupAction().SYMBOL + p.getOtherAction().SYMBOL;
     }
 
     /**
@@ -412,8 +407,7 @@ public class HdfsApi {
      * @throws InterruptedException
      * @throws IOException
      */
-    public void upLoadFile(final String srcFile, final String destPath, boolean delSrc, boolean overwrite)
-            throws IOException, InterruptedException {
+    public void upLoadFile(final String srcFile, final String destPath, boolean delSrc, boolean overwrite) throws IOException, InterruptedException {
         execute(new PrivilegedExceptionAction<Void>() {
             public Void run() throws IOException, InterruptedException {
 
@@ -535,8 +529,7 @@ public class HdfsApi {
                 String fileName = srcFile.substring(srcFile.lastIndexOf("/") + 1);
                 System.err.println(fileName);
                 response.setContentType(new MimetypesFileTypeMap().getContentType(new File(fileName)));
-                response.setHeader("Content-Disposition",
-                        "attachment;filename=" + URLEncoder.encode(fileName, StandardCharsets.UTF_8));
+                response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(fileName, StandardCharsets.UTF_8));
 
                 try {
                     InputStream is = fs.open(sPath);
@@ -956,8 +949,7 @@ public class HdfsApi {
      * @throws InterruptedException
      * @throws IOException
      */
-    public boolean restoreFromTrash(final String srcPath, final String destPath)
-            throws IOException, InterruptedException {
+    public boolean restoreFromTrash(final String srcPath, final String destPath) throws IOException, InterruptedException {
         return execute(new PrivilegedExceptionAction<Boolean>() {
             @Override
             public Boolean run() throws Exception {
@@ -1086,8 +1078,7 @@ public class HdfsApi {
      * @throws IOException
      * @throws InterruptedException
      */
-    public <T> T execute(PrivilegedExceptionAction<T> action, boolean alwaysRetry)
-            throws IOException, InterruptedException {
+    public <T> T execute(PrivilegedExceptionAction<T> action, boolean alwaysRetry) throws IOException, InterruptedException {
 
         T result = null;
 

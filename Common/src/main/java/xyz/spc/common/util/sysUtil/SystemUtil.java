@@ -1,5 +1,7 @@
 package xyz.spc.common.util.sysUtil;
 
+import lombok.Getter;
+
 import java.io.File;
 
 /**
@@ -8,12 +10,22 @@ import java.io.File;
 public final class SystemUtil {
 
     /**
-     * 获取系统类型
+     * 获取虚拟机的编码格式 可由-Dfile.encoding参数指定
+     */
+    @Getter
+    private static final String encoding = System.getProperty("file.encoding");
+    /**
+     * 获取操作系统一般情况下默认的编码: Linux是utf-8 Windows是gbk
+     */
+    @Getter
+    private static final String OSDefaultEncoding = isWindows() ? "gbk" : "utf-8";
+
+    /**
+     * 是否是Windows系统
      */
     public static boolean isWindows() {
-        return System.getProperty("os.name").toLowerCase().startsWith("win");
+        return System.getProperty("os.name").toLowerCase().contains("win");
     }
-
 
     /**
      * 获取当前文件夹占用空间，单位GB，2位小数
@@ -55,4 +67,6 @@ public final class SystemUtil {
 
         return "总空间：" + totalSpace + "GB" + " 剩余空间：" + freeSpace + "GB";
     }
+
+
 }

@@ -5,6 +5,7 @@ import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -27,12 +28,19 @@ import static xyz.spc.common.util.sysUtil.DateUtil.getCurrDate;
 /**
  * 文件处理工具类
  */
+@Slf4j
 public final class FileUtil {
 
     /**
      * 文件名正则表达式
      */
     public static String FILENAME_PATTERN = "[a-zA-Z0-9_\\-\\|\\.\\u4e00-\\u9fa5]+";
+
+    /**
+     * 路径分隔符
+     */
+    public static String PATH_SEPARATOR = "\\";
+
 
     /**
      * 输出指定文件的byte数组
@@ -291,7 +299,7 @@ public final class FileUtil {
         checkPathSecurity(path);
         checkNameSecurity(name);
 
-        String fullPath = StringUtils.concat(, path, name);
+        String fullPath = path + name;
         return cn.hutool.core.io.FileUtil.mkdir(fullPath) != null;
     }
 
@@ -303,7 +311,7 @@ public final class FileUtil {
         checkPathSecurity(path);
         checkNameSecurity(name);
 
-        String fullPath = StringUtils.concat(, path, name);
+        String fullPath = path + name;
         return cn.hutool.core.io.FileUtil.del(fullPath);
     }
 
@@ -338,7 +346,9 @@ public final class FileUtil {
         return Objects.nonNull(cn.hutool.core.io.FileUtil.rename(file, newName, true));
     }
 
-
+    /**
+     * 重命名文件夹
+     */
     public boolean renameFolder(String path, String name, String newName) {
         checkPathSecurity(path);
         checkNameSecurity(name, newName);
@@ -346,13 +356,15 @@ public final class FileUtil {
         return renameFile(path, name, newName);
     }
 
-
+    /**
+     * 复制文件
+     */
     public boolean copyFile(String path, String name, String targetPath, String targetName, Boolean overwrite) {
         checkPathSecurity(path, targetPath);
         checkNameSecurity(name, targetName);
-        String srcFileStr = StringUtils.concat(+path + ZFileConstant.PATH_SEPARATOR + name);
+        String srcFileStr = path + PATH_SEPARATOR + name;
         File srcFile = new File(srcFileStr);
-        String targetFileStr = StringUtils.concat(+targetPath + ZFileConstant.PATH_SEPARATOR + targetName);
+        String targetFileStr = targetPath + PATH_SEPARATOR + targetName;
         File targetFile = new File(targetFileStr);
         if (!srcFile.exists() || !targetFile.getParentFile().exists()) {
             return false;
@@ -371,13 +383,15 @@ public final class FileUtil {
         return true;
     }
 
-
+    /**
+     * 复制文件夹
+     */
     public boolean copyFolder(String path, String name, String targetPath, String targetName, Boolean overwrite) {
         checkPathSecurity(path, targetPath);
         checkNameSecurity(name, targetName);
-        String srcFileStr = StringUtils.concat(+path + ZFileConstant.PATH_SEPARATOR + name);
+        String srcFileStr = path + PATH_SEPARATOR + name;
         File srcFile = new File(srcFileStr);
-        String targetFileStr = StringUtils.concat(+targetPath + ZFileConstant.PATH_SEPARATOR + targetName);
+        String targetFileStr = targetPath + PATH_SEPARATOR + targetName;
         File targetFile = new File(targetFileStr);
         if (!srcFile.exists() || !targetFile.getParentFile().exists()) {
             return false;
@@ -399,8 +413,8 @@ public final class FileUtil {
                     File dstFile = new File(targetFileStr, f.getName());
                     FileUtils.copyFile(f, dstFile);
                 } else {
-                    String childSrcPath = StringUtils.concat(path + ZFileConstant.PATH_SEPARATOR + name);
-                    String childDstPath = StringUtils.concat(targetPath + ZFileConstant.PATH_SEPARATOR + targetName);
+                    String childSrcPath = path + PATH_SEPARATOR + name;
+                    String childDstPath = targetPath + PATH_SEPARATOR + targetName;
                     copyFolder(childSrcPath, f.getName(), childDstPath, f.getName(), overwrite);
                 }
             } catch (IOException e) {
@@ -413,13 +427,15 @@ public final class FileUtil {
         return ret;
     }
 
-
+    /**
+     * 移动文件
+     */
     public boolean moveFile(String path, String name, String targetPath, String targetName, Boolean overwrite) {
         checkPathSecurity(path, targetPath);
         checkNameSecurity(name, targetName);
-        String srcFileStr = StringUtils.concat(+path + ZFileConstant.PATH_SEPARATOR + name);
+        String srcFileStr = path + PATH_SEPARATOR + name;
         File srcFile = new File(srcFileStr);
-        String targetFileStr = StringUtils.concat(+targetPath + ZFileConstant.PATH_SEPARATOR + targetName);
+        String targetFileStr = targetPath + PATH_SEPARATOR + targetName;
         File targetFile = new File(targetFileStr);
         if (!srcFile.exists() || !targetFile.getParentFile().exists()) {
             return false;
@@ -438,13 +454,15 @@ public final class FileUtil {
         return true;
     }
 
-
-    public boolean moveFolder(String path, String name, String targetPath, String targetName, Boolean overwrite) {
+    /**
+     * 移动文件夹
+     */
+    public static boolean moveFolder(String path, String name, String targetPath, String targetName, Boolean overwrite) {
         checkPathSecurity(path, targetPath);
         checkNameSecurity(name, targetName);
-        String srcFileStr = StringUtils.concat(+path + ZFileConstant.PATH_SEPARATOR + name);
+        String srcFileStr = path + PATH_SEPARATOR + name;
         File srcFile = new File(srcFileStr);
-        String targetFileStr = StringUtils.concat(+targetPath + ZFileConstant.PATH_SEPARATOR + targetName);
+        String targetFileStr = targetPath + PATH_SEPARATOR + targetName;
         File targetFile = new File(targetFileStr);
         if (!srcFile.exists() || !targetFile.getParentFile().exists()) {
             return false;
@@ -464,8 +482,8 @@ public final class FileUtil {
                         }
                         f.renameTo(dstFile);
                     } else {
-                        String childSrcPath = StringUtils.concat(path + ZFileConstant.PATH_SEPARATOR + name);
-                        String childDstPath = StringUtils.concat(targetPath + ZFileConstant.PATH_SEPARATOR + targetName);
+                        String childSrcPath = path + PATH_SEPARATOR + name;
+                        String childDstPath = targetPath + PATH_SEPARATOR + targetName;
                         moveFolder(childSrcPath, f.getName(), childDstPath, f.getName(), overwrite);
                     }
                 }
@@ -482,10 +500,12 @@ public final class FileUtil {
     }
 
 
-    // 列出所有文件，包括子文件夹的文件
-    private void listFiles(String path, List<FileItemResult> result) {
+    /**
+     * 列出所有文件，包括子文件夹的文件
+     */
+    public static void listFiles(String path, List<String> result) {
         checkPathSecurity(path);
-        String absFileStr = StringUtils.concat(+path);
+        String absFileStr = path;
         File absFile = new File(absFileStr);
         if (!absFile.exists()) {
             return;
@@ -497,10 +517,9 @@ public final class FileUtil {
 
         for (File f : flist) {
             if (f.isFile()) {
-                FileItemResult item = fileToFileItem(f, path);
-                result.add(item);
+                result.add(f.getName());
             } else {
-                String childFilePath = StringUtils.concat(path + ZFileConstant.PATH_SEPARATOR + f.getName());
+                String childFilePath = path + PATH_SEPARATOR + f.getName();
                 listFiles(childFilePath, result);
             }
         }

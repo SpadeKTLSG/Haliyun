@@ -8,13 +8,13 @@ import org.apache.hadoop.hdfs.DistributedFileSystem;
 import org.apache.hadoop.hdfs.protocol.DatanodeInfo;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Arrays;
 
 public class HDFSTest {
-
 
 
     //在HDFS上创建目录
@@ -40,18 +40,6 @@ public class HDFSTest {
         IOUtils.copy(in, out);
     }
 
-    //写入数据（上传文件）
-    @Test
-    public void testUpload() throws Exception {
-        // 指定上传的文件（输入流）
-        InputStream in = new FileInputStream("d:\\test.war");
-
-        // 构造输出流 ----> HDFS
-        FileSystem fs = FileSystem.get(new URI("hdfs://192.168.2.123:9000"), new Configuration());
-        OutputStream out = new FileOutputStream("hdfs://
-                // 工具类 ---> 直接实现上传和下载
-                IOUtils.copy(in, out);
-    }
 
     //查看目录及文件信息
     @Test
@@ -95,16 +83,16 @@ public class HDFSTest {
     }
 
     //删除数据
-    @Test
-    public void deleteFile() throws Exception {
-        Configuration conf = new Configuration();
-        conf.set("fs.defaultFS", "hdfs://192.168.137.25:9000");
-
-        FileSystem fs = FileSystem.get(conf);
-        // 第二个参数表示是否递归
-        boolean flag = fs.delete(new Path("/mydir/test.txt", false));
-        System.out.println(flag ? "删除成功" : "删除失败");
-    }
+//    @Test
+//    public void deleteFile() throws Exception {
+//        Configuration conf = new Configuration();
+//        conf.set("fs.defaultFS", "hdfs://192.168.137.25:9000");
+//
+//        FileSystem fs = FileSystem.get(conf);
+//        // 第二个参数表示是否递归
+//        boolean flag = fs.delete(new Path("/mydir/test.txt", false));
+//        System.out.println(flag ? "删除成功" : "删除失败");
+//    }
 
     //    获取HDFS集群上所有数据节点的信息
     @Test

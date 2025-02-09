@@ -27,9 +27,6 @@ public class HdfsConn {
         return SingletonHolder.INSTANCE.configuration;
     }
 
-    public static void main(String[] args) {
-        System.out.println(getFileSystem());
-    }
 
     private static class SingletonHolder {
         private static final HdfsConn INSTANCE = new HdfsConn();

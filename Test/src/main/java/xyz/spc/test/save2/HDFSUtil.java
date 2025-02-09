@@ -1,10 +1,10 @@
-package save.save2;
+package xyz.spc.test.save2;
 
 
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.springframework.web.multipart.MultipartFile;
-import save.HdfsConn;
+import xyz.spc.test.HdfsConn;
 
 import java.io.File;
 import java.io.IOException;

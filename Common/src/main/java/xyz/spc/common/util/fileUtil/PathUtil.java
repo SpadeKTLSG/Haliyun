@@ -229,7 +229,7 @@ public final class PathUtil {
      * @param names 文件路径
      * @throws IllegalArgumentException 文件名包含非法字符时会抛出此异常
      */
-    private static void checkNameSecurity(String... names) {
+    public static void checkNameSecurity(String... names) {
         for (String name : names) {
             // 路径中不能包含 .. 不然可能会获取到上层文件夹的内容
             if (StrUtil.containsAny(name, "\\", "/")) {
@@ -237,4 +237,22 @@ public final class PathUtil {
             }
         }
     }
+
+
+    /**
+     * 检查路径合法性：
+     * - 只有以 . 开头的允许通过，其他的如 ./ ../ 的都是非法获取上层文件夹内容的路径.
+     *
+     * @param paths 文件路径
+     * @throws IllegalArgumentException 文件路径包含非法字符时会抛出此异常
+     */
+    public static void checkPathSecurity(String... paths) {
+        for (String path : paths) {
+            // 路径中不能包含 .. 不然可能会获取到上层文件夹的内容
+            if (StrUtil.startWith(path, "/..") || StrUtil.containsAny(path, "../", "..\\")) {
+                throw new IllegalArgumentException("文件路径存在安全隐患: " + path);
+            }
+        }
+    }
+
 }

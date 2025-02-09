@@ -1,4 +1,4 @@
-package save;
+package xyz.spc.test;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;

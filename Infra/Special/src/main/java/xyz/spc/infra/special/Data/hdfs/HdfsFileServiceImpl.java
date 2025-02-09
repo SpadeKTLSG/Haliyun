@@ -1,9 +1,6 @@
-package xyz.spc.test.save1;
+package xyz.spc.infra.special.Data.hdfs;
 
-import com.budbreak.pan.common.InvokeResult;
-import com.budbreak.pan.service.HdfsConn;
-import com.budbreak.pan.service.WebUtil;
-import com.budbreak.pan.service.hdfs.HdfsFileService;
+
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
@@ -12,6 +9,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.spc.common.funcpack.Result;
+import xyz.spc.test.HdfsConn;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -21,15 +20,10 @@ import java.io.OutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.budbreak.pan.common.StringUtil.stringSlashToOne;
 
-/**
- * @author baoqi
- * @date 2020/5/10 18:36
- */
 @Service
 @Transactional(rollbackFor = Exception.class)
-public class HdfsFileServiceImpl implements HdfsFileService {
+public class HdfsFileServiceImpl {
 
     @Value("${fileRootPath}")
     public String fileRootPath;
@@ -43,16 +37,12 @@ public class HdfsFileServiceImpl implements HdfsFileService {
     @Value("${secretLen}")
     private int secretLen;
 
-    @Value("${key}")
-    private String key;
-
-    @Override
-    public InvokeResult hdfsUpload(HttpServletRequest request, MultipartFile file, String path) {
+    public Result hdfsUpload(HttpServletRequest request, MultipartFile file, String path) {
         if (path == null) {
             path = "/";
         }
         if (file.isEmpty()) {
-            return InvokeResult.failure("请选择要上传的文件！");
+            return Result.fail("请选择要上传的文件！");
         }
         // 获取用户名
         String userName = WebUtil.getUserNameByRequest(request);
@@ -82,23 +72,22 @@ public class HdfsFileServiceImpl implements HdfsFileService {
             e.printStackTrace();
         }
         if (b) {
-            return InvokeResult.success("上传成功");
+            return Result.success("上传成功");
         } else {
-            return InvokeResult.failure("上传失败");
+            return Result.fail("上传失败");
         }
     }
 
-    @Override
-    public InvokeResult hdfsDownload(String fileName, String path, HttpServletRequest request) {
+    public Result hdfsDownload(String fileName, String path, HttpServletRequest request) {
         Map<String, Object> map = new HashMap<>(2, 1);
         if (path == null) {
             path = "/";
         }
         if (fileName.isEmpty()) {
-            return InvokeResult.failure("文件名为空！");
+            return Result.fail("文件名为空！");
         }
         // 获取用户名
-        String userName = WebUtil.getUserNameByRequest(request);
+        String userName = UserHolder.getUserNameByRequest(request);
         // 下载文件，获取下载路径,这个是 个映射的路径
         // 服务器下载的文件所在的本地路径的文件夹
         String saveFilePath = fileRootPath + userName + "/" + path;
@@ -112,33 +101,17 @@ public class HdfsFileServiceImpl implements HdfsFileService {
         String saveFilePath1 = saveFilePath + "/" + fileName;
         String link = saveFilePath1.replace(fileRootPath, "/data/");
         link = stringSlashToOne(link);
+
         try {
             if (HdfsConn.getFileSystem().exists(new Path(saveFilePath, fileName))) {
                 FSDataInputStream inputStream = HdfsConn.getFileSystem().open(new Path(saveFilePath));
                 OutputStream outputStream = new FileOutputStream(link);
                 IOUtils.copyBytes(inputStream, outputStream, 4096, true);
-                return InvokeResult.success();
+                return Result.success();
             }
-        } catch (IllegalArgumentException e) {
-            e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return InvokeResult.failure("下载失败！");
-//        try {
-//            //这里校验要填真实的路经
-//            String newLink = link.replace("/data/", fileRootPath);
-//            String[] md5Array = FileSplit.splitBySizeSubSection(newLink, size,
-//                    fileRootPath + "/tempMd5/" + userName + "/");
-//            map.put("md5Array", md5Array);
-//        } catch (Exception e) {
-//            return InvokeResult.error();
-//        }
-//        if (!link.isEmpty()) {
-//            map.put("link", link);
-//            return InvokeResult.success(map);
-//        } else {
-//            return InvokeResult.failure("下载失败！");
-//        }
+        return Result.fail("下载失败！");
     }
 }

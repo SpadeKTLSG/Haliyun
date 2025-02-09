@@ -1,4 +1,4 @@
-package xyz.spc.test.save2;
+package xyz.spc.common.util.hdfsUtil;
 
 
 import org.apache.hadoop.fs.FileSystem;
@@ -10,7 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class HDFSUtil {
+public final class HdfsUpDownloadUtil {
 
 
     /*
@@ -47,7 +47,7 @@ public class HDFSUtil {
         System.out.println(suffix);
         String localPath = "D:\\uploadtemp\\" + rowkeyUtil.getRowkey() + '.' + suffix;
         mfile.transferTo(new File(localPath));//将文件传入服务器
-        HDFSUtil.searchDir(hdfsPath);
+        HdfsUpDownloadUtil.searchDir(hdfsPath);
         String aimpath = hdfsPath + "\\" + rowkeyUtil.getRowkey() + '.' + suffix;
         FileSystem fs = HdfsConn.getFileSystem();
         fs.copyFromLocalFile(new Path(localPath), new Path(aimpath));

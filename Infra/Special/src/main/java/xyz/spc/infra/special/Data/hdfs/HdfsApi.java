@@ -1,4 +1,4 @@
-package xyz.spc.test;
+package xyz.spc.infra.special.Data.hdfs;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

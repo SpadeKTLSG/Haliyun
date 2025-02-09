@@ -1,4 +1,4 @@
-package xyz.spc.test.hdfs;
+package xyz.spc.infra.special.Data.hdfs;
 
 import com.bishe.netdisc.entity.UserFile;
 import org.apache.hadoop.conf.Configuration;
@@ -25,7 +25,7 @@ import java.util.List;
  * @create 2020/4/30 0030-下午 5:12
  */
 @Component
-public class HDFSServiceImp implements HDFSService {
+public class HDFSServiceImp {
     Logger logger = LoggerFactory.getLogger(HDFSServiceImp.class);
 
     @Value("${hdfs.path}")

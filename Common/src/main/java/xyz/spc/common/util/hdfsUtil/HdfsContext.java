@@ -3,6 +3,7 @@ package xyz.spc.common.util.hdfsUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.FileSystem;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -10,6 +11,7 @@ import java.io.IOException;
  * HDFS上下文, 存储HDFS配置 (提升至Common模块以便于调用)
  */
 @Slf4j
+@Component
 public final class HdfsContext {
     /**
      * 文件系统

@@ -4,6 +4,7 @@ package xyz.spc.common.util.hdfsUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
@@ -11,6 +12,7 @@ import java.io.IOException;
  * HDFS上传下载工具类
  */
 @Slf4j
+@Service
 public final class HdfsUpDownloadUtil {
 
 

@@ -13,12 +13,12 @@ import java.io.IOException;
 @Slf4j
 public final class HdfsFuncUtil {
 
+    private static final FileSystem dfs = HdfsContext.getFileSystem();
 
     /**
      * hdfs是否存在文件夹
      */
     public static void searchDir(String stringDir) throws IOException {
-        FileSystem dfs = HdfsContext.getFileSystem();
         Path dir = new Path(stringDir);
         //查找目录
         if (!dfs.exists(dir)) {

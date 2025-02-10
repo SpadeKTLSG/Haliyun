@@ -39,7 +39,7 @@ public final class FileUtil {
     /**
      * 路径分隔符
      */
-    public static String PATH_SEPARATOR = "\\";
+    public static String PATH_SEPARATOR = "/";
 
 
     /**

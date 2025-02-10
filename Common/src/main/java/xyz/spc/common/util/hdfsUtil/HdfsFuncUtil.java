@@ -15,18 +15,19 @@ public final class HdfsFuncUtil {
 
     private static final FileSystem dfs = HdfsContext.getFileSystem();
 
+
     /**
-     * hdfs是否存在文件夹
+     * 尝试创建目录
      */
-    public static void searchDir(String stringDir) throws IOException {
+    public static void tryMkdir(String stringDir) throws IOException {
         Path dir = new Path(stringDir);
         //查找目录
         if (!dfs.exists(dir)) {
-            System.out.println("目录不存在，正在准备创建！");
+            log.debug("目录不存在: 开始创建目录 ");
             dfs.mkdirs(dir);
-            System.out.println("创建目录成功！");
+            log.debug("目录创建成功 ");
         } else {
-            System.out.println("目录已存在！");
+            log.debug("目录已存在 ");
         }
     }
 

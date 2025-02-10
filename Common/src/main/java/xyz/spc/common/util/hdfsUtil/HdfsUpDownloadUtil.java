@@ -16,21 +16,22 @@ import java.io.IOException;
 public final class HdfsUpDownloadUtil {
 
 
+    private static final FileSystem dfs = HdfsContext.getFileSystem();
+
     /**
-     * hdfs的下载
+     * 下载HDFS文件到本地
+     *
+     * @param fromPath   hdfs文件路径
+     *                   例如：/user/hadoop/word.txt
+     * @param targetPath 本地文件路径
+     *                   例如：D:/word.txt
      */
-    public static void downFile(String frompath, String aimpath) throws IOException {
-        // 1 获取文件系统
-        FileSystem fs = HdfsContext.getFileSystem();
-        // 2 执行下载操作
+    public static void downFile(String fromPath, String targetPath) throws IOException {
+
+        //参数:
         //boolean delSrc 指是否将原文件删除
-        //Path src 指要下载的文件路径
-        //Path dst 指将文件下载到的路径
         //boolean useRawLocalFileSystem 是否开启文件校验
-        fs.copyToLocalFile(false, new Path(frompath), new Path(aimpath), true);
-        //3 关闭资源
-        fs.close();
-        System.out.println("over");
+        dfs.copyToLocalFile(false, new Path(fromPath), new Path(targetPath), true);
     }
 
 

@@ -22,6 +22,16 @@ public final class HdfsContext {
      */
     private Configuration configuration = null;
 
+    /**
+     * HDFS工作根目录 (开发环境个人PC) (一般可忽略)
+     */
+    public static final String HD_WORK_DIR = "hdfs://localhost:9000/user/spade/";
+
+    /**
+     * 本地磁盘工作根目录 (开发环境个人PC)
+     */
+    public static final String PC_WORK_DIR = "D:/CODE/HaliyunAll/Data/";
+
     private HdfsContext() {
         try {
             configuration = new Configuration();

@@ -23,7 +23,7 @@
 //
 //@Service
 //@Transactional(rollbackFor = Exception.class)
-//public class HdfsFileServiceImpl {
+//public class HdfsUpDownloadService {
 //
 //    @Value("${fileRootPath}")
 //    public String fileRootPath;
@@ -55,7 +55,7 @@
 //        if (!filePathDir.exists()) {
 //            filePathDir.mkdir();
 //        }
-//        // 获取上传文件的原名 例464e7a80_710229096@qq.com.zip
+//        // 获取上传文件的原名
 //        String saveFileName = file.getOriginalFilename();
 //        // 上传文件到-磁盘
 //        try {

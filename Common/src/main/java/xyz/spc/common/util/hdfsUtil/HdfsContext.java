@@ -9,6 +9,7 @@ import java.io.IOException;
 
 /**
  * HDFS上下文, 存储HDFS配置 (提升至Common模块以便于调用)
+ * 以下三个工具类依赖之
  */
 @Slf4j
 @Component

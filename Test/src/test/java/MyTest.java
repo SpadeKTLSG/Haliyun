@@ -1,18 +1,17 @@
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
-import xyz.spc.common.util.hdfsUtil.HdfsFuncUtil;
 import xyz.spc.serve.guest.GuestAPP;
-
-import java.io.IOException;
 
 @SpringBootTest(classes = GuestAPP.class)
 public class MyTest {
 
     @Test
-    public void test() throws IOException {
+    public void test() throws Exception {
         System.out.println("test: ");
 //
 //        HdfsUpDownloadUtil.downFile("TEST/测试文件.txt", HdfsContext.PC_WORK_DIR + "TEST/测试文件.txt");
-        HdfsFuncUtil.searchDir("Tmp01");
+//        HdfsFuncUtil.deleteF("TEST/测试文件2.txt");
+//        System.out.println(HdfsQueryUtil.chechMD5("TEST/测试文件.txt"));
+
     }
 }

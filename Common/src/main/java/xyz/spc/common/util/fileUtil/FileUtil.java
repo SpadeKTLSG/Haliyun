@@ -1,7 +1,6 @@
 package xyz.spc.common.util.fileUtil;
 
 import cn.hutool.core.exceptions.ExceptionUtil;
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
@@ -17,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Objects;
 
@@ -215,54 +213,6 @@ public final class FileUtil {
         String filename = src.substring(src.lastIndexOf(File.separator) + 1);// 获取到文件名
 
         return filename.substring(0, filename.lastIndexOf("."));
-    }
-
-
-    /**
-     * 转换为美化的文件大小
-     */
-    public static String toButifSize(double size) {
-        String sizeStr = "";
-        int level = 0;
-        while (size > 1024) {
-            size = size / 1024.0;
-            level++;
-        }
-        sizeStr = switch (level) {
-            case 0 -> "B";
-            case 1 -> "KB";
-            case 2 -> "MB";
-            case 3 -> "GB";
-            case 4 -> "TB";
-            case 5 -> "PB";
-            default -> sizeStr;
-        };
-
-        sizeStr = new DecimalFormat("######0.00").format(size) + sizeStr;
-        return sizeStr;
-    }
-
-    /**
-     * 转化为GB单位大小
-     */
-    public static float toGBSize(long size) {
-        return (float) size / 1024 / 1024 / 1024;
-    }
-
-    /**
-     * 将文件大小转换为可读单位
-     *
-     * @param bytes 字节数
-     * @return 文件大小可读单位
-     */
-    public static String bytesToSize(long bytes) {
-        if (bytes == 0) {
-            return "0";
-        }
-        double k = 1024;
-        String[] sizes = new String[]{"B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"};
-        double i = Math.floor(Math.log(bytes) / Math.log(k));
-        return NumberUtil.round(bytes / Math.pow(k, i), 3) + " " + sizes[(int) i];
     }
 
 

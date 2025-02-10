@@ -8,7 +8,7 @@ import java.io.IOException;
 
 
 /**
- * HDFS功能工具类
+ * HDFS功能工具类 (Add/Update/Delete)
  */
 @Slf4j
 public final class HdfsFuncUtil {
@@ -30,5 +30,13 @@ public final class HdfsFuncUtil {
             log.debug("目录已存在 ");
         }
     }
+
+    /**
+     * 删除文件/文件夹, 递归删除
+     */
+    public static void deleteF(String stringDir) throws Exception {
+        dfs.delete(new Path(stringDir), true);
+    }
+
 
 }

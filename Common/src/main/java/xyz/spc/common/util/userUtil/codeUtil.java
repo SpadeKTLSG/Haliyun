@@ -1,6 +1,6 @@
 package xyz.spc.common.util.userUtil;
 
-import xyz.spc.common.constant.LoginCommonCT;
+import xyz.spc.common.constant.Guest.users.LoginCommonCT;
 
 import java.util.Arrays;
 import java.util.Collections;

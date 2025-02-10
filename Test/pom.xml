@@ -26,7 +26,45 @@
             <groupId>xyz.spc.serve</groupId>
             <artifactId>Serve</artifactId>
             <version>3.0.0-RELEASE</version>
+            <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>xyz.spc.serve.data</groupId>
+            <artifactId>Data</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.spc.serve.group</groupId>
+            <artifactId>Group</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.spc.serve.guest</groupId>
+            <artifactId>Guest</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.spc.serve.guide</groupId>
+            <artifactId>Guide</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.spc.serve.money</groupId>
+            <artifactId>Money</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>xyz.spc.serve.pub</groupId>
+            <artifactId>Pub</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
 

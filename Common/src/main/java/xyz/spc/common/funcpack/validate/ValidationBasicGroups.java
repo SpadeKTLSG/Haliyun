@@ -29,4 +29,9 @@ public class ValidationBasicGroups {
     public interface Select {
     }
 
+    /**
+     * 公共组
+     */
+    public interface Common {
+    }
 }

@@ -6,8 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
-import xyz.spc.common.annotation.RepeatSubmit;
-import xyz.spc.common.funcpack.commu.Result;
+import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.util.webUtil.ServletUtil;
 
 import java.lang.reflect.Method;
@@ -29,10 +28,8 @@ public abstract class RepeatSubmitInterceptor implements HandlerInterceptor {
                     return false;
                 }
             }
-            return true;
-        } else {
-            return true;
         }
+        return true;
     }
 
     /**

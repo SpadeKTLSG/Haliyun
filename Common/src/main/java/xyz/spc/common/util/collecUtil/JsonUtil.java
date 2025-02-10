@@ -1,13 +1,14 @@
 package xyz.spc.common.util.collecUtil;
 
-
 import com.alibaba.cloud.commons.lang.StringUtils;
+import com.alibaba.fastjson.util.ParameterizedTypeImpl;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 
+import java.lang.reflect.Type;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -262,5 +263,24 @@ public final class JsonUtil {
             }
         }
         return object;
+    }
+
+    /**
+     * 构建类型
+     *
+     * @param types
+     * @return
+     */
+    public static Type buildType(Type... types) {
+        ParameterizedTypeImpl beforeType = null;
+        if (types != null && types.length > 0) {
+            if (types.length == 1) {
+                return new ParameterizedTypeImpl(new Type[]{null}, null, types[0]);
+            }
+            for (int i = types.length - 1; i > 0; i--) {
+                beforeType = new ParameterizedTypeImpl(new Type[]{beforeType == null ? types[i] : beforeType}, null, types[i - 1]);
+            }
+        }
+        return beforeType;
     }
 }

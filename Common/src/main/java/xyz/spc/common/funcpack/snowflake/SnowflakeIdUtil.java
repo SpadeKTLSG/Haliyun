@@ -12,14 +12,8 @@ public final class SnowflakeIdUtil {
     /**
      * 雪花算法对象
      */
-    private static Snowflake SNOWFLAKE;
+    private static final Snowflake SNOWFLAKE = new Snowflake();
 
-    /**
-     * 初始化雪花算法
-     */
-    public static void initSnowflake(Snowflake snowflake) {
-        SnowflakeIdUtil.SNOWFLAKE = snowflake;
-    }
 
     /**
      * 获取雪花算法实例

@@ -1,28 +1,44 @@
 package xyz.spc.common.util.fileUtil;
 
+import cn.hutool.core.exceptions.ExceptionUtil;
+import cn.hutool.core.util.StrUtil;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
 import xyz.spc.common.constant.UploadDownloadCT;
-import xyz.spc.common.funcpack.uuid.IdUtils;
+import xyz.spc.common.funcpack.uuid.IdUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
-import java.text.DecimalFormat;
+import java.util.List;
+import java.util.Objects;
 
+import static xyz.spc.common.util.fileUtil.PathUtil.checkNameSecurity;
+import static xyz.spc.common.util.fileUtil.PathUtil.checkPathSecurity;
 import static xyz.spc.common.util.sysUtil.DateUtil.getCurrDate;
 
 /**
  * 文件处理工具类
  */
+@Slf4j
 public final class FileUtil {
 
     /**
      * 文件名正则表达式
      */
     public static String FILENAME_PATTERN = "[a-zA-Z0-9_\\-\\|\\.\\u4e00-\\u9fa5]+";
+
+    /**
+     * 路径分隔符
+     */
+    public static String PATH_SEPARATOR = "/";
+
 
     /**
      * 输出指定文件的byte数组
@@ -55,11 +71,12 @@ public final class FileUtil {
      * 写数据到文件中
      *
      * @param data 数据
+     * @param type 文件类型
      * @return 目标文件
      * @throws IOException IO异常
      */
-    public static String writeImportBytes(byte[] data) throws IOException {
-        return writeBytes(data, UploadDownloadCT.DOWNLOAD_DEFAULT_PATH);
+    public static String writeImportBytes(byte[] data, String type) throws IOException {
+        return writeBytes(data, UploadDownloadCT.DOWNLOAD_DEFAULT_PATH, type);
     }
 
     /**
@@ -67,15 +84,16 @@ public final class FileUtil {
      *
      * @param data      数据
      * @param uploadDir 目标文件
+     * @param type      文件类型
      * @return 目标文件
      * @throws IOException IO异常
      */
-    public static String writeBytes(byte[] data, String uploadDir) throws IOException {
+    public static String writeBytes(byte[] data, String uploadDir, String type) throws IOException {
         FileOutputStream fos = null;
         String pathName;
         try {
-            String extension = getFileExtendName(data);
-            pathName = getCurrDate() + "/" + IdUtils.fastUUID() + "." + extension;
+            String extension = "." + type;
+            pathName = getCurrDate() + "/" + IdUtil.fastUUID() + extension;
             File file = UploadUtil.getAbsoluteFile(uploadDir, pathName);
             fos = new FileOutputStream(file);
             fos.write(data);
@@ -84,6 +102,7 @@ public final class FileUtil {
         }
         return UploadUtil.getPathFileName(uploadDir, pathName);
     }
+
 
     /**
      * 删除文件
@@ -146,28 +165,6 @@ public final class FileUtil {
 
 
     /**
-     * 获取图像后缀
-     *
-     * @param photoByte 图像数据
-     * @return 后缀名
-     */
-    public static String getFileExtendName(byte[] photoByte) {
-        String strFileExtendName = "jpg";
-        if ((photoByte[0] == 71) && (photoByte[1] == 73) && (photoByte[2] == 70) && (photoByte[3] == 56)
-                && ((photoByte[4] == 55) || (photoByte[4] == 57)) && (photoByte[5] == 97)) {
-            strFileExtendName = "gif";
-        } else if ((photoByte[6] == 74) && (photoByte[7] == 70) && (photoByte[8] == 73) && (photoByte[9] == 70)) {
-            strFileExtendName = "jpg";
-        } else if ((photoByte[0] == 66) && (photoByte[1] == 77)) {
-            strFileExtendName = "bmp";
-        } else if ((photoByte[1] == 80) && (photoByte[2] == 78) && (photoByte[3] == 71)) {
-            strFileExtendName = "png";
-        }
-        return strFileExtendName;
-    }
-
-
-    /**
      * 获从文件全限定名中的文件名称 (带后缀类型)
      *
      * @param fileName 路径名称
@@ -220,33 +217,263 @@ public final class FileUtil {
 
 
     /**
-     * 转换为美化的文件大小
+     * 判断是否为相同文件
      */
-    public static String toButifSize(double size) {
-        String sizeStr = "";
-        int level = 0;
-        while (size > 1024) {
-            size = size / 1024.0;
-            level++;
+    private Boolean checkSameFile(File f1, File f2) {
+        if (f1 == null && f2 == null) {
+            return true;
         }
-        sizeStr = switch (level) {
-            case 0 -> "B";
-            case 1 -> "KB";
-            case 2 -> "MB";
-            case 3 -> "GB";
-            case 4 -> "TB";
-            case 5 -> "PB";
-            default -> sizeStr;
-        };
+        if (f1 == null || f2 == null) {
+            return false;
+        }
+        boolean same = false;
+        if (f2.length() == f1.length()) {
+            try {
+                HashCode distHash = com.google.common.io.Files.asByteSource(f2).hash(Hashing.sha256());
+                HashCode srcHash = com.google.common.io.Files.asByteSource(f1).hash(Hashing.sha256());
+                if (distHash.equals(srcHash)) {
+                    same = true;
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return same;
+    }
 
-        sizeStr = new DecimalFormat("######0.00").format(size) + sizeStr;
-        return sizeStr;
+
+    /**
+     * 新建文件
+     */
+    public boolean newFolder(String path, String name) {
+        checkPathSecurity(path);
+        checkNameSecurity(name);
+
+        String fullPath = path + name;
+        return cn.hutool.core.io.FileUtil.mkdir(fullPath) != null;
+    }
+
+
+    /**
+     * 删除文件
+     */
+    public boolean deleteFile(String path, String name) {
+        checkPathSecurity(path);
+        checkNameSecurity(name);
+
+        String fullPath = path + name;
+        return cn.hutool.core.io.FileUtil.del(fullPath);
+    }
+
+
+    /**
+     * 删除文件夹
+     */
+    public boolean deleteFolder(String path, String name) {
+        checkPathSecurity(path);
+        checkNameSecurity(name);
+
+        return deleteFile(path, name);
     }
 
     /**
-     * 转化为GB单位大小
+     * 重命名文件
      */
-    public static float toGBSize(long size) {
-        return (float) size / 1024 / 1024 / 1024;
+    public boolean renameFile(String path, String name, String newName) {
+        checkPathSecurity(path);
+        checkNameSecurity(name, newName);
+
+        // 如果文件名没变则不做任何操作
+        if (StrUtil.equals(name, newName)) {
+            return true;
+        }
+
+        File file = new File(path + name);
+        if (!file.exists()) {
+            throw ExceptionUtil.wrapRuntime(new FileNotFoundException("文件夹不存在."));
+        }
+
+        return Objects.nonNull(cn.hutool.core.io.FileUtil.rename(file, newName, true));
     }
+
+    /**
+     * 重命名文件夹
+     */
+    public boolean renameFolder(String path, String name, String newName) {
+        checkPathSecurity(path);
+        checkNameSecurity(name, newName);
+
+        return renameFile(path, name, newName);
+    }
+
+    /**
+     * 复制文件
+     */
+    public boolean copyFile(String path, String name, String targetPath, String targetName, Boolean overwrite) {
+        checkPathSecurity(path, targetPath);
+        checkNameSecurity(name, targetName);
+        String srcFileStr = path + PATH_SEPARATOR + name;
+        File srcFile = new File(srcFileStr);
+        String targetFileStr = targetPath + PATH_SEPARATOR + targetName;
+        File targetFile = new File(targetFileStr);
+        if (!srcFile.exists() || !targetFile.getParentFile().exists()) {
+            return false;
+        }
+        if (!overwrite && targetFile.exists()) {
+            return false;
+        }
+        try {
+            FileUtils.copyFile(srcFile, targetFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            log.error("文件复制异常，源目录：[{}],源文件名：[{}],目标目录：[{}],目标文件：[{}]", path, name, targetPath, targetName, e);
+            return false;
+        }
+        log.info("文件复制成功，源目录：[{}],源文件名：[{}],目标目录：[{}],目标文件：[{}]", path, name, targetPath, targetName);
+        return true;
+    }
+
+    /**
+     * 复制文件夹
+     */
+    public boolean copyFolder(String path, String name, String targetPath, String targetName, Boolean overwrite) {
+        checkPathSecurity(path, targetPath);
+        checkNameSecurity(name, targetName);
+        String srcFileStr = path + PATH_SEPARATOR + name;
+        File srcFile = new File(srcFileStr);
+        String targetFileStr = targetPath + PATH_SEPARATOR + targetName;
+        File targetFile = new File(targetFileStr);
+        if (!srcFile.exists() || !targetFile.getParentFile().exists()) {
+            return false;
+        }
+        if (!overwrite && targetFile.exists()) {
+            return false;
+        }
+        if (!targetFile.exists()) {
+            targetFile.mkdir();
+        }
+        File[] flist = srcFile.listFiles();
+        if (flist == null) {
+            return true;
+        }
+        boolean ret = true;
+        for (File f : flist) {
+            try {
+                if (f.isFile()) {
+                    File dstFile = new File(targetFileStr, f.getName());
+                    FileUtils.copyFile(f, dstFile);
+                } else {
+                    String childSrcPath = path + PATH_SEPARATOR + name;
+                    String childDstPath = targetPath + PATH_SEPARATOR + targetName;
+                    copyFolder(childSrcPath, f.getName(), childDstPath, f.getName(), overwrite);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                log.error("文件复制异常，源目录：[{}],源文件名：[{}],目标目录：[{}],目标文件：[{}]", path, name, targetPath, targetName, e);
+                ret = false;
+            }
+        }
+        log.info("目录复制成功，源目录：[{}],源文件名：[{}],目标目录：[{}],目标文件：[{}]", path, name, targetPath, targetName);
+        return ret;
+    }
+
+    /**
+     * 移动文件
+     */
+    public boolean moveFile(String path, String name, String targetPath, String targetName, Boolean overwrite) {
+        checkPathSecurity(path, targetPath);
+        checkNameSecurity(name, targetName);
+        String srcFileStr = path + PATH_SEPARATOR + name;
+        File srcFile = new File(srcFileStr);
+        String targetFileStr = targetPath + PATH_SEPARATOR + targetName;
+        File targetFile = new File(targetFileStr);
+        if (!srcFile.exists() || !targetFile.getParentFile().exists()) {
+            return false;
+        }
+        if (targetFile.exists()) {
+            if (overwrite) {// 覆盖
+                targetFile.delete();// 删除再移动
+                srcFile.renameTo(targetFile);
+            } else { // 不覆盖
+                return false;
+            }
+        } else {
+            srcFile.renameTo(targetFile);
+        }
+        log.info("文件移动成功，源目录：[{}],源文件名：[{}],目标目录：[{}],目标文件：[{}]", path, name, targetPath, targetName);
+        return true;
+    }
+
+    /**
+     * 移动文件夹
+     */
+    public static boolean moveFolder(String path, String name, String targetPath, String targetName, Boolean overwrite) {
+        checkPathSecurity(path, targetPath);
+        checkNameSecurity(name, targetName);
+        String srcFileStr = path + PATH_SEPARATOR + name;
+        File srcFile = new File(srcFileStr);
+        String targetFileStr = targetPath + PATH_SEPARATOR + targetName;
+        File targetFile = new File(targetFileStr);
+        if (!srcFile.exists() || !targetFile.getParentFile().exists()) {
+            return false;
+        }
+        if (targetFile.exists()) {
+            if (overwrite) {
+                // 移动子文件夹和子文件
+                File[] flist = srcFile.listFiles();
+                if (flist == null) {
+                    return true;
+                }
+                for (File f : flist) {
+                    if (f.isFile()) {
+                        File dstFile = new File(targetFileStr, f.getName());
+                        if (dstFile.exists()) {
+                            dstFile.delete();// 删除再移动
+                        }
+                        f.renameTo(dstFile);
+                    } else {
+                        String childSrcPath = path + PATH_SEPARATOR + name;
+                        String childDstPath = targetPath + PATH_SEPARATOR + targetName;
+                        moveFolder(childSrcPath, f.getName(), childDstPath, f.getName(), overwrite);
+                    }
+                }
+                // 移动子文件夹和子文件后，删除原文件夹
+                srcFile.delete();
+            } else { // 不覆盖
+                return false;
+            }
+        } else {
+            srcFile.renameTo(targetFile);
+        }
+        log.info("目录移动成功，源目录：[{}],源文件名：[{}],目标目录：[{}],目标文件：[{}]", path, name, targetPath, targetName);
+        return true;
+    }
+
+
+    /**
+     * 列出所有文件，包括子文件夹的文件
+     */
+    public static void listFiles(String path, List<String> result) {
+        checkPathSecurity(path);
+        String absFileStr = path;
+        File absFile = new File(absFileStr);
+        if (!absFile.exists()) {
+            return;
+        }
+        File[] flist = absFile.listFiles();
+        if (flist == null) {
+            return;
+        }
+
+        for (File f : flist) {
+            if (f.isFile()) {
+                result.add(f.getName());
+            } else {
+                String childFilePath = path + PATH_SEPARATOR + f.getName();
+                listFiles(childFilePath, result);
+            }
+        }
+    }
+
+
 }

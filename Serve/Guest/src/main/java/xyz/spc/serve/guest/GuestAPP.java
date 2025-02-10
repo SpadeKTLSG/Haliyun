@@ -18,8 +18,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @SpringBootApplication(scanBasePackages = {
         "xyz.spc.serve.guest",
         "xyz.spc.serve.auxiliary",
-        "xyz.spc.infra"
-})
+        "xyz.spc.infra.*",
+        "xyz.spc.common.*"})
 @EnableFeignClients(basePackages = "xyz.spc.infra.feign")
 @EnableDiscoveryClient //开启服务发现
 @EnableScheduling //开启定时任务

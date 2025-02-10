@@ -39,6 +39,7 @@ public class User extends BaseModel {
 
     /**
      * 登陆方式 (0账号密码 1手机验证码 2邮箱验证码 3账号密码 + 手机验证码)
+     * note: 是为了兼容未来定制化登陆的场景 可以锁定登陆方式
      */
     private Integer loginType;
     public static final int LOGIN_TYPE_ACCOUNT = 0;
@@ -121,13 +122,25 @@ public class User extends BaseModel {
 
     //! 基础信息
 
+    /**
+     * 是否是管理员
+     */
     public boolean isAdmin() {
         return admin == 0;
     }
 
+    /**
+     * 是否正常
+     */
     public boolean isNormal() {
         return status == 0;
     }
 
+    /**
+     * 密码是否正确
+     */
+    public boolean passwordEquals(String password) {
+        return this.password.equals(password);
+    }
 
 }

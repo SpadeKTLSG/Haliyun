@@ -2,7 +2,7 @@ package xyz.spc.serve.auxiliary.config.mp.compo;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import org.apache.ibatis.reflection.MetaObject;
-import xyz.spc.common.enums.DelEnum;
+import xyz.spc.common.constant.DelEnum;
 
 import java.util.Date;
 

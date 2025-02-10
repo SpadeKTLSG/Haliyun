@@ -7,6 +7,7 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -44,9 +45,31 @@ public final class StringUtil {
     public static final String DELIM_START = "{";
     public static final String DELIM_END = "}";
     public static final String EMPTY_JSON = "{}";
+    public static final char[] ALL_DICT = new char[]{
+            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+    };
 
-
+    /**
+     * 中文正则
+     */
     public static final Pattern CHINESE_PATTERN = Pattern.compile("[\\u4e00-\\u9fa5]");
+    /**
+     * 非文字字符表达式
+     */
+    private final static Pattern NON_TEXT_PATTERN = Pattern.compile("\\s*|\t*|\r*|\n*");
+
+    /**
+     * 随机字符串采用的字符序列
+     */
+    private final static String PATTERN = "qwertyuiopasdfghjklzxcvbnm";
+
+    /**
+     * 随机字符串采用的字符序列长度
+     */
+    private final static int PATTERN_LEN = PATTERN.length();
+
 
     /**
      * 字符串是否为空白 空白的定义如下： <br>
@@ -454,5 +477,72 @@ public final class StringUtil {
             return false;
         }
         return CHINESE_PATTERN.matcher(str).find();
+    }
+
+    /**
+     * 判断是否为乱码
+     *
+     * @param input 待测试的字符串
+     * @return 乱码为true，否则为false
+     */
+    public static boolean isMessyCode(String input) {
+        Matcher m = NON_TEXT_PATTERN.matcher(input);
+        String after = m.replaceAll("");
+        String temp = after.replaceAll("\\p{P}", "");
+        char[] ch = temp.trim().toCharArray();
+        float chLength = 0;
+        float count = 0;
+        for (char c : ch) {
+            if (!Character.isLetterOrDigit(c)) {
+                if (!isChinese(c)) {
+                    count = count + 1;
+                }
+                chLength++;
+            }
+        }
+        float result = count / chLength;
+        return result > 0.4;
+    }
+
+    private static boolean isChinese(char c) {
+        Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+        return ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+                || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+                || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+                || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+                || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS;
+    }
+
+    /**
+     * 生成一个纯字母随机字符串
+     *
+     * @param len          生成的字符串长度
+     * @param mixUpperCase 是否混入大写字母
+     * @return 随机字符串
+     */
+    public static String getRandomString(int len, boolean mixUpperCase) {
+        StringBuilder sb = new StringBuilder(len);
+        Random r = new Random();
+        if (mixUpperCase) {
+            for (int i = 0; i < len; i++) {
+                sb.append((char) (PATTERN.charAt(r.nextInt(PATTERN_LEN)) - (r.nextInt(2) == 0 ? 32 : 0)));
+            }
+        } else {
+            for (int i = 0; i < len; i++) {
+                sb.append(PATTERN.charAt(r.nextInt(PATTERN_LEN)));
+            }
+        }
+        return sb.toString();
+    }
+
+    /**
+     * 生成一个纯字母随机字符串
+     *
+     * @param len 生成的字符串长度
+     * @return 随机字符串
+     */
+    public static String getRandomString(int len) {
+        return getRandomString(len, true);
     }
 }

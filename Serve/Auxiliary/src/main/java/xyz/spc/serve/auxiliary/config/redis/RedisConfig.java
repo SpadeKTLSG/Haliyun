@@ -4,21 +4,22 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RedissonClient;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.data.redis.core.script.RedisScript;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
-import org.springframework.scripting.support.ResourceScriptSource;
+import xyz.spc.serve.auxiliary.config.redis.compo.StringRedisTemplateProxy;
+import xyz.spc.serve.auxiliary.config.redis.core.RedisDistributedProperties;
 
 import java.time.Duration;
 import java.util.Objects;
@@ -69,16 +70,13 @@ public class RedisConfig {
         return template;
     }
 
+
     /**
-     * 配置限流脚本
+     * 配置StringRedisTemplateProxy
      */
     @Bean
-    public RedisScript<Long> limitScript() {
-        DefaultRedisScript<Long> redisScript = new DefaultRedisScript<>();
-        redisScript.setScriptSource(new ResourceScriptSource(new ClassPathResource("lua/limit.lua")));
-        redisScript.setResultType(Long.class);
-        log.debug("限流脚本配置完成");
-        return redisScript;
+    public StringRedisTemplateProxy stringRedisTemplateProxy(StringRedisTemplate stringRedisTemplate, RedisDistributedProperties redisProperties, RedissonClient redissonClient) {
+        return new StringRedisTemplateProxy(stringRedisTemplate, redisProperties, redissonClient);
     }
 
 
@@ -110,6 +108,18 @@ public class RedisConfig {
                         .build();
         log.debug("CacheManager配置完成");
         return redisCacheManager;
+    }
+
+
+    /**
+     * Redis消息监听器容器
+     */
+    @Bean
+    RedisMessageListenerContainer container(RedisConnectionFactory factory) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(factory);
+        log.debug("Redis消息监听器容器初始化完成");
+        return container;
     }
 
 }

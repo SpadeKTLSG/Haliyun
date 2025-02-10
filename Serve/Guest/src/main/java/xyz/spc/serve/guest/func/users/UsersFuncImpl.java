@@ -2,33 +2,34 @@ package xyz.spc.serve.guest.func.users;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RBloomFilter;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import xyz.spc.common.constant.LoginCommonCT;
-import xyz.spc.common.constant.redis.LoginCacheKey;
-import xyz.spc.common.funcpack.commu.errorcode.ClientError;
-import xyz.spc.common.funcpack.commu.exception.AbstractException;
-import xyz.spc.common.funcpack.commu.exception.ClientException;
-import xyz.spc.common.funcpack.commu.exception.ServiceException;
+import xyz.spc.common.constant.Guest.users.LoginCacheKey;
+import xyz.spc.common.constant.Guest.users.LoginCommonCT;
+import xyz.spc.common.funcpack.errorcode.ClientError;
+import xyz.spc.common.funcpack.exception.AbstractException;
+import xyz.spc.common.funcpack.exception.ClientException;
+import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.funcpack.uuid.UUID;
 import xyz.spc.common.util.collecUtil.StringUtil;
 import xyz.spc.common.util.encryptUtil.MD5Util;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
-import xyz.spc.domain.dos.Guest.users.UserDO;
-import xyz.spc.domain.dos.Guest.users.UserDetailDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
-import xyz.spc.serve.auxiliary.config.redis.RedisCacheGeneral;
+import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
+import xyz.spc.serve.auxiliary.config.redis.tool.RedisCacheGeneral;
+import xyz.spc.serve.guest.common.enums.UsersChainMarkEnum;
 
 import javax.security.auth.login.AccountNotFoundException;
 import java.util.HashMap;
@@ -43,10 +44,24 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class UsersFuncImpl implements UsersFunc {
 
-    private final RedisTemplate<Object, Object> redisTemplate;
-    private final RedisCacheGeneral rcg;
+    /**
+     * Repo
+     */
     private final UsersRepo usersRepo;
 
+    /**
+     * 责任链
+     */
+    private final AbstractChainContext<User, UserDTO> abstractChainContext;
+
+
+    /**
+     * 中间件
+     */
+    private final RedisTemplate<Object, Object> redisTemplate;
+    private final RedisCacheGeneral rcg;
+    private final RedissonClient redissonClient;
+    private final RBloomFilter<String> userRegisterCachePenetrationBloomFilter;
 
     @Override
     @Retryable(retryFor = ServiceException.class, backoff = @Backoff(delay = 1000, multiplier = 1.5)) //重试策略, 通常在依赖外部服务时使用
@@ -105,7 +120,7 @@ public class UsersFuncImpl implements UsersFunc {
 
         //生成验证码
         String code = codeUtil.achieveCode(); //自定义工具类生成验证码
-        rcg.setCacheObject(LoginCacheKey.LOGIN_CODE_KEY + phone, code, Math.toIntExact(LoginCacheKey.LOGIN_CODE_TTL_GUEST), TimeUnit.MINUTES);
+        rcg.setCacheObject(LoginCacheKey.LOGIN_CODE_KEY + phone, code, Math.toIntExact(LoginCommonCT.LOGIN_CODE_TTL_GUEST), TimeUnit.MINUTES);
         // 更新发送时间和次数
         redisTemplate.opsForZSet().add(LoginCacheKey.SENDCODE_SENDTIME_KEY + phone, System.currentTimeMillis() + "", System.currentTimeMillis());
 
@@ -114,7 +129,7 @@ public class UsersFuncImpl implements UsersFunc {
 
 
     @Override
-    @Transactional(rollbackFor = AbstractException.class)
+    @Transactional(rollbackFor = AbstractException.class, timeout = 30)
     public String login(UserDTO userDTO) throws AccountNotFoundException {
 
 
@@ -132,7 +147,7 @@ public class UsersFuncImpl implements UsersFunc {
         }
 
 
-        // 确定登陆方式
+        // 确定登陆方式: 手动策略模式
         return switch (login_type) {
             case User.LOGIN_TYPE_ACCOUNT -> loginByAccount(userDTO);
             case User.LOGIN_TYPE_PHONE -> loginByPhone(userDTO);
@@ -149,123 +164,86 @@ public class UsersFuncImpl implements UsersFunc {
         return rcg.deleteObject(tokenKey);
     }
 
-    private String loginByAccountPhone(UserDTO userDTO) throws AccountNotFoundException {
-        //? 目前暂时只选择此方式
-        //note: 根据用户名查询用户 | 根据手机号查询用户, 这里后者
 
-        //! 校验 todo 责任链模式
+    private String loginByAccountPhone(UserDTO userDTO) {
+        //? 目前暂时只选择此方式 note: 根据用户名查询用户 | 根据手机号查询用户, 这里后者
 
-        //? 1 校验手机号格式
-        String phone = userDTO.getPhone();
-        if (!PhoneUtil.isMatches(phone, true)) {
-            throw new ClientException(ClientError.PHONE_VERIFY_ERROR);
-        }
+        //! DB取Model
+        User user = usersRepo.getUserByUserDTO(userDTO, UserDTO.UserDTOField.phone);
 
+        //! 落库校验 (责任链)
+        abstractChainContext.handler(UsersChainMarkEnum.USER_LOGIN_FILTER.name(), user, userDTO);
 
-        //查找手机号关联用户 : 去找手机号对应的用户详情DO todo : 抽取到DAO(Service)区域
-        LambdaQueryWrapper<UserDetailDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(UserDetailDO::getPhone, phone);
-        UserDetailDO userDetailDO = Optional.ofNullable(usersRepo.userDetailService.getOne(queryWrapper)).orElseThrow(() -> new AccountNotFoundException("手机号未注册"));
+        //! 登陆业务
+        //1 Account作为MD5 salt生成token
+        String token = MD5Util.enryption(UUID.randomUUID(false).toString(), user.getAccount());
 
-        //利用UserDetailDO的id去查找UserDO
-        //todo  特种写法 1 手动创建, 但是用w -> and一层嵌套
-/*        LambdaQueryWrapper<UserDO> userQueryWrapper = new LambdaQueryWrapper<>();
-        userQueryWrapper.and(w -> w.eq(UserDO::getId, userDetailDO.getId())); //好劲的写法
-        UserDO userDO = usersRepo.userService.getOne(userQueryWrapper);*/
-
-        UserDO userDO = usersRepo.userService.getOne(Wrappers.lambdaQuery(UserDO.class).eq(UserDO::getId, userDetailDO.getId())  //使用Wrappers.lambdaQuery直接创建, 统一写法
-        );
-
-        //todo 抽取Repo的 Wrapper集群示例 之后用Class的方式封装通过id查询的方法, 加上联表方法
-        /*LambdaQueryWrapper<RegionDO> queryWrapper = switch (requestParam.getQueryType()) {
-            case 0 -> Wrappers.lambdaQuery(RegionDO.class)
-                    .eq(RegionDO::getPopularFlag, FlagEnum.TRUE.code());
-            case 1 -> Wrappers.lambdaQuery(RegionDO.class)
-                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.A_E.getSpells());
-            case 2 -> Wrappers.lambdaQuery(RegionDO.class)
-                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.F_J.getSpells());
-            case 3 -> Wrappers.lambdaQuery(RegionDO.class)
-                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.K_O.getSpells());
-            case 4 -> Wrappers.lambdaQuery(RegionDO.class)
-                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.P_T.getSpells());
-            case 5 -> Wrappers.lambdaQuery(RegionDO.class)
-                    .in(RegionDO::getInitial, RegionStationQueryTypeEnum.U_Z.getSpells());
-            default -> throw new ClientException("查询失败，请检查查询参数是否正确");
-        };*/
-
-        //? 2 校验用户是否被锁定了
-        User user = new User().fromDO(userDO);
-        if (!user.isNormal()) {
-            throw new ClientException(ClientError.USER_ACCOUNT_BLOCKED_ERROR);
-        }
-
-        //? 3 密码校验
-        if (!user.getPassword().equals(userDTO.getPassword())) {
-            throw new ClientException(ClientError.USER_PASSWORD_ERROR);
-        }
-
-        //? 4 从redis获取验证码并校验
-        String cacheCode = rcg.getCacheObject(LoginCacheKey.LOGIN_CODE_KEY + phone);
-        String code = userDTO.getCode();
-        if (StringUtil.isBlank(cacheCode) || !cacheCode.equals(code)) throw new ClientException(ClientError.USER_CODE_ERROR);
-
-
-        //! 登陆
-        // 使用用户Account作为MD5 salt生成token
-        String key = user.getAccount();
-        String text = UUID.randomUUID(false).toString();
-        String token = MD5Util.enryption(text, key);
-
-        // 制作用户信息Map (去除密码code加入Token)
-        userDTO.setPassword(null);
-        userDTO.setCode(null);
-        userDTO.setToken(token);
+        //2 制作用户信息Map (去除密码code加入Token)
+        userDTO.setPassword(null).setCode(null).setToken(token);
         Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(), CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> fieldValue == null ? null : fieldValue.toString()));
 
-        // 存储用户信息到redis
+        //3 存储用户信息到redis
         String tokenKey = LoginCacheKey.LOGIN_USER_KEY + userDTO.getAccount();
-
-
         rcg.deleteObject(tokenKey);
         rcg.setCacheMap(tokenKey, userMap);
         rcg.expire(tokenKey, LoginCommonCT.LOGIN_USER_TTL, TimeUnit.MINUTES);
+
         return token;
     }
 
     private String loginByEmail(UserDTO userDTO) {
-        throw new ClientException("暂不支持邮箱登陆", ClientError.USER_LOGIN_ERROR);
+        throw new ClientException("暂不支持邮箱登陆, 敬请期待", ClientError.USER_LOGIN_ERROR);
     }
 
     private String loginByPhone(UserDTO userDTO) {
-        throw new ClientException("暂不支持手机验证码登陆", ClientError.USER_LOGIN_ERROR);
+        if (userDTO.getAdmin() == 0) {
+            throw new ClientException("安全原因, 用户暂不支持仅手机验证码登陆", ClientError.USER_LOGIN_ERROR);
+        }
+        throw new ClientException("安全原因, 管理员暂不支持仅手机验证码登陆", ClientError.USER_LOGIN_ERROR);
     }
 
     private String loginByAccount(UserDTO userDTO) {
-        throw new ClientException("暂不支持账号密码登陆", ClientError.USER_LOGIN_ERROR);
+        if (userDTO.getAdmin() == 0) {
+            throw new ClientException("安全原因, 用户暂不支持仅账号密码登陆", ClientError.USER_LOGIN_ERROR);
+        }
+        throw new ClientException("安全原因, 管理员暂不支持仅账号密码登陆", ClientError.USER_LOGIN_ERROR);
     }
 
-    //todo 加锁注册 + 事务回滚示例
-//    @Transactional(rollbackFor = Exception.class, timeout = 30)
-//    public void register(UserRegisterReqDTO requestParam) {
-//        if (!hasUsername(requestParam.getUsername())) {
-//            throw new ClientException(USER_NAME_EXIST);
-//        }
-//        RLock lock = redissonClient.getLock(LOCK_USER_REGISTER_KEY + requestParam.getUsername());
-//        if (!lock.tryLock()) {
-//            throw new ClientException(USER_NAME_EXIST);
-//        }
-//        try {
-//            int inserted = baseMapper.insert(BeanUtil.toBean(requestParam, UserDO.class));
-//            if (inserted < 1) {
-//                throw new ClientException(USER_SAVE_ERROR);
-//            }
-//            groupService.saveGroup(requestParam.getUsername(), "默认分组");
-//            userRegisterCachePenetrationBloomFilter.add(requestParam.getUsername());
-//        } catch (DuplicateKeyException ex) {
-//            throw new ClientException(USER_EXIST);
-//        } finally {
-//            lock.unlock();
-//        }
-//    }
+
+    @Override
+    public boolean register(UserDTO userDTO) {
+
+        // Control已做限流
+        // 校验: 确认验证码
+        String cacheCode = rcg.getCacheObject(LoginCacheKey.LOGIN_CODE_KEY + userDTO.getPhone());
+        String code = userDTO.getCode();
+        if (StringUtil.isBlank(cacheCode) || !cacheCode.equals(code)) {
+            throw new ClientException(ClientError.USER_CODE_ERROR);
+        }
+
+        // 校验: 账户 Account是否已存在 - 已通过唯一索引保证, 这里用布隆再来一次校验, 因为可能存在数据库生成不及时导致冲突
+        if (userRegisterCachePenetrationBloomFilter.contains(userDTO.getAccount())) {
+            throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
+        }
+
+        // 加锁注册业务流程
+        RLock lock = redissonClient.getLock(LoginCacheKey.REGISTER_REQUEST_ONLY_KEY + userDTO.getAccount());
+        if (!lock.tryLock()) {
+            // 没抢到锁就意味着可能是其他人来注册同样的名字了
+            throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
+        }
+        try {
+            usersRepo.addUser(userDTO);
+        } catch (ClientException ex) {
+            throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
+        } finally {
+            //成功注册需要添加到布隆过滤器
+            userRegisterCachePenetrationBloomFilter.add(userDTO.getAccount());
+            lock.unlock();
+        }
+
+        return true;
+    }
+
 
 }

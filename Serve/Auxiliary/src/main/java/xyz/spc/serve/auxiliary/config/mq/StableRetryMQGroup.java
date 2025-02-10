@@ -4,7 +4,6 @@ import org.springframework.amqp.core.*;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import xyz.spc.common.constant.mq.BasicMQCompo;
 
 /**
  * 默认稳定重试队列

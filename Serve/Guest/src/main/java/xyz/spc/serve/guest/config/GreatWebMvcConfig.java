@@ -9,18 +9,17 @@ import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactor
 import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.ByteArrayHttpMessageConverter;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import xyz.spc.common.funcpack.repeat.RepeatSubmitInterceptor;
-import xyz.spc.serve.guest.common.interceptor.login.GreatLoginInterceptor;
-import xyz.spc.serve.guest.common.interceptor.login.GreatTokenRefreshInterceptor;
+import xyz.spc.serve.auxiliary.common.interceptor.login.GreatLoginInterceptor;
+import xyz.spc.serve.auxiliary.common.interceptor.login.GreatTokenRefreshInterceptor;
+import xyz.spc.serve.auxiliary.config.serial.StringToEnumConverterFactory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.List;
@@ -90,6 +89,15 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
 
 
     /**
+     * 添加自定义枚举格式化器
+     */
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        registry.addConverterFactory(new StringToEnumConverterFactory());
+        log.debug("自定义枚举格式化器 init");
+    }
+
+    /**
      * 配置静态资源映射
      */
     @Override
@@ -116,26 +124,5 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
         });
         log.debug("Tomcat Servlet Web 服务器工厂 init");
         return webServerFactory;
-    }
-
-    /**
-     * 跨域配置(网关本身有做跨域, 这里只是调试方便)
-     */
-    @Bean
-    public CorsFilter corsFilter() {
-        CorsConfiguration config = new CorsConfiguration();
-
-        config.setAllowCredentials(true); //允许发送Cookie信息
-        config.addAllowedOriginPattern("*"); // 设置访问源地址
-        config.addAllowedHeader("*"); // 设置访问源请求头
-        config.addAllowedMethod("*"); // 设置访问源请求方法
-        config.setMaxAge(1800L);   // 有效期 1800秒
-
-        // 添加映射路径, 应用到所有请求
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", config);
-
-        log.debug("跨域配置 init");
-        return new CorsFilter(source);
     }
 }

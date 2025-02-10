@@ -47,7 +47,7 @@ public final class HdfsFuncUtil {
      * @param overwrite 覆盖存在的文件
      * @return output stream
      */
-    public FSDataOutputStream createFile(final String path, final boolean overwrite) throws IOException {
+    public static FSDataOutputStream createFile(final String path, final boolean overwrite) throws IOException {
         return dfs.create(new Path(path), overwrite);
     }
 
@@ -55,7 +55,7 @@ public final class HdfsFuncUtil {
     /**
      * 移动文件或目录
      */
-    public boolean move(final String src, final String dest) throws Exception {
+    public static boolean move(final String src, final String dest) throws Exception {
 
         /*
          * 是否删除源文件 == true
@@ -71,9 +71,14 @@ public final class HdfsFuncUtil {
     /**
      * 复制文件或目录
      */
-    public boolean copy(final String src, final String dest) throws Exception {
+    public static boolean copy(final String src, final String dest) throws Exception {
         return FileUtil.copy(dfs, new Path(src), dfs, new Path(dest), false, dfs.getConf());
     }
 
-
+    /**
+     * 目录/文件重命名
+     */
+    public static boolean rename(final String src, final String dest) throws Exception {
+        return dfs.rename(new Path(src), new Path(dest));
+    }
 }

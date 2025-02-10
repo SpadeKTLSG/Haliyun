@@ -17,6 +17,13 @@ public class HdfsQueryUtil {
 
 
     /**
+     * 拿到HDFS的home目录 => /user/用户/
+     */
+    public static Path getHomeDir() {
+        return dfs.getHomeDirectory();
+    }
+
+    /**
      * 查完对应路径文件是否存在
      */
     public static boolean checkFileExist(String pathStr) throws Exception {

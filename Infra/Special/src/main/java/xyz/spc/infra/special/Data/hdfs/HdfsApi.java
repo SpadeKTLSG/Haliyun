@@ -4,10 +4,7 @@ package xyz.spc.infra.special.Data.hdfs;
 import com.google.common.base.Strings;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.hadoop.conf.Configuration;
-import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.*;
-import org.apache.hadoop.security.UserGroupInformation;
 import xyz.spc.test.pojo.HdfsApiException;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -28,79 +25,6 @@ import java.util.List;
  * @date 2018年7月3日15:43:16
  */
 public class HdfsApi {
-
-    // Hadoop的用户和组信息。
-    private final UserGroupInformation ugi;
-    // 创建配置时候加载core-site.xml、hdfs-site.xml
-    // 如果本地有，加载本地
-    // 否则加载远程HDFS文件系统上的配置文件，远程必须指定uri
-
-
-    private final Configuration conf;
-
-    /**
-     * 如果不指定hdfs文件系统的uri，默认文件系统指向本地环境，比如当前环境是Windows 如果指定hdfs文件系统的uri
-     * ，也就是连接远程Hadoop文件系统，
-     * 请确保uri和core-site.xml里面配置的fs.defaultFS的value值一样，否者获取远程文件系统失败
-     */
-    private String uri;
-    /**
-     * 在Hadoop中,FileSystem是一个通用的文件系统API FileSystem是一个抽象类
-     */
-    private FileSystem fs;
-
-
-    /**
-     * 获取HDFS文件系统的状态（存储情况）
-     *
-     * @return fs的状态
-     * @throws Exception
-     */
-    public synchronized FsStatus getStatus() throws Exception {
-        return execute(new PrivilegedExceptionAction<FsStatus>() {
-            public FsStatus run() throws IOException {
-                FsStatus status = fs.getStatus();
-                System.out.println("容量：" + getByteToSize(status.getCapacity()));
-                System.out.println("已用：" + getByteToSize(status.getUsed()));
-                System.out.println("剩余：" + getByteToSize(status.getRemaining()));
-                return status;
-            }
-        });
-    }
-
-    /**
-     * 创建文件目录/文件
-     *
-     * @param path
-     * @throws InterruptedException
-     * @throws IOException
-     */
-    public boolean mkdir(final String path) throws IOException, InterruptedException {
-        return execute(new PrivilegedExceptionAction<Boolean>() {
-            public Boolean run() throws IllegalArgumentException, IOException {
-                Path dPath = new Path(uri + "/" + path);
-                return fs.mkdirs(dPath);
-            }
-        });
-
-    }
-
-    /**
-     * 创建文件 == 返回文件的输出字节流，可以使用write进行内容添加
-     *
-     * @param path      path
-     * @param overwrite 覆盖存在的文件
-     * @return output stream
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    public FSDataOutputStream createFile(final String path, final boolean overwrite) throws IOException, InterruptedException {
-        return execute(new PrivilegedExceptionAction<FSDataOutputStream>() {
-            public FSDataOutputStream run() throws Exception {
-                return fs.create(new Path(uri + "/" + path), overwrite);
-            }
-        });
-    }
 
 
     /**
@@ -456,115 +380,6 @@ public class HdfsApi {
         });
     }
 
-
-    /**
-     * 复制文件从src目录到dest目录
-     *
-     * @param src  源path
-     * @param dest 目标path
-     */
-    public void copy(final String src, final String dest) throws Exception {
-
-        boolean result = execute(new PrivilegedExceptionAction<Boolean>() {
-            public Boolean run() throws Exception {
-                // 是否删除源文件 == false，不删除源文件
-                return FileUtil.copy(fs, new Path(uri + "/" + src), fs, new Path(uri + "/" + dest), false, conf);
-            }
-        });
-
-        if (!result) {
-            throw new Exception("HDFS010 Can't copy source file from \" + src + \" to \" + dest");
-        }
-    }
-
-    /**
-     * 移动文件或者目录
-     *
-     * @param src
-     * @param dest
-     * @throws Exception
-     */
-    public void move(final String src, final String dest) throws Exception {
-        boolean result = execute(new PrivilegedExceptionAction<Boolean>() {
-            public Boolean run() throws Exception {
-                /**
-                 * 是否删除源文件 == true，删除源文件 copy原理: 1.先复制字节 2.然后递归删除源文件或目录
-                 */
-                Path sPath;
-                Path dPath;
-                String srcPath;
-                if (StringUtils.isNotBlank(uri)) {
-                    srcPath = uri + "/" + src;
-                    sPath = new Path(srcPath);
-                    dPath = new Path(uri + "/" + dest);
-                } else {
-                    srcPath = src;
-                    sPath = new Path(srcPath);
-                    dPath = new Path(dest);
-                }
-                if (!existFile(src)) {
-                    System.out.println(srcPath + " == 不存在，本次操作终止");
-                    return false;
-                }
-                boolean copy = FileUtil.copy(fs, sPath, fs, dPath, true, conf);
-                return copy;
-            }
-        });
-
-        if (!result) {
-            throw new Exception("HDFS010 Can't copy source file from \" + src + \" to \" + dest");
-        }
-
-    }
-
-    /**
-     * 判断文件是否存在
-     *
-     * @param filePath
-     * @return
-     * @throws InterruptedException
-     * @throws IOException
-     */
-    public boolean existFile(final String filePath) throws IOException, InterruptedException {
-        return execute(new PrivilegedExceptionAction<Boolean>() {
-            public Boolean run() {
-                boolean flag = false;
-                if (StringUtils.isEmpty(filePath)) {
-                    return flag;
-                }
-                try {
-                    Path path;
-                    if (StringUtils.isNotBlank(uri)) {
-                        path = new Path(uri + "/" + filePath);
-                    } else {
-                        path = new Path(filePath);
-                    }
-                    // 如果文件存在，返回true
-                    if (fs.exists(path)) {
-                        flag = true;
-                    }
-                } catch (Exception e) {
-                    System.err.println(e);
-                }
-                return flag;
-            }
-        });
-
-    }
-
-    /**
-     * 拿到HDFS的home目录 == /user/用户/
-     *
-     * @return home directory
-     * @throws Exception
-     */
-    public Path getHomeDir() throws Exception {
-        return execute(new PrivilegedExceptionAction<Path>() {
-            public Path run() throws IOException {
-                return fs.getHomeDirectory();
-            }
-        });
-    }
 
     /**
      * 检查Hadoop的回收站功能是否可用（开启）

@@ -1,7 +1,9 @@
 package xyz.spc.common.util.hdfsUtil;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.FileUtil;
 import org.apache.hadoop.fs.Path;
 
 import java.io.IOException;
@@ -36,6 +38,41 @@ public final class HdfsFuncUtil {
      */
     public static void deleteF(String stringDir) throws Exception {
         dfs.delete(new Path(stringDir), true);
+    }
+
+    /**
+     * 创建文件, 返回文件的输出字节流. 可以使用write进行内容添加
+     *
+     * @param path      path
+     * @param overwrite 覆盖存在的文件
+     * @return output stream
+     */
+    public FSDataOutputStream createFile(final String path, final boolean overwrite) throws IOException {
+        return dfs.create(new Path(path), overwrite);
+    }
+
+
+    /**
+     * 移动文件或目录
+     */
+    public boolean move(final String src, final String dest) throws Exception {
+
+        /*
+         * 是否删除源文件 == true
+         * 删除源文件 copy原理: 1.先复制字节 2.然后递归删除源文件或目录
+         */
+        if (!HdfsQueryUtil.checkFileExist(src)) {
+            log.warn(src + ": HDFS文件不存在，本次操作终止");
+            return false;
+        }
+        return FileUtil.copy(dfs, new Path(src), dfs, new Path(dest), true, dfs.getConf());
+    }
+
+    /**
+     * 复制文件或目录
+     */
+    public boolean copy(final String src, final String dest) throws Exception {
+        return FileUtil.copy(dfs, new Path(src), dfs, new Path(dest), false, dfs.getConf());
     }
 
 

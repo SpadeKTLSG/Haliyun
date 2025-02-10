@@ -1,10 +1,7 @@
 package xyz.spc.common.util.hdfsUtil;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.hadoop.fs.FSDataOutputStream;
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.FileUtil;
-import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.*;
 
 import java.io.IOException;
 
@@ -81,4 +78,97 @@ public final class HdfsFuncUtil {
     public static boolean rename(final String src, final String dest) throws Exception {
         return dfs.rename(new Path(src), new Path(dest));
     }
+
+
+    /**
+     * 删除文件或者文件目录
+     *
+     * @param recursive 是否递归删除：如果path是目录，则该参数设置为true，否则会抛出异常
+     * @param skiptrash 是否删除的时候，将文件或者目录放入回收站
+     */
+    public static boolean rmdir(final String path, boolean recursive, boolean skiptrash) throws IOException, InterruptedException {
+
+        // 不跳过回收站则将删除的对象放入回收站
+        if (!skiptrash) {
+            move2Trash(path);
+            return true;
+        }
+
+        // 采用递归删除文件
+        return dfs.delete(new Path(path), recursive);
+    }
+
+
+    /**
+     * 检查Hadoop的回收站功能是否可用（开启）
+     *
+     * @return 返回true，证明回收站功能可用
+     */
+    public static boolean trashEnabled() throws Exception {
+        Trash trash = new Trash(dfs, dfs.getConf());
+        return trash.isEnabled();
+    }
+
+    /**
+     * 拿到回收站的Path
+     *
+     * @return 回收站目录 == Path路径对象
+     */
+    public static Path getTrashDir() throws Exception {
+        TrashPolicy trashPolicy = TrashPolicy.getInstance(dfs.getConf(), dfs, dfs.getHomeDirectory());
+        return trashPolicy.getCurrentTrashDir().getParent();
+    }
+
+    /**
+     * 拿到回收站的目录路径
+     *
+     * @return 回收站目录 字符串形式的路径
+     */
+    public static String getTrashDirPath() throws Exception {
+        Path trashDir = getTrashDir();
+        // 返回回收站目录URI的原始路径组件 -> 字符串形式的路径
+        return trashDir.toUri().getRawPath();
+    }
+
+
+    /**
+     * 拿到回收站里面指定的文件的路径
+     *
+     * @param filePath : 回收站里面的文件
+     * @return 回收站下面的文件
+     */
+    public static String getTrashDirPath(final String filePath) throws Exception {
+        String trashDirPath = getTrashDirPath();
+        Path path = new Path(filePath);
+        trashDirPath = trashDirPath + "/" + path.getName();
+        return trashDirPath;
+    }
+
+
+    /**
+     * 将文件或目录放到回收站
+     */
+    public static boolean move2Trash(final String path) throws IOException, InterruptedException {
+        Trash trash = new Trash(dfs, dfs.getConf());
+        return trash.moveToTrash(new Path(path));
+
+    }
+
+    /**
+     * 从回收站恢复指定文件或目录到指定位置
+     */
+    public static boolean restoreFrTrash(final String srcPath, final String destPath) throws Exception {
+        return move(srcPath, destPath);
+    }
+
+    /**
+     * 清空回收站 (也可暴力)
+     */
+    public static boolean emptyTrash() throws Exception {
+        Trash tr = new Trash(dfs, dfs.getConf());
+        tr.expunge();
+        return true;
+    }
+
+
 }

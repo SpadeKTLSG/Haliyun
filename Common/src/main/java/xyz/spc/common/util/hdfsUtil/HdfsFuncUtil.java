@@ -100,10 +100,11 @@ public final class HdfsFuncUtil {
 
 
     /**
-     * 检查Hadoop的回收站功能是否可用（开启）
+     * 检查Hadoop的回收站功能是否可用（我默认关闭, 采用自己文件夹实现）
      *
      * @return 返回true，证明回收站功能可用
      */
+    @Deprecated
     public static boolean trashEnabled() throws Exception {
         Trash trash = new Trash(dfs, dfs.getConf());
         return trash.isEnabled();
@@ -114,6 +115,7 @@ public final class HdfsFuncUtil {
      *
      * @return 回收站目录 == Path路径对象
      */
+    @Deprecated
     public static Path getTrashDir() throws Exception {
         TrashPolicy trashPolicy = TrashPolicy.getInstance(dfs.getConf(), dfs, dfs.getHomeDirectory());
         return trashPolicy.getCurrentTrashDir().getParent();
@@ -124,6 +126,7 @@ public final class HdfsFuncUtil {
      *
      * @return 回收站目录 字符串形式的路径
      */
+    @Deprecated
     public static String getTrashDirPath() throws Exception {
         Path trashDir = getTrashDir();
         // 返回回收站目录URI的原始路径组件 -> 字符串形式的路径
@@ -137,6 +140,7 @@ public final class HdfsFuncUtil {
      * @param filePath : 回收站里面的文件
      * @return 回收站下面的文件
      */
+    @Deprecated
     public static String getTrashDirPath(final String filePath) throws Exception {
         String trashDirPath = getTrashDirPath();
         Path path = new Path(filePath);
@@ -148,6 +152,7 @@ public final class HdfsFuncUtil {
     /**
      * 将文件或目录放到回收站
      */
+    @Deprecated
     public static boolean move2Trash(final String path) throws IOException, InterruptedException {
         Trash trash = new Trash(dfs, dfs.getConf());
         return trash.moveToTrash(new Path(path));
@@ -157,6 +162,7 @@ public final class HdfsFuncUtil {
     /**
      * 从回收站恢复指定文件或目录到指定位置
      */
+    @Deprecated
     public static boolean restoreFrTrash(final String srcPath, final String destPath) throws Exception {
         return move(srcPath, destPath);
     }
@@ -164,6 +170,7 @@ public final class HdfsFuncUtil {
     /**
      * 清空回收站 (也可暴力)
      */
+    @Deprecated
     public static boolean emptyTrash() throws Exception {
         Trash tr = new Trash(dfs, dfs.getConf());
         tr.expunge();

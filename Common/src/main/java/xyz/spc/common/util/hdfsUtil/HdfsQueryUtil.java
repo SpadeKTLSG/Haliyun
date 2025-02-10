@@ -3,9 +3,12 @@ package xyz.spc.common.util.hdfsUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.*;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.security.MessageDigest;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * HDFS查询工具类 (Query)
@@ -90,5 +93,35 @@ public class HdfsQueryUtil {
         }
     }
 
+
+    /**
+     * 根据filter获取目录下的文件
+     *
+     * @param path       路径
+     * @param pathFilter 过滤器
+     * @return String[] 文件路径
+     */
+    public static String[] listFilePaths(String path, PathFilter pathFilter) throws IOException {
+        List<String> fileList = new ArrayList<>();
+
+        FileStatus[] status;
+        if (pathFilter != null) {
+            // 根据filter列出目录内容
+            status = dfs.listStatus(new Path(path), pathFilter);
+        } else {
+            // 列出目录内容
+            status = dfs.listStatus(new Path(path));
+        }
+        // 获取目录下的所有文件路径
+        Path[] listedPaths = FileUtil.stat2Paths(status);
+        // 转换List<String>
+        if (listedPaths != null) {
+            for (Path listedPath : listedPaths) {
+                fileList.add(listedPath.toString());
+            }
+        }
+
+        return fileList.toArray(new String[0]);
+    }
 
 }

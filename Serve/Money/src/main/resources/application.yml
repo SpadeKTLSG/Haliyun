@@ -1,20 +1,18 @@
 server:
-  port: 10000 # Gateway No 0
+  port: 10005 # Money No 5
 
 spring:
 
   application:
-    name: gateway-app
+    name: money-app
 
   profiles:
     active: dev
 
   main:
-    web-application-type: reactive # 使用响应式编程 (网关与MVC冲突)
     allow-circular-references: true # 允许循环引用
     allow-bean-definition-overriding: true # 允许覆盖bean定义
     lazy-initialization: false # 关闭懒加载, 防止组件失效
-
 
   # MySQL
   datasource:
@@ -82,6 +80,7 @@ spring:
         max-interval: 10000ms
         multiplier: 1
 
+
   cloud:
     # Nacos
     nacos:
@@ -103,12 +102,39 @@ spring:
 
     # Sentinel
     sentinel:
+      web-context-unify: false # 关闭context整合
       enabled: true # 是否开启。默认为 true 开启
       eager: true # 是否饥饿加载。默认为 false 关闭
       transport:
-        port: 9990 # Gateway No 0
+        port: 9995  # Money No 5
         dashboard: ${infrastructure.sentinel.host}:${infrastructure.sentinel.port} # Sentinel 控制台地址
         clientIp: 127.0.0.1
+      datasource:
+        flow:
+          nacos:
+            server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+            dataId: ${spring.application.name}-flow-rules-${spring.profiles.active}.yaml
+            groupId: DEFAULT_GROUP
+            rule-type: flow
+        degrade:
+          nacos:
+            server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+            dataId: ${spring.application.name}-degrade-rules-${spring.profiles.active}.yaml
+            groupId: DEFAULT_GROUP
+            rule-type: degrade
+        authority:
+          nacos:
+            server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+            dataId: ${spring.application.name}-authority-rules-${spring.profiles.active}.yaml
+            groupId: DEFAULT_GROUP
+            rule-type: authority
+        param-flow:
+          nacos:
+            server-addr: ${infrastructure.nacos.host}:${infrastructure.nacos.port}
+            dataId: ${spring.application.name}-param-flow-rules-${spring.profiles.active}.yaml
+            groupId: DEFAULT_GROUP
+            rule-type: param-flow
+
 
     # Feign
     openfeign:
@@ -120,32 +146,6 @@ spring:
             connect-timeout: 5000
             read-timeout: 5000
             logger-level: full
-
-    # Gateway
-    gateway:
-      globalcors: # 全局的跨域处理
-        add-to-simple-url-handler-mapping: true # 解决options请求被拦截问题
-        corsConfigurations:
-          "[/**]":
-            allowedOrigins: "http://localhost:9876" # 允许跨域请求-前端地址
-            allowedMethods: "*" # 允许所有的跨域ajax的请求方式
-            allowedHeaders: "*" # 允许在请求中携带的头信息
-            allowCredentials: true # 是否允许携带cookie
-            maxAge: 3600000 # 这次跨域检测的有效期
-
-
-      routes:
-        - id: guest-service
-          uri: lb://guest-app
-          predicates:
-            - Path=/Guest/**
-          filters:
-            - name: RequestRateLimiter
-              args:
-                redis-rate-limiter.replenishRate: 100000 # 每秒允许的请求数 : 十万
-                redis-rate-limiter.burstCapacity: 200000 # 突发请求的最大数量: 二十万
-                key-resolver: "#{@ipKeyResolver}" # 使用IP地址作为限流的key, 创建一个Limit Config
-
 
 
 
@@ -170,6 +170,8 @@ spring:
 
 mybatis-plus:
 
+  mapper-locations: classpath*:/Infra/Mapper/src/main/resources/mapper/*Mapper.xml
+
   global-config:
     banner: false
 
@@ -182,28 +184,17 @@ mybatis-plus:
 mybatis-plus-join:
   banner: false
 
-
 # 日志配置
 logging:
 
   level:
     xyz.spc:
       DEBUG
-    org.springframework.cloud.gateway:
-      DEBUG
+    org.springframework:
+      INFO
 
   pattern:
     dateformat: mm:ss.SSS
-
-
-
-# 关闭心跳监控
-management:
-  health:
-    redis:
-      enabled: false
-    rabbit:
-      enabled: false
 
 
 # springdoc
@@ -212,18 +203,29 @@ springdoc:
   swagger-ui:
     path: doc.html
 
+# 高并发
+multi:
+  # 线程池
+  threadpool:
+    core-pool-size: 16
+    max-pool-size: 32
+    queue-capacity: 512
+    keep-alive-seconds: 60
 
 
-# 网关白名单路径
-auth:
-  exclude-paths:
-    - /Guest/users/login
-    - /Guest/users/register
-    - /Guest/users/code
-    - /swagger-ui/**
-    - /swagger-ui.html
-    - /doc.html
-    - /webjars/**
-    - /swagger-resources/**
-    - /v3/**
-    - /error
+# actuator (检查项目运行情况)
+management:
+
+  server:
+    port: 11005 # Money No 5
+    base-path: /sys # 端点信息接口使用的端口
+
+  # 端点
+  endpoint:
+    health:
+      show-details: always # 健康情况设置为"always"可以显示硬盘使用情况和线程情况
+
+  endpoints:
+    web:
+      exposure: # 设置端点暴露的哪些内容, 设置"*"代表暴露所有可访问的端点
+        include: '*'

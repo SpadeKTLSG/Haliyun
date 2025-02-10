@@ -1,0 +1,30 @@
+infrastructure:
+
+  datasource: #MySQL
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    host: localhost
+    port: 3306
+    database: haliyun_pub
+    username: root
+    password: 2333
+
+  redis: #Redis
+    host: localhost
+    port: 6379
+    password: 2333
+    database: 1
+
+  rabbitmq: #RabbitMQ
+    host: localhost
+    port: 5672
+    username: root
+    password: 2333
+    virtual-host: Haliyun
+
+  nacos: #Nacos
+    host: localhost
+    port: 8848
+
+  sentinel: #Sentinel
+    host: localhost
+    port: 9091

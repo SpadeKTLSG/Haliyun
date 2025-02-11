@@ -15,6 +15,7 @@ import xyz.spc.domain.dos.BaseDO;
 @TableName("user_detail")
 public class UserDetailDO extends BaseDO {
 
+
     /**
      * User主键
      */

@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.OptimisticLockerInnerInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
 import com.github.yulichang.injector.MPJSqlInjector;
@@ -15,7 +16,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import xyz.spc.serve.auxiliary.config.mp.compo.CustomIdGenerator;
-import xyz.spc.serve.auxiliary.config.mp.compo.MyMetaObjectHandler;
 
 import javax.sql.DataSource;
 
@@ -28,23 +28,18 @@ public class MybatisPlusConfig {
 
 
     /**
-     * 分页插件
+     * 插件
      */
     @Bean
     public MybatisPlusInterceptor mybatisPlusInterceptor() {
         log.debug("分页插件创建");
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        // 添加分页插件
         interceptor.addInnerInterceptor(new PaginationInnerInterceptor(DbType.MYSQL));
-        return interceptor;
-    }
+        // 添加乐观锁插件
+        interceptor.addInnerInterceptor(new OptimisticLockerInnerInterceptor());
 
-    /**
-     * 元数据填充
-     */
-    @Bean
-    public MyMetaObjectHandler myMetaObjectHandler() {
-        log.debug("元数据填充创建");
-        return new MyMetaObjectHandler();
+        return interceptor;
     }
 
     /**

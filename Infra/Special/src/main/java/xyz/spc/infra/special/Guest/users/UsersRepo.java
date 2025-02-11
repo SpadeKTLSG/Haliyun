@@ -83,7 +83,7 @@ public class UsersRepo {
 
         //? 插入 UserDO
         UserDO userDO = UserDO.builder()
-                .id(id)
+//                .id(id)
                 .admin(isAdmin ? 1 : 0)
                 .loginType(User.LOGIN_TYPE_ACCOUNT_PHONE)
                 .account(userDTO.getAccount())

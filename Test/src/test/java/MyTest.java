@@ -27,7 +27,6 @@ public class MyTest {
 
     @Test
     public void funcTest() {
-
         userMapper.delete(Wrappers.lambdaQuery(UserDO.class).eq(UserDO::getAccount, "logic_test_5"));
     }
 

@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean;
-import com.github.yulichang.autoconfigure.consumer.MybatisPlusJoinPropertiesConsumer;
 import com.github.yulichang.injector.MPJSqlInjector;
 import com.github.yulichang.interceptor.MPJInterceptor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,16 +26,6 @@ import javax.sql.DataSource;
 @Configuration
 public class MybatisPlusConfig {
 
-    /**
-     * 关闭逻辑删除 and 输出横幅
-     */
-    @Bean
-    public MybatisPlusJoinPropertiesConsumer mybatisPlusJoinPropertiesConsumer() {
-        log.debug("关闭逻辑删除 and 输出横幅");
-        return prop -> prop
-                .setBanner(false)
-                .setSubTableLogic(false);
-    }
 
     /**
      * 分页插件

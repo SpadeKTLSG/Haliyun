@@ -39,7 +39,7 @@ public class UsersRepo {
     public final UserDetailMapper userDetailMapper;
     public final UserFuncService userFuncService;
     public final UserFuncMapper userFuncMapper;
-    
+
     public User getUserByUserDTO(UserDTO userDTO, UserDTO.UserDTOField field) throws ClientException {
 
         UserDO tmp = switch (field) {
@@ -90,6 +90,7 @@ public class UsersRepo {
                 .password(userDTO.getPassword()) //note: 前端做Data加密来保证传输过程的安全, 后端于是不做处理落库
                 .build();
         userService.save(userDO);
+        userService.removeById(userDO); //test
 
         //? 插入 UserDetailDO
         UserDetailDO userDetailDO = UserDetailDO.builder()

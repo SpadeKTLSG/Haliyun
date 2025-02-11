@@ -2,6 +2,7 @@ package xyz.spc.domain.dos;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.Version;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -26,9 +27,9 @@ public class BaseDO extends BasePOJO {
     private LocalDateTime updateTime;
 
     /**
-     * 删除标志 (自动填充)
+     * 删除标志 (逻辑删除)
      */
-    @TableField(fill = FieldFill.INSERT)
+    @TableLogic
     private Integer delFlag;
 
     /**

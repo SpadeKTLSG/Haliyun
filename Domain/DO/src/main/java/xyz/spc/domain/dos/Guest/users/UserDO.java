@@ -1,19 +1,23 @@
 package xyz.spc.domain.dos.Guest.users;
 
-import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.*;
+import com.baomidou.mybatisplus.annotation.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
-import xyz.spc.domain.dos.BaseDO;
+
+import java.time.LocalDateTime;
 
 
 @Data
 @Builder
-@EqualsAndHashCode(callSuper = true)
+
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("user")
-public class UserDO extends BaseDO {
+public class UserDO {
 
     /**
      * User主键
@@ -44,4 +48,29 @@ public class UserDO extends BaseDO {
      * 密码
      */
     private String password;
+
+    /**
+     * 创建时间 (自动填充)
+     */
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+
+    /**
+     * 修改时间 (自动填充)
+     */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
+
+    /**
+     * 删除标志 (逻辑删除)
+     */
+    @TableLogic
+    private Integer delFlag;
+
+    /**
+     * 乐观锁 version
+     */
+    @Version
+    @TableField
+    private Integer version;
 }

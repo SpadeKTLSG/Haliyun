@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
-import xyz.spc.infra.feign.Guest.users.UsersClient;
+import xyz.spc.infra.feign.Guest.UsersClient;
 import xyz.spc.serve.guest.func.logs.StatisticFunc;
 import xyz.spc.serve.guest.func.logs.TombFunc;
 import xyz.spc.serve.guest.func.users.UsersFunc;

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.common.constant.Guest.users.LoginCommonCT;
 import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.exception.ClientException;
@@ -72,7 +71,6 @@ public class UsersRepo {
     /**
      * 添加用户
      */
-    @Transactional(rollbackFor = Exception.class, timeout = 15)
     public void addUser(UserDTO userDTO) {
 
         boolean isAdmin = userDTO.getAdmin() != 0;

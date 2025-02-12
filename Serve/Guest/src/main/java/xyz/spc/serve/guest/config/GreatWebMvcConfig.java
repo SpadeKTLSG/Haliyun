@@ -35,7 +35,7 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
 
     private final String[] exICPath = {
             //登录/code
-            "/Guest/users/login",
+            "/Guest/users/loginCore",
             "/Guest/users/register",
             "/Guest/users/code",
             "/favicon.ico", "/Guest.html", //浏览器页面

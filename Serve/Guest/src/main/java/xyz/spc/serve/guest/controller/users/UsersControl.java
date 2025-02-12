@@ -16,16 +16,14 @@ import xyz.spc.common.constant.Guest.UsersValiGroups;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.validate.Xss;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
-import xyz.spc.infra.feign.Guest.users.UsersClient;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.auxiliary.config.ratelimit.LimitTypeEnum;
 import xyz.spc.serve.auxiliary.config.ratelimit.RateLimiter;
 import xyz.spc.serve.auxiliary.config.senti.CustomBlockHandler;
 import xyz.spc.serve.auxiliary.config.senti.SentinelPath;
-import xyz.spc.serve.guest.func.users.UsersFunc;
+import xyz.spc.serve.guest.flow.UsersFlow;
 
-import javax.security.auth.login.AccountNotFoundException;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -36,8 +34,9 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class UsersControl {
 
-    private final UsersFunc usersFunc;
-    private final UsersClient usersClient;
+    // Flow
+    private final UsersFlow usersFlow;
+
 
     //! Client
 
@@ -57,7 +56,7 @@ public class UsersControl {
             @NotEmpty(message = "登陆手机号不能为空")
             String phone
     ) {
-        String code = usersFunc.sendCode(phone);
+        String code = usersFlow.sendCode(phone);
 
         if (code.startsWith("!")) {//如果是!开头的字符串，说明发送失败
             return Result.fail(code.substring(1));
@@ -77,8 +76,8 @@ public class UsersControl {
             @RequestBody
             @Validated({UsersValiGroups.Common.class, UsersValiGroups.Login.class}) //登陆校验组, 减少Service层校验
             UserDTO userDTO
-    ) throws AccountNotFoundException {
-        String token = usersFunc.login(userDTO);
+    ) {
+        String token = usersFlow.login(userDTO);
         return StrUtil.isBlank(token) ? Result.fail("登录失败") : Result.success(token);
     }
     //http://localhost:10000/Guest/users/login
@@ -91,7 +90,7 @@ public class UsersControl {
     @Parameters(@Parameter(name = "无", description = "无", required = true))
     public Result<String> logout() {
         log.debug(UserContext.getUA() + "已登出");
-        return usersFunc.logout() ? Result.success("用户已登出") : Result.fail("用户登出失败");
+        return usersFlow.logout() ? Result.success("用户已登出") : Result.fail("用户登出失败");
     }
     //http://localhost:10000/Guest/users/logout
 
@@ -107,7 +106,7 @@ public class UsersControl {
             @Validated({UsersValiGroups.Common.class, UsersValiGroups.Register.class})
             UserDTO userDTO
     ) {
-        return usersFunc.register(userDTO) ? Result.success("注册成功") : Result.fail("注册失败");
+        return usersFlow.register(userDTO) ? Result.success("注册成功") : Result.fail("注册失败");
     }
     //http://localhost:10000/Guest/users/register
 

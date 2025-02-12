@@ -100,7 +100,7 @@ public final class UploadUtil {
         return desc;
     }
 
-    public static String getPathFileName(String uploadDir, String fileName) throws IOException {
+    public static String getPathFileName(String uploadDir, String fileName) {
         int dirLastIndex = uploadDir.length() + 1;
         String currentDir = org.apache.commons.lang3.StringUtils.substring(uploadDir, dirLastIndex);
         return currentDir + "/" + fileName;

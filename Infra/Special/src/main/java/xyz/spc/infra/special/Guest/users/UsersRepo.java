@@ -87,7 +87,7 @@ public class UsersRepo {
                 .admin(isAdmin ? 1 : 0)
                 .loginType(User.LOGIN_TYPE_ACCOUNT_PHONE)
                 .account(userDTO.getAccount())
-                .password(userDTO.getPassword()) //note: 前端做Data加密来保证传输过程的安全, 后端于是不做处理落库
+                .password(userDTO.getPassword()) //note: 前端做Data加密来保证传输过程的安全, 后端于是不做处理直接落库
                 .build();
 
         userService.save(userDO);

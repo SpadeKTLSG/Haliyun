@@ -234,6 +234,8 @@ public class UsersFuncImpl implements UsersFunc {
         }
         try {
             usersRepo.addUser(userDTO);
+            //todo, 用户注册后在后台拉异步的记录, 记录用户是第几个用户等功能
+
         } catch (ClientException ex) {
             throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
         } finally {

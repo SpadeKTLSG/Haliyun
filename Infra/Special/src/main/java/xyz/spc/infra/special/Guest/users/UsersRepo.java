@@ -89,6 +89,7 @@ public class UsersRepo {
                 .account(userDTO.getAccount())
                 .password(userDTO.getPassword()) //note: 前端做Data加密来保证传输过程的安全, 后端于是不做处理落库
                 .build();
+
         userService.save(userDO);
 
         //? 插入 UserDetailDO
@@ -108,6 +109,6 @@ public class UsersRepo {
                 .build();
         userFuncService.save(userFuncDO);
 
-        log.debug("用户: {} 注册成功: ", userDTO.getAccount()); //todo, 用户注册后在后台拉异步的记录, 记录用户是第几个用户等功能
+        log.debug("用户: {} 注册成功: ", userDTO.getAccount());
     }
 }

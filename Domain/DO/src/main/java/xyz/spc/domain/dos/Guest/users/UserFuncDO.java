@@ -1,9 +1,14 @@
 package xyz.spc.domain.dos.Guest.users;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.Version;
 import lombok.*;
 import lombok.experimental.Accessors;
 import xyz.spc.domain.dos.BaseDO;
+
+import java.time.LocalDateTime;
 
 /**
  * 用户功能 DO
@@ -67,4 +72,33 @@ public class UserFuncDO extends BaseDO {
      * 注册邀请码
      */
     private String registerCode;
+
+
+    /* -- 以下为半自动填充字段 -- */
+
+
+    /**
+     * 创建时间 (半自动填充)
+     */
+    @TableField(fill = FieldFill.INSERT)
+    private LocalDateTime createTime;
+
+
+    /**
+     * 修改时间 (半自动填充)
+     */
+    @TableField(fill = FieldFill.INSERT_UPDATE)
+    private LocalDateTime updateTime;
+
+    /**
+     * 删除标志 (半自动填充)
+     */
+    @TableField(fill = FieldFill.DEFAULT)
+    private Integer delFlag;
+
+    /**
+     * 乐观锁 version
+     */
+    @Version
+    private Integer version;
 }

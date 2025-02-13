@@ -128,7 +128,6 @@ public class UsersFunc {
     /**
      * 登录核心方法
      */
-
     public String loginCore(UserDTO userDTO) {
 
         Integer login_type = Optional.ofNullable(userDTO.getLoginType()).orElseThrow(() -> new ClientException("登陆方式不能为空", ClientError.USER_REGISTER_ERROR));

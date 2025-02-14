@@ -1,5 +1,8 @@
 package xyz.spc.common.constant;
 
+/**
+ * 系统特殊常量
+ */
 public interface SystemSpecialCT {
 
     /**

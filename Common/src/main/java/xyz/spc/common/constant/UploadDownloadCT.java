@@ -1,7 +1,7 @@
 package xyz.spc.common.constant;
 
 /**
- * 系统常量
+ * 上传下载常量
  */
 public interface UploadDownloadCT {
 

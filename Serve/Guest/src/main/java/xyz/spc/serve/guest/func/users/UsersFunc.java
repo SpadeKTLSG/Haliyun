@@ -177,8 +177,13 @@ public class UsersFunc {
         //1 Account作为MD5 salt生成token
         String token = MD5Util.enryption(UUID.randomUUID(false).toString(), user.getAccount());
 
-        //2 制作用户信息Map (去除密码code加入Token)
-        userDTO.setPassword(null).setCode(null).setToken(token);
+        //2 制作用户信息Map
+        userDTO
+                .setPassword(null)
+                .setCode(null)
+                .setToken(token)
+                .setId(user.getId())
+        ;
         Map<String, Object> userMap = BeanUtil.beanToMap(userDTO, new HashMap<>(), CopyOptions.create().setIgnoreNullValue(true).setFieldValueEditor((fieldName, fieldValue) -> fieldValue == null ? null : fieldValue.toString()));
 
         //3 存储用户信息到redis

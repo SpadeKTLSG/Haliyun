@@ -15,7 +15,6 @@ public class UserVO extends BaseVO {
 
     private Long id;
 
-
     private Integer admin;
 
     private Integer status;

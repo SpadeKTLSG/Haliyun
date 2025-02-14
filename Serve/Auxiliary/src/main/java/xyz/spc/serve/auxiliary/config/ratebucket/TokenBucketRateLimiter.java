@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * 手写令牌桶限流组件
+ */
 @Slf4j
 @Component
 public class TokenBucketRateLimiter {

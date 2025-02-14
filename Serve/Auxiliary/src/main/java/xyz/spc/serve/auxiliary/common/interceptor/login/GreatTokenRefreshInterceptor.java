@@ -45,7 +45,7 @@ public class GreatTokenRefreshInterceptor implements HandlerInterceptor {
         // 获取网关设置的UserContext JSON对象
         String saved_info = request.getHeader("userDto");
         if (StrUtil.isBlank(saved_info) || StrUtil.isBlank(token)) {
-            throw new ServiceException(ServerError.SERVICE_ERROR);
+            return true; //没有东西, 取消刷新
         }
 
         if (token.startsWith("Bearer")) { //去除Postman产生的Bearer前缀

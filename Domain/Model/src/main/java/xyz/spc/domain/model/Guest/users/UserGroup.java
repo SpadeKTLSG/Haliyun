@@ -8,8 +8,6 @@ import xyz.spc.domain.model.BaseModel;
 
 /**
  * 用户群组关联
- *
- * @author admin
  */
 @Data
 @Builder

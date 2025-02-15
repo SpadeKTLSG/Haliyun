@@ -17,7 +17,7 @@ import xyz.spc.domain.model.BaseModel;
 public class UserDetail extends BaseModel {
 
     /**
-     * User主键
+     * -> User主键
      */
     private Long id;
 

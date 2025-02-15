@@ -7,8 +7,6 @@ import xyz.spc.domain.model.BaseModel;
 
 /**
  * 用户功能
- *
- * @author admin
  */
 @Data
 @Builder
@@ -19,7 +17,7 @@ import xyz.spc.domain.model.BaseModel;
 public class UserFunc extends BaseModel {
 
     /**
-     * User主键
+     * -> User主键
      */
     private Long id;
 

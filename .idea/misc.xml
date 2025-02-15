@@ -4,13 +4,14 @@
     <option name="optimizeImportsOnTheFly" value="true" />
   </component>
   <component name="EntryPointsManager">
-    <list size="6">
+    <list size="7">
       <item index="0" class="java.lang.String" itemvalue="lombok.Builder" />
       <item index="1" class="java.lang.String" itemvalue="org.apache.ibatis.annotations.Mapper" />
       <item index="2" class="java.lang.String" itemvalue="org.aspectj.lang.annotation.Pointcut" />
       <item index="3" class="java.lang.String" itemvalue="org.mapstruct.Mapper" />
-      <item index="4" class="java.lang.String" itemvalue="org.springframework.context.annotation.ComponentScan" />
-      <item index="5" class="java.lang.String" itemvalue="org.springframework.stereotype.Repository" />
+      <item index="4" class="java.lang.String" itemvalue="org.springframework.cloud.openfeign.FeignClient" />
+      <item index="5" class="java.lang.String" itemvalue="org.springframework.context.annotation.ComponentScan" />
+      <item index="6" class="java.lang.String" itemvalue="org.springframework.stereotype.Repository" />
     </list>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />

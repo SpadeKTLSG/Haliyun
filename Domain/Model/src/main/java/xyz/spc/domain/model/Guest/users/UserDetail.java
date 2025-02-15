@@ -55,4 +55,9 @@ public class UserDetail extends BaseModel {
      * 个人介绍
      */
     private String introduce;
+
+    //? 转换器
+
+
+    //! 基础信息
 }

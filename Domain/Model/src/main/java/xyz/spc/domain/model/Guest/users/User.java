@@ -66,9 +66,6 @@ public class User extends BaseModel {
                 .account(account)
                 .password(password)
                 .build();
-
-        tmp.setDelFlag(getDelFlag());
-
         return tmp;
     }
 
@@ -81,9 +78,6 @@ public class User extends BaseModel {
                 .account(userDO.getAccount())
                 .password(userDO.getPassword())
                 .build();
-
-        tmp.setDelFlag(userDO.getDelFlag());
-
         return tmp;
     }
 
@@ -96,7 +90,6 @@ public class User extends BaseModel {
                 .account(account)
                 .password(password)
                 .build();
-
         return tmp;
     }
 
@@ -109,7 +102,6 @@ public class User extends BaseModel {
                 .account(userDTO.getAccount())
                 .password(userDTO.getPassword())
                 .build();
-
         return tmp;
     }
 

@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @MLog
-@Tag(name = "Users", description = "用户合集")
+@Tag(name = "Users", description = "用户用户合集")
 @RequestMapping("/Guest/users")
 @RestController
 @RequiredArgsConstructor

@@ -47,7 +47,14 @@ public class UsersControl {
     public Map<Object, Object> getUserMap(@RequestParam("tokenKey") String tokenKey) {
         return redisTemplate.opsForHash().entries(tokenKey);
     }
-    //http://localhost:10003/Guest/users/user_map
+    //http://localhost:10000/Guest/users/user_map
+
+    @PostMapping("/user_tl")
+    @Operation(summary = "登陆用户获得TL中的用户信息")
+    public Result getUserMap() {
+        return Result.success(UserContext.getUser());
+    }
+    //http://localhost:10000/Guest/users/user_tl
 
     //! Func
 

@@ -76,7 +76,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             //基于TOKEN获取redis中的用户DTO Map对象
             String key = LoginCacheKey.LOGIN_USER_KEY + account;
 
-            //获取存储的Map: 直接采用手动调用服务的方式获取
+            //获取存储的Map: 禁止使用Redis, 禁止使用Feign. 必须采用直接请求服务的方式获取
             String JsonStr = HttpsUtil.sendGet("http://localhost:10003/Guest/users/user_map", "tokenKey=" + key);
             Map<Object, Object> userDtoMap = new Gson().fromJson(JsonStr, Map.class);
             //校验token + account正确性

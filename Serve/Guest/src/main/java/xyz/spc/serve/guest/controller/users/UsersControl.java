@@ -43,7 +43,7 @@ public class UsersControl {
     //! Client
 
     @GetMapping("/user_map")
-    @Operation(summary = "远程调用用户Map")
+    @Operation(summary = "远程调用获得用户Map")
     public Map<Object, Object> getUserMap(@RequestParam("tokenKey") String tokenKey) {
         return redisTemplate.opsForHash().entries(tokenKey);
     }

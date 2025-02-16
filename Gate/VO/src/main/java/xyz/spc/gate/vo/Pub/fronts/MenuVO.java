@@ -4,6 +4,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import xyz.spc.gate.vo.BaseVO;
 
+import java.util.List;
+
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = true)
@@ -26,5 +28,15 @@ public class MenuVO extends BaseVO {
     private Integer order;
 
     private String remark;
+
+    /**
+     * 存储区 Tmodel
+     */
+    private List<?> list;
+
+    /**
+     * 父菜单名称 Tmodel
+     */
+    private String parentName;
 
 }

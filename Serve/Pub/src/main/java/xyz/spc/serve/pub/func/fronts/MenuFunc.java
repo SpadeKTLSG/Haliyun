@@ -1,6 +1,5 @@
-package xyz.spc.serve.pub.func.systems;
+package xyz.spc.serve.pub.func.fronts;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,12 +7,12 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import xyz.spc.domain.dos.Pub.fronts.MenuDO;
 import xyz.spc.gate.vo.Pub.fronts.MenuVO;
-import xyz.spc.infra.special.Pub.systems.SystemsRepo;
+import xyz.spc.infra.special.Pub.fronts.FrontsRepo;
 
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -24,39 +23,43 @@ public class MenuFunc {
     /**
      * Repo
      */
-    private final SystemsRepo systemsRepo;
+    private final FrontsRepo frontsRepo;
 
     public List<MenuVO> listNav() {
 
-        List<MenuDO> res = this.list(new LambdaQueryWrapper<MenuDO>()
+        // 全部查出来菜单
+        List<MenuDO> tmp = frontsRepo.menuService.list(new LambdaQueryWrapper<MenuDO>()
                 .ne(MenuDO::getType, 2)
-                .orderByAsc(MenuDO::getOrderNum)
+                .orderByAsc(MenuDO::getOrder)
         );
 
-        Map<Long, List<MenuDO>> MenuDOMap = res.stream()
-                .sorted(Comparator.comparing(MenuDO::getOrderNum))
+        // 按照 parentId 分组
+        Map<Long, List<MenuDO>> resMap = tmp.stream()
+                .sorted(Comparator.comparing(MenuDO::getOrder))
                 .collect(Collectors.groupingBy(MenuDO::getParentId));
 
-        List<MenuDO> rootMenu = menuMap.get(0L);
-        if (CollectionUtil.isEmpty(rootMenu)) {
-            return Collections.emptyList();
-        }
+        // 获取根节点
+        List<MenuDO> rootMenu = resMap.get(0L);
+
+        Objects.requireNonNull(rootMenu, "菜单跑丢啦");
 
         //补充T字段
         List<MenuVO> rootMenuVO = rootMenu.stream().map(menu -> {
             MenuVO menuVO = new MenuVO();
             BeanUtils.copyProperties(menu, menuVO);
-            menuVO.setList(menuMap.get(menu.getMenuId()));
+            menuVO.setList(resMap.get(menu.getId()));
             return menuVO;
         }).collect(Collectors.toList());
 
+        // 递归设置子菜单
         rootMenuVO.forEach(menuVO -> {
-            List<Menu> childMenus = menuMap.get(menuVO.getMenuId());
+            List<MenuDO> childMenus = resMap.get(menuVO.getId());
+
             if (childMenus != null) {
                 List<MenuVO> childMenuVOs = childMenus.stream().map(childMenu -> {
                     MenuVO childMenuVO = new MenuVO();
                     BeanUtils.copyProperties(childMenu, childMenuVO);
-                    childMenuVO.setParentName("null"); // 手动设置 parentName = null 字段适配前端
+                    childMenuVO.setParentName("null"); // 适配前端
                     return childMenuVO;
                 }).collect(Collectors.toList());
                 menuVO.setList(childMenuVOs);

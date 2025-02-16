@@ -11,4 +11,20 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MenuDTO extends BaseDTO {
+    private Long id;
+
+    private Long parentId;
+
+    private Integer type;
+
+    private Integer admin;
+
+    private String name;
+
+    private String url;
+
+    private Integer order;
+
+    private String remark;
+
 }

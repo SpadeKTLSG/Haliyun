@@ -11,4 +11,21 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SelfMailDTO extends BaseDTO {
+
+    private Long id;
+
+    private Long groupId;
+
+    private Long senderId;
+
+    private Long receiverId;
+
+    private Integer status;
+
+    private Integer drop;
+
+    private String header;
+
+    private String body;
+
 }

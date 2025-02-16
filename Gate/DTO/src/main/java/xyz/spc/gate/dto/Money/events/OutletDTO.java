@@ -11,4 +11,19 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OutletDTO extends BaseDTO {
+    private Long id;
+
+    private Integer status;
+
+    private String name;
+
+    private String intro;
+
+    private String remark;
+
+    private Integer type;
+
+    private Long bonusExp;
+
+    private Long bonusCoin;
 }

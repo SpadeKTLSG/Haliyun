@@ -11,4 +11,15 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupDetailDTO extends BaseDTO {
+
+
+    private Long id;
+
+    private String shareLink;
+
+    private String album;
+
+    private Long usedSpace;
+
+    private Long totalSpace;
 }

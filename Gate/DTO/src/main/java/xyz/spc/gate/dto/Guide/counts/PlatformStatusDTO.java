@@ -11,4 +11,14 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PlatformStatusDTO extends BaseDTO {
+
+    private Long id;
+
+    private Long userCount;
+
+    private Long groupCount;
+
+    private Long fileCount;
+
+    private Long riskCount;
 }

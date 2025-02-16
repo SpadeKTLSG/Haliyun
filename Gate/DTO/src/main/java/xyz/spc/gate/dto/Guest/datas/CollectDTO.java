@@ -12,4 +12,12 @@ import xyz.spc.gate.dto.BaseDTO;
 @AllArgsConstructor
 public class CollectDTO extends BaseDTO {
 
+    private Long id;
+
+    private Long targetId;
+
+    private Long userId;
+
+    private Integer type;
+
 }

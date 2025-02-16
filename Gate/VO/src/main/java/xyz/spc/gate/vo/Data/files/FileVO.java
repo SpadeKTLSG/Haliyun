@@ -1,8 +1,8 @@
-package xyz.spc.gate.dto.Money.standards;
+package xyz.spc.gate.vo.Data.files;
 
 import lombok.*;
 import lombok.experimental.Accessors;
-import xyz.spc.gate.dto.BaseDTO;
+import xyz.spc.gate.vo.BaseVO;
 
 @Data
 @Builder
@@ -10,15 +10,17 @@ import xyz.spc.gate.dto.BaseDTO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class CurrencyDTO extends BaseDTO {
+public class FileVO extends BaseVO {
 
     private Long id;
+
+    private Long pid;
+
+    private Long userId;
 
     private Long groupId;
 
     private String name;
 
-    private Float exchangeRate;
-
-    private String pic;
+    private String type;
 }

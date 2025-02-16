@@ -11,4 +11,15 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FeedbackDTO extends BaseDTO {
+
+    private Long id;
+
+    private Long userId;
+
+    private String userAccount;
+
+    private String title;
+
+    private String content;
+
 }

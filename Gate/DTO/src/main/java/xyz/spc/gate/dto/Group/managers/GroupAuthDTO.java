@@ -11,4 +11,20 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupAuthDTO extends BaseDTO {
+
+    private Long id;
+
+    private Long groupId;
+
+    private Long userId;
+
+    private Integer canKick;
+
+    private Integer canInvite;
+
+    private Integer canUpload;
+
+    private Integer canDownload;
+
+    private Integer status;
 }

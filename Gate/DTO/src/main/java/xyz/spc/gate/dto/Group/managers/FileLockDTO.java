@@ -11,4 +11,19 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileLockDTO extends BaseDTO {
+    private Long id;
+
+    private Long groupId;
+
+    private Long ownerId;
+
+    private String ownerAccount;
+
+    private Integer currencyType;
+
+    private Integer lockType;
+
+    private Integer levelLimit;
+
+    private Integer cost;
 }

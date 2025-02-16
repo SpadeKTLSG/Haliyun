@@ -11,4 +11,15 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileStatusDTO extends BaseDTO {
+    private Long id;
+
+    private String fileType;
+
+    private String typeRemark;
+
+    private String remark;
+
+    private Long count;
+
+    private Long space;
 }

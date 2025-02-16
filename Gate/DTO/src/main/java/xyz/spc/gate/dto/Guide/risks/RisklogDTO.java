@@ -11,4 +11,9 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RisklogDTO extends BaseDTO {
+    private Long id;
+
+    private String header;
+
+    private String lines;
 }

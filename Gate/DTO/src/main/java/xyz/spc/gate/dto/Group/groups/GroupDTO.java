@@ -11,4 +11,14 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupDTO extends BaseDTO {
+
+    private Long id;
+
+    private String name;
+
+    private String nickname;
+
+    private String pic;
+
+    private Integer popVolume;
 }

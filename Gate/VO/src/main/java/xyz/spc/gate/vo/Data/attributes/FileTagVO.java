@@ -1,8 +1,8 @@
-package xyz.spc.gate.dto.Pub.compos;
+package xyz.spc.gate.vo.Data.attributes;
 
 import lombok.*;
 import lombok.experimental.Accessors;
-import xyz.spc.gate.dto.BaseDTO;
+import xyz.spc.gate.vo.BaseVO;
 
 @Data
 @Builder
@@ -10,13 +10,11 @@ import xyz.spc.gate.dto.BaseDTO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class NaviCompoDTO extends BaseDTO {
+public class FileTagVO extends BaseVO {
 
     private Long id;
 
     private String name;
 
-    private String target;
-
-    private Integer sort;
+    private Integer status;
 }

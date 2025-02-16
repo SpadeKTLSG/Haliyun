@@ -11,4 +11,17 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoginLogDTO extends BaseDTO {
+
+    private Long id;
+
+    private Long userId;
+
+    private String account;
+
+    private String ipv4;
+
+    private String ipv6;
+
+    private Integer loginType;
 }
+

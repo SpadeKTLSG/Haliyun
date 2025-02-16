@@ -11,4 +11,19 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LevelDTO extends BaseDTO {
+
+    private Long id;
+
+    private Integer floor;
+
+    private String name;
+
+    private Float cut;
+
+    private Long grow;
+
+    private String desc;
+
+    private String remark;
+
 }

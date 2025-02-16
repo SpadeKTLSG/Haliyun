@@ -11,4 +11,22 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDetailDTO extends BaseDTO {
+
+    private Long id;
+
+    private Integer gender;
+
+    private String phone;
+
+    private String email;
+
+    private String avatar;
+
+    private String area;
+
+    private String nickname;
+
+    private String introduce;
+
+
 }

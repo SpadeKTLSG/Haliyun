@@ -11,4 +11,11 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SysConfigDTO extends BaseDTO {
+
+
+    private Long id;
+
+    private String conf;
+
+    private String value;
 }

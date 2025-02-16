@@ -11,5 +11,17 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostDTO extends BaseDTO {
+    private Long id;
 
+    private Long userId;
+
+    private Long groupId;
+
+    private Integer personShow;
+
+    private String title;
+
+    private String content;
+
+    private String pics;
 }

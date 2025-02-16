@@ -11,4 +11,12 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NoticeDTO extends BaseDTO {
+
+    private Long id;
+
+    private String name;
+
+    private String content;
+
+    private Integer readCount;
 }

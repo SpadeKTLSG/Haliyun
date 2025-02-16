@@ -11,4 +11,20 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MenuConfDTO extends BaseDTO {
+
+    private Long id;
+
+    private Long userId;
+
+    private String userAccount;
+
+    private Long menuId;
+
+    private String menuName;
+
+    private Integer status;
+
+    private Integer value;
+
 }
+

@@ -11,4 +11,18 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GroupFuncDTO extends BaseDTO {
+
+    private Long id;
+
+    private Long noticeId;
+
+    private Long currencyId;
+
+    private Integer allowInvite;
+
+    private Long currencyStock;
+
+    private Long coinStock;
+
+    private String remarks;
 }

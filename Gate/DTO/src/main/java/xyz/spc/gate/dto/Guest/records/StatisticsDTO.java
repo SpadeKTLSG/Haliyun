@@ -11,4 +11,24 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StatisticsDTO extends BaseDTO {
+
+    private Long id;
+
+    private Long userId;
+
+    private Integer comment;
+
+    private Integer download;
+
+    private Integer upload;
+
+    private Integer outlet;
+
+    private Integer mail;
+
+    private Integer collect;
+
+    private Integer like;
+
+    private Integer trick;
 }

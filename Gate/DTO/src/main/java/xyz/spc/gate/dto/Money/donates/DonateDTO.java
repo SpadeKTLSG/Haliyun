@@ -11,4 +11,13 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DonateDTO extends BaseDTO {
+    private Long id;
+
+    private String nickname;
+
+    private Integer money;
+
+    private String remark;
+
 }
+

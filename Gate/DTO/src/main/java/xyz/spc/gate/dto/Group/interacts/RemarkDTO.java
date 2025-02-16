@@ -11,4 +11,11 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RemarkDTO extends BaseDTO {
+    private Long id;
+
+    private Long targetId;
+
+    private Integer type;
+
+    private Long likes;
 }

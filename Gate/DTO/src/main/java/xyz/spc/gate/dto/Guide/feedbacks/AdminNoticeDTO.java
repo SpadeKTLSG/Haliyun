@@ -11,4 +11,14 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AdminNoticeDTO extends BaseDTO {
+
+
+    private Long id;
+
+    private String title;
+
+    private String content;
+
+    private Integer top;
+
 }

@@ -11,4 +11,24 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserFuncDTO extends BaseDTO {
+
+    private Long id;
+
+    private Long levelId;
+
+    private Integer vip;
+
+    private Integer createGroupCount;
+
+    private Integer createGroupMax;
+
+    private Integer joinGroupCount;
+
+    private Integer joinGroupMax;
+
+    private Long coin;
+
+    private Long energyCoin;
+
+    private String registerCode;
 }

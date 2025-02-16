@@ -11,4 +11,14 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserGroupDTO extends BaseDTO {
+
+    private Long id;
+
+    private Long userId;
+
+    private Long groupId;
+
+    private String collect;
+
+    private Integer sort;
 }

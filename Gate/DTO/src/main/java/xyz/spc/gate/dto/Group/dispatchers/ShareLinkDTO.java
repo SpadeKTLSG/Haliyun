@@ -4,6 +4,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import xyz.spc.gate.dto.BaseDTO;
 
+import java.time.LocalDateTime;
+
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = true)
@@ -11,4 +13,14 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ShareLinkDTO extends BaseDTO {
+
+    private Long id;
+
+    private Long fileId;
+
+    private String godAccount;
+
+    private LocalDateTime expireDate;
+
+    private Long visitCount;
 }

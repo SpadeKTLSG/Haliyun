@@ -1,4 +1,4 @@
-package xyz.spc.gate.vo.Guest.users;
+package xyz.spc.gate.vo.Data.files;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -10,20 +10,17 @@ import xyz.spc.gate.vo.BaseVO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserVO extends BaseVO {
-
+public class FileFuncVO extends BaseVO {
 
     private Long id;
 
-    private Integer admin;
+    private Long tag;
+
+    private Long lock;
 
     private Integer status;
 
-    private Integer loginType;
+    private Integer validDateType;
 
-    private String account;
-
-    private String password;
-
-
+    private String validDate;
 }

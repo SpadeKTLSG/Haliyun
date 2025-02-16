@@ -11,4 +11,10 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DictionaryDTO extends BaseDTO {
+
+    private Long id;
+
+    private String name;
+
+    private String code;
 }

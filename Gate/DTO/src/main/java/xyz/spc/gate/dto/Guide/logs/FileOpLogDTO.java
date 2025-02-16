@@ -11,4 +11,15 @@ import xyz.spc.gate.dto.BaseDTO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileOpLogDTO extends BaseDTO {
+    private Long id;
+
+    private Long userId;
+
+    private Long fileId;
+
+    private Integer op;
+
+    private String account;
+
+    private String fileName;
 }

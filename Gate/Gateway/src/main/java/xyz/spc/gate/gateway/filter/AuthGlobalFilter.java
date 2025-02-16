@@ -8,7 +8,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
-import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ import java.util.Optional;
 @EnableConfigurationProperties(AuthProperties.class)
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
-    private final StringRedisTemplate stringRedisTemplate;
+    private final RedisTemplate redisTemplate;
     private final AuthProperties authProperties;
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -77,7 +77,8 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             String key = LoginCacheKey.LOGIN_USER_KEY + account;
 
             //获取存储的Map
-            Map<Object, Object> userDtoMap = Optional.of(stringRedisTemplate.opsForHash().entries(key)).orElseThrow(() -> new ClientException("网络异常, 请重新登陆"));
+            Map userDtoMap = Optional.of(redisTemplate.opsForHash().entries(key))
+                    .orElseThrow(() -> new ClientException("网络异常, 请重新登陆"));
 
             //校验token + account正确性
             if (!token.equals(userDtoMap.get("token")) || !account.equals(userDtoMap.get("account"))) {
@@ -127,10 +128,12 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             return chain.filter(ex);
 
         } catch (Exception e) {
+
             log.error(e.getMessage());
             ServerHttpResponse response = exchange.getResponse();
             response.setRawStatusCode(HttpStatusCT.UNAUTHORIZED); //401
-            return response.setComplete();
+//            return response.setComplete();
+            throw e;    // 调试使用
         }
     }
 

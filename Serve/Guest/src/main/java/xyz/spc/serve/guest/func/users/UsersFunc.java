@@ -192,6 +192,10 @@ public class UsersFunc {
         rcg.setCacheMap(tokenKey, userMap);
         rcg.expire(tokenKey, LoginCommonCT.LOGIN_USER_TTL, TimeUnit.MINUTES);
 
+        //调试使用: 打印用户信息
+        Map<Object, Object> userDtoMap = Optional.of(redisTemplate.opsForHash().entries(tokenKey))
+                .orElseThrow(() -> new ClientException("网络异常, 请重新登陆"));
+        log.debug(userDtoMap.toString(), "=> 登陆的用户信息已经保存到Redis");
         return token;
     }
 

@@ -24,6 +24,6 @@ public class LogsRepo {
     public final FileOpLogService fileOpLogService;
     public final FileOpLogMapper fileOpLogMapper;
 
-    
+
 }
 

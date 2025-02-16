@@ -135,6 +135,26 @@ spring:
 
 
       routes:
+        - id: data-service
+          uri: lb://data-app
+          predicates:
+            - Path=/Data/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 100000 # 每秒允许的请求数 : 十万
+                redis-rate-limiter.burstCapacity: 200000 # 突发请求的最大数量: 二十万
+                key-resolver: "#{@ipKeyResolver}" # 使用IP地址作为限流的key, 创建一个Limit Config
+        - id: group-service
+          uri: lb://group-app
+          predicates:
+            - Path=/Group/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 100000 # 每秒允许的请求数 : 十万
+                redis-rate-limiter.burstCapacity: 200000 # 突发请求的最大数量: 二十万
+                key-resolver: "#{@ipKeyResolver}" # 使用IP地址作为限流的key, 创建一个Limit Config
         - id: guest-service
           uri: lb://guest-app
           predicates:
@@ -145,6 +165,37 @@ spring:
                 redis-rate-limiter.replenishRate: 100000 # 每秒允许的请求数 : 十万
                 redis-rate-limiter.burstCapacity: 200000 # 突发请求的最大数量: 二十万
                 key-resolver: "#{@ipKeyResolver}" # 使用IP地址作为限流的key, 创建一个Limit Config
+        - id: guide-service
+          uri: lb://guide-app
+          predicates:
+            - Path=/Guide/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 100000 # 每秒允许的请求数 : 十万
+                redis-rate-limiter.burstCapacity: 200000 # 突发请求的最大数量: 二十万
+                key-resolver: "#{@ipKeyResolver}" # 使用IP地址作为限流的key, 创建一个Limit Config
+        - id: money-service
+          uri: lb://money-app
+          predicates:
+            - Path=/Money/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 100000 # 每秒允许的请求数 : 十万
+                redis-rate-limiter.burstCapacity: 200000 # 突发请求的最大数量: 二十万
+                key-resolver: "#{@ipKeyResolver}" # 使用IP地址作为限流的key, 创建一个Limit Config
+        - id: pub-service
+          uri: lb://pub-app
+          predicates:
+            - Path=/Pub/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                redis-rate-limiter.replenishRate: 100000 # 每秒允许的请求数 : 十万
+                redis-rate-limiter.burstCapacity: 200000 # 突发请求的最大数量: 二十万
+                key-resolver: "#{@ipKeyResolver}" # 使用IP地址作为限流的key, 创建一个Limit Config
+
 
 
 

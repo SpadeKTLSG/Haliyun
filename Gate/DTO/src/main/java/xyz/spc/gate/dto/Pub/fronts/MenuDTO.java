@@ -23,7 +23,7 @@ public class MenuDTO extends BaseDTO {
 
     private String url;
 
-    private Integer order;
+    private Integer score;
 
     private String remark;
 

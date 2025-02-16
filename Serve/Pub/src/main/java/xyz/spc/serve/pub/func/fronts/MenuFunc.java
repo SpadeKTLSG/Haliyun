@@ -27,15 +27,15 @@ public class MenuFunc {
 
     public List<MenuVO> listNav() {
 
-        // 全部查出来菜单
+        // 全部查出来 页面+菜单
         List<MenuDO> tmp = frontsRepo.menuService.list(new LambdaQueryWrapper<MenuDO>()
                 .ne(MenuDO::getType, 2)
-                .orderByAsc(MenuDO::getOrder)
+                .orderByAsc(MenuDO::getScore)
         );
 
         // 按照 parentId 分组
         Map<Long, List<MenuDO>> resMap = tmp.stream()
-                .sorted(Comparator.comparing(MenuDO::getOrder))
+                .sorted(Comparator.comparing(MenuDO::getScore))
                 .collect(Collectors.groupingBy(MenuDO::getParentId));
 
         // 获取根节点

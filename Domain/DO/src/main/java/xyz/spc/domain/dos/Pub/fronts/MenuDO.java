@@ -26,7 +26,7 @@ public class MenuDO extends BaseDO {
 
     private String url;
 
-    private Integer order;
+    private Integer score;
 
     private String remark;
 

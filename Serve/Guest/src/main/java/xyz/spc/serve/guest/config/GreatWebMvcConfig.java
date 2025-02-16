@@ -35,9 +35,11 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
 
     private final String[] exICPath = {
             //登录/code
-            "/Guest/users/login",
+            "/Guest/users/loginCore",
             "/Guest/users/register",
             "/Guest/users/code",
+            //获取用户Map
+            "/Guest/users/user_map",
             "/favicon.ico", "/Guest.html", //浏览器页面
             "/initialize/dispatcher-servlet", //初始化请求
             "/swagger-ui/**", "/swagger-ui.html", "/doc.html", "/webjars/**", "/swagger-resources/**", "/swagger-ui/**", "/v3/**", "/error"};

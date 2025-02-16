@@ -1,7 +1,7 @@
 package xyz.spc.common.constant;
 
 /**
- * System Cache key
+ * 系统缓存 key
  */
 public interface SysCacheKey {
 

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.common.constant.Guest.users.LoginCommonCT;
 import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.exception.ClientException;
@@ -19,14 +18,14 @@ import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.mapper.Guest.users.UserDetailMapper;
 import xyz.spc.infra.mapper.Guest.users.UserFuncMapper;
+import xyz.spc.infra.mapper.Guest.users.UserGroupMapper;
 import xyz.spc.infra.mapper.Guest.users.UserMapper;
 import xyz.spc.infra.repo.Guest.users.UserDetailService;
 import xyz.spc.infra.repo.Guest.users.UserFuncService;
+import xyz.spc.infra.repo.Guest.users.UserGroupService;
 import xyz.spc.infra.repo.Guest.users.UserService;
 
-/**
- * 用户Repo
- */
+
 @Slf4j
 @Service
 @Data
@@ -39,7 +38,9 @@ public class UsersRepo {
     public final UserDetailMapper userDetailMapper;
     public final UserFuncService userFuncService;
     public final UserFuncMapper userFuncMapper;
-    
+    public final UserGroupService userGroupService;
+    public final UserGroupMapper userGroupMapper;
+
     public User getUserByUserDTO(UserDTO userDTO, UserDTO.UserDTOField field) throws ClientException {
 
         UserDO tmp = switch (field) {
@@ -72,7 +73,6 @@ public class UsersRepo {
     /**
      * 添加用户
      */
-    @Transactional(rollbackFor = Exception.class, timeout = 15)
     public void addUser(UserDTO userDTO) {
 
         boolean isAdmin = userDTO.getAdmin() != 0;
@@ -87,8 +87,9 @@ public class UsersRepo {
                 .admin(isAdmin ? 1 : 0)
                 .loginType(User.LOGIN_TYPE_ACCOUNT_PHONE)
                 .account(userDTO.getAccount())
-                .password(userDTO.getPassword()) //note: 前端做Data加密来保证传输过程的安全, 后端于是不做处理落库
+                .password(userDTO.getPassword()) //note: 前端做Data加密来保证传输过程的安全, 后端于是不做处理直接落库
                 .build();
+
         userService.save(userDO);
 
         //? 插入 UserDetailDO
@@ -108,6 +109,6 @@ public class UsersRepo {
                 .build();
         userFuncService.save(userFuncDO);
 
-        log.debug("用户: {} 注册成功: ", userDTO.getAccount()); //todo, 用户注册后在后台拉异步的记录, 记录用户是第几个用户等功能
+        log.debug("用户: {} 注册成功: ", userDTO.getAccount());
     }
 }

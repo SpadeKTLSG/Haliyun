@@ -4,7 +4,9 @@ import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-
+/**
+ * 防止缓存穿透布隆过滤器
+ */
 @Data
 @Component
 @ConfigurationProperties(prefix = BloomFilterPenetrateProperties.PREFIX)
@@ -15,7 +17,7 @@ public class BloomFilterPenetrateProperties {
     /**
      * 布隆过滤器默认实例名称
      */
-    private String name = "bloom_filter";
+    private String name = "{bloom_filter}:func:penetrate";
 
     /**
      * 每个元素的预期插入量

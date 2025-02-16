@@ -17,9 +17,6 @@ import xyz.spc.gate.dto.Guest.users.UserDTO;
 @AllArgsConstructor
 public class User extends BaseModel {
 
-    /**
-     * User主键
-     */
     private Long id;
 
 
@@ -69,11 +66,6 @@ public class User extends BaseModel {
                 .account(account)
                 .password(password)
                 .build();
-
-        tmp.setCreateTime(getCreateTime());
-        tmp.setUpdateTime(getUpdateTime());
-        tmp.setDelFlag(getDelFlag());
-
         return tmp;
     }
 
@@ -86,11 +78,6 @@ public class User extends BaseModel {
                 .account(userDO.getAccount())
                 .password(userDO.getPassword())
                 .build();
-
-        tmp.setCreateTime(userDO.getCreateTime());
-        tmp.setUpdateTime(userDO.getUpdateTime());
-        tmp.setDelFlag(userDO.getDelFlag());
-
         return tmp;
     }
 
@@ -103,7 +90,6 @@ public class User extends BaseModel {
                 .account(account)
                 .password(password)
                 .build();
-
         return tmp;
     }
 
@@ -116,7 +102,6 @@ public class User extends BaseModel {
                 .account(userDTO.getAccount())
                 .password(userDTO.getPassword())
                 .build();
-
         return tmp;
     }
 

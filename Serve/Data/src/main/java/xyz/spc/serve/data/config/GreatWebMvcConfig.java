@@ -54,18 +54,18 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
 
         //1 登录拦截器
         registry.addInterceptor(greatLoginInterceptor)
-                .excludePathPatterns(exICPath) //排除登录接口
+                .excludePathPatterns(exICPath)
                 .order(0);
 
         //2 token刷新拦截器
         registry.addInterceptor(greatTokenRefreshInterceptor)
                 .addPathPatterns("/**")
-                .excludePathPatterns(exICPath) //排除登录接口
+                .excludePathPatterns(exICPath)
                 .order(1);
 
         //3 重复提交拦截器
         registry.addInterceptor(repeatSubmitInterceptor)
-                .addPathPatterns("/**") //对所有请求都进行拦截
+                .addPathPatterns("/**")
                 .order(2);
 
         log.debug("自定义拦截器启动!");

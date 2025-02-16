@@ -10,43 +10,58 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.constant.Guest.UsersValiGroups;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.validate.Xss;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
-import xyz.spc.infra.feign.Guest.users.UsersClient;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.auxiliary.config.ratelimit.LimitTypeEnum;
 import xyz.spc.serve.auxiliary.config.ratelimit.RateLimiter;
 import xyz.spc.serve.auxiliary.config.senti.CustomBlockHandler;
 import xyz.spc.serve.auxiliary.config.senti.SentinelPath;
-import xyz.spc.serve.guest.func.users.UsersFunc;
+import xyz.spc.serve.guest.flow.UsersFlow;
 
-import javax.security.auth.login.AccountNotFoundException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @MLog
-@Tag(name = "Users", description = "用户合集")
+@Tag(name = "Users", description = "用户用户合集")
 @RequestMapping("/Guest/users")
 @RestController
 @RequiredArgsConstructor
 public class UsersControl {
 
-    private final UsersFunc usersFunc;
-    private final UsersClient usersClient;
+    // Flow
+    private final UsersFlow usersFlow;
+    private final RedisTemplate<Object, Object> redisTemplate;
 
     //! Client
+
+    @GetMapping("/user_map")
+    @Operation(summary = "远程调用获得用户Map")
+    public Map<Object, Object> getUserMap(@RequestParam("tokenKey") String tokenKey) {
+        return redisTemplate.opsForHash().entries(tokenKey);
+    }
+    //http://localhost:10000/Guest/users/user_map
+
+    @PostMapping("/user_tl")
+    @Operation(summary = "登陆用户获得TL中的用户信息")
+    public Result getUserMap() {
+        return Result.success(UserContext.getUser());
+    }
+    //http://localhost:10000/Guest/users/user_tl
 
     //! Func
 
     /**
      * 获取手机验证码
      */
-    @GetMapping("code")
+    @GetMapping("/code")
     @Operation(summary = "验证码")
     @Parameters(@Parameter(name = "phone", description = "手机号", required = true))
     @SentinelResource(value = SentinelPath.GET_LOGIN_CODE_PATH, blockHandler = "getLoginCodeBlockHandlerMethod", blockHandlerClass = CustomBlockHandler.class)
@@ -57,7 +72,7 @@ public class UsersControl {
             @NotEmpty(message = "登陆手机号不能为空")
             String phone
     ) {
-        String code = usersFunc.sendCode(phone);
+        String code = usersFlow.sendCode(phone);
 
         if (code.startsWith("!")) {//如果是!开头的字符串，说明发送失败
             return Result.fail(code.substring(1));
@@ -77,8 +92,8 @@ public class UsersControl {
             @RequestBody
             @Validated({UsersValiGroups.Common.class, UsersValiGroups.Login.class}) //登陆校验组, 减少Service层校验
             UserDTO userDTO
-    ) throws AccountNotFoundException {
-        String token = usersFunc.login(userDTO);
+    ) {
+        String token = usersFlow.login(userDTO);
         return StrUtil.isBlank(token) ? Result.fail("登录失败") : Result.success(token);
     }
     //http://localhost:10000/Guest/users/login
@@ -91,7 +106,7 @@ public class UsersControl {
     @Parameters(@Parameter(name = "无", description = "无", required = true))
     public Result<String> logout() {
         log.debug(UserContext.getUA() + "已登出");
-        return usersFunc.logout() ? Result.success("用户已登出") : Result.fail("用户登出失败");
+        return usersFlow.logout() ? Result.success("用户已登出") : Result.fail("用户登出失败");
     }
     //http://localhost:10000/Guest/users/logout
 
@@ -107,7 +122,7 @@ public class UsersControl {
             @Validated({UsersValiGroups.Common.class, UsersValiGroups.Register.class})
             UserDTO userDTO
     ) {
-        return usersFunc.register(userDTO) ? Result.success("注册成功") : Result.fail("注册失败");
+        return usersFlow.register(userDTO) ? Result.success("注册成功") : Result.fail("注册失败");
     }
     //http://localhost:10000/Guest/users/register
 

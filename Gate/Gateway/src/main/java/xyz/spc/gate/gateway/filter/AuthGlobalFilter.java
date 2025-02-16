@@ -2,13 +2,13 @@ package xyz.spc.gate.gateway.filter;
 
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
+import com.google.gson.Gson;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
-import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.http.server.reactive.ServerHttpResponse;
 import org.springframework.stereotype.Component;
@@ -19,6 +19,7 @@ import xyz.spc.common.constant.Guest.users.LoginCacheKey;
 import xyz.spc.common.constant.HttpStatusCT;
 import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.exception.ClientException;
+import xyz.spc.common.util.webUtil.HttpsUtil;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 
 import java.util.List;
@@ -34,7 +35,6 @@ import java.util.Optional;
 @EnableConfigurationProperties(AuthProperties.class)
 public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
-    private final StringRedisTemplate stringRedisTemplate;
     private final AuthProperties authProperties;
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -76,9 +76,9 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             //基于TOKEN获取redis中的用户DTO Map对象
             String key = LoginCacheKey.LOGIN_USER_KEY + account;
 
-            //获取存储的Map
-            Map<Object, Object> userDtoMap = Optional.of(stringRedisTemplate.opsForHash().entries(key)).orElseThrow(() -> new ClientException("网络异常, 请重新登陆"));
-
+            //获取存储的Map: 禁止使用Redis, 禁止使用Feign. 必须采用直接请求服务的方式获取
+            String JsonStr = HttpsUtil.sendGet("http://localhost:10003/Guest/users/user_map", "tokenKey=" + key);
+            Map<Object, Object> userDtoMap = new Gson().fromJson(JsonStr, Map.class);
             //校验token + account正确性
             if (!token.equals(userDtoMap.get("token")) || !account.equals(userDtoMap.get("account"))) {
                 throw new ClientException(ClientError.NOT_LOGIN_ERROR);
@@ -88,37 +88,19 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
             UserDTO.UserDTOBuilder userDtoBuilder = UserDTO.builder();
 
-            Optional.ofNullable(userDtoMap.get("id"))
-                    .map(Object::toString)
-                    .map(Long::parseLong)
-                    .ifPresent(userDtoBuilder::id);
+            Optional.ofNullable(userDtoMap.get("id")).map(Object::toString).map(Long::parseLong).ifPresent(userDtoBuilder::id);
 
-            Optional.ofNullable(userDtoMap.get("admin"))
-                    .map(Object::toString)
-                    .map(Integer::parseInt)
-                    .ifPresent(userDtoBuilder::admin);
+            Optional.ofNullable(userDtoMap.get("admin")).map(Object::toString).map(Integer::parseInt).ifPresent(userDtoBuilder::admin);
 
-            Optional.ofNullable(userDtoMap.get("status"))
-                    .map(Object::toString)
-                    .map(Integer::parseInt)
-                    .ifPresent(userDtoBuilder::status);
+            Optional.ofNullable(userDtoMap.get("status")).map(Object::toString).map(Integer::parseInt).ifPresent(userDtoBuilder::status);
 
-            Optional.ofNullable(userDtoMap.get("loginType"))
-                    .map(Object::toString)
-                    .map(Integer::parseInt)
-                    .ifPresent(userDtoBuilder::loginType);
+            Optional.ofNullable(userDtoMap.get("loginType")).map(Object::toString).map(Integer::parseInt).ifPresent(userDtoBuilder::loginType);
 
-            Optional.ofNullable(userDtoMap.get("account"))
-                    .map(Object::toString)
-                    .ifPresent(userDtoBuilder::account);
+            Optional.ofNullable(userDtoMap.get("account")).map(Object::toString).ifPresent(userDtoBuilder::account);
 
-            Optional.ofNullable(userDtoMap.get("password"))
-                    .map(Object::toString)
-                    .ifPresent(userDtoBuilder::password);
+            Optional.ofNullable(userDtoMap.get("password")).map(Object::toString).ifPresent(userDtoBuilder::password);
 
-            Optional.ofNullable(userDtoMap.get("phone"))
-                    .map(Object::toString)
-                    .ifPresent(userDtoBuilder::phone);
+            Optional.ofNullable(userDtoMap.get("phone")).map(Object::toString).ifPresent(userDtoBuilder::phone);
 
             UserDTO userDto = userDtoBuilder.build();
 
@@ -127,10 +109,12 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             return chain.filter(ex);
 
         } catch (Exception e) {
+
             log.error(e.getMessage());
             ServerHttpResponse response = exchange.getResponse();
             response.setRawStatusCode(HttpStatusCT.UNAUTHORIZED); //401
-            return response.setComplete();
+//            return response.setComplete();
+            throw e;    // 调试使用
         }
     }
 

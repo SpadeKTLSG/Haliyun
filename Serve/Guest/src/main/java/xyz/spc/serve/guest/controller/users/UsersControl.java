@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.constant.Guest.UsersValiGroups;
@@ -24,6 +25,7 @@ import xyz.spc.serve.auxiliary.config.senti.CustomBlockHandler;
 import xyz.spc.serve.auxiliary.config.senti.SentinelPath;
 import xyz.spc.serve.guest.flow.UsersFlow;
 
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -36,16 +38,23 @@ public class UsersControl {
 
     // Flow
     private final UsersFlow usersFlow;
-
+    private final RedisTemplate<Object, Object> redisTemplate;
 
     //! Client
+
+    @GetMapping("/user_map")
+    @Operation(summary = "远程调用用户Map")
+    public Map<Object, Object> getUserMap(@RequestParam("tokenKey") String tokenKey) {
+        return redisTemplate.opsForHash().entries(tokenKey);
+    }
+    //http://localhost:10003/Guest/users/user_map
 
     //! Func
 
     /**
      * 获取手机验证码
      */
-    @GetMapping("code")
+    @GetMapping("/code")
     @Operation(summary = "验证码")
     @Parameters(@Parameter(name = "phone", description = "手机号", required = true))
     @SentinelResource(value = SentinelPath.GET_LOGIN_CODE_PATH, blockHandler = "getLoginCodeBlockHandlerMethod", blockHandlerClass = CustomBlockHandler.class)

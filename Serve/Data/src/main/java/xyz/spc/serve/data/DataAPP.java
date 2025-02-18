@@ -28,5 +28,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class DataAPP {
     public static void main(String[] args) {
         SpringApplication.run(DataAPP.class, args);
+        log.info("数据服务启动成功");
     }
 }

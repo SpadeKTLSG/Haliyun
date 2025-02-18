@@ -28,5 +28,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class MoneyAPP {
     public static void main(String[] args) {
         SpringApplication.run(MoneyAPP.class, args);
+        log.info("金钱服务启动成功");
     }
 }

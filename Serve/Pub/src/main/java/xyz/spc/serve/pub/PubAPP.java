@@ -28,5 +28,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class PubAPP {
     public static void main(String[] args) {
         SpringApplication.run(PubAPP.class, args);
+        log.info("公共服务启动成功");
     }
 }

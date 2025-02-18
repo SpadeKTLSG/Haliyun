@@ -33,9 +33,8 @@ import java.util.List;
 public class GreatWebMvcConfig implements WebMvcConfigurer {
 
 
-    private final String[] exICPath = {
-            "/favicon.ico", "/Guest.html", //浏览器页面
-            "/initialize/dispatcher-servlet", //初始化请求
+    private final String[] exICPath = {"/favicon.ico", "/Guest.html", //浏览器页面
+            "Pub/fronts/nav", "/initialize/dispatcher-servlet", //初始化请求
             "/swagger-ui/**", "/swagger-ui.html", "/doc.html", "/webjars/**", "/swagger-resources/**", "/swagger-ui/**", "/v3/**", "/error"};
 
     private final GreatLoginInterceptor greatLoginInterceptor;
@@ -49,19 +48,15 @@ public class GreatWebMvcConfig implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
 
         //1 登录拦截器
-        registry.addInterceptor(greatLoginInterceptor)
-                .excludePathPatterns(exICPath) //排除登录接口
+        registry.addInterceptor(greatLoginInterceptor).excludePathPatterns(exICPath) //排除登录接口
                 .order(0);
 
         //2 token刷新拦截器
-        registry.addInterceptor(greatTokenRefreshInterceptor)
-                .addPathPatterns("/**")
-                .excludePathPatterns(exICPath) //排除登录接口
+        registry.addInterceptor(greatTokenRefreshInterceptor).addPathPatterns("/**").excludePathPatterns(exICPath) //排除登录接口
                 .order(1);
 
         //3 重复提交拦截器
-        registry.addInterceptor(repeatSubmitInterceptor)
-                .addPathPatterns("/**") //对所有请求都进行拦截
+        registry.addInterceptor(repeatSubmitInterceptor).addPathPatterns("/**") //对所有请求都进行拦截
                 .order(2);
 
         log.debug("自定义拦截器启动!");

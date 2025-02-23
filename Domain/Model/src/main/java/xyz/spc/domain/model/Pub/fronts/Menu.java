@@ -46,7 +46,7 @@ public class Menu extends BaseModel {
     private String name;
 
     /**
-     * 菜单动态路由(页面路径)
+     * 菜单动态路由 Plan (页面路径) => 当前取消
      * <p>示例: 系统核心页面 '菜单管理'index的URL: 'sys/menu', 位于前端的modules/ **sys/menu** /index.vue.
      * <p>则自己的  /modules/Guest/users/index.vue 用户微服务的users逻辑区块的index(默认微服务下面的业务包作为一个页面)
      * <p>需要填写的URL即为: Guest/users

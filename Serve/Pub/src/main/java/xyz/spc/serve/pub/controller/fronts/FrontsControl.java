@@ -26,6 +26,9 @@ public class FrontsControl {
     // Flow
     private final FrontsFlow frontsFlow;
 
+    /**
+     * 获取菜单 todo: 未完成权限改造
+     */
     @GetMapping("/nav")
     @Operation(summary = "获取菜单")
     public Result<List<MenuVO>> getBasicNav() {

@@ -29,5 +29,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class GroupAPP {
     public static void main(String[] args) {
         SpringApplication.run(GroupAPP.class, args);
+        log.info("群组服务启动成功");
     }
 }

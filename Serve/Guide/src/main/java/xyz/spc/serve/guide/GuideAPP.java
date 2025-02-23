@@ -29,5 +29,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class GuideAPP {
     public static void main(String[] args) {
         SpringApplication.run(GuideAPP.class, args);
+        log.info("管理服务启动成功");
     }
 }

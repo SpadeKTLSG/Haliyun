@@ -65,7 +65,6 @@ public class MenuFunc {
                 menuVO.setList(childMenuVOs);
             }
         });
-
         return rootMenuVO;
     }
 }

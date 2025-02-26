@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import xyz.spc.common.constant.Guest.UsersValiGroups;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.validate.Xss;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
+import xyz.spc.gate.vo.Guest.users.UserGreatVO;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.auxiliary.config.ratelimit.LimitTypeEnum;
@@ -136,7 +138,12 @@ public class UsersControl {
 
 
     /**
-     * 全部查询, 联表三张
+     * 用户信息全部查询, 联表三张 + 加入的群组Name
      */
-
+    @GetMapping("/user_info/{account}")
+    @Parameter(description = "用户账号", required = true)
+    public Result<UserGreatVO> getUserInfo(@NotNull @NotEmpty @Xss
+                                           @PathVariable("account") String account) {
+        return Result.success(usersFlow.getUserInfoWithGroups(account));
+    }
 }

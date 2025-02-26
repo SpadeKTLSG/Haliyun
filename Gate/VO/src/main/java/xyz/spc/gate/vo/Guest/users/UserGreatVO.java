@@ -1,0 +1,27 @@
+package xyz.spc.gate.vo.Guest.users;
+
+import lombok.*;
+import lombok.experimental.Accessors;
+import xyz.spc.gate.vo.BaseVO;
+
+import java.util.List;
+
+@Data
+@Builder
+@EqualsAndHashCode(callSuper = true)
+@Accessors(chain = true)
+@NoArgsConstructor
+@AllArgsConstructor
+public class UserGreatVO extends BaseVO {
+
+    private UserVO userVO;
+
+    private UserDetailVO userDetailVO;
+
+    private UserFuncVO userFuncVO;
+
+    /**
+     * 临时字段 - 用户加入的群组名
+     */
+    private List<String> groupNames;
+}

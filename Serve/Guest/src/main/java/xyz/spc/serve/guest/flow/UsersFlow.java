@@ -6,10 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
+import xyz.spc.gate.vo.Guest.users.UserGreatVO;
 import xyz.spc.infra.feign.Guest.UsersClient;
 import xyz.spc.serve.guest.func.records.StatisticFunc;
 import xyz.spc.serve.guest.func.records.TombFunc;
 import xyz.spc.serve.guest.func.users.UsersFunc;
+
+import java.util.List;
 
 @Slf4j
 @Service
@@ -67,5 +70,19 @@ public class UsersFlow {
         return true;
     }
 
+    /**
+     * 获取用户信息
+     */
+    public UserGreatVO getUserInfoWithGroups(String account) {
+        //获得用户基础联表三张信息
+        UserGreatVO userGreatVO = usersFunc.getUserInfo(account);
 
+        //查用户加入的群组ids
+        List<Long> groupIds = usersFunc.getUsersGroupIds(account);
+
+        //通过ids去 Group 模块 找群组名
+        userGreatVO.setGroupNames(usersClient.getGroupNames(groupIds));
+
+        return userGreatVO;
+    }
 }

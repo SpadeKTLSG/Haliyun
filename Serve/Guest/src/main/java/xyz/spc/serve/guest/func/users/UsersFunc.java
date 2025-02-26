@@ -2,6 +2,7 @@ package xyz.spc.serve.guest.func.users;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
@@ -21,6 +22,9 @@ import xyz.spc.common.util.collecUtil.StringUtil;
 import xyz.spc.common.util.encryptUtil.MD5Util;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
+import xyz.spc.domain.dos.Guest.users.UserDO;
+import xyz.spc.domain.dos.Guest.users.UserDetailDO;
+import xyz.spc.domain.dos.Guest.users.UserFuncDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
@@ -260,6 +264,14 @@ public class UsersFunc {
      * 查用户三张表信息联表查询
      */
     public UserGreatVO getUserInfo(Long id) {
-        return usersRepo.getUserInfo(id);
+        //MPJ联表查询 - 标准的经过拆分的对象的信息综合查询 (我只说一次)
+        return usersRepo.userMapper.selectJoinOne(UserGreatVO.class, new MPJLambdaWrapper<UserDO>()
+                .selectAll(UserDO.class)
+                .selectAll(UserDetailDO.class)
+                .selectAll(UserFuncDO.class)
+                .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId)
+                .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
+                .eq(UserDO::getId, id)
+        ); //note: 这里直接把 UserGreatVO.class 作为传递的对象其实是违反规定的, 但是既然这里能自动处理并填充, 我就先用吧
     }
 }

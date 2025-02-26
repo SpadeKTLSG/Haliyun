@@ -67,8 +67,15 @@ public class UserGreatVO extends BaseVO {
 
     private String registerCode;
 
+    // 临时字段
+
     /**
-     * 临时字段 - 用户加入的群组名
+     * 用户加入的群组名
      */
     private List<String> groupNames;
+
+    /**
+     * 等级名称
+     */
+    private String levelName;
 }

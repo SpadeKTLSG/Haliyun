@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
 import xyz.spc.infra.feign.Guest.UsersClient;
+import xyz.spc.serve.guest.func.levels.LevelFunc;
 import xyz.spc.serve.guest.func.records.StatisticFunc;
 import xyz.spc.serve.guest.func.records.TombFunc;
 import xyz.spc.serve.guest.func.users.UsersFunc;
@@ -22,6 +23,7 @@ public class UsersFlow {
 
     //Func
     private final UsersFunc usersFunc;
+    private final LevelFunc levelFunc;
     private final TombFunc tombFunc;
     private final StatisticFunc statisticFunc;
 
@@ -75,6 +77,8 @@ public class UsersFlow {
         //获得用户基础联表三张信息
         UserGreatVO userGreatVO = usersFunc.getUserInfo(id);
 
+        //补充查询基础信息: Level等级名称
+        userGreatVO.setLevelName(levelFunc.getLevelName(userGreatVO.getLevelId()));
         //查用户加入的群组ids
 //        List<Long> groupIds = usersFunc.getUsersGroupIds(id);
 //

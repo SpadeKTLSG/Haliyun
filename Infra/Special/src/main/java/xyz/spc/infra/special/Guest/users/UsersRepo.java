@@ -16,7 +16,6 @@ import xyz.spc.domain.dos.Guest.users.UserDetailDO;
 import xyz.spc.domain.dos.Guest.users.UserFuncDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
-import xyz.spc.gate.vo.Guest.users.UserGreatVO;
 import xyz.spc.infra.mapper.Guest.users.UserDetailMapper;
 import xyz.spc.infra.mapper.Guest.users.UserFuncMapper;
 import xyz.spc.infra.mapper.Guest.users.UserGroupMapper;
@@ -60,7 +59,7 @@ public class UsersRepo {
                 //MPJ版本 联表查询 note: MySQL升级至8.X最新版后, 推荐采用联表以提升性能
                     userMapper.selectJoinOne(UserDO.class, new MPJLambdaWrapper<UserDO>()
                             .selectAll(UserDO.class)
-                            //.select(UserDetailDO::getId, UserDetailDO::getPhone) //下面处理关联和业务的字段可以不查
+                            //.select(UserDetailDO::getId, UserDetailDO::getPhone) //下面处理关联和业务的字段, 不需要返回的可以不查
                             .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId) //联表类和对应字段
                             .eq(UserDetailDO::getPhone, userDTO.getPhone()) //业务条件
                     );
@@ -114,21 +113,5 @@ public class UsersRepo {
         log.debug("用户: {} 注册成功: ", userDTO.getAccount());
     }
 
-    /**
-     * 联表查询
-     */
-    public UserGreatVO getUserInfo(Long id) {
 
-        //MPJ联表查询
-        UserGreatVO userGreatVO = userMapper.selectJoinOne(UserGreatVO.class, new MPJLambdaWrapper<UserDO>()
-                .selectAll(UserDO.class)
-                .selectAll(UserDetailDO.class)
-                .selectAll(UserFuncDO.class)
-                .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId)
-                .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
-                .eq(UserDO::getId, id)
-        );
-        log.error("用户信息查询成功: {}", userGreatVO);
-        return userGreatVO;
-    }
 }

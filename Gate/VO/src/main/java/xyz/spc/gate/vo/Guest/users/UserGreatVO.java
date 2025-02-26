@@ -14,11 +14,58 @@ import java.util.List;
 @AllArgsConstructor
 public class UserGreatVO extends BaseVO {
 
-    private UserVO userVO;
+    //! id
+    private Long id;
 
-    private UserDetailVO userDetailVO;
+    //    UserVO
 
-    private UserFuncVO userFuncVO;
+    private Integer admin;
+
+    private Integer status;
+
+    private Integer loginType;
+
+    private String account;
+
+    private String password;
+
+
+    //    UserDetailVO
+
+
+    private Integer gender;
+
+    private String phone;
+
+    private String email;
+
+    private String avatar;
+
+    private String area;
+
+    private String nickname;
+
+    private String introduce;
+
+    //    UserFuncVO
+
+    private Long levelId;
+
+    private Integer vip;
+
+    private Integer createGroupCount;
+
+    private Integer createGroupMax;
+
+    private Integer joinGroupCount;
+
+    private Integer joinGroupMax;
+
+    private Long coin;
+
+    private Long energyCoin;
+
+    private String registerCode;
 
     /**
      * 临时字段 - 用户加入的群组名

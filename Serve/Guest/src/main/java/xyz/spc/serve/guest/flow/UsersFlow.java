@@ -73,12 +73,12 @@ public class UsersFlow {
     /**
      * 获取用户信息
      */
-    public UserGreatVO getUserInfoWithGroups(String account) {
+    public UserGreatVO getUserInfoWithGroups(String id) {
         //获得用户基础联表三张信息
-        UserGreatVO userGreatVO = usersFunc.getUserInfo(account);
+        UserGreatVO userGreatVO = usersFunc.getUserInfo(id);
 
         //查用户加入的群组ids
-        List<Long> groupIds = usersFunc.getUsersGroupIds(account);
+        List<Long> groupIds = usersFunc.getUsersGroupIds(id);
 
         //通过ids去 Group 模块 找群组名
         userGreatVO.setGroupNames(usersClient.getGroupNames(groupIds));

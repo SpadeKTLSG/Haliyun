@@ -16,6 +16,7 @@ import xyz.spc.domain.dos.Guest.users.UserDetailDO;
 import xyz.spc.domain.dos.Guest.users.UserFuncDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
+import xyz.spc.gate.vo.Guest.users.UserGreatVO;
 import xyz.spc.infra.mapper.Guest.users.UserDetailMapper;
 import xyz.spc.infra.mapper.Guest.users.UserFuncMapper;
 import xyz.spc.infra.mapper.Guest.users.UserGroupMapper;
@@ -110,5 +111,19 @@ public class UsersRepo {
         userFuncService.save(userFuncDO);
 
         log.debug("用户: {} 注册成功: ", userDTO.getAccount());
+    }
+
+    /**
+     * 联表查询
+     */
+    public UserGreatVO getUserInfo(Long id) {
+
+        //MPJ联表查询
+        UserGreatVO userGreatVO = userMapper.selectJoinOne(UserGreatVO.class, new MPJLambdaWrapper<UserDO>()
+                .selectAll(UserDO.class)
+                .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId)
+                .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
+                .eq(UserDO::getId, id)
+        );
     }
 }

@@ -23,6 +23,7 @@ import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
+import xyz.spc.gate.vo.Guest.users.UserGreatVO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
@@ -255,4 +256,10 @@ public class UsersFunc {
     }
 
 
+    /**
+     * 查用户三张表信息联表查询
+     */
+    public UserGreatVO getUserInfo(Long id) {
+        return usersRepo.getUserInfo(id);
+    }
 }

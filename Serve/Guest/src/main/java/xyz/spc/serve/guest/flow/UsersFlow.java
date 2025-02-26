@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
+import xyz.spc.gate.vo.Guest.levels.LevelVO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
 import xyz.spc.infra.feign.Guest.UsersClient;
 import xyz.spc.serve.guest.func.levels.LevelFunc;
@@ -77,8 +78,12 @@ public class UsersFlow {
         //获得用户基础联表三张信息
         UserGreatVO userGreatVO = usersFunc.getUserInfo(id);
 
-        //补充查询基础信息: Level等级名称
-        userGreatVO.setLevelName(levelFunc.getLevelName(userGreatVO.getLevelId()));
+        //补充查询基础信息: Level等级 => 名称和层级
+        LevelVO levelVO = levelFunc.getLevelInfo(userGreatVO.getLevelId());
+        userGreatVO.setLevelName(levelVO.getName());
+        userGreatVO.setLevelFloor(levelVO.getFloor());
+
+        //todo 等群组上线后再开启
         //查用户加入的群组ids
 //        List<Long> groupIds = usersFunc.getUsersGroupIds(id);
 //

@@ -41,17 +41,6 @@ public class LevelsControl {
     //! Query
 
     /**
-     * id获取等级名称
-     */
-    @GetMapping("/levelname")
-    @Operation(summary = "查等级名称")
-    @Parameter(name = "id", description = "等级id", required = true)
-    public String getLevelName(@NotNull @RequestParam("id") Long id) {
-        return levelsFlow.getLevelName(id);
-    }
-    //http://localhost:10000/Guest/levels/levelname?id=...
-
-    /**
      * id获取等级信息
      */
     @GetMapping("/levelinfo")

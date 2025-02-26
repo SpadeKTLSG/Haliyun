@@ -75,6 +75,11 @@ public class UserGreatVO extends BaseVO {
     private List<String> groupNames;
 
     /**
+     * 等级层级
+     */
+    private Integer levelFloor;
+
+    /**
      * 等级名称
      */
     private String levelName;

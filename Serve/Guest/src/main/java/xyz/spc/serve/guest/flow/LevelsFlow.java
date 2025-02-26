@@ -18,12 +18,6 @@ public class LevelsFlow {
     //Func
     private final LevelFunc levelFunc;
 
-    /**
-     * 获取等级名称
-     */
-    public String getLevelName(Long id) {
-        return levelFunc.getLevelName(id);
-    }
 
     /**
      * 获取等级信息

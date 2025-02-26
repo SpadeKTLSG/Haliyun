@@ -19,13 +19,6 @@ public class LevelFunc {
     private final LevelsRepo levelsRepo;
 
     /**
-     * 通过等级ID获取等级名称
-     */
-    public String getLevelName(Long id) {
-        return levelsRepo.levelService.getById(id).getName();
-    }
-
-    /**
      * 通过等级ID获取等级信息
      */
     public LevelVO getLevelInfo(Long id) {

@@ -143,7 +143,7 @@ public class UsersControl {
     @GetMapping("/user_info")
     @Operation(summary = "查用户信息")
     @Parameter(name = "id", description = "用户id", required = true)
-    public Result<UserGreatVO> getUserInfo(@NotNull @RequestBody Long id) {
+    public Result<UserGreatVO> getUserInfo(@NotNull @RequestParam("id") Long id) {
         return Result.success(usersFlow.getUserInfoWithGroups(id));
     }
     //http://localhost:10000/Guest/users/user_info

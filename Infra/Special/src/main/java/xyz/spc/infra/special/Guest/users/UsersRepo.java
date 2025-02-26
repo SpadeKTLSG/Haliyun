@@ -55,6 +55,7 @@ public class UsersRepo {
                     /*userService.getById(userDetailService.getOne(Wrappers.lambdaQuery(UserDetailDO.class) // 查找手机号对应的用户详情DO
                                     .eq(UserDetailDO::getPhone, userDTO.getPhone()))
                             .getId());*/
+                //通过用户详情DO的id查找用户DO:MPJ版本
                 //我只讲一次:
                 //MPJ版本 联表查询 note: MySQL升级至8.X最新版后, 推荐采用联表以提升性能
                     userMapper.selectJoinOne(UserDO.class, new MPJLambdaWrapper<UserDO>()
@@ -121,6 +122,8 @@ public class UsersRepo {
         //MPJ联表查询
         UserGreatVO userGreatVO = userMapper.selectJoinOne(UserGreatVO.class, new MPJLambdaWrapper<UserDO>()
                 .selectAll(UserDO.class)
+                .selectAll(UserDetailDO.class)
+                .selectAll(UserFuncDO.class)
                 .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId)
                 .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
                 .eq(UserDO::getId, id)

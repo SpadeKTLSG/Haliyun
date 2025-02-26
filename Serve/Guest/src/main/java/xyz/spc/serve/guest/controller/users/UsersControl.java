@@ -140,10 +140,11 @@ public class UsersControl {
     /**
      * 用户信息全部查询, 联表三张 + 加入的群组Name
      */
-    @GetMapping("/user_info/{account}")
-    @Parameter(description = "用户账号", required = true)
-    public Result<UserGreatVO> getUserInfo(@NotNull @NotEmpty @Xss
-                                           @PathVariable("account") String account) {
-        return Result.success(usersFlow.getUserInfoWithGroups(account));
+    @GetMapping("/user_info")
+    @Operation(summary = "查用户信息")
+    @Parameter(name = "id", description = "用户id", required = true)
+    public Result<UserGreatVO> getUserInfo(@NotNull @RequestBody Long id) {
+        return Result.success(usersFlow.getUserInfoWithGroups(id));
     }
+    //http://localhost:10000/Guest/users/user_info
 }

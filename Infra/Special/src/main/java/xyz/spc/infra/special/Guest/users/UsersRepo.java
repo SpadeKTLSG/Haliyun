@@ -125,5 +125,7 @@ public class UsersRepo {
                 .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
                 .eq(UserDO::getId, id)
         );
+        log.error("用户信息查询成功: {}", userGreatVO);
+        return userGreatVO;
     }
 }

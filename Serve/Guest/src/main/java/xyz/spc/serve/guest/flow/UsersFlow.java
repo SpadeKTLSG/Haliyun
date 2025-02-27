@@ -92,4 +92,13 @@ public class UsersFlow {
 
         return userGreatVO;
     }
+
+    /**
+     * 更新用户信息
+     */
+    public void updateUserInfo(UserGreatVO userGreatVO) {
+        //更新用户基础联表三张信息
+        usersFunc.updateUserInfo(userGreatVO);
+        //暂定不更新其他信息
+    }
 }

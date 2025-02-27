@@ -3,6 +3,7 @@ package xyz.spc.serve.guest.func.users;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
+import com.github.yulichang.wrapper.UpdateJoinWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
@@ -273,5 +274,28 @@ public class UsersFunc {
                 .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
                 .eq(UserDO::getId, id)
         ); //note: 这里直接把 UserGreatVO.class 作为传递的对象其实是违反规定的, 但是既然这里能自动处理并填充, 我就先用吧
+    }
+
+
+    /**
+     * 联表更新用户信息(Null值的字段不更新)
+     */
+    public void updateUserInfo(UserGreatVO userGreatVO) {
+
+        //用工具类直接打入三个DO:
+        UserDO userDO = new UserDO();
+        UserDetailDO userDetailDO = new UserDetailDO();
+        UserFuncDO userFuncDO = new UserFuncDO();
+        BeanUtil.copyProperties(userGreatVO, userDO, CopyOptions.create().setIgnoreNullValue(true));
+        BeanUtil.copyProperties(userGreatVO, userDetailDO, CopyOptions.create().setIgnoreNullValue(true));
+        BeanUtil.copyProperties(userGreatVO, userFuncDO, CopyOptions.create().setIgnoreNullValue(true));
+
+
+        usersRepo.userMapper.updateJoinAndNull(userDO, new UpdateJoinWrapper<>(UserDO.class)
+                //设置两个副表的 set 语句
+                .setUpdateEntityAndNull(userDetailDO, userFuncDO) //使用传递的对象更新目标表的所有字段
+                .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId)
+                .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
+                .eq(UserDO::getId, userGreatVO.getId()));
     }
 }

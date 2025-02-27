@@ -53,7 +53,7 @@ public class UsersControl {
 
     @PostMapping("/user_tl")
     @Operation(summary = "登陆用户获得TL中的用户信息")
-    public Result getUserMap() {
+    public Result<Object> getUserMap() {
         return Result.success(UserContext.getUser());
     }
     //http://localhost:10000/Guest/users/user_tl
@@ -133,6 +133,14 @@ public class UsersControl {
     //! DELETE
 
     //! UPDATE
+
+    @PutMapping("/user_info")
+    @Operation(summary = "更新用户信息")
+    @Parameters(@Parameter(name = "userGreatVO", description = "用户完整信息", required = true))
+    public Result<Object> updateUserInfo(@RequestBody UserGreatVO userGreatVO) {
+        usersFlow.updateUserInfo(userGreatVO)
+        return Result.success();
+    }
 
     //! Query
 

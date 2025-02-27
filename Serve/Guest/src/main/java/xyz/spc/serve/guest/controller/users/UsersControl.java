@@ -138,7 +138,7 @@ public class UsersControl {
     @Operation(summary = "更新用户信息")
     @Parameters(@Parameter(name = "userGreatVO", description = "用户完整信息", required = true))
     public Result<Object> updateUserInfo(@RequestBody UserGreatVO userGreatVO) {
-        usersFlow.updateUserInfo(userGreatVO)
+        usersFlow.updateUserInfo(userGreatVO);
         return Result.success();
     }
 

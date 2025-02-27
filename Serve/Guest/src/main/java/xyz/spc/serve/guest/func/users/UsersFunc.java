@@ -267,9 +267,11 @@ public class UsersFunc {
     public UserGreatVO getUserInfo(Long id) {
         //MPJ联表查询 - 标准的经过拆分的对象的信息综合查询 (我只说一次)
         return usersRepo.userMapper.selectJoinOne(UserGreatVO.class, new MPJLambdaWrapper<UserDO>()
+                //要啥都查, 最后会封装到 UserGreatVO.class 里
                 .selectAll(UserDO.class)
                 .selectAll(UserDetailDO.class)
                 .selectAll(UserFuncDO.class)
+                //联表
                 .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId)
                 .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
                 .eq(UserDO::getId, id)
@@ -290,10 +292,11 @@ public class UsersFunc {
         BeanUtil.copyProperties(userGreatVO, userDetailDO, CopyOptions.create().setIgnoreNullValue(true));
         BeanUtil.copyProperties(userGreatVO, userFuncDO, CopyOptions.create().setIgnoreNullValue(true));
 
-
-        usersRepo.userMapper.updateJoinAndNull(userDO, new UpdateJoinWrapper<>(UserDO.class)
+        //我只讲一遍: 联表更新 MPJ, 需要用到 UpdateJoinWrapper + setUpdateEntity (会自动忽略空属性更新)
+        usersRepo.userMapper.updateJoin(userDO, new UpdateJoinWrapper<>(UserDO.class)
                 //设置两个副表的 set 语句
-                .setUpdateEntityAndNull(userDetailDO, userFuncDO) //使用传递的对象更新目标表的所有字段
+                .setUpdateEntity(userDetailDO, userFuncDO) //:使用传递的对象更新目标表的所有字段
+                //联表条件
                 .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId)
                 .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
                 .eq(UserDO::getId, userGreatVO.getId()));

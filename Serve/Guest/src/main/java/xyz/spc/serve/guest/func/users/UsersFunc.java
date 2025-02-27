@@ -260,6 +260,24 @@ public class UsersFunc {
         return true;
     }
 
+    /**
+     * 获取用户标记
+     */
+    public Map<String, String> getUserMark(String account) {
+        Map<String, String> userMark = new HashMap<>();
+        //用account查userDO. 再联表查userDetailDO, 得到phone
+        UserDTO userDTO = UserDTO.builder().account(account).build();
+        User user = usersRepo.getUserByUserDTO(userDTO, UserDTO.UserDTOField.account);
+        String phone = usersRepo.getPhoneByUserDTO(userDTO, UserDTO.UserDTOField.account);
+
+        //组装返回参数
+        userMark.put("id", user.getId().toString());
+        userMark.put("account", user.getAccount());
+        userMark.put("phone", phone);
+        userMark.put("loginType", user.getLoginType().toString());
+        userMark.put("admin", user.getAdmin().toString());
+        return userMark;
+    }
 
     /**
      * 查用户三张表信息联表查询
@@ -301,4 +319,6 @@ public class UsersFunc {
                 .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
                 .eq(UserDO::getId, userGreatVO.getId()));
     }
+
+
 }

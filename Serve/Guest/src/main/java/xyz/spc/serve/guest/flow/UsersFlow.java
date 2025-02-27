@@ -73,7 +73,11 @@ public class UsersFlow {
         return true;
     }
 
+    /**
+     * 获取用户标记
+     */
     public Map<String, String> getUserMark(String account) {
+        return usersFunc.getUserMark(account);
     }
 
     /**

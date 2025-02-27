@@ -41,6 +41,9 @@ public class UsersRepo {
     public final UserGroupService userGroupService;
     public final UserGroupMapper userGroupMapper;
 
+    /**
+     * note: 不规范: 这里的返回POJO类型其实应该还是DO, 因为这个Repo本来就是处理DAO/Mapper层的. 但是为了方便, 我直接返回了User避免了Func层(User的生存区)来再次转换
+     */
     public User getUserByUserDTO(UserDTO userDTO, UserDTO.UserDTOField field) throws ClientException {
 
         UserDO tmp = switch (field) {
@@ -55,8 +58,7 @@ public class UsersRepo {
                                     .eq(UserDetailDO::getPhone, userDTO.getPhone()))
                             .getId());*/
                 //通过用户详情DO的id查找用户DO:MPJ版本
-                //我只讲一次:
-                //MPJ版本 联表查询 note: MySQL升级至8.X最新版后, 推荐采用联表以提升性能
+                //我只讲一次: MPJ版本 联表查询 note: MySQL升级至8.X最新版后, 推荐采用联表以提升性能
                     userMapper.selectJoinOne(UserDO.class, new MPJLambdaWrapper<UserDO>()
                             .selectAll(UserDO.class)
                             //.select(UserDetailDO::getId, UserDetailDO::getPhone) //下面处理关联和业务的字段, 不需要返回的可以不查
@@ -70,6 +72,19 @@ public class UsersRepo {
         return new User().fromDO(tmp);
     }
 
+
+    public String getPhoneByUserDTO(UserDTO userDTO, UserDTO.UserDTOField field) throws ClientException {
+
+        return switch (field) {
+            case id -> userDetailService.getOne(Wrappers.lambdaQuery(UserDetailDO.class).eq(UserDetailDO::getId, userDTO.getId())).getPhone();
+            case account -> userDetailService.getOne(Wrappers.lambdaQuery(UserDetailDO.class).eq(UserDetailDO::getId,
+                    userService.getOne(Wrappers.lambdaQuery(UserDO.class).eq(UserDO::getAccount, userDTO.getAccount())).getId())
+            ).getPhone();
+            default -> {
+                throw new ClientException(ClientError.USER_ACCOUNT_NOT_EXIST_ERROR);
+            }
+        };
+    }
 
     /**
      * 添加用户

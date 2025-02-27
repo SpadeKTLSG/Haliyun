@@ -47,6 +47,7 @@ public class UserGreatVO extends BaseVO {
 
     private String introduce;
 
+
     //    UserFuncVO
 
     private Long levelId;

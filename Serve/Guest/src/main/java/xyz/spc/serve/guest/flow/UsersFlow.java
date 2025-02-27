@@ -14,6 +14,8 @@ import xyz.spc.serve.guest.func.records.StatisticFunc;
 import xyz.spc.serve.guest.func.records.TombFunc;
 import xyz.spc.serve.guest.func.users.UsersFunc;
 
+import java.util.Map;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -71,6 +73,9 @@ public class UsersFlow {
         return true;
     }
 
+    public Map<String, String> getUserMark(String account) {
+    }
+
     /**
      * 获取用户信息
      */
@@ -101,4 +106,6 @@ public class UsersFlow {
         usersFunc.updateUserInfo(userGreatVO);
         //暂定不更新其他信息
     }
+
+
 }

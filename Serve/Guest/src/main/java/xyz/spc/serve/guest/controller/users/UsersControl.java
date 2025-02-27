@@ -51,12 +51,25 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/user_map
 
-    @PostMapping("/user_tl")
-    @Operation(summary = "登陆用户获得TL中的用户信息")
+    @GetMapping("/user_tl")
+
+    @Deprecated
     public Result<Object> getUserMap() {
         return Result.success(UserContext.getUser());
     }
     //http://localhost:10000/Guest/users/user_tl
+
+
+    /**
+     * 获取来进行信息存储
+     */
+    @GetMapping("/user_mark")
+    @Operation(summary = "登陆用户获得TL中的用户标志信息")
+    public Result<Map<String, String>> getUserMark(@RequestParam String account) {
+        return Result.success(usersFlow.getUserMark(account));
+    }
+    //http://localhost:10000/Guest/users/user_mark
+
 
     //! Func
 
@@ -141,6 +154,7 @@ public class UsersControl {
         usersFlow.updateUserInfo(userGreatVO);
         return Result.success();
     }
+    //http://localhost:10000/Guest/users/user_info
 
     //! Query
 

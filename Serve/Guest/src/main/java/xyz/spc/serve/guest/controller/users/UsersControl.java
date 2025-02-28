@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,6 +18,7 @@ import xyz.spc.common.constant.Guest.UsersValiGroups;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.validate.Xss;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
+import xyz.spc.gate.vo.Guest.users.UserGreatVO;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.auxiliary.config.ratelimit.LimitTypeEnum;
@@ -49,12 +51,25 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/user_map
 
-    @PostMapping("/user_tl")
-    @Operation(summary = "登陆用户获得TL中的用户信息")
-    public Result getUserMap() {
+    @GetMapping("/user_tl")
+
+    @Deprecated
+    public Result<Object> getUserMap() {
         return Result.success(UserContext.getUser());
     }
     //http://localhost:10000/Guest/users/user_tl
+
+
+    /**
+     * 获取来进行信息存储
+     */
+    @GetMapping("/user_mark")
+    @Operation(summary = "登陆用户获得TL中的用户标志信息")
+    public Result<Map<String, String>> getUserMark(@RequestParam String account) {
+        return Result.success(usersFlow.getUserMark(account));
+    }
+    //http://localhost:10000/Guest/users/user_mark
+
 
     //! Func
 
@@ -130,9 +145,43 @@ public class UsersControl {
 
     //! DELETE
 
+    /**
+     * 逻辑删除账号: 直接修改状态为-已注销
+     */
+    @DeleteMapping("/killme")
+    @Operation(summary = "注销账号")
+    @Parameters(@Parameter(name = "id", description = "用户id", required = true))
+    public Result<Object> killUserAccount(@RequestParam Long id) {
+        usersFlow.killUserAccount(id);
+        return Result.success();
+    }
+    //http://localhost:10000/Guest/users/killme
+
     //! UPDATE
+
+    /**
+     * 更新用户信息
+     */
+    @PutMapping("/user_info")
+    @Operation(summary = "更新用户信息")
+    @Parameters(@Parameter(name = "userGreatVO", description = "用户完整信息", required = true))
+    public Result<Object> updateUserInfo(@RequestBody UserGreatVO userGreatVO) {
+        usersFlow.updateUserInfo(userGreatVO);
+        return Result.success();
+    }
+    //http://localhost:10000/Guest/users/user_info
 
     //! Query
 
 
+    /**
+     * 用户信息全部查询, 联表三张 + 加入的群组Name
+     */
+    @GetMapping("/user_info")
+    @Operation(summary = "查用户信息")
+    @Parameter(name = "id", description = "用户id", required = true)
+    public Result<UserGreatVO> getUserInfo(@NotNull @RequestParam("id") Long id) {
+        return Result.success(usersFlow.getUserInfoWithGroups(id));
+    }
+    //http://localhost:10000/Guest/users/user_info
 }

@@ -2,6 +2,8 @@ package xyz.spc.serve.guest.func.users;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
+import com.github.yulichang.wrapper.UpdateJoinWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
@@ -21,8 +23,12 @@ import xyz.spc.common.util.collecUtil.StringUtil;
 import xyz.spc.common.util.encryptUtil.MD5Util;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
+import xyz.spc.domain.dos.Guest.users.UserDO;
+import xyz.spc.domain.dos.Guest.users.UserDetailDO;
+import xyz.spc.domain.dos.Guest.users.UserFuncDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
+import xyz.spc.gate.vo.Guest.users.UserGreatVO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
@@ -254,5 +260,71 @@ public class UsersFunc {
         return true;
     }
 
+    /**
+     * 获取用户标记
+     */
+    public Map<String, String> getUserMark(String account) {
+        Map<String, String> userMark = new HashMap<>();
+        //用account查userDO. 再联表查userDetailDO, 得到phone
+        UserDTO userDTO = UserDTO.builder().account(account).build();
+        User user = usersRepo.getUserByUserDTO(userDTO, UserDTO.UserDTOField.account);
+        String phone = usersRepo.getPhoneByUserDTO(userDTO, UserDTO.UserDTOField.account);
 
+        //组装返回参数
+        userMark.put("id", user.getId().toString());
+        userMark.put("account", user.getAccount());
+        userMark.put("phone", phone);
+        userMark.put("loginType", user.getLoginType().toString());
+        userMark.put("admin", user.getAdmin().toString());
+        return userMark;
+    }
+
+    /**
+     * 查用户三张表信息联表查询
+     */
+    public UserGreatVO getUserInfo(Long id) {
+        //MPJ联表查询 - 标准的经过拆分的对象的信息综合查询 (我只说一次)
+        return usersRepo.userMapper.selectJoinOne(UserGreatVO.class, new MPJLambdaWrapper<UserDO>()
+                //要啥都查, 最后会封装到 UserGreatVO.class 里
+                .selectAll(UserDO.class)
+                .selectAll(UserDetailDO.class)
+                .selectAll(UserFuncDO.class)
+                //联表
+                .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId)
+                .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
+                .eq(UserDO::getId, id)
+        ); //note: 这里直接把 UserGreatVO.class 作为传递的对象其实是违反规定的, 但是既然这里能自动处理并填充, 我就先用吧
+    }
+
+
+    /**
+     * 联表更新用户信息(Null值的字段不更新)
+     */
+    public void updateUserInfo(UserGreatVO userGreatVO) {
+
+        //用工具类直接打入三个DO:
+        UserDO userDO = new UserDO();
+        UserDetailDO userDetailDO = new UserDetailDO();
+        UserFuncDO userFuncDO = new UserFuncDO();
+        BeanUtil.copyProperties(userGreatVO, userDO, CopyOptions.create().setIgnoreNullValue(true));
+        BeanUtil.copyProperties(userGreatVO, userDetailDO, CopyOptions.create().setIgnoreNullValue(true));
+        BeanUtil.copyProperties(userGreatVO, userFuncDO, CopyOptions.create().setIgnoreNullValue(true));
+
+        //我只讲一遍: 联表更新 MPJ, 需要用到 UpdateJoinWrapper + setUpdateEntity (会自动忽略空属性更新)
+        usersRepo.userMapper.updateJoin(userDO, new UpdateJoinWrapper<>(UserDO.class)
+                //设置两个副表的 set 语句
+                .setUpdateEntity(userDetailDO, userFuncDO) //:使用传递的对象更新目标表的所有字段
+                //联表条件
+                .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId)
+                .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
+                .eq(UserDO::getId, userGreatVO.getId()));
+    }
+
+
+    /**
+     * 注销账号-用户三张表 - 实际只修改状态字段
+     */
+    public void killUserAccount(Long id) {
+        usersRepo.userService.updateById(UserDO.builder().id(id).status(User.STATUS_STOP).build());
+    }
 }

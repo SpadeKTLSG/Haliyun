@@ -155,6 +155,7 @@ public class UsersControl {
         usersFlow.killUserAccount(id);
         return Result.success();
     }
+    //http://localhost:10000/Guest/users/killme
 
     //! UPDATE
 

@@ -145,8 +145,22 @@ public class UsersControl {
 
     //! DELETE
 
+    /**
+     * 逻辑删除账号: 直接修改状态为-已注销
+     */
+    @DeleteMapping("/killme")
+    @Operation(summary = "注销账号")
+    @Parameters(@Parameter(name = "id", description = "用户id", required = true))
+    public Result<Object> killUserAccount(@RequestParam Long id) {
+        usersFlow.killUserAccount(id);
+        return Result.success();
+    }
+
     //! UPDATE
 
+    /**
+     * 更新用户信息
+     */
     @PutMapping("/user_info")
     @Operation(summary = "更新用户信息")
     @Parameters(@Parameter(name = "userGreatVO", description = "用户完整信息", required = true))

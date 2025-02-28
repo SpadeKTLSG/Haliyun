@@ -111,5 +111,17 @@ public class UsersFlow {
         //暂定不更新其他信息
     }
 
+    /**
+     * 注销账号
+     */
+    public void killUserAccount(Long id) {
+        //群组: 退出所有群组, 解绑关系
 
+        //文件: 删除所有文件, 清理历史
+
+        //日志: 定时清理失效用户的日志, 降低管理日志压力
+
+        //用户: 注销用户基础联表三张信息
+        usersFunc.killUserAccount(id);
+    }
 }

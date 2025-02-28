@@ -33,14 +33,13 @@ public class GlobalExceptionHandler {
         log.debug("参数验证异常捕获");
         BindingResult bindingResult = ex.getBindingResult();
         FieldError firstFieldError = CollectionUtil.getFirst(bindingResult.getFieldErrors());
-        String exceptionStr = Optional.ofNullable(firstFieldError)
-                .map(FieldError::getDefaultMessage)
-                .orElse(StrUtil.EMPTY);
+        String exceptionStr = Optional.ofNullable(firstFieldError).map(FieldError::getDefaultMessage).orElse(StrUtil.EMPTY);
         log.error("[{}] {} [ex] {}", request.getMethod(), getUrl(request), exceptionStr);
 
         //DEBUG: 把错误堆栈打出来
         ex.printStackTrace();
-        return Result.fail(ClientError.CLIENT_ERROR.getCode(), exceptionStr);
+        return Result.fail(ClientError.CLIENT_ERROR.getCode(), exceptionStr); //适用于测试
+//        return Result.fail("参数验证失败"); //适用于生产
     }
 
     /**
@@ -57,7 +56,7 @@ public class GlobalExceptionHandler {
 
         //DEBUG: 把错误堆栈打出来
         ex.printStackTrace();
-        return Result.fail(String.valueOf(ex));
+        return Result.fail(ex.getErrorMessage()); //前端只需要返回错误信息
     }
 
     /**

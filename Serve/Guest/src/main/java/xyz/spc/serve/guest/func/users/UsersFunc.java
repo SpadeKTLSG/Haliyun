@@ -276,6 +276,7 @@ public class UsersFunc {
         userMark.put("phone", phone);
         userMark.put("loginType", user.getLoginType().toString());
         userMark.put("admin", user.getAdmin().toString());
+
         return userMark;
     }
 

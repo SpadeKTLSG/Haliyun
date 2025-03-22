@@ -62,6 +62,7 @@ public class UsersControl {
 
     /**
      * 获取来进行信息存储
+     * <极度热点, 暴露功能>
      */
     @GetMapping("/user_mark")
     @Operation(summary = "登陆用户获得TL中的用户标志信息")
@@ -175,7 +176,8 @@ public class UsersControl {
 
 
     /**
-     * 用户信息全部查询, 联表三张 + 加入的群组Name
+     * 用户信息全部查询, 联表三张 + 加入的群组Name.
+     * <热点>
      */
     @GetMapping("/user_info")
     @Operation(summary = "查用户信息")

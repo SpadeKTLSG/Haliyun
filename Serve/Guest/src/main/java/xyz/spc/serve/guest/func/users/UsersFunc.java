@@ -9,6 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -263,6 +265,7 @@ public class UsersFunc {
     /**
      * 获取用户标记
      */
+    @Cacheable(key = "'getUserMark' + #account", value = "userMark")
     public Map<String, String> getUserMark(String account) {
         Map<String, String> userMark = new HashMap<>();
         //用account查userDO. 再联表查userDetailDO, 得到phone
@@ -283,6 +286,7 @@ public class UsersFunc {
     /**
      * 查用户三张表信息联表查询
      */
+    @Cacheable(key = "'getUserInfoById' + #id", value = "user")
     public UserGreatVO getUserInfo(Long id) {
         //MPJ联表查询 - 标准的经过拆分的对象的信息综合查询 (我只说一次)
         return usersRepo.userMapper.selectJoinOne(UserGreatVO.class, new MPJLambdaWrapper<UserDO>()
@@ -301,6 +305,7 @@ public class UsersFunc {
     /**
      * 联表更新用户信息(Null值的字段不更新)
      */
+    @CacheEvict(key = "'getUserInfoById' + #userGreatVO.id", value = "user")
     public void updateUserInfo(UserGreatVO userGreatVO) {
 
         //用工具类直接打入三个DO:

@@ -26,7 +26,7 @@ public class LevelFunc {
                 .eq(LevelDO::getId, id));
     }
 
-    public LevelVO getLevelInfoByFloor(Integer floor) {
+    public LevelVO getLevelInfoByFloor(Long floor) {
         //同上, 偷懒直接返回VO了
         return levelsRepo.levelMapper.selectJoinOne(LevelVO.class, new MPJLambdaWrapper<LevelDO>()
                 .selectAll(LevelDO.class)

@@ -30,7 +30,7 @@ public class LevelsFlow {
     /**
      * 通过楼层获取等级信息
      */
-    public LevelVO getLevelInfoByFloor(@NotNull Integer floor) {
+    public LevelVO getLevelInfoByFloor(@NotNull Long floor) {
         return levelFunc.getLevelInfoByFloor(floor);
     }
 }

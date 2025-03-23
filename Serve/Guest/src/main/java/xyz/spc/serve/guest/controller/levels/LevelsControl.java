@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.spc.common.funcpack.Result;
 import xyz.spc.gate.vo.Guest.levels.LevelVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.guest.flow.LevelsFlow;
@@ -46,8 +47,8 @@ public class LevelsControl {
     @GetMapping("/levelinfo")
     @Operation(summary = "查等级信息")
     @Parameter(name = "id", description = "等级id", required = true)
-    public LevelVO getLevelInfo(@NotNull @RequestParam("id") Long id) {
-        return levelsFlow.getLevelInfo(id);
+    public Result<LevelVO> getLevelInfo(@NotNull @RequestParam("id") Long id) {
+        return Result.success(levelsFlow.getLevelInfo(id));
     }
     //http://localhost:10000/Guest/levels/levelinfo?id=...
 
@@ -58,8 +59,8 @@ public class LevelsControl {
     @GetMapping("/levelinfo/floor")
     @Operation(summary = "用楼层查等级信息")
     @Parameter(name = "floor", description = "楼层", required = true)
-    public LevelVO getLevelInfoByFloor(@NotNull @RequestParam("floor") Integer floor) {
-        return levelsFlow.getLevelInfoByFloor(floor);
+    public Result<LevelVO> getLevelInfoByFloor(@NotNull @RequestParam("floor") Long floor) {
+        return Result.success(levelsFlow.getLevelInfoByFloor(floor));
     }
     //http://localhost:10000/Guest/levels/levelinfo/floor?floor=...
 }

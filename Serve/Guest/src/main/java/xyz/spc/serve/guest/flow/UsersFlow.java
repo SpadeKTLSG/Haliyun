@@ -128,7 +128,11 @@ public class UsersFlow {
     /**
      * 获取用户等级
      */
-    public Long getUserLevelFloor(Long id) {
-        return usersFunc.getUserLevelFloor(id);
+    public Integer getUserLevelFloor(Long id) {
+        //获取对应的等级 id
+        Long tmp = usersFunc.getUserLevelFloor(id);
+
+        //查看对应id的等级的层级
+        return levelFunc.getLevelInfo(tmp).getFloor();
     }
 }

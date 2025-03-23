@@ -32,7 +32,7 @@ public class UserLevelCOntrol {
     @GetMapping("/floor")
     @Operation(summary = "查用户等级层级")
     @Parameter(name = "id", description = "用户id", required = true)
-    public Result<Long> getUserInfo(@NotNull @RequestParam("id") Long id) {
+    public Result<Integer> getUserInfo(@NotNull @RequestParam("id") Long id) {
         return Result.success(usersFlow.getUserLevelFloor(id));
     }
     //http://localhost:10000/Guest/users/userslevel/floor?id=...

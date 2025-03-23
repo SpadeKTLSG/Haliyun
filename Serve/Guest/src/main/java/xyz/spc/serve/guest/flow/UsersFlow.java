@@ -124,4 +124,11 @@ public class UsersFlow {
         //用户: 注销用户基础联表三张信息
         usersFunc.killUserAccount(id);
     }
+
+    /**
+     * 获取用户等级
+     */
+    public Long getUserLevelFloor(Long id) {
+        return usersFunc.getUserLevelFloor(id);
+    }
 }

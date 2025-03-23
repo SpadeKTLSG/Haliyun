@@ -50,4 +50,16 @@ public class LevelsControl {
         return levelsFlow.getLevelInfo(id);
     }
     //http://localhost:10000/Guest/levels/levelinfo?id=...
+
+
+    /**
+     * floor获取等级信息
+     */
+    @GetMapping("/levelinfo/floor")
+    @Operation(summary = "用楼层查等级信息")
+    @Parameter(name = "floor", description = "楼层", required = true)
+    public LevelVO getLevelInfoByFloor(@NotNull @RequestParam("floor") Integer floor) {
+        return levelsFlow.getLevelInfoByFloor(floor);
+    }
+    //http://localhost:10000/Guest/levels/levelinfo/floor?floor=...
 }

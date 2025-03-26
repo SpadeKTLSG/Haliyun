@@ -38,6 +38,7 @@ public class PageResponse<T> implements Serializable {
      */
     private List<T> records;
 
+
     public PageResponse(long current) {
         this(current, ReqRespCT.DEFAULT_PAGE_SIZE, 0);
     }

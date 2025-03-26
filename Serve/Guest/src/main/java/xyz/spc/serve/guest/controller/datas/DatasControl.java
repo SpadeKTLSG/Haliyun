@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.spc.common.funcpack.Result;
-import xyz.spc.gate.vo.Guest.levels.LevelVO;
+import xyz.spc.gate.vo.Data.files.FileVO;
+import xyz.spc.gate.vo.Group.groups.GroupVO;
+import xyz.spc.gate.vo.Group.interacts.PostVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.guest.flow.DatasFlow;
 
@@ -45,20 +47,35 @@ public class DatasControl {
     /**
      * 查询用户 动态 - 0 收藏信息
      */
-    @GetMapping("/levelinfo")
-    @Operation(summary = "查等级信息")
-    @Parameter(name = "id", description = "等级id", required = true)
-    public Result<LevelVO> getLevelInfo(@NotNull @RequestParam("id") Long id) {
-        return Result.success(datasFlow.getLevelInfo(id));
+    @GetMapping("/collect/data/post")
+    @Operation(summary = "查用户 动态 收藏信息")
+    @Parameter(name = "id", description = "用户id", required = true)
+    public Result<PostVO> getUserDataOfPost(@NotNull @RequestParam("id") Long id) {
+        return Result.success(datasFlow.getUserDataOfPost(id));
     }
-    //http://localhost:10000/Guest/levels/levelinfo?id=...
+    //http://localhost:10000/Guest/datas/collect/data/post?id=...
 
 
     /**
      * 查询用户 文件 - 1 收藏信息
      */
+    @GetMapping("/collect/data/file")
+    @Operation(summary = "查用户 文件 收藏信息")
+    @Parameter(name = "id", description = "用户id", required = true)
+    public Result<FileVO> getUserDataOfFile(@NotNull @RequestParam("id") Long id) {
+        return Result.success(datasFlow.getUserDataOfFile(id));
+    }
+    //http://localhost:10000/Guest/datas/collect/data/file?id=...
+
 
     /**
      * 查询用户 群组 - 2 收藏信息
      */
+    @GetMapping("/collect/data/group")
+    @Operation(summary = "查用户 群组 收藏信息")
+    @Parameter(name = "id", description = "用户id", required = true)
+    public Result<GroupVO> getUserDataOfGroup(@NotNull @RequestParam("id") Long id) {
+        return Result.success(datasFlow.getUserDataOfGroup(id));
+    }
+    //http://localhost:10000/Guest/datas/collect/data/group?id=...
 }

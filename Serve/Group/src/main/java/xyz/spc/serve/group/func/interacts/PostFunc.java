@@ -34,10 +34,6 @@ public class PostFunc {
         );
 
 
-        PageResponse<PostDO> temp = new PageResponse<>(postPage.getCurrent(), postPage.getSize(), postPage.getTotal(), postPage.getRecords());
-        if (temp.getCurrent() == null) { // 防止空指针 bug, 很离谱的转换问题
-            temp.setCurrent(0L);
-        }
-        return temp;
+        return new PageResponse<>(postPage.getCurrent(), postPage.getSize(), postPage.getTotal(), postPage.getRecords());
     }
 }

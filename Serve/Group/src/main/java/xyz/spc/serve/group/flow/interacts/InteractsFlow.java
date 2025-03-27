@@ -53,8 +53,6 @@ public class InteractsFlow {
             postShowVOS.add(postShowVO);
         }
 
-        PageResponse<PostShowVO> temp = new PageResponse<>(tempPage.getCurrent(), tempPage.getSize(), tempPage.getTotal(), postShowVOS);
-
-        return temp;
+        return new PageResponse<>(tempPage.getCurrent(), tempPage.getSize(), tempPage.getTotal(), postShowVOS);
     }
 }

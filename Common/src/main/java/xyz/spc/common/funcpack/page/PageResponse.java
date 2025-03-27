@@ -59,6 +59,8 @@ public class PageResponse<T> implements Serializable {
     public PageResponse(long current, long size, long total, List<T> records) {
         if (current > 1) {
             this.current = current;
+        }else{
+            this.current = 1L;
         }
         this.size = size;
         this.total = total;

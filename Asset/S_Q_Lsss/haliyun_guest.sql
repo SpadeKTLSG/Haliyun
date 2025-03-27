@@ -231,7 +231,7 @@ DROP TABLE IF EXISTS `user_group`;
 CREATE TABLE `user_group`  (
   `id` bigint UNSIGNED NOT NULL,
   `user_id` bigint UNSIGNED NOT NULL COMMENT 'User',
-  `group_id` bigint UNSIGNED NOT NULL COMMENT 'Group',
+  `group_id` bigint UNSIGNED NOT NULL COMMENT 'Cluster',
   `collect` char(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NULL DEFAULT '默认群组集' COMMENT '集合',
   `sort` int NULL DEFAULT NULL COMMENT '排序',
   `create_time` datetime NULL DEFAULT (now()),

@@ -28,7 +28,7 @@ public class File extends BaseModel {
     private Long userId;
 
     /**
-     * -> Group
+     * -> Cluster
      */
     private Long groupId;
 

@@ -36,7 +36,7 @@
         </dependency>
         <dependency>
             <groupId>xyz.spc.serve.group</groupId>
-            <artifactId>Group</artifactId>
+            <artifactId>Cluster</artifactId>
             <version>3.0.0-RELEASE</version>
             <scope>test</scope>
         </dependency>

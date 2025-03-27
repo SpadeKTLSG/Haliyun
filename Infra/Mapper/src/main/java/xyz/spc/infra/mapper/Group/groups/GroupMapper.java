@@ -1,9 +1,9 @@
-package xyz.spc.infra.mapper.Group.groups;
+package xyz.spc.infra.mapper.Cluster.groups;
 
 import com.github.yulichang.base.MPJBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import xyz.spc.domain.dos.Group.groups.GroupDO;
+import xyz.spc.domain.dos.Cluster.groups.ClusterDO;
 
 @Mapper
-public interface GroupMapper extends MPJBaseMapper<GroupDO> {
+public interface ClusterMapper extends MPJBaseMapper<ClusterDO> {
 }

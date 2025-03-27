@@ -10,7 +10,7 @@ import xyz.spc.gate.dto.BaseDTO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserGroupDTO extends BaseDTO {
+public class UserClusterDTO extends BaseDTO {
 
     private Long id;
 

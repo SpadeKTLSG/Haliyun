@@ -148,7 +148,7 @@ spring:
         - id: group-service
           uri: lb://group-app
           predicates:
-            - Path=/Group/**
+            - Path=/Cluster/**
           filters:
             - name: RequestRateLimiter
               args:

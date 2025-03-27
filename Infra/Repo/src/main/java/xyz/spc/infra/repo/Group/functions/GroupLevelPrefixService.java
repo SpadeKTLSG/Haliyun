@@ -1,7 +1,7 @@
-package xyz.spc.infra.repo.Group.functions;
+package xyz.spc.infra.repo.Cluster.functions;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import xyz.spc.domain.dos.Group.functions.GroupLevelPrefixDO;
+import xyz.spc.domain.dos.Cluster.functions.ClusterLevelPrefixDO;
 
-public interface GroupLevelPrefixService extends IService<GroupLevelPrefixDO> {
+public interface ClusterLevelPrefixService extends IService<ClusterLevelPrefixDO> {
 }

@@ -15,7 +15,7 @@ import xyz.spc.domain.model.BaseModel;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserGroup extends BaseModel {
+public class UserCluster extends BaseModel {
 
 
     /**
@@ -30,7 +30,7 @@ public class UserGroup extends BaseModel {
     private Long userId;
 
     /**
-     * -> Group主键
+     * -> Cluster主键
      */
     private Long groupId;
 

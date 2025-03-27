@@ -1,4 +1,4 @@
-package xyz.spc.domain.model.Group.groups;
+package xyz.spc.domain.model.Cluster.groups;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -13,7 +13,7 @@ import xyz.spc.domain.model.BaseModel;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupFunc extends BaseModel {
+public class ClusterFunc extends BaseModel {
 
 
     private Long id;

@@ -1,4 +1,4 @@
-package xyz.spc.domain.model.Group.interacts;
+package xyz.spc.domain.model.Cluster.interacts;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -23,7 +23,7 @@ public class Post extends BaseModel {
     private Long userId;
 
     /**
-     * -> Group主键
+     * -> Cluster主键
      */
     private Long groupId;
 

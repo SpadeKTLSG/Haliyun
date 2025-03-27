@@ -1,4 +1,4 @@
-package xyz.spc.domain.dos.Group.interacts;
+package xyz.spc.domain.dos.Cluster.interacts;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;

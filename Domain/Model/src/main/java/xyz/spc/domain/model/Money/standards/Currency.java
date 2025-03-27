@@ -18,7 +18,7 @@ public class Currency extends BaseModel {
     private Long id;
 
     /**
-     * 对应流通群组 -> Group
+     * 对应流通群组 -> Cluster
      */
     private Long groupId;
 

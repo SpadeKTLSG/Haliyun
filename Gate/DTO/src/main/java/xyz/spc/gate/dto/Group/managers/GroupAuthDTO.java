@@ -1,4 +1,4 @@
-package xyz.spc.gate.dto.Group.managers;
+package xyz.spc.gate.dto.Cluster.managers;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -10,7 +10,7 @@ import xyz.spc.gate.dto.BaseDTO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupAuthDTO extends BaseDTO {
+public class ClusterAuthDTO extends BaseDTO {
 
     private Long id;
 

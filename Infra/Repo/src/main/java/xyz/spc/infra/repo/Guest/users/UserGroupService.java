@@ -1,7 +1,7 @@
 package xyz.spc.infra.repo.Guest.users;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import xyz.spc.domain.dos.Guest.users.UserGroupDO;
+import xyz.spc.domain.dos.Guest.users.UserClusterDO;
 
-public interface UserGroupService extends IService<UserGroupDO> {
+public interface UserClusterService extends IService<UserClusterDO> {
 }

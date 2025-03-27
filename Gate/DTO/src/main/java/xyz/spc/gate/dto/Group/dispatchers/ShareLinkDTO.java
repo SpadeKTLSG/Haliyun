@@ -1,4 +1,4 @@
-package xyz.spc.gate.dto.Group.dispatchers;
+package xyz.spc.gate.dto.Cluster.dispatchers;
 
 import lombok.*;
 import lombok.experimental.Accessors;

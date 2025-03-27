@@ -35,8 +35,8 @@
     <file url="file://$PROJECT_DIR$/Infra/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Infra/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Serve/Auxiliary/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/Serve/Cluster/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Serve/Data/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/Serve/Group/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Serve/Guest/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Serve/Guide/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/Serve/Money/src/main/java" charset="UTF-8" />

@@ -1,4 +1,4 @@
-package xyz.spc.domain.model.Group.managers;
+package xyz.spc.domain.model.Cluster.managers;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -13,12 +13,12 @@ import xyz.spc.domain.model.BaseModel;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupAuth extends BaseModel {
+public class ClusterAuth extends BaseModel {
 
     private Long id;
 
     /**
-     * -> Group主键
+     * -> Cluster主键
      */
     private Long groupId;
 

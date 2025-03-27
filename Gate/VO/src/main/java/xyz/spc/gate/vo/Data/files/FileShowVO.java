@@ -18,7 +18,7 @@ public class FileShowVO extends BaseVO {
 
     private Long userId;
 
-    // 群组的需要去查具体 GroupDO 的 name
+    // 群组的需要去查具体 ClusterDO 的 name
     private String groupName;
 
     private String name;

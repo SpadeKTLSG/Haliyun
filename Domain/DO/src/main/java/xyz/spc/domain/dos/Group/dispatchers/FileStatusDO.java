@@ -1,4 +1,4 @@
-package xyz.spc.domain.dos.Group.dispatchers;
+package xyz.spc.domain.dos.Cluster.dispatchers;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
@@ -13,7 +13,7 @@ import xyz.spc.domain.dos.BaseDO;
 @AllArgsConstructor
 @TableName("file_status")
 public class FileStatusDO extends BaseDO {
-    
+
     private Long id;
 
     private String fileType;

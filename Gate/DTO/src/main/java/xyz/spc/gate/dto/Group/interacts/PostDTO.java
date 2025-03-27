@@ -1,4 +1,4 @@
-package xyz.spc.gate.dto.Group.interacts;
+package xyz.spc.gate.dto.Cluster.interacts;
 
 import lombok.*;
 import lombok.experimental.Accessors;

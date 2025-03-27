@@ -1,4 +1,4 @@
-package xyz.spc.domain.model.Group.dispatchers;
+package xyz.spc.domain.model.Cluster.dispatchers;
 
 import lombok.*;
 import lombok.experimental.Accessors;

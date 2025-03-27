@@ -1,4 +1,4 @@
-package xyz.spc.domain.model.Group.interacts;
+package xyz.spc.domain.model.Cluster.interacts;
 
 import lombok.*;
 import lombok.experimental.Accessors;

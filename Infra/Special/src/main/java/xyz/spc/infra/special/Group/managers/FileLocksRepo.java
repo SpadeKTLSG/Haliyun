@@ -1,11 +1,11 @@
-package xyz.spc.infra.special.Group.managers;
+package xyz.spc.infra.special.Cluster.managers;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import xyz.spc.infra.mapper.Group.managers.FileLockMapper;
-import xyz.spc.infra.repo.Group.managers.FileLockService;
+import xyz.spc.infra.mapper.Cluster.managers.FileLockMapper;
+import xyz.spc.infra.repo.Cluster.managers.FileLockService;
 
 @Slf4j
 @Service

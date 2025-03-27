@@ -18,11 +18,11 @@ import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.infra.mapper.Guest.users.UserDetailMapper;
 import xyz.spc.infra.mapper.Guest.users.UserFuncMapper;
-import xyz.spc.infra.mapper.Guest.users.UserGroupMapper;
+import xyz.spc.infra.mapper.Guest.users.UserClusterMapper;
 import xyz.spc.infra.mapper.Guest.users.UserMapper;
 import xyz.spc.infra.repo.Guest.users.UserDetailService;
 import xyz.spc.infra.repo.Guest.users.UserFuncService;
-import xyz.spc.infra.repo.Guest.users.UserGroupService;
+import xyz.spc.infra.repo.Guest.users.UserClusterService;
 import xyz.spc.infra.repo.Guest.users.UserService;
 
 
@@ -38,8 +38,8 @@ public class UsersRepo {
     public final UserDetailMapper userDetailMapper;
     public final UserFuncService userFuncService;
     public final UserFuncMapper userFuncMapper;
-    public final UserGroupService userGroupService;
-    public final UserGroupMapper userGroupMapper;
+    public final UserClusterService userClusterService;
+    public final UserClusterMapper userClusterMapper;
 
     /**
      * note: 不规范: 这里的返回POJO类型其实应该还是DO, 因为这个Repo本来就是处理DAO/Mapper层的. 但是为了方便, 我直接返回了User避免了Func层(User的生存区)来再次转换

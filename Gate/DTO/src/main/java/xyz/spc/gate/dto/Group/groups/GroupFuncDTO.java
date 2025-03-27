@@ -1,4 +1,4 @@
-package xyz.spc.gate.dto.Group.groups;
+package xyz.spc.gate.dto.Cluster.groups;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -10,7 +10,7 @@ import xyz.spc.gate.dto.BaseDTO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupFuncDTO extends BaseDTO {
+public class ClusterFuncDTO extends BaseDTO {
 
     private Long id;
 

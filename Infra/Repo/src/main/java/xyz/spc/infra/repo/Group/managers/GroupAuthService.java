@@ -1,7 +1,7 @@
-package xyz.spc.infra.repo.Group.managers;
+package xyz.spc.infra.repo.Cluster.managers;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import xyz.spc.domain.dos.Group.managers.GroupAuthDO;
+import xyz.spc.domain.dos.Cluster.managers.ClusterAuthDO;
 
-public interface GroupAuthService extends IService<GroupAuthDO> {
+public interface ClusterAuthService extends IService<ClusterAuthDO> {
 }

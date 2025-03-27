@@ -15,8 +15,8 @@ import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.gate.vo.Data.files.FileShowVO;
-import xyz.spc.gate.vo.Group.groups.GroupVO;
-import xyz.spc.gate.vo.Group.interacts.PostShowVO;
+import xyz.spc.gate.vo.Cluster.groups.ClusterVO;
+import xyz.spc.gate.vo.Cluster.interacts.PostShowVO;
 import xyz.spc.gate.vo.Guest.datas.CollectCountVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.guest.flow.DatasFlow;
@@ -103,13 +103,13 @@ public class DatasControl {
     @GetMapping("/collect/data/group")
     @Operation(summary = "查用户 群组 收藏信息")
     @Parameter(name = "id", description = "用户id", required = true)
-    public Result<PageResponse<GroupVO>> getUserDataOfGroup(
+    public Result<PageResponse<ClusterVO>> getUserDataOfCluster(
 
             @NotNull @RequestParam("id") Long id,
             @RequestParam("current") Long current,
             @RequestParam("size") Long size
     ) {
-        return Result.success(datasFlow.getUserDataOfGroup(id, new PageRequest(current, size)));
+        return Result.success(datasFlow.getUserDataOfCluster(id, new PageRequest(current, size)));
     }
     //http://localhost:10000/Guest/datas/collect/data/group?id=...
 }

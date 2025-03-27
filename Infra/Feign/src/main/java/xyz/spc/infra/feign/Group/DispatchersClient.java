@@ -1,4 +1,4 @@
-package xyz.spc.infra.feign.Group;
+package xyz.spc.infra.feign.Cluster;
 
 import org.springframework.cloud.openfeign.FeignClient;
 

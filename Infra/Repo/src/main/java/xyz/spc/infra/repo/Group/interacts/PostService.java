@@ -1,7 +1,7 @@
-package xyz.spc.infra.repo.Group.interacts;
+package xyz.spc.infra.repo.Cluster.interacts;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import xyz.spc.domain.dos.Group.interacts.PostDO;
+import xyz.spc.domain.dos.Cluster.interacts.PostDO;
 
 public interface PostService extends IService<PostDO> {
 }

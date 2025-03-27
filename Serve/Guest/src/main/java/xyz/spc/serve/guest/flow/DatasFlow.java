@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.gate.vo.Data.files.FileShowVO;
-import xyz.spc.gate.vo.Group.groups.GroupVO;
-import xyz.spc.gate.vo.Group.interacts.PostShowVO;
+import xyz.spc.gate.vo.Cluster.groups.ClusterVO;
+import xyz.spc.gate.vo.Cluster.interacts.PostShowVO;
 import xyz.spc.gate.vo.Guest.datas.CollectCountVO;
-import xyz.spc.infra.feign.Group.InteractsClient;
+import xyz.spc.infra.feign.Cluster.InteractsClient;
 
 @Slf4j
 @Service
@@ -39,7 +39,7 @@ public class DatasFlow {
         return new PageResponse<>(10, 10, 10, null);
     }
 
-    public PageResponse<GroupVO> getUserDataOfGroup(@NotNull Long id, PageRequest pageRequest) {
+    public PageResponse<ClusterVO> getUserDataOfCluster(@NotNull Long id, PageRequest pageRequest) {
         return new PageResponse<>(10, 10, 10, null);
     }
 

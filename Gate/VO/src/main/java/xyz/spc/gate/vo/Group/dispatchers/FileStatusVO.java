@@ -1,4 +1,4 @@
-package xyz.spc.gate.vo.Group.dispatchers;
+package xyz.spc.gate.vo.Cluster.dispatchers;
 
 import lombok.*;
 import lombok.experimental.Accessors;

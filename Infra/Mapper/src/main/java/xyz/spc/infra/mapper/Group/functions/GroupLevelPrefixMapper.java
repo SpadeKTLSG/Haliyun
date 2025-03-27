@@ -1,9 +1,9 @@
-package xyz.spc.infra.mapper.Group.functions;
+package xyz.spc.infra.mapper.Cluster.functions;
 
 import com.github.yulichang.base.MPJBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import xyz.spc.domain.dos.Group.functions.GroupLevelPrefixDO;
+import xyz.spc.domain.dos.Cluster.functions.ClusterLevelPrefixDO;
 
 @Mapper
-public interface GroupLevelPrefixMapper extends MPJBaseMapper<GroupLevelPrefixDO> {
+public interface ClusterLevelPrefixMapper extends MPJBaseMapper<ClusterLevelPrefixDO> {
 }

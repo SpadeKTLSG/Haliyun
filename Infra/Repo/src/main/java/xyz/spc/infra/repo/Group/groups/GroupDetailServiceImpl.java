@@ -1,12 +1,12 @@
-package xyz.spc.infra.repo.Group.groups;
+package xyz.spc.infra.repo.Cluster.groups;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import xyz.spc.domain.dos.Group.groups.GroupDetailDO;
-import xyz.spc.infra.mapper.Group.groups.GroupDetailMapper;
+import xyz.spc.domain.dos.Cluster.groups.ClusterDetailDO;
+import xyz.spc.infra.mapper.Cluster.groups.ClusterDetailMapper;
 
 @Service
 @RequiredArgsConstructor
-public class GroupDetailServiceImpl extends ServiceImpl<GroupDetailMapper, GroupDetailDO> implements GroupDetailService {
+public class ClusterDetailServiceImpl extends ServiceImpl<ClusterDetailMapper, ClusterDetailDO> implements ClusterDetailService {
 }

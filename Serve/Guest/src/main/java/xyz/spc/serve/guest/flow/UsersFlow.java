@@ -83,7 +83,7 @@ public class UsersFlow {
     /**
      * 获取用户信息
      */
-    public UserGreatVO getUserInfoWithGroups(Long id) {
+    public UserGreatVO getUserInfoWithClusters(Long id) {
         //获得用户基础联表三张信息
         UserGreatVO userGreatVO = usersFunc.getUserInfo(id);
 
@@ -94,10 +94,10 @@ public class UsersFlow {
 
         //todo 等群组上线后再开启
         //查用户加入的群组ids
-//        List<Long> groupIds = usersFunc.getUsersGroupIds(id);
+//        List<Long> groupIds = usersFunc.getUsersClusterIds(id);
 //
-//        //通过ids去 Group 模块 找群组名
-//        userGreatVO.setGroupNames(usersClient.getGroupNames(groupIds));
+//        //通过ids去 Cluster 模块 找群组名
+//        userGreatVO.setClusterNames(usersClient.getClusterNames(groupIds));
 
         return userGreatVO;
     }

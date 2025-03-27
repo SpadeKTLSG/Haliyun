@@ -1,4 +1,4 @@
-package xyz.spc.domain.model.Group.managers;
+package xyz.spc.domain.model.Cluster.managers;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -19,7 +19,7 @@ public class FileLock extends BaseModel {
     private Long id;
 
     /**
-     * -> Group主键
+     * -> Cluster主键
      */
     private Long groupId;
 

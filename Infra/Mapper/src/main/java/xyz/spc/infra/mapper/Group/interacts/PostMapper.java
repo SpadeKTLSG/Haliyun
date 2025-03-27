@@ -1,8 +1,8 @@
-package xyz.spc.infra.mapper.Group.interacts;
+package xyz.spc.infra.mapper.Cluster.interacts;
 
 import com.github.yulichang.base.MPJBaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import xyz.spc.domain.dos.Group.interacts.PostDO;
+import xyz.spc.domain.dos.Cluster.interacts.PostDO;
 
 @Mapper
 public interface PostMapper extends MPJBaseMapper<PostDO> {

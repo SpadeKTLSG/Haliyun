@@ -24,7 +24,7 @@ public class TombDO extends BaseDO {
 
     private Long maxCoin;
 
-    private String bigintestGroup;
+    private String bigintestCluster;
 
     private LocalDateTime deepestNignt;
 

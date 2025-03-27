@@ -1,4 +1,4 @@
-package xyz.spc.gate.vo.Group.managers;
+package xyz.spc.gate.vo.Cluster.managers;
 
 import lombok.*;
 import lombok.experimental.Accessors;

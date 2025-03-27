@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import xyz.spc.common.constant.Guest.UsersValiGroups;
+import xyz.spc.common.constant.Guest.UsersValiClusters;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.validate.Xss;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
@@ -106,7 +106,7 @@ public class UsersControl {
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
     public Result<String> login(
             @RequestBody
-            @Validated({UsersValiGroups.Common.class, UsersValiGroups.Login.class}) //登陆校验组, 减少Service层校验
+            @Validated({UsersValiClusters.Common.class, UsersValiClusters.Login.class}) //登陆校验组, 减少Service层校验
             UserDTO userDTO
     ) {
         String token = usersFlow.login(userDTO);
@@ -135,7 +135,7 @@ public class UsersControl {
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
     public Result<String> register(
             @RequestBody
-            @Validated({UsersValiGroups.Common.class, UsersValiGroups.Register.class})
+            @Validated({UsersValiClusters.Common.class, UsersValiClusters.Register.class})
             UserDTO userDTO
     ) {
         return usersFlow.register(userDTO) ? Result.success("注册成功") : Result.fail("注册失败");
@@ -183,7 +183,7 @@ public class UsersControl {
     @Operation(summary = "查用户信息")
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<UserGreatVO> getUserInfo(@NotNull @RequestParam("id") Long id) {
-        return Result.success(usersFlow.getUserInfoWithGroups(id));
+        return Result.success(usersFlow.getUserInfoWithClusters(id));
     }
     //http://localhost:10000/Guest/users/user_info
 }

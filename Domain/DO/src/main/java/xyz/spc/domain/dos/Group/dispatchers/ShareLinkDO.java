@@ -1,4 +1,4 @@
-package xyz.spc.domain.dos.Group.dispatchers;
+package xyz.spc.domain.dos.Cluster.dispatchers;
 
 
 import com.baomidou.mybatisplus.annotation.TableName;

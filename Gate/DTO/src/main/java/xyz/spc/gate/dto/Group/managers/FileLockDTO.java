@@ -1,4 +1,4 @@
-package xyz.spc.gate.dto.Group.managers;
+package xyz.spc.gate.dto.Cluster.managers;
 
 import lombok.*;
 import lombok.experimental.Accessors;

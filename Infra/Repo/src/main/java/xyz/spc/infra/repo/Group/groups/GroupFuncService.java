@@ -1,7 +1,7 @@
-package xyz.spc.infra.repo.Group.groups;
+package xyz.spc.infra.repo.Cluster.groups;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import xyz.spc.domain.dos.Group.groups.GroupFuncDO;
+import xyz.spc.domain.dos.Cluster.groups.ClusterFuncDO;
 
-public interface GroupFuncService extends IService<GroupFuncDO> {
+public interface ClusterFuncService extends IService<ClusterFuncDO> {
 }

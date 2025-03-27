@@ -1,10 +1,10 @@
-package xyz.spc.infra.repo.Group.managers;
+package xyz.spc.infra.repo.Cluster.managers;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import xyz.spc.domain.dos.Group.managers.FileLockDO;
-import xyz.spc.infra.mapper.Group.managers.FileLockMapper;
+import xyz.spc.domain.dos.Cluster.managers.FileLockDO;
+import xyz.spc.infra.mapper.Cluster.managers.FileLockMapper;
 
 @Service
 @RequiredArgsConstructor

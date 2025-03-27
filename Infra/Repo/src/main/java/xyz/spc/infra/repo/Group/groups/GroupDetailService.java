@@ -1,7 +1,7 @@
-package xyz.spc.infra.repo.Group.groups;
+package xyz.spc.infra.repo.Cluster.groups;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import xyz.spc.domain.dos.Group.groups.GroupDetailDO;
+import xyz.spc.domain.dos.Cluster.groups.ClusterDetailDO;
 
-public interface GroupDetailService extends IService<GroupDetailDO> {
+public interface ClusterDetailService extends IService<ClusterDetailDO> {
 }

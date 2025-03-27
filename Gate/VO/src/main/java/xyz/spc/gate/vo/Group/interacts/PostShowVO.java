@@ -10,13 +10,14 @@ import xyz.spc.gate.vo.BaseVO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostVO extends BaseVO {
+public class PostShowVO extends BaseVO {
 
     private Long id;
 
     private Long userId;
 
-    private Long groupId;
+    // 群组的需要去查具体 GroupDO 的 name
+    private String groupName;
 
     private Integer personShow;
 

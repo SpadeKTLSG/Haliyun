@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
-import xyz.spc.gate.vo.Data.files.FileVO;
+import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.gate.vo.Group.groups.GroupVO;
-import xyz.spc.gate.vo.Group.interacts.PostVO;
+import xyz.spc.gate.vo.Group.interacts.PostShowVO;
 import xyz.spc.gate.vo.Guest.datas.CollectCountVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.guest.flow.DatasFlow;
@@ -70,7 +70,7 @@ public class DatasControl {
     @GetMapping("/collect/data/post")
     @Operation(summary = "查用户 动态 收藏信息")
     @Parameter(name = "id", description = "用户id", required = true)
-    public Result<PageResponse<PostVO>> getUserDataOfPost(
+    public Result<PageResponse<PostShowVO>> getUserDataOfPost(
 
             @NotNull @RequestParam("id") Long id,
             @RequestBody PageRequest pageRequest
@@ -86,7 +86,7 @@ public class DatasControl {
     @GetMapping("/collect/data/file")
     @Operation(summary = "查用户 文件 收藏信息")
     @Parameter(name = "id", description = "用户id", required = true)
-    public Result<PageResponse<FileVO>> getUserDataOfFile(
+    public Result<PageResponse<FileShowVO>> getUserDataOfFile(
 
             @NotNull @RequestParam("id") Long id,
             @RequestBody PageRequest pageRequest

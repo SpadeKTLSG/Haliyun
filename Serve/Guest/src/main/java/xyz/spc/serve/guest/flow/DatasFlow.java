@@ -6,9 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
-import xyz.spc.gate.vo.Data.files.FileVO;
+import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.gate.vo.Group.groups.GroupVO;
-import xyz.spc.gate.vo.Group.interacts.PostVO;
+import xyz.spc.gate.vo.Group.interacts.PostShowVO;
 import xyz.spc.gate.vo.Guest.datas.CollectCountVO;
 
 @Slf4j
@@ -23,12 +23,12 @@ public class DatasFlow {
         return null;
     }
 
-    public PageResponse<PostVO> getUserDataOfPost(@NotNull Long id, PageRequest pageRequest) {
+    public PageResponse<PostShowVO> getUserDataOfPost(@NotNull Long id, PageRequest pageRequest) {
         return null;
     }
 
 
-    public PageResponse<FileVO> getUserDataOfFile(@NotNull Long id, PageRequest pageRequest) {
+    public PageResponse<FileShowVO> getUserDataOfFile(@NotNull Long id, PageRequest pageRequest) {
         return null;
     }
 

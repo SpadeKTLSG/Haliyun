@@ -92,7 +92,7 @@ public class UsersFlow {
         userGreatVO.setLevelName(levelVO.getName());
         userGreatVO.setLevelFloor(levelVO.getFloor());
 
-        //todo 等群组上线后再开启
+        //todo
         //查用户加入的群组ids
 //        List<Long> groupIds = usersFunc.getUsersClusterIds(id);
 //

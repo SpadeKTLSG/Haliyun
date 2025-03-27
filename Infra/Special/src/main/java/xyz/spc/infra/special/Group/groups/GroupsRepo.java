@@ -24,4 +24,6 @@ public class GroupsRepo {
     public final GroupFuncService groupFuncService;
     public final GroupFuncMapper groupFuncMapper;
 
+
+    //我的大DAO早已饥渴难耐
 }

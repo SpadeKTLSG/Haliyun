@@ -44,7 +44,7 @@ public class InteractsControl {
     /**
      * 用户获取收藏分页数据 - Post动态
      */
-    @GetMapping("/collect/data/post")
+    @PostMapping("/collect/data/post")
     PageResponse<PostShowVO> getUserDataOfPost(
             @RequestParam("id") @NotNull Long id,
             @RequestBody PageRequest pageRequest) {

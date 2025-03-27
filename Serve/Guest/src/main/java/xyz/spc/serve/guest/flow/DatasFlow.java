@@ -36,11 +36,11 @@ public class DatasFlow {
 
 
     public PageResponse<FileShowVO> getUserDataOfFile(@NotNull Long id, PageRequest pageRequest) {
-        return null;
+        return new PageResponse<>(10, 10, 10, null);
     }
 
     public PageResponse<GroupVO> getUserDataOfGroup(@NotNull Long id, PageRequest pageRequest) {
-        return null;
+        return new PageResponse<>(10, 10, 10, null);
     }
 
 }

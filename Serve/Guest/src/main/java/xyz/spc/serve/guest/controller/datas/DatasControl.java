@@ -8,10 +8,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
@@ -52,7 +49,7 @@ public class DatasControl {
     /**
      * 查询用户收藏总览情况
      */
-    @GetMapping("/collect/count")
+    @PostMapping("/collect/count")
     @Operation(summary = "查用户收藏总览情况")
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<CollectCountVO> getUserDataOfAllCollect(
@@ -67,7 +64,7 @@ public class DatasControl {
     /**
      * 查询用户 动态 - 0 收藏信息 (分页- pageNo + Size)
      */
-    @GetMapping("/collect/data/post")
+    @PostMapping("/collect/data/post")
     @Operation(summary = "查用户 动态 收藏信息")
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<PostShowVO>> getUserDataOfPost(
@@ -83,7 +80,7 @@ public class DatasControl {
     /**
      * 查询用户 文件 - 1 收藏信息 (分页- pageNo + Size)
      */
-    @GetMapping("/collect/data/file")
+    @PostMapping("/collect/data/file")
     @Operation(summary = "查用户 文件 收藏信息")
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<FileShowVO>> getUserDataOfFile(

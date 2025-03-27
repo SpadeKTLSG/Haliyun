@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("file_status")
+@TableName("share_link")
 public class ShareLinkDO extends BaseDO {
 
     private Long id;

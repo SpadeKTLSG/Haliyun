@@ -11,7 +11,7 @@ import xyz.spc.domain.dos.BaseDO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("cluster")
+@TableName("cluster_detail")
 public class ClusterDetailDO extends BaseDO {
 
     private Long id;

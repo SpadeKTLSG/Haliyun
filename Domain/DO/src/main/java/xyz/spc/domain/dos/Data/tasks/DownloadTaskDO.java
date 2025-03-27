@@ -12,7 +12,7 @@ import xyz.spc.domain.dos.BaseDO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("file_func")
+@TableName("download_task")
 public class DownloadTaskDO extends BaseDO {
 
     private Long id;

@@ -41,6 +41,9 @@ public class InteractsFlow {
         List<Long> groupIds = new ArrayList<>();
         List<String> groupName = groupsFunc.getGroupNamesByIds(groupIds);
 
+
+        //todo 找不到对应的groupIds, 无法获取groupName, 无法填充的降级
+
         //从tempPage获取数据, 拿去处理为PostShowVO
         List<PostShowVO> postShowVOS = new ArrayList<>();
         for (PostDO postDO : tempPage.getRecords()) {

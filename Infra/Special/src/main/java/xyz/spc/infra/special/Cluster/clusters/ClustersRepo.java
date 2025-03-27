@@ -1,15 +1,15 @@
-package xyz.spc.infra.special.Cluster.groups;
+package xyz.spc.infra.special.Cluster.clusters;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import xyz.spc.infra.mapper.Cluster.groups.ClusterDetailMapper;
-import xyz.spc.infra.mapper.Cluster.groups.ClusterFuncMapper;
-import xyz.spc.infra.mapper.Cluster.groups.ClusterMapper;
-import xyz.spc.infra.repo.Cluster.groups.ClusterDetailService;
-import xyz.spc.infra.repo.Cluster.groups.ClusterFuncService;
-import xyz.spc.infra.repo.Cluster.groups.ClusterService;
+import xyz.spc.infra.mapper.Cluster.clusters.ClusterDetailMapper;
+import xyz.spc.infra.mapper.Cluster.clusters.ClusterFuncMapper;
+import xyz.spc.infra.mapper.Cluster.clusters.ClusterMapper;
+import xyz.spc.infra.repo.Cluster.clusters.ClusterDetailService;
+import xyz.spc.infra.repo.Cluster.clusters.ClusterFuncService;
+import xyz.spc.infra.repo.Cluster.clusters.ClusterService;
 
 @Slf4j
 @Service

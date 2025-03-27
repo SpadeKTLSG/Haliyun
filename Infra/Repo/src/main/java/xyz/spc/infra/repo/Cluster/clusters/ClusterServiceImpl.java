@@ -1,10 +1,10 @@
-package xyz.spc.infra.repo.Cluster.groups;
+package xyz.spc.infra.repo.Cluster.clusters;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import xyz.spc.domain.dos.Cluster.groups.ClusterDO;
-import xyz.spc.infra.mapper.Cluster.groups.ClusterMapper;
+import xyz.spc.domain.dos.Cluster.clusters.ClusterDO;
+import xyz.spc.infra.mapper.Cluster.clusters.ClusterMapper;
 
 @Service
 @RequiredArgsConstructor

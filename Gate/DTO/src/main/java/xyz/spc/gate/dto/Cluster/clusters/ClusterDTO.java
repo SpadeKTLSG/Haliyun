@@ -1,8 +1,8 @@
-package xyz.spc.gate.vo.Cluster.groups;
+package xyz.spc.gate.dto.Cluster.clusters;
 
 import lombok.*;
 import lombok.experimental.Accessors;
-import xyz.spc.gate.vo.BaseVO;
+import xyz.spc.gate.dto.BaseDTO;
 
 @Data
 @Builder
@@ -10,7 +10,7 @@ import xyz.spc.gate.vo.BaseVO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClusterVO extends BaseVO {
+public class ClusterDTO extends BaseDTO {
 
     private Long id;
 

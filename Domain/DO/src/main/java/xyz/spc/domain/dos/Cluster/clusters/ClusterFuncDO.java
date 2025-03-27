@@ -1,8 +1,9 @@
-package xyz.spc.gate.vo.Cluster.groups;
+package xyz.spc.domain.dos.Cluster.clusters;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 import lombok.experimental.Accessors;
-import xyz.spc.gate.vo.BaseVO;
+import xyz.spc.domain.dos.BaseDO;
 
 @Data
 @Builder
@@ -10,7 +11,8 @@ import xyz.spc.gate.vo.BaseVO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClusterFuncVO extends BaseVO {
+@TableName("cluster")
+public class ClusterFuncDO extends BaseDO {
 
     private Long id;
 

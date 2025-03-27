@@ -1,11 +1,11 @@
-package xyz.spc.serve.cluster.func.groups;
+package xyz.spc.serve.cluster.func.clusters;
 
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import xyz.spc.domain.dos.Cluster.groups.ClusterDO;
-import xyz.spc.infra.special.Cluster.groups.ClustersRepo;
+import xyz.spc.domain.dos.Cluster.clusters.ClusterDO;
+import xyz.spc.infra.special.Cluster.clusters.ClustersRepo;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
-import xyz.spc.gate.vo.Cluster.groups.ClusterVO;
+import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.gate.vo.Cluster.interacts.PostShowVO;
 import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.gate.vo.Guest.datas.CollectCountVO;

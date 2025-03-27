@@ -1,8 +1,9 @@
-package xyz.spc.gate.dto.Cluster.groups;
+package xyz.spc.domain.dos.Cluster.clusters;
 
+import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 import lombok.experimental.Accessors;
-import xyz.spc.gate.dto.BaseDTO;
+import xyz.spc.domain.dos.BaseDO;
 
 @Data
 @Builder
@@ -10,7 +11,8 @@ import xyz.spc.gate.dto.BaseDTO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClusterDTO extends BaseDTO {
+@TableName("cluster")
+public class ClusterDO extends BaseDO {
 
     private Long id;
 

@@ -1,4 +1,4 @@
-package xyz.spc.gate.vo.Cluster.groups;
+package xyz.spc.gate.vo.Cluster.clusters;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -10,16 +10,15 @@ import xyz.spc.gate.vo.BaseVO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClusterDetailVO extends BaseVO {
-
+public class ClusterVO extends BaseVO {
 
     private Long id;
 
-    private String shareLink;
+    private String name;
 
-    private String album;
+    private String nickname;
 
-    private Long usedSpace;
+    private String pic;
 
-    private Long totalSpace;
+    private Integer popVolume;
 }

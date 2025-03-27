@@ -1,4 +1,4 @@
-package xyz.spc.domain.dos.Cluster.groups;
+package xyz.spc.domain.dos.Cluster.clusters;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
@@ -12,15 +12,16 @@ import xyz.spc.domain.dos.BaseDO;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableName("cluster")
-public class ClusterDO extends BaseDO {
+public class ClusterDetailDO extends BaseDO {
 
     private Long id;
 
-    private String name;
+    private String shareLink;
 
-    private String nickname;
+    private String album;
 
-    private String pic;
+    private Long usedSpace;
 
-    private Integer popVolume;
+    private Long totalSpace;
+
 }

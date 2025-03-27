@@ -121,7 +121,7 @@ public final class Base64Util {
             encodedData[encodedIndex++] = lookUpBase64Alphabet[b3 & 0x3f];
         }
 
-        // form integral number of 6-bit groups
+        // form integral number of 6-bit clusters
         if (fewerThan24bits == EIGHTBIT) {
             b1 = binaryData[dataIndex];
             k = (byte) (b1 & 0x03);

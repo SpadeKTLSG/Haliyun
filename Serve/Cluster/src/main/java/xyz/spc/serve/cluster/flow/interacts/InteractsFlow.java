@@ -8,7 +8,7 @@ import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.domain.dos.Cluster.interacts.PostDO;
 import xyz.spc.gate.vo.Cluster.interacts.PostShowVO;
-import xyz.spc.serve.cluster.func.groups.ClustersFunc;
+import xyz.spc.serve.cluster.func.clusters.ClustersFunc;
 import xyz.spc.serve.cluster.func.interacts.PostFunc;
 import xyz.spc.serve.cluster.func.interacts.RemarkFunc;
 

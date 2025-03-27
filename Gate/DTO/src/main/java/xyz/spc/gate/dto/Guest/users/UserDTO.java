@@ -33,7 +33,7 @@ public class UserDTO extends BaseDTO {
     private String account;
 
     @NotChinese(message = "密码不能包含中文")
-//    @Pattern(groups = {UsersValiClusters.Common.class}, regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$", message = "密码格式不正确, 需要6-16位数字字母组合")
+//    @Pattern(clusters = {UsersValiClusters.Common.class}, regexp = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$", message = "密码格式不正确, 需要6-16位数字字母组合")
     //改为前端判断(方便起见暂放开), 加密存储.
     @NotEmpty(groups = {UsersValiClusters.Login.class}, message = "登陆密码不能为空")
     @NotEmpty(groups = {UsersValiClusters.Register.class}, message = "注册密码不能为空")

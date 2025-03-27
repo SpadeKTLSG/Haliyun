@@ -53,11 +53,8 @@ public class InteractsFlow {
             postShowVOS.add(postShowVO);
         }
 
-        return PageResponse.<PostShowVO>builder()
-                .current(tempPage.getCurrent())
-                .size(tempPage.getSize())
-                .total(tempPage.getTotal())
-                .records(postShowVOS)
-                .build();
+        PageResponse<PostShowVO> temp = new PageResponse<>(tempPage.getCurrent(), tempPage.getSize(), tempPage.getTotal(), postShowVOS);
+
+        return temp;
     }
 }

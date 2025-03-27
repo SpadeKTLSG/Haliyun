@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
  * 默认稳定重试队列
  */
 @Configuration
-public class StableRetryMQCluster {
+public class StableRetryMQGroup {
 
 
     /**

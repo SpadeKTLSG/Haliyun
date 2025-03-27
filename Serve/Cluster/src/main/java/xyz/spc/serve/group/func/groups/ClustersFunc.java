@@ -26,12 +26,12 @@ public class ClustersFunc {
     public List<String> getClusterNamesByIds(List<Long> groupIds) {
 
         List<String> res = new ArrayList<>();
-        for (Long groupId : groupIds) {
-            ClusterDO group = groupsRepo.groupService.getById(groupId);
+        for (Long clusterId : groupIds) {
+            ClusterDO group = groupsRepo.groupService.getById(clusterId);
             if (group != null) {
                 res.add(group.getName());
             } else {
-                log.warn("Cluster with id {} not found", groupId);
+                log.warn("Cluster with id {} not found", clusterId);
             }
         }
         return res;

@@ -1,4 +1,4 @@
-package xyz.spc.gate.vo.Guest.messages;
+package xyz.spc.gate.vo.Cluster.managers;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -10,22 +10,21 @@ import xyz.spc.gate.vo.BaseVO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class SelfMailVO extends BaseVO {
+public class ClusterAuthVO extends BaseVO {
 
     private Long id;
 
     private Long clusterId;
 
-    private Long senderId;
+    private Long userId;
 
-    private Long receiverId;
+    private Integer canKick;
+
+    private Integer canInvite;
+
+    private Integer canUpload;
+
+    private Integer canDownload;
 
     private Integer status;
-
-    private Integer drop;
-
-    private String header;
-
-    private String body;
-
 }

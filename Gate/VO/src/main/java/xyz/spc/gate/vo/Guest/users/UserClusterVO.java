@@ -16,7 +16,7 @@ public class UserClusterVO extends BaseVO {
 
     private Long userId;
 
-    private Long groupId;
+    private Long clusterId;
 
     private String collect;
 

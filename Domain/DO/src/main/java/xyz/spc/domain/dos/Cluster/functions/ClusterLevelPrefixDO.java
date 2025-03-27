@@ -1,4 +1,4 @@
-package xyz.spc.domain.dos.Guest.users;
+package xyz.spc.domain.dos.Cluster.functions;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
@@ -11,16 +11,22 @@ import xyz.spc.domain.dos.BaseDO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("user_group")
-public class UserClusterDO extends BaseDO {
+@TableName("group_level_prefix")
+public class ClusterLevelPrefixDO extends BaseDO {
+
 
     private Long id;
 
-    private Long userId;
-
     private Long clusterId;
 
-    private String collect;
+    private String name;
 
-    private Integer sort;
+    private Integer levelStart;
+
+    private Integer levelEnd;
+
+    private String polish;
+
+    private String remark;
+
 }

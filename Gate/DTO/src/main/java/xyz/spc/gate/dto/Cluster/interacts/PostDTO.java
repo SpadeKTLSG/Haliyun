@@ -1,4 +1,4 @@
-package xyz.spc.gate.dto.Data.files;
+package xyz.spc.gate.dto.Cluster.interacts;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -10,17 +10,18 @@ import xyz.spc.gate.dto.BaseDTO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileDTO extends BaseDTO {
-
+public class PostDTO extends BaseDTO {
     private Long id;
-
-    private Long pid;
 
     private Long userId;
 
     private Long clusterId;
 
-    private String name;
+    private Integer personShow;
 
-    private String type;
+    private String title;
+
+    private String content;
+
+    private String pics;
 }

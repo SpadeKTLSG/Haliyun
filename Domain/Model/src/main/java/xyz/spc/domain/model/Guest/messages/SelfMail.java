@@ -20,7 +20,7 @@ public class SelfMail extends BaseModel {
     /**
      * -> Cluster主键
      */
-    private Long groupId;
+    private Long clusterId;
 
     /**
      * -> User主键 发送者

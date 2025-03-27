@@ -30,7 +30,7 @@ public class File extends BaseModel {
     /**
      * -> Cluster
      */
-    private Long groupId;
+    private Long clusterId;
 
     /**
      * 文件名

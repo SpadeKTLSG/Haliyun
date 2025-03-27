@@ -20,7 +20,7 @@ public class Currency extends BaseModel {
     /**
      * 对应流通群组 -> Cluster
      */
-    private Long groupId;
+    private Long clusterId;
 
 
     /**

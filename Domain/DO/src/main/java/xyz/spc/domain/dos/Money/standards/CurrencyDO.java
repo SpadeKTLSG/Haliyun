@@ -16,7 +16,7 @@ public class CurrencyDO extends BaseDO {
 
     private Long id;
 
-    private Long groupId;
+    private Long clusterId;
 
     private String name;
 

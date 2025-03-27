@@ -1,4 +1,4 @@
-package xyz.spc.gate.vo.Money.standards;
+package xyz.spc.gate.vo.Cluster.functions;
 
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -10,7 +10,8 @@ import xyz.spc.gate.vo.BaseVO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class CurrencyVO extends BaseVO {
+public class ClusterLevelPrefixVO extends BaseVO {
+
 
     private Long id;
 
@@ -18,7 +19,11 @@ public class CurrencyVO extends BaseVO {
 
     private String name;
 
-    private Float exchangeRate;
+    private Integer levelStart;
 
-    private String pic;
+    private Integer levelEnd;
+
+    private String polish;
+
+    private String remark;
 }

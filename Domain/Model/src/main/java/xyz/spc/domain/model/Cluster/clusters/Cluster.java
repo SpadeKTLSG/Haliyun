@@ -1,11 +1,11 @@
-package xyz.spc.domain.model.Cluster.groups;
+package xyz.spc.domain.model.Cluster.clusters;
 
 import lombok.*;
 import lombok.experimental.Accessors;
 import xyz.spc.domain.model.BaseModel;
 
 /**
- * 群组详情
+ * 群组
  */
 @Data
 @Builder
@@ -13,28 +13,27 @@ import xyz.spc.domain.model.BaseModel;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class ClusterDetail extends BaseModel {
+public class Cluster extends BaseModel {
 
     private Long id;
 
     /**
-     * 分享链接
+     * 群组名称
      */
-    private String shareLink;
+    private String name;
 
     /**
-     * 相册
+     * 群组昵称
      */
-    private String album;
+    private String nickname;
 
     /**
-     * 使用容量
+     * 图片
      */
-    private Long usedSpace;
+    private String pic;
 
     /**
-     * 总容量
+     * 群组容量
      */
-    private Long totalSpace;
-
+    private Integer popVolume;
 }

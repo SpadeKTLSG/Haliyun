@@ -11,7 +11,7 @@ import xyz.spc.domain.dos.BaseDO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("group_level_prefix")
+@TableName("cluster_level_prefix")
 public class ClusterLevelPrefixDO extends BaseDO {
 
 

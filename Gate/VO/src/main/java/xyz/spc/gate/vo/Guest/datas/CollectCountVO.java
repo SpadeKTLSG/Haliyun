@@ -16,5 +16,5 @@ public class CollectCountVO extends BaseVO {
 
     private Long fileCount;
 
-    private Long groupCount;
+    private Long clusterCount;
 }

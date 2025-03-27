@@ -19,7 +19,7 @@ public class PlatformStatusDO extends BaseDO {
 
     private Long userCount;
 
-    private Long groupCount;
+    private Long clusterCount;
 
     private Long fileCount;
 

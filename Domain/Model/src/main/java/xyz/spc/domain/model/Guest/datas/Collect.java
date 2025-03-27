@@ -33,6 +33,6 @@ public class Collect extends BaseModel {
     private Integer type;
     public static final int TYPE_DYNAMIC = 0;
     public static final int TYPE_FILE = 1;
-    public static final int TYPE_GROUP = 2;
+    public static final int TYPE_CLUSTER = 2;
 
 }

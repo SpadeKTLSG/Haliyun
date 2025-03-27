@@ -18,16 +18,16 @@ public class ClustersFunc {
     /**
      * Repo
      */
-    private final ClustersRepo groupsRepo;
+    private final ClustersRepo clustersRepo;
 
     /**
      * 根据groupIds获取groupNames
      */
-    public List<String> getClusterNamesByIds(List<Long> groupIds) {
+    public List<String> getClusterNamesByIds(List<Long> clusterIds) {
 
         List<String> res = new ArrayList<>();
-        for (Long clusterId : groupIds) {
-            ClusterDO cluster = groupsRepo.groupService.getById(clusterId);
+        for (Long clusterId : clusterIds) {
+            ClusterDO cluster = clustersRepo.clusterService.getById(clusterId);
             if (cluster != null) {
                 res.add(cluster.getName());
             } else {

@@ -17,13 +17,13 @@ import xyz.spc.infra.repo.Cluster.clusters.ClusterService;
 @RequiredArgsConstructor
 public class ClustersRepo {
 
-    public final ClusterService groupService;
-    public final ClusterMapper groupMapper;
-    public final ClusterDetailService groupDetailService;
-    public final ClusterDetailMapper groupDetailMapper;
-    public final ClusterFuncService groupFuncService;
-    public final ClusterFuncMapper groupFuncMapper;
+    public final ClusterService clusterService;
+    public final ClusterMapper clusterMapper;
+    public final ClusterDetailService  clusterDetailService;
+    public final ClusterDetailMapper clusterDetailMapper;
+    public final ClusterFuncService clusterFuncService;
+    public final ClusterFuncMapper clusterFuncMapper;
 
 
-    //我的大DAO早已饥渴难耐
+
 }

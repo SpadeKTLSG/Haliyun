@@ -11,7 +11,7 @@ import xyz.spc.domain.dos.BaseDO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("group_auth")
+@TableName("cluster_auth")
 public class ClusterAuthDO extends BaseDO {
 
     private Long id;

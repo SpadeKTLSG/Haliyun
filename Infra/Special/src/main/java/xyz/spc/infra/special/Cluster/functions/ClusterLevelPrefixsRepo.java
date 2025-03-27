@@ -13,6 +13,6 @@ import xyz.spc.infra.repo.Cluster.functions.ClusterLevelPrefixService;
 @RequiredArgsConstructor
 public class ClusterLevelPrefixsRepo {
 
-    public final ClusterLevelPrefixService groupLevelPrefixsService;
-    public final ClusterLevelPrefixMapper groupLevelPrefixsMapper;
+    public final ClusterLevelPrefixService clusterLevelPrefixService;
+    public final ClusterLevelPrefixMapper clusterLevelPrefixMapper;
 }

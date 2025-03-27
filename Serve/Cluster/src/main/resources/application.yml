@@ -4,7 +4,7 @@ server:
 spring:
 
   application:
-    name: group-app
+    name: cluster-app
 
   profiles:
     active: dev

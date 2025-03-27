@@ -27,7 +27,7 @@ public class InteractsFlow {
     //Func
     private final PostFunc postFunc;
     private final RemarkFunc remarkFunc;
-    private final ClustersFunc groupsFunc;
+    private final ClustersFunc clustersFunc;
 
 
     /**
@@ -42,7 +42,7 @@ public class InteractsFlow {
         for (PostDO postDO : tempPage.getRecords()) {
             groupIds.add(postDO.getClusterId());
         }
-        List<String> groupName = groupsFunc.getClusterNamesByIds(groupIds);
+        List<String> groupName = clustersFunc.getClusterNamesByIds(groupIds);
 
 
         //todo 找不到对应的groupIds, 无法获取groupName, 无法填充的降级
@@ -53,7 +53,7 @@ public class InteractsFlow {
             int i = groupIds.indexOf(postDO.getClusterId());
             String tName = "";
             if (i == -1) {
-                log.warn("未找到对应的groupIds: {}", postDO.getClusterId());
+                log.warn("未找到对应的clusterIds: {}", postDO.getClusterId());
                 tName = "走丢了";
             } else {
                 tName = groupName.get(i);
@@ -61,7 +61,7 @@ public class InteractsFlow {
             PostShowVO postShowVO = PostShowVO.builder()
                     //处理限定于收藏分页的需要展示字段: id, groupName, title
                     .id(postDO.getId())
-                    .groupName(tName)
+                    .clusterName(tName)
                     .title(postDO.getTitle())
                     .build();
             postShowVOS.add(postShowVO);

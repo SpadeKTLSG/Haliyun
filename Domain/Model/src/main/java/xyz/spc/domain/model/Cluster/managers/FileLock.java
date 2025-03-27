@@ -38,7 +38,7 @@ public class FileLock extends BaseModel {
      */
     private Integer currencyType;
     public static final int CURRENCY_TYPE_PLATFORM = 0;
-    public static final int CURRENCY_TYPE_GROUP = 1;
+    public static final int CURRENCY_TYPE_CLUSTER = 1;
 
     /**
      * 锁类型 0 货币锁 1 用户锁 2 本人锁

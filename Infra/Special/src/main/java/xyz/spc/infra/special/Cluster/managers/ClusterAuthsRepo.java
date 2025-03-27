@@ -13,6 +13,6 @@ import xyz.spc.infra.repo.Cluster.managers.ClusterAuthService;
 @RequiredArgsConstructor
 public class ClusterAuthsRepo {
 
-    public final ClusterAuthService groupAuthService;
-    public final ClusterAuthMapper groupAuthMapper;
+    public final ClusterAuthService clusterAuthService;
+    public final ClusterAuthMapper clusterAuthMapper;
 }

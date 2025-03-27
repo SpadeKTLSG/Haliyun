@@ -8,7 +8,7 @@ import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.domain.dos.Group.interacts.PostDO;
 import xyz.spc.gate.vo.Group.interacts.PostShowVO;
-import xyz.spc.infra.feign.Group.GroupsClient;
+import xyz.spc.serve.group.func.groups.GroupsFunc;
 import xyz.spc.serve.group.func.interacts.PostFunc;
 import xyz.spc.serve.group.func.interacts.RemarkFunc;
 
@@ -22,11 +22,12 @@ public class InteractsFlow {
 
 
     //Feign
-    private final GroupsClient groupsClient;
+
 
     //Func
     private final PostFunc postFunc;
     private final RemarkFunc remarkFunc;
+    private final GroupsFunc groupsFunc;
 
 
     /**
@@ -38,7 +39,7 @@ public class InteractsFlow {
 
         //抽取Groupids, 拿去Group获取 GroupName 字段填充
         List<Long> groupIds = new ArrayList<>();
-        List<String> groupName = groupsClient.getGroupNamesByIds(groupIds);
+        List<String> groupName = groupsFunc.getGroupNamesByIds(groupIds);
 
         //从tempPage获取数据, 拿去处理为PostShowVO
         List<PostShowVO> postShowVOS = new ArrayList<>();

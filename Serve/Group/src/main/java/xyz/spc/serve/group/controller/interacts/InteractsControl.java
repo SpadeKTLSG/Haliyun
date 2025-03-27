@@ -5,9 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.gate.vo.Group.interacts.PostShowVO;
@@ -47,7 +45,9 @@ public class InteractsControl {
      * 用户获取收藏分页数据 - Post动态
      */
     @GetMapping("/collect/data/post")
-    PageResponse<PostShowVO> getUserDataOfPost(@NotNull Long id, PageRequest pageRequest) {
+    PageResponse<PostShowVO> getUserDataOfPost(
+            @RequestParam("id") @NotNull Long id,
+            @RequestBody PageRequest pageRequest) {
         return interactsFlow.getUserDataOfPost(id, pageRequest);
     }
 

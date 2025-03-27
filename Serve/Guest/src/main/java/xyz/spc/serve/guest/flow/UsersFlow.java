@@ -14,6 +14,7 @@ import xyz.spc.serve.guest.func.records.StatisticFunc;
 import xyz.spc.serve.guest.func.records.TombFunc;
 import xyz.spc.serve.guest.func.users.UsersFunc;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -92,12 +93,12 @@ public class UsersFlow {
         userGreatVO.setLevelName(levelVO.getName());
         userGreatVO.setLevelFloor(levelVO.getFloor());
 
-        //todo
-        //查用户加入的群组ids
-//        List<Long> groupIds = usersFunc.getUsersClusterIds(id);
-//
-//        //通过ids去 Cluster 模块 找群组名
-//        userGreatVO.setClusterNames(usersClient.getClusterNames(groupIds));
+
+//        查用户加入的群组ids
+        List<Long> groupIds = usersFunc.getUsersClusterIds(id);
+
+        //通过ids去 Cluster 模块 找群组名
+        userGreatVO.setClusterNames(usersClient.getClusterNames(groupIds));
 
         return userGreatVO;
     }

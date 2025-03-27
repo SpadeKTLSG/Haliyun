@@ -37,10 +37,7 @@ import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
 import xyz.spc.serve.auxiliary.config.redis.tool.RedisCacheGeneral;
 import xyz.spc.serve.guest.common.enums.UsersChainMarkEnum;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -336,5 +333,8 @@ public class UsersFunc {
 
     public Long getUserLevelFloor(Long id) {
         return usersRepo.userFuncService.getById(id).getLevelId();
+    }
+
+    public List<Long> getUsersClusterIds(Long id) {
     }
 }

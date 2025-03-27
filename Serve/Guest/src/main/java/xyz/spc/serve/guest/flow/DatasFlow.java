@@ -10,21 +10,28 @@ import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.gate.vo.Group.groups.GroupVO;
 import xyz.spc.gate.vo.Group.interacts.PostShowVO;
 import xyz.spc.gate.vo.Guest.datas.CollectCountVO;
+import xyz.spc.infra.feign.Group.InteractsClient;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class DatasFlow {
 
-    //todo 等群组和文件的功能实现
+    //Feign
+    private final InteractsClient interactsClient;
 
+
+    //Func
+
+
+    //! Client
 
     public CollectCountVO getUserDataOfAllCollect(@NotNull Long id) {
         return null;
     }
 
     public PageResponse<PostShowVO> getUserDataOfPost(@NotNull Long id, PageRequest pageRequest) {
-        return null;
+        return interactsClient.getUserDataOfPost(id, pageRequest);
     }
 
 

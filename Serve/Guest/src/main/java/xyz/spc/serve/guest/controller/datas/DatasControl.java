@@ -81,7 +81,7 @@ public class DatasControl {
 
 
     /**
-     * 查询用户 文件 - 1 收藏信息
+     * 查询用户 文件 - 1 收藏信息 (分页- pageNo + Size)
      */
     @GetMapping("/collect/data/file")
     @Operation(summary = "查用户 文件 收藏信息")
@@ -97,7 +97,7 @@ public class DatasControl {
 
 
     /**
-     * 查询用户 群组 - 2 收藏信息
+     * 查询用户 群组 - 2 收藏信息 (分页- pageNo + Size)
      */
     @GetMapping("/collect/data/group")
     @Operation(summary = "查用户 群组 收藏信息")

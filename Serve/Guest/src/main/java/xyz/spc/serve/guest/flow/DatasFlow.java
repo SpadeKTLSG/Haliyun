@@ -31,7 +31,7 @@ public class DatasFlow {
     }
 
     public PageResponse<PostShowVO> getUserDataOfPost(@NotNull Long id, PageRequest pageRequest) {
-        return interactsClient.getUserDataOfPost(id, pageRequest);
+        return interactsClient.getUserDataOfPost(id, pageRequest.getCurrent(), pageRequest.getSize());
     }
 
 

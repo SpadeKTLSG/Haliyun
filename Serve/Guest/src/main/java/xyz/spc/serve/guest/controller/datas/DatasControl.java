@@ -3,12 +3,14 @@ package xyz.spc.serve.guest.controller.datas;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
@@ -49,7 +51,7 @@ public class DatasControl {
     /**
      * 查询用户收藏总览情况
      */
-    @PostMapping("/collect/count")
+    @GetMapping("/collect/count")
     @Operation(summary = "查用户收藏总览情况")
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<CollectCountVO> getUserDataOfAllCollect(
@@ -64,15 +66,16 @@ public class DatasControl {
     /**
      * 查询用户 动态 - 0 收藏信息 (分页- pageNo + Size)
      */
-    @PostMapping("/collect/data/post")
+    @GetMapping("/collect/data/post")
     @Operation(summary = "查用户 动态 收藏信息")
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<PostShowVO>> getUserDataOfPost(
 
             @NotNull @RequestParam("id") Long id,
-            @RequestBody PageRequest pageRequest
+            @RequestParam("current") Long current,
+            @RequestParam("size") Long size
     ) {
-        return Result.success(datasFlow.getUserDataOfPost(id, pageRequest));
+        return Result.success(datasFlow.getUserDataOfPost(id, new PageRequest(current, size)));
     }
     //http://localhost:10000/Guest/datas/collect/data/post?id=...
 
@@ -80,15 +83,16 @@ public class DatasControl {
     /**
      * 查询用户 文件 - 1 收藏信息 (分页- pageNo + Size)
      */
-    @PostMapping("/collect/data/file")
+    @GetMapping("/collect/data/file")
     @Operation(summary = "查用户 文件 收藏信息")
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<FileShowVO>> getUserDataOfFile(
 
             @NotNull @RequestParam("id") Long id,
-            @RequestBody PageRequest pageRequest
+            @RequestParam("current") Long current,
+            @RequestParam("size") Long size
     ) {
-        return Result.success(datasFlow.getUserDataOfFile(id, pageRequest));
+        return Result.success(datasFlow.getUserDataOfFile(id, new PageRequest(current, size)));
     }
     //http://localhost:10000/Guest/datas/collect/data/file?id=...
 
@@ -102,9 +106,10 @@ public class DatasControl {
     public Result<PageResponse<GroupVO>> getUserDataOfGroup(
 
             @NotNull @RequestParam("id") Long id,
-            @RequestBody PageRequest pageRequest
+            @RequestParam("current") Long current,
+            @RequestParam("size") Long size
     ) {
-        return Result.success(datasFlow.getUserDataOfGroup(id, pageRequest));
+        return Result.success(datasFlow.getUserDataOfGroup(id, new PageRequest(current, size)));
     }
     //http://localhost:10000/Guest/datas/collect/data/group?id=...
 }

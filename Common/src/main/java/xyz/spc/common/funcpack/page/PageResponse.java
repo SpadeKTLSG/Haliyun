@@ -1,5 +1,6 @@
 package xyz.spc.common.funcpack.page;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Data;
 import xyz.spc.common.constant.ReqRespCT;
@@ -15,6 +16,7 @@ import java.util.stream.Collectors;
  */
 @Data
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PageResponse<T> implements Serializable {
 
 
@@ -38,6 +40,9 @@ public class PageResponse<T> implements Serializable {
      */
     private List<T> records;
 
+    public PageResponse() {
+
+    }
 
     public PageResponse(long current) {
         this(current, ReqRespCT.DEFAULT_PAGE_SIZE, 0);

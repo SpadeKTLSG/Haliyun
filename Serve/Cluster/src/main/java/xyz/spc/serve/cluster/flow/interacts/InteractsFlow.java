@@ -1,4 +1,4 @@
-package xyz.spc.serve.group.flow.interacts;
+package xyz.spc.serve.cluster.flow.interacts;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -8,9 +8,9 @@ import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.domain.dos.Cluster.interacts.PostDO;
 import xyz.spc.gate.vo.Cluster.interacts.PostShowVO;
-import xyz.spc.serve.group.func.groups.ClustersFunc;
-import xyz.spc.serve.group.func.interacts.PostFunc;
-import xyz.spc.serve.group.func.interacts.RemarkFunc;
+import xyz.spc.serve.cluster.func.groups.ClustersFunc;
+import xyz.spc.serve.cluster.func.interacts.PostFunc;
+import xyz.spc.serve.cluster.func.interacts.RemarkFunc;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package xyz.spc.serve.group.config;
+package xyz.spc.serve.cluster.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
-@ComponentScan(basePackages = "xyz.spc.serve.group.controller")
+@ComponentScan(basePackages = "xyz.spc.serve.cluster.controller")
 public class SwaggerConfig {
 
 

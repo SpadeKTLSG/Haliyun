@@ -1,4 +1,4 @@
-package xyz.spc.serve.group.config;
+package xyz.spc.serve.cluster.config;
 
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.alibaba.fastjson.support.config.FastJsonConfig;

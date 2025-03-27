@@ -1,4 +1,4 @@
-package xyz.spc.serve.group.func.interacts;
+package xyz.spc.serve.cluster.func.interacts;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;

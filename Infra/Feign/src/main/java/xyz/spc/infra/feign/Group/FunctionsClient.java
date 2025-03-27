@@ -2,6 +2,6 @@ package xyz.spc.infra.feign.Cluster;
 
 import org.springframework.cloud.openfeign.FeignClient;
 
-@FeignClient(name = "group-app")
+@FeignClient(name = "cluster-app")
 public interface FunctionsClient {
 }

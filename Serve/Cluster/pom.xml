@@ -8,7 +8,7 @@
         <artifactId>Serve</artifactId>
         <version>3.0.0-RELEASE</version>
     </parent>
-    <groupId>xyz.spc.serve.group</groupId>
+    <groupId>xyz.spc.serve.cluster</groupId>
     <artifactId>Cluster</artifactId>
 
     <properties>

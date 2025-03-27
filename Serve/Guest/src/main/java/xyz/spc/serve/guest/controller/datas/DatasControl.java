@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
-import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.gate.vo.Cluster.groups.ClusterVO;
 import xyz.spc.gate.vo.Cluster.interacts.PostShowVO;
+import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.gate.vo.Guest.datas.CollectCountVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.guest.flow.DatasFlow;
@@ -100,7 +100,7 @@ public class DatasControl {
     /**
      * 查询用户 群组 - 2 收藏信息 (分页- pageNo + Size)
      */
-    @GetMapping("/collect/data/group")
+    @GetMapping("/collect/data/cluster")
     @Operation(summary = "查用户 群组 收藏信息")
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<ClusterVO>> getUserDataOfCluster(
@@ -111,5 +111,5 @@ public class DatasControl {
     ) {
         return Result.success(datasFlow.getUserDataOfCluster(id, new PageRequest(current, size)));
     }
-    //http://localhost:10000/Guest/datas/collect/data/group?id=...
+    //http://localhost:10000/Guest/datas/collect/data/cluster?id=...
 }

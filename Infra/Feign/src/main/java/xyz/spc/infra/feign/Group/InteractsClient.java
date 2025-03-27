@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.gate.vo.Cluster.interacts.PostShowVO;
 
-@FeignClient(name = "group-app")
+@FeignClient(name = "cluster-app")
 public interface InteractsClient {
 
     String BASE_URL = "/Cluster/interacts";

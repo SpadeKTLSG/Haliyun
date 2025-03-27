@@ -1,4 +1,4 @@
-package xyz.spc.serve.group.func.interacts;
+package xyz.spc.serve.cluster.func.interacts;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

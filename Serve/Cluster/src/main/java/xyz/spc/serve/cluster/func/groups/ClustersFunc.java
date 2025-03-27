@@ -1,4 +1,4 @@
-package xyz.spc.serve.group.func.groups;
+package xyz.spc.serve.cluster.func.groups;
 
 
 import lombok.RequiredArgsConstructor;
@@ -27,9 +27,9 @@ public class ClustersFunc {
 
         List<String> res = new ArrayList<>();
         for (Long clusterId : groupIds) {
-            ClusterDO group = groupsRepo.groupService.getById(clusterId);
-            if (group != null) {
-                res.add(group.getName());
+            ClusterDO cluster = groupsRepo.groupService.getById(clusterId);
+            if (cluster != null) {
+                res.add(cluster.getName());
             } else {
                 log.warn("Cluster with id {} not found", clusterId);
             }

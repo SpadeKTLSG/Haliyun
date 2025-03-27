@@ -64,7 +64,7 @@ CREATE TABLE `file_status`  (
 -- ----------------------------
 
 -- ----------------------------
--- Table structure for group
+-- Table structure for cluster
 -- ----------------------------
 DROP TABLE IF EXISTS `group`;
 CREATE TABLE `group`  (
@@ -82,7 +82,7 @@ CREATE TABLE `group`  (
 ) ENGINE = InnoDB CHARACTER SET = utf8mb4 COLLATE = utf8mb4_bin COMMENT = '群组' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Records of group
+-- Records of cluster
 -- ----------------------------
 
 -- ----------------------------

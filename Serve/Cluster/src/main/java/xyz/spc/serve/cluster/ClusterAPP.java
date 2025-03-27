@@ -1,4 +1,4 @@
-package xyz.spc.serve.group;
+package xyz.spc.serve.cluster;
 
 import lombok.extern.slf4j.Slf4j;
 import org.mybatis.spring.annotation.MapperScan;
@@ -17,7 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Slf4j
 @MapperScan({"xyz.spc.infra.mapper"})
 @SpringBootApplication(scanBasePackages = {
-        "xyz.spc.serve.group",
+        "xyz.spc.serve.cluster",
         "xyz.spc.serve.auxiliary",
         "xyz.spc.infra.*",
         "xyz.spc.common.*"})

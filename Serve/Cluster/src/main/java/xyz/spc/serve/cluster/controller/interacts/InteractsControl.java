@@ -1,4 +1,4 @@
-package xyz.spc.serve.group.controller.interacts;
+package xyz.spc.serve.cluster.controller.interacts;
 
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -13,7 +13,7 @@ import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.gate.vo.Cluster.interacts.PostShowVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
-import xyz.spc.serve.group.flow.interacts.InteractsFlow;
+import xyz.spc.serve.cluster.flow.interacts.InteractsFlow;
 
 @Slf4j
 @MLog

@@ -12,6 +12,7 @@ import xyz.spc.infra.feign.Guest.UsersClient;
 import xyz.spc.serve.guest.func.levels.LevelFunc;
 import xyz.spc.serve.guest.func.records.StatisticFunc;
 import xyz.spc.serve.guest.func.records.TombFunc;
+import xyz.spc.serve.guest.func.users.UserClusterFunc;
 import xyz.spc.serve.guest.func.users.UsersFunc;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class UsersFlow {
     private final LevelFunc levelFunc;
     private final TombFunc tombFunc;
     private final StatisticFunc statisticFunc;
+    private final UserClusterFunc userClusterFunc;
 
 
     /**
@@ -94,10 +96,10 @@ public class UsersFlow {
         userGreatVO.setLevelFloor(levelVO.getFloor());
 
 
-//        查用户加入的群组ids
-        List<Long> groupIds = usersFunc.getUsersClusterIds(id);
+        //中间表查用户加入的群组ids集合
+        List<Long> groupIds = userClusterFunc.getUsersClusterIds(id);
 
-        //通过ids去 Cluster 模块 找群组名
+        //去 Cluster 模块 找对应群组名
         userGreatVO.setClusterNames(usersClient.getClusterNames(groupIds));
 
         return userGreatVO;

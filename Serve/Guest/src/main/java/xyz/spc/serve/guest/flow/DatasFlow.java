@@ -56,7 +56,7 @@ public class DatasFlow {
 
         // 收集 所有 需要去查询的 Post id
         List<Long> postIds = collectList.stream()
-                .map(CollectDO::getId)
+                .map(CollectDO::getTargetId)
                 .toList();
 
 

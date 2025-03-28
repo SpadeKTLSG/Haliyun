@@ -48,8 +48,8 @@ public class InteractsControl {
      * 用户获取收藏分页数据 - Post动态
      */
     @PostMapping("/post/batch")
-    List<PostShowVO> getPostByIdBatch(@RequestBody List<Long> clusterIds) {
-        return interactsFlow.getPostByIdBatch(clusterIds);
+    List<PostShowVO> getPostByIdBatch(@RequestBody List<Long> postIds) {
+        return interactsFlow.getPostByIdBatch(postIds);
     }
 
 

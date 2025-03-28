@@ -31,10 +31,14 @@ public class InteractsFlow {
     /**
      * 根据id批量查询动态
      */
-    public List<PostShowVO> getPostByIdBatch(List<Long> clusterIds) {
+    public List<PostShowVO> getPostByIdBatch(List<Long> postIds) {
 
         // 批量查询动态基本存储对象
-        List<PostDO> postList = postFunc.getPostByIdBatch(clusterIds);
+        List<PostDO> postList = postFunc.getPostByIdBatch(postIds);
+
+        if(postList == null || postList.isEmpty()) {
+            return List.of();
+        }
 
         // 补充群组查询信息
         // 收集所有需要查询的 clusterId

@@ -38,11 +38,11 @@ public class PostFunc {
     /**
      * 根据ids批量查询动态
      */
-    public List<PostDO> getPostByIdBatch(List<Long> clusterIds) {
-        if (clusterIds == null || clusterIds.isEmpty()) {
+    public List<PostDO> getPostByIdBatch(List<Long> postIds) {
+        if (postIds == null || postIds.isEmpty()) {
             return List.of();
         }
-        return postsRepo.postsMapper.selectBatchIds(clusterIds);
+        return postsRepo.postsMapper.selectBatchIds(postIds);
     }
 
 

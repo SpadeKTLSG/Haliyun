@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import xyz.spc.domain.dos.Cluster.clusters.ClusterDO;
 import xyz.spc.infra.special.Cluster.clusters.ClustersRepo;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,6 +25,11 @@ public class ClustersFunc {
      * 根据groupIds获取groupNames
      */
     public List<String> getClusterNamesByIds(List<Long> clusterIds) {
+
+        if (clusterIds == null || clusterIds.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         // 批量查询群组对象
         List<ClusterDO> clusters = clustersRepo.clusterMapper.selectBatchIds(clusterIds);
 

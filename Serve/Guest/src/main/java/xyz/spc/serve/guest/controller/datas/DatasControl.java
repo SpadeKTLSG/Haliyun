@@ -67,8 +67,8 @@ public class DatasControl {
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<PostShowVO>> getUserDataOfPost(
 
-            @RequestParam("current") Long current,
-            @RequestParam("size") Long size
+            @RequestParam("current") Integer current,
+            @RequestParam("size") Integer size
     ) {
         return Result.success(datasFlow.getUserDataOfPost(new PageRequest(current, size)));
     }
@@ -83,8 +83,8 @@ public class DatasControl {
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<FileShowVO>> getUserDataOfFile(
 
-            @RequestParam("current") Long current,
-            @RequestParam("size") Long size
+            @RequestParam("current") Integer current,
+            @RequestParam("size") Integer size
     ) {
         return Result.success(datasFlow.getUserDataOfFile(new PageRequest(current, size)));
     }
@@ -99,8 +99,8 @@ public class DatasControl {
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<ClusterVO>> getUserDataOfCluster(
 
-            @RequestParam("current") Long current,
-            @RequestParam("size") Long size
+            @RequestParam("current") Integer current,
+            @RequestParam("size") Integer size
     ) {
         return Result.success(datasFlow.getUserDataOfCluster(new PageRequest(current, size)));
     }

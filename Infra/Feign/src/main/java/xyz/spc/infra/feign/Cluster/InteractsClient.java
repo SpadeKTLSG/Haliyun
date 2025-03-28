@@ -16,7 +16,7 @@ public interface InteractsClient {
      * 用户获取收藏分页数据 - Post动态
      */
     @GetMapping(BASE_URL + "/collect/data/post")
-    PageResponse<PostShowVO> getUserDataOfPost(
+    PageResponse<PostShowVO> getAllDataOfPost(
             @RequestParam("id") @NotNull Long id,
             @RequestParam("current") Long current,
             @RequestParam("size") Long size);

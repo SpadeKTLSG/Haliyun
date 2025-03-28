@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.gate.vo.Pub.fronts.MenuVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
-import xyz.spc.serve.pub.flow.fronts.FrontsFlow;
+import xyz.spc.serve.pub.flow.FrontsFlow;
 
 import java.util.List;
 

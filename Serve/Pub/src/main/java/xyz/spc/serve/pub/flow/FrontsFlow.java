@@ -1,4 +1,4 @@
-package xyz.spc.serve.pub.flow.fronts;
+package xyz.spc.serve.pub.flow;
 
 
 import lombok.RequiredArgsConstructor;

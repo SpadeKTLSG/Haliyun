@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.levels.LevelVO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
-import xyz.spc.infra.feign.Guest.UsersClient;
+import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.serve.guest.func.levels.LevelFunc;
 import xyz.spc.serve.guest.func.records.StatisticFunc;
 import xyz.spc.serve.guest.func.records.TombFunc;
@@ -24,7 +24,7 @@ import java.util.Map;
 public class UsersFlow {
 
     //Feign
-    private final UsersClient usersClient;
+    private final ClustersClient clustersClient;
 
     //Func
     private final UsersFunc usersFunc;
@@ -100,7 +100,7 @@ public class UsersFlow {
         List<Long> groupIds = userClusterFunc.getUsersClusterIds(id);
 
         //去 Cluster 模块 找对应群组名
-        userGreatVO.setClusterNames(usersClient.getClusterNames(groupIds));
+        userGreatVO.setClusterNames(clustersClient.getClusterNames(groupIds));
 
         return userGreatVO;
     }

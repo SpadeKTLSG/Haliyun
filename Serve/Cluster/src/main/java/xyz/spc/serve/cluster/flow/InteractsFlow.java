@@ -30,6 +30,9 @@ public class InteractsFlow {
     private final RemarkFunc remarkFunc;
     private final ClustersFunc clustersFunc;
 
+    /**
+     * 用户获取收藏分页数据 - Post动态
+     */
     public PageResponse<PostShowVO> getUserDataOfPost(@NotNull Long id, PageRequest pageRequest) {
         PageResponse<PostDO> tmp = postFunc.getUserDataOfPost(id, pageRequest);
 

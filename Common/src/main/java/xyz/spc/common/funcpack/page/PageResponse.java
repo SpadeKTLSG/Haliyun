@@ -6,7 +6,7 @@ import lombok.Data;
 import xyz.spc.common.constant.ReqRespCT;
 
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -53,7 +53,7 @@ public class PageResponse<T> implements Serializable {
     }
 
     public PageResponse(long current, long size, long total) {
-        this(current, size, total, Collections.emptyList());
+        this(current, size, total, new ArrayList<>());
     }
 
     public PageResponse(long current, long size, long total, List<T> records) {

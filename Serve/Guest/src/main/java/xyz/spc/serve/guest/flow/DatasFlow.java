@@ -11,6 +11,7 @@ import xyz.spc.gate.vo.Cluster.interacts.PostShowVO;
 import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.gate.vo.Guest.datas.CollectCountVO;
 import xyz.spc.infra.feign.Cluster.InteractsClient;
+import xyz.spc.infra.feign.Data.FilesClient;
 
 @Slf4j
 @Service
@@ -19,7 +20,7 @@ public class DatasFlow {
 
     //Feign
     private final InteractsClient interactsClient;
-
+    private final FilesClient filesClient;
 
     //Func
 
@@ -36,7 +37,7 @@ public class DatasFlow {
 
 
     public PageResponse<FileShowVO> getUserDataOfFile(@NotNull Long id, PageRequest pageRequest) {
-        return new PageResponse<>(10, 10, 10, null);
+        return filesClient.getUserDataOfFile(id, pageRequest.getCurrent(), pageRequest.getSize());
     }
 
     public PageResponse<ClusterVO> getUserDataOfCluster(@NotNull Long id, PageRequest pageRequest) {

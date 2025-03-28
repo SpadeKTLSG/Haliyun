@@ -51,10 +51,10 @@ public final class PageUtil {
                 .map(mapper)
                 .collect(Collectors.toList());
         return PageResponse.<TARGET>builder()
-                .current(iPage.getCurrent())
-                .size(iPage.getSize())
+                .current((int) iPage.getCurrent())
+                .size((int) iPage.getSize())
                 .records(targetDataList)
-                .total(iPage.getTotal())
+                .total((int) iPage.getTotal())
                 .build();
     }
 
@@ -63,10 +63,10 @@ public final class PageUtil {
      */
     private static PageResponse buildConventionPage(IPage iPage) {
         return PageResponse.builder()
-                .current(iPage.getCurrent())
-                .size(iPage.getSize())
+                .current((int) iPage.getCurrent())
+                .size((int) iPage.getSize())
                 .records(iPage.getRecords())
-                .total(iPage.getTotal())
+                .total((int) iPage.getTotal())
                 .build();
     }
 }

@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import xyz.spc.domain.dos.Cluster.clusters.ClusterDO;
 import xyz.spc.infra.special.Cluster.clusters.ClustersRepo;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -24,16 +24,12 @@ public class ClustersFunc {
      * 根据groupIds获取groupNames
      */
     public List<String> getClusterNamesByIds(List<Long> clusterIds) {
+        // 批量查询群组对象
+        List<ClusterDO> clusters = clustersRepo.clusterMapper.selectBatchIds(clusterIds);
 
-        List<String> res = new ArrayList<>();
-        for (Long clusterId : clusterIds) {
-            ClusterDO cluster = clustersRepo.clusterService.getById(clusterId);
-            if (cluster != null) {
-                res.add(cluster.getName());
-            } else {
-                log.warn("Cluster with id {} not found", clusterId);
-            }
-        }
-        return res;
+        // 提取群组名称
+        return clusters.stream()
+                .map(ClusterDO::getName)
+                .collect(Collectors.toList());
     }
 }

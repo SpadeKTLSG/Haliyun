@@ -14,10 +14,10 @@ public class PageRequest {
     /**
      * 当前页
      */
-    private Long current = 1L;
+    private Integer current = 1;
 
     /**
      * 每页显示条数
      */
-    private Long size = ReqRespCT.DEFAULT_PAGE_SIZE;
+    private Integer size = ReqRespCT.DEFAULT_PAGE_SIZE;
 }

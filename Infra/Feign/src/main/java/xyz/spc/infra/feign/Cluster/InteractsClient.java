@@ -1,11 +1,11 @@
 package xyz.spc.infra.feign.Cluster;
 
-import jakarta.validation.constraints.NotNull;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import xyz.spc.common.funcpack.page.PageResponse;
+import org.springframework.web.bind.annotation.RequestBody;
 import xyz.spc.gate.vo.Cluster.interacts.PostShowVO;
+
+import java.util.List;
 
 @FeignClient(name = "cluster-app")
 public interface InteractsClient {
@@ -13,11 +13,8 @@ public interface InteractsClient {
     String BASE_URL = "/Cluster/interacts";
 
     /**
-     * 用户获取收藏分页数据 - Post动态
+     * id 批量查询 Post 动态
      */
-    @GetMapping(BASE_URL + "/collect/data/post")
-    PageResponse<PostShowVO> getAllDataOfPost(
-            @RequestParam("id") @NotNull Long id,
-            @RequestParam("current") Long current,
-            @RequestParam("size") Long size);
+    @GetMapping(BASE_URL + "/post/batch")
+    List<PostShowVO> getPostByIdBatch(@RequestBody List<Long> clusterIds);
 }

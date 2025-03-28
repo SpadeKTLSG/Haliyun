@@ -49,21 +49,40 @@ public class DatasFlow {
 
         Long userId = Objects.requireNonNull(UserContext.getUI());
 
-        // 获取这个用户收藏的动态列表 (id 用 TL来做的)
+
+        // 获取这个用户收藏的动态列表
         List<CollectDO> collectList = collectFunc.getUserCollectListOfPost(userId);
 
-        // 收集所有需要查询的 clusterId
-        List<Long> clusterIds = collectList.stream()
+
+        // 收集 所有 需要去查询的 Post id
+        List<Long> postIds = collectList.stream()
                 .map(CollectDO::getId)
                 .toList();
 
 
-        // 批量查询 clusterName
-        List<String> clusterNames = interactsClient.getClusterNamesByIds(clusterIds);
+        // 提前进行逻辑分页操作: 将 分页查询 降级为 批量查询, 对方服务只需要查询提供的 ids
+        int currentPage = pageRequest.getCurrent();
+        int pageSize = pageRequest.getSize();
+        int fromIndex = (currentPage - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, postIds.size());
+
+        // 获取当前页的 Post id
+        List<Long> pagedPostIds = postIds.subList(fromIndex, toIndex);
+
+        // 批量查询动态对象
+        List<PostShowVO> postShowVOS = interactsClient.getPostByIdBatch(pagedPostIds);
 
 
-        // 发起远程调用, 对每一个收藏进行补偿查询
-        return interactsClient.getAllDataOfPost(collectList, pageRequest.getCurrent(), pageRequest.getSize());
+        // 构建分页响应
+        PageResponse<PostShowVO> res = new PageResponse<>(
+                pageRequest.getCurrent(),
+                pageRequest.getSize(),
+                postIds.size(),
+                postShowVOS
+        );
+
+        return res;
+
     }
 
 

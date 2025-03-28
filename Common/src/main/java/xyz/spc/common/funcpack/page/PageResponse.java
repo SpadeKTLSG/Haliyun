@@ -23,17 +23,17 @@ public class PageResponse<T> implements Serializable {
     /**
      * 当前页
      */
-    private Long current;
+    private Integer current;
 
     /**
      * 每页显示条数
      */
-    private Long size;
+    private Integer size;
 
     /**
      * 总数
      */
-    private Long total;
+    private Integer total;
 
     /**
      * 查询数据列表
@@ -44,23 +44,23 @@ public class PageResponse<T> implements Serializable {
 
     }
 
-    public PageResponse(long current) {
+    public PageResponse(int current) {
         this(current, ReqRespCT.DEFAULT_PAGE_SIZE, 0);
     }
 
-    public PageResponse(long current, long size) {
+    public PageResponse(int current, int size) {
         this(current, size, 0);
     }
 
-    public PageResponse(long current, long size, long total) {
+    public PageResponse(int current, int size, int total) {
         this(current, size, total, new ArrayList<>());
     }
 
-    public PageResponse(long current, long size, long total, List<T> records) {
+    public PageResponse(int current, int size, int total, List<T> records) {
         if (current > 1) {
             this.current = current;
-        }else{
-            this.current = 1L;
+        } else {
+            this.current = 1;
         }
         this.size = size;
         this.total = total;

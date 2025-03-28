@@ -39,6 +39,9 @@ public class PostFunc {
      * 根据ids批量查询动态
      */
     public List<PostDO> getPostByIdBatch(List<Long> clusterIds) {
+        if (clusterIds == null || clusterIds.isEmpty()) {
+            return List.of();
+        }
         return postsRepo.postsMapper.selectBatchIds(clusterIds);
     }
 

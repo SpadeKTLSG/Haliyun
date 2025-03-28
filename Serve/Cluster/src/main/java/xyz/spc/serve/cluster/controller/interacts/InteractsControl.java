@@ -4,7 +4,7 @@ package xyz.spc.serve.cluster.controller.interacts;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -47,7 +47,7 @@ public class InteractsControl {
     /**
      * 用户获取收藏分页数据 - Post动态
      */
-    @GetMapping("/post/batch")
+    @PostMapping("/post/batch")
     List<PostShowVO> getPostByIdBatch(@RequestBody List<Long> clusterIds) {
         return interactsFlow.getPostByIdBatch(clusterIds);
     }

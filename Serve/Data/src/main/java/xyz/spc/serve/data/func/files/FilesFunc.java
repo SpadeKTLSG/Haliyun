@@ -18,6 +18,6 @@ public class FilesFunc {
      private final FilesRepo filesRepo;
 
     public void getUserDataOfFile(@NotNull Long id, Long current, Long size) {
-        、、todo
+
     }
 }

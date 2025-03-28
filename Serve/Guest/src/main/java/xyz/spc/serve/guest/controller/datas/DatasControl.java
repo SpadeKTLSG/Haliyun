@@ -4,7 +4,6 @@ package xyz.spc.serve.guest.controller.datas;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,11 +53,8 @@ public class DatasControl {
     @GetMapping("/collect/count")
     @Operation(summary = "查用户收藏总览情况")
     @Parameter(name = "id", description = "用户id", required = true)
-    public Result<CollectCountVO> getUserDataOfAllCollect(
-
-            @NotNull @RequestParam("id") Long id
-    ) {
-        return Result.success(datasFlow.getUserDataOfAllCollect(id));
+    public Result<CollectCountVO> getUserDataOfAllCollect( ) {
+        return Result.success(datasFlow.getUserDataOfAllCollect());
     }
     //http://localhost:10000/Guest/datas/collect/count?id=...
 
@@ -71,11 +67,10 @@ public class DatasControl {
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<PostShowVO>> getUserDataOfPost(
 
-            @NotNull @RequestParam("id") Long id,
             @RequestParam("current") Long current,
             @RequestParam("size") Long size
     ) {
-        return Result.success(datasFlow.getUserDataOfPost(id, new PageRequest(current, size)));
+        return Result.success(datasFlow.getUserDataOfPost(new PageRequest(current, size)));
     }
     //http://localhost:10000/Guest/datas/collect/data/post?id=...
 
@@ -88,11 +83,10 @@ public class DatasControl {
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<FileShowVO>> getUserDataOfFile(
 
-            @NotNull @RequestParam("id") Long id,
             @RequestParam("current") Long current,
             @RequestParam("size") Long size
     ) {
-        return Result.success(datasFlow.getUserDataOfFile(id, new PageRequest(current, size)));
+        return Result.success(datasFlow.getUserDataOfFile(new PageRequest(current, size)));
     }
     //http://localhost:10000/Guest/datas/collect/data/file?id=...
 
@@ -105,11 +99,10 @@ public class DatasControl {
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<ClusterVO>> getUserDataOfCluster(
 
-            @NotNull @RequestParam("id") Long id,
             @RequestParam("current") Long current,
             @RequestParam("size") Long size
     ) {
-        return Result.success(datasFlow.getUserDataOfCluster(id, new PageRequest(current, size)));
+        return Result.success(datasFlow.getUserDataOfCluster(new PageRequest(current, size)));
     }
     //http://localhost:10000/Guest/datas/collect/data/cluster?id=...
 }

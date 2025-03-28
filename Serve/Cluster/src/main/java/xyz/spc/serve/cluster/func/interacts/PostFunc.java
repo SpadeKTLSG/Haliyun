@@ -30,7 +30,7 @@ public class PostFunc {
 
         //? 分页查询: 统一采用MP的分页查询, 使用 DO, 之后再去转换刷洗; 封装 PageResponse 对象
         IPage<PostDO> postPage = postsRepo.postsService.page(page, Wrappers.lambdaQuery(PostDO.class)
-                .eq(PostDO::getUserId, id)
+                .eq(PostDO::getId, id)
         );
 
 

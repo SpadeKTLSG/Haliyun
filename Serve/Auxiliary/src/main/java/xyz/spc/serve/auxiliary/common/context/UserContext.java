@@ -38,6 +38,13 @@ public final class UserContext {
         return Optional.ofNullable(userDTO).map(UserDTO::getAccount).orElse(null);
     }
 
+    /**
+     * 获取上下文中用户 Id
+     */
+    public static Long getUI() {
+        UserDTO userDTO = USER_THREAD_LOCAL.get();
+        return Optional.ofNullable(userDTO).map(UserDTO::getId).orElse(null);
+    }
 
     /**
      * 清理用户上下文

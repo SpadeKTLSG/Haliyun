@@ -1,17 +1,22 @@
 package xyz.spc.serve.guest.flow;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
+import xyz.spc.domain.dos.Guest.datas.CollectDO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.gate.vo.Cluster.interacts.PostShowVO;
 import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.gate.vo.Guest.datas.CollectCountVO;
 import xyz.spc.infra.feign.Cluster.InteractsClient;
 import xyz.spc.infra.feign.Data.FilesClient;
+import xyz.spc.serve.auxiliary.common.context.UserContext;
+import xyz.spc.serve.guest.func.datas.CollectFunc;
+
+import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -23,24 +28,33 @@ public class DatasFlow {
     private final FilesClient filesClient;
 
     //Func
-
+    private final CollectFunc collectFunc;
 
     //! Client
 
-    public CollectCountVO getUserDataOfAllCollect(@NotNull Long id) {
+    public CollectCountVO getUserDataOfAllCollect() {
         return null;
     }
 
-    public PageResponse<PostShowVO> getUserDataOfPost(@NotNull Long id, PageRequest pageRequest) {
-        return interactsClient.getUserDataOfPost(id, pageRequest.getCurrent(), pageRequest.getSize());
+    public PageResponse<PostShowVO> getUserDataOfPost(PageRequest pageRequest) {
+        //获取这个用户收藏的动态列表 (id 用 TL来做的)
+        Long userId = Objects.requireNonNull(UserContext.getUI());
+
+        List<CollectDO> collectList = collectFunc.getUserCollectListOfPost(userId);
+
+        return interactsClient.getUserDataOfPost(userId, pageRequest.getCurrent(), pageRequest.getSize());
     }
 
 
-    public PageResponse<FileShowVO> getUserDataOfFile(@NotNull Long id, PageRequest pageRequest) {
-        return filesClient.getUserDataOfFile(id, pageRequest.getCurrent(), pageRequest.getSize());
+    public PageResponse<FileShowVO> getUserDataOfFile(PageRequest pageRequest) {
+        //获取这个用户收藏的动态列表 (id 用 TL来做的)
+        Long userId = Objects.requireNonNull(UserContext.getUI());
+
+        return filesClient.getUserDataOfFile(userId, pageRequest.getCurrent(), pageRequest.getSize());
     }
 
-    public PageResponse<ClusterVO> getUserDataOfCluster(@NotNull Long id, PageRequest pageRequest) {
+    public PageResponse<ClusterVO> getUserDataOfCluster(PageRequest pageRequest) {
+        Long userId = Objects.requireNonNull(UserContext.getUI());
         return new PageResponse<>(10, 10, 10, null);
     }
 

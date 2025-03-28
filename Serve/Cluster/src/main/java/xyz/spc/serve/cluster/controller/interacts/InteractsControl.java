@@ -13,7 +13,8 @@ import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.gate.vo.Cluster.interacts.PostShowVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
-import xyz.spc.serve.cluster.flow.interacts.InteractsFlow;
+import xyz.spc.serve.cluster.flow.InteractsFlow;
+
 
 @Slf4j
 @MLog

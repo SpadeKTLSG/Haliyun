@@ -17,7 +17,7 @@ import xyz.spc.serve.guest.flow.UsersFlow;
 
 @Slf4j
 @MLog
-@Tag(name = "UsersLevel", description = "用户等级合集")
+@Tag(name = "UsersLevel", description = "用户用户等级合集")
 @RequestMapping("/Guest/users/userslevel")
 @RestController
 @RequiredArgsConstructor

@@ -35,7 +35,7 @@ public class FilesControl {
             @RequestParam("id") @NotNull Long id,
             @RequestParam("current") Long current,
             @RequestParam("size") Long size) {
-
+        filesFlow.getUserDataOfFile(id, current, size);
     }
 
 }

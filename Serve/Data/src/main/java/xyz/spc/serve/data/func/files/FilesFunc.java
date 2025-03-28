@@ -1,26 +1,23 @@
-package xyz.spc.serve.data.flow;
+package xyz.spc.serve.data.func.files;
 
 
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import xyz.spc.serve.data.func.files.FilesFunc;
+import xyz.spc.infra.special.Data.files.FilesRepo;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class FilesFlow {
+public class FilesFunc {
 
-
-    //Feign
-
-
-    //Func
-    private final FilesFunc filesFunc;
-
+    /**
+     * Repo
+     */
+     private final FilesRepo filesRepo;
 
     public void getUserDataOfFile(@NotNull Long id, Long current, Long size) {
-        filesFunc.getUserDataOfFile(id, current, size);
+        、、todo
     }
 }

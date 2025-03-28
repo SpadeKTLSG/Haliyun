@@ -99,8 +99,8 @@ public class UsersFlow {
         //中间表查用户加入的群组ids集合
         List<Long> groupIds = userClusterFunc.getUsersClusterIds(id);
 
-        //去 Cluster 模块 找对应群组名
-        userGreatVO.setClusterNames(clustersClient.getClusterNames(groupIds));
+        //Cluster 模块Feign找对应群组名
+        userGreatVO.setClusterNames(clustersClient.getClusterNamesByIds(groupIds));
 
         return userGreatVO;
     }

@@ -45,15 +45,14 @@ public class UsersControl {
     //! Client
 
     @GetMapping("/user_map")
-    @Operation(summary = "远程调用获得用户Map")
     public Map<Object, Object> getUserMap(@RequestParam("tokenKey") String tokenKey) {
         return redisTemplate.opsForHash().entries(tokenKey);
     }
     //http://localhost:10000/Guest/users/user_map
 
-    @GetMapping("/user_tl")
 
     @Deprecated
+    @GetMapping("/user_tl")
     public Result<Object> getUserMap() {
         return Result.success(UserContext.getUser());
     }
@@ -65,7 +64,6 @@ public class UsersControl {
      * <极度热点, 暴露功能>
      */
     @GetMapping("/user_mark")
-    @Operation(summary = "登陆用户获得TL中的用户标志信息")
     public Result<Map<String, String>> getUserMark(@RequestParam String account) {
         return Result.success(usersFlow.getUserMark(account));
     }

@@ -37,11 +37,14 @@ public class DatasFlow {
     }
 
     public PageResponse<PostShowVO> getUserDataOfPost(PageRequest pageRequest) {
-        //获取这个用户收藏的动态列表 (id 用 TL来做的)
+
         Long userId = Objects.requireNonNull(UserContext.getUI());
 
+        // 获取这个用户收藏的动态列表 (id 用 TL来做的)
         List<CollectDO> collectList = collectFunc.getUserCollectListOfPost(userId);
 
+
+        // 发起远程调用, 对每一个收藏进行补偿查询 todo
         return interactsClient.getUserDataOfPost(userId, pageRequest.getCurrent(), pageRequest.getSize());
     }
 

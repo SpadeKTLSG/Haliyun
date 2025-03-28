@@ -28,7 +28,7 @@ public class Remark extends BaseModel {
     private Integer type;
     public static final int TYPE_CLUSTER = 0;
     public static final int TYPE_FILE = 1;
-    public static final int TYPE_DYNAMIC = 2;
+    public static final int TYPE_POST = 2;
 
     /**
      * 点赞数 (可重复点击)

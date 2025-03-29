@@ -67,6 +67,12 @@ public class DatasFlow {
         int toIndex = Math.min(fromIndex + pageSize, postIds.size());
 
         // 获取当前页的 Post id
+
+        // 避免 越界
+        if (fromIndex >= postIds.size()) {
+            return new PageResponse<>(currentPage, pageSize, postIds.size(), List.of());
+        }
+
         List<Long> pagedPostIds = postIds.subList(fromIndex, toIndex);
 
         // 批量查询动态对象
@@ -108,6 +114,11 @@ public class DatasFlow {
         int pageSize = pageRequest.getSize();
         int fromIndex = (currentPage - 1) * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, fileIds.size());
+
+        // 避免 越界
+        if (fromIndex >= fileIds.size()) {
+            return new PageResponse<>(currentPage, pageSize, fileIds.size(), List.of());
+        }
 
         // 获取当前页的 File id
         List<Long> pagedFileIds = fileIds.subList(fromIndex, toIndex);

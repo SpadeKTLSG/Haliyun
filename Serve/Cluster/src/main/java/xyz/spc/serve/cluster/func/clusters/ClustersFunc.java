@@ -38,4 +38,17 @@ public class ClustersFunc {
                 .map(ClusterDO::getName)
                 .collect(Collectors.toList());
     }
+
+
+    /**
+     * 根据ids批量查询群组
+     */
+    public List<ClusterDO> getClusterByIdBatch(List<Long> pagedClusterIds) {
+
+        if( pagedClusterIds == null || pagedClusterIds.isEmpty()) {
+            return List.of();
+        }
+
+        return clustersRepo.clusterMapper.selectBatchIds(pagedClusterIds);
+    }
 }

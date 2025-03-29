@@ -10,6 +10,7 @@ import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.gate.vo.Cluster.interacts.PostShowVO;
 import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.gate.vo.Guest.datas.CollectCountVO;
+import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.infra.feign.Cluster.InteractsClient;
 import xyz.spc.infra.feign.Data.FilesClient;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
@@ -26,9 +27,11 @@ public class DatasFlow {
     //Feign
     private final InteractsClient interactsClient;
     private final FilesClient filesClient;
+    private final ClustersClient clustersClient;
 
     //Func
     private final CollectFunc collectFunc;
+
 
     //! Client
 
@@ -144,8 +147,41 @@ public class DatasFlow {
 
         //? 这边的思路和上面一样
 
+        // 获取这个用户收藏的群组列表
+        List<CollectDO> collectList = collectFunc.getUserCollectListOfCluster(userId);
 
-        return new PageResponse<>(10, 10, 10, null);
+        // 收集所有需要查询的 Cluster id
+        List<Long> clusterIds = collectList.stream()
+                .map(CollectDO::getTargetId)
+                .toList();
+
+        // 提前进行逻辑分页操作: 将分页查询降级为批量查询，对方服务只需要查询提供的 ids
+        int currentPage = pageRequest.getCurrent();
+        int pageSize = pageRequest.getSize();
+        int fromIndex = (currentPage - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, clusterIds.size());
+
+        // 避免越界
+        if (fromIndex >= clusterIds.size()) {
+            return new PageResponse<>(currentPage, pageSize, clusterIds.size(), List.of());
+        }
+
+        // 获取当前页的 Cluster id
+        List<Long> pagedClusterIds = clusterIds.subList(fromIndex, toIndex);
+
+        // 批量查询群组对象
+        List<ClusterVO> clusterVOS = clustersClient.getClusterByIdBatch(pagedClusterIds);
+
+        // 构建分页响应
+        PageResponse<ClusterVO> res = new PageResponse<>(
+                pageRequest.getCurrent(),
+                pageRequest.getSize(),
+                clusterIds.size(),
+                clusterVOS
+        );
+
+        return res;
+
     }
 
 }

@@ -48,4 +48,17 @@ public class CollectFunc {
 
         return tmp;
     }
+
+    /**
+     * 查询用户收藏的群组列表
+     */
+    public List<CollectDO> getUserCollectListOfCluster(Long userId) {
+
+        List<CollectDO> tmp = collectsRepo.collectService.list(Wrappers.lambdaQuery(CollectDO.class)
+                .eq(CollectDO::getUserId, userId)
+                .eq(CollectDO::getType, Collect.TYPE_CLUSTER)
+        );
+
+        return tmp;
+    }
 }

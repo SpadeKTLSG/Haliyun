@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.cluster.flow.ClustersFlow;
 
@@ -34,4 +35,13 @@ public class ClustersControl {
     List<String> getClusterNamesByIds(@RequestBody List<Long> groupIds) {
         return clustersFlow.getClusterNamesByIds(groupIds);
     }
+
+    /**
+     * id 批量查询群组
+     */
+    @PostMapping("/cluster/batch")
+    List<ClusterVO> getClusterByIdBatch(@RequestBody List<Long> pagedClusterIds){
+        return clustersFlow.getClusterByIdBatch(pagedClusterIds);
+    }
+
 }

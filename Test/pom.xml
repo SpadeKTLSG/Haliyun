@@ -35,7 +35,7 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>xyz.spc.serve.group</groupId>
+            <groupId>xyz.spc.serve.cluster</groupId>
             <artifactId>Cluster</artifactId>
             <version>3.0.0-RELEASE</version>
             <scope>test</scope>

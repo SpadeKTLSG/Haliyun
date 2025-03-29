@@ -35,4 +35,17 @@ public class CollectFunc {
         return tmp;
 
     }
+
+    /**
+     * 查询用户收藏的文件列表
+     */
+    public List<CollectDO> getUserCollectListOfFile(Long userId) {
+
+        List<CollectDO> tmp = collectsRepo.collectService.list(Wrappers.lambdaQuery(CollectDO.class)
+                .eq(CollectDO::getUserId, userId)
+                .eq(CollectDO::getType, Collect.TYPE_FILE)
+        );
+
+        return tmp;
+    }
 }

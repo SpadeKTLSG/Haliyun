@@ -36,32 +36,40 @@ public class InteractsFlow {
         // 批量查询动态基本存储对象
         List<PostDO> postList = postFunc.getPostByIdBatch(postIds);
 
-        if(postList == null || postList.isEmpty()) {
+        if (postList == null || postList.isEmpty()) {
             return List.of();
         }
 
         // 补充群组查询信息
         // 收集所有需要查询的 clusterId
-        List<Long> groupIds = postList.stream()
+        List<Long> clusterIds = postList.stream()
                 .map(PostDO::getClusterId)
-                .collect(Collectors.toList());
+                .toList();
 
         // 批量查询 clusterName
-        List<String> clusterNames = clustersFunc.getClusterNamesByIds(groupIds);
+        List<String> clusterNames = clustersFunc.getClusterNamesByIds(clusterIds);
 
         // 补充信息
         return postList.stream()
                 .map(post -> {
+
                     PostShowVO postShowVO = new PostShowVO();
+
                     postShowVO.setId(post.getId());
                     postShowVO.setUserId(post.getUserId());
                     postShowVO.setContent(post.getContent());
-                    postShowVO.setCreateTime(post.getCreateTime());
-                    postShowVO.setUpdateTime(post.getUpdateTime());
                     postShowVO.setTitle(post.getTitle());
                     postShowVO.setPics(post.getPics());
                     postShowVO.setPersonShow(post.getPersonShow());
-                    postShowVO.setClusterName(clusterNames.get(0));
+
+                    postShowVO.setCreateTime(post.getCreateTime());
+                    postShowVO.setUpdateTime(post.getUpdateTime());
+
+                    // 补充群组名称
+                    int index = clusterIds.indexOf(post.getClusterId());
+                    if (index != -1) {
+                        postShowVO.setClusterName(clusterNames.get(index));
+                    }
                     return postShowVO;
                 })
                 .collect(Collectors.toList());

@@ -16,5 +16,5 @@ public interface InteractsClient {
      * id 批量查询 Post 动态
      */
     @PostMapping(BASE_URL + "/post/batch")
-    List<PostShowVO> getPostByIdBatch(@RequestBody List<Long> clusterIds);
+    List<PostShowVO> getPostByIdBatch(@RequestBody List<Long> postIds);
 }

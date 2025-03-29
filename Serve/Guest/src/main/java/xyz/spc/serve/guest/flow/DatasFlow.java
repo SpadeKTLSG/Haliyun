@@ -91,8 +91,40 @@ public class DatasFlow {
         Long userId = Objects.requireNonNull(UserContext.getUI());
 
         //? 这边的思路和上面一样
+        //1. 获取需要的文件对象id清单 (手动分页ids)
+        //2. 批量查询文件对象, 只需要补充其中需要的字段
+        //3. 返回给前端, 进行展示
 
-        return new PageResponse<>(10, 10, 10, null);
+        // 获取这个用户收藏的文件列表
+        List<CollectDO> collectList = collectFunc.getUserCollectListOfFile(userId);
+
+        // 收集 所有 需要去查询的 File id
+        List<Long> fileIds = collectList.stream()
+                .map(CollectDO::getTargetId)
+                .toList();
+
+        // 提前进行逻辑分页操作: 将 分页查询 降级为 批量查询, 对方服务只需要查询提供的 ids
+        int currentPage = pageRequest.getCurrent();
+        int pageSize = pageRequest.getSize();
+        int fromIndex = (currentPage - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, fileIds.size());
+
+        // 获取当前页的 File id
+        List<Long> pagedFileIds = fileIds.subList(fromIndex, toIndex);
+
+        // 批量查询文件对象
+        List<FileShowVO> fileShowVOS = filesClient.getFileByIdBatch(pagedFileIds);
+
+        // 构建分页响应
+        PageResponse<FileShowVO> res = new PageResponse<>(
+                pageRequest.getCurrent(),
+                pageRequest.getSize(),
+                fileIds.size(),
+                fileShowVOS
+        );
+
+
+        return res;
     }
 
     public PageResponse<ClusterVO> getUserDataOfCluster(PageRequest pageRequest) {
@@ -100,7 +132,6 @@ public class DatasFlow {
         Long userId = Objects.requireNonNull(UserContext.getUI());
 
         //? 这边的思路和上面一样
-
 
 
         return new PageResponse<>(10, 10, 10, null);

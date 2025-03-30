@@ -56,7 +56,7 @@ public class DatasControl {
     public Result<CollectCountVO> getUserDataOfAllCollect( ) {
         return Result.success(datasFlow.getUserDataOfAllCollect());
     }
-    //http://localhost:10000/Guest/datas/collect/count?id=...
+    //http://localhost:10000/Guest/datas/collect/count
 
 
     /**

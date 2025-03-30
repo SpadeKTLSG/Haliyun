@@ -36,6 +36,12 @@ public class DatasFlow {
     //! Client
 
     public CollectCountVO getUserDataOfAllCollect() {
+
+        //复用下面的清单查询, 直接把清单数量统计
+
+        Long userId = Objects.requireNonNull(UserContext.getUI());
+
+
         return null;
     }
 

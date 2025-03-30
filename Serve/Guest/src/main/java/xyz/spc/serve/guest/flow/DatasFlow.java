@@ -42,7 +42,20 @@ public class DatasFlow {
         Long userId = Objects.requireNonNull(UserContext.getUI());
 
 
-        return null;
+        // 动态
+        int postCount = collectFunc.getUserCollectListOfPost(userId).size();
+        // 文件
+        int fileCount = collectFunc.getUserCollectListOfFile(userId).size();
+        // 群组
+        int clusterCount = collectFunc.getUserCollectListOfCluster(userId).size();
+
+        CollectCountVO collectCountVO = new CollectCountVO();
+        collectCountVO.setPostCount(postCount);
+        collectCountVO.setFileCount(fileCount);
+        collectCountVO.setClusterCount(clusterCount);
+
+
+        return collectCountVO;
     }
 
 

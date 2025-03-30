@@ -12,9 +12,9 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class CollectCountVO extends BaseVO {
 
-    private Long postCount;
+    private Integer postCount;
 
-    private Long fileCount;
+    private Integer fileCount;
 
-    private Long clusterCount;
+    private Integer clusterCount;
 }

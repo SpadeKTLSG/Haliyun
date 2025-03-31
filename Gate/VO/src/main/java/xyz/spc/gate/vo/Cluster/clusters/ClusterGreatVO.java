@@ -4,6 +4,8 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import xyz.spc.gate.vo.BaseVO;
 
+import java.util.List;
+
 @Data
 @Builder
 @EqualsAndHashCode(callSuper = true)
@@ -51,13 +53,22 @@ public class ClusterGreatVO extends BaseVO {
 
     private String remarks;
 
+
     // 临时字段 T-model
+
+    // 用户信息
+
+    private String userAccount;
+
+    private Integer userisAdmin;
+
 
     // 公告信息
 
     private String noticeName;
 
     private String noticeContent;
+
 
     // 货币信息
 
@@ -67,7 +78,8 @@ public class ClusterGreatVO extends BaseVO {
 
     private String currencyPic;
 
+
     // 评论信息(清单)
 
-
+    private List<String> content;
 }

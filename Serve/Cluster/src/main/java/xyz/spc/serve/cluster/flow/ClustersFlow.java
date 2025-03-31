@@ -156,6 +156,9 @@ public class ClustersFlow {
 
         //2 补充字段Tmodel
 
+        //2.0 补充 UserDO
+
+
         //2.1 补充 NoticeDO
 
 
@@ -163,6 +166,9 @@ public class ClustersFlow {
 
 
         //2.3 补充 RemarkDOS
+
+
+        //3 组装返回
 
     }
 }

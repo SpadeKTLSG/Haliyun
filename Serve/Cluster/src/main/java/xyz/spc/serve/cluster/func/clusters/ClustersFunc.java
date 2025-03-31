@@ -2,10 +2,14 @@ package xyz.spc.serve.cluster.func.clusters;
 
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.spc.domain.dos.Cluster.clusters.ClusterDO;
+import xyz.spc.domain.dos.Cluster.clusters.ClusterDetailDO;
+import xyz.spc.domain.dos.Cluster.clusters.ClusterFuncDO;
+import xyz.spc.gate.vo.Cluster.clusters.ClusterGreatVO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.infra.special.Cluster.clusters.ClustersRepo;
 
@@ -87,4 +91,16 @@ public class ClustersFunc {
     }
 
 
+    public ClusterGreatVO getClusterInfo(Long id) {
+
+        return clustersRepo.clusterMapper.selectJoinOne(ClusterGreatVO.class, new MPJLambdaWrapper<ClusterDO>()
+                .selectAll(ClusterDO.class)
+                .selectAll(ClusterDetailDO.class)
+                .selectAll(ClusterFuncDO.class)
+                .leftJoin(ClusterDetailDO.class, ClusterDetailDO::getId, ClusterDO::getId)
+                .leftJoin(ClusterFuncDO.class, ClusterFuncDO::getId, ClusterDO::getId)
+                .eq(ClusterDO::getId, id)
+        );
+
+    }
 }

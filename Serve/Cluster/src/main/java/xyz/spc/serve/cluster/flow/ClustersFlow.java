@@ -151,5 +151,18 @@ public class ClustersFlow {
      */
     public ClusterGreatVO getAllClusterById(Long id) {
 
+        //1 联表查询三张表
+        ClusterGreatVO clusterGreatVO = clustersFunc.getClusterInfo(id);
+
+        //2 补充字段Tmodel
+
+        //2.1 补充NoticeDO
+
+
+        //2.2 补充CurrencyDO
+
+
+        //2.3 补充RemarkDOS
+
     }
 }

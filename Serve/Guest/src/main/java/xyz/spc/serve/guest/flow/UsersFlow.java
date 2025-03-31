@@ -8,13 +8,17 @@ import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.levels.LevelVO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
-import xyz.spc.infra.feign.Guest.UsersClient;
+import xyz.spc.infra.feign.Cluster.ClustersClient;
+import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.guest.func.levels.LevelFunc;
 import xyz.spc.serve.guest.func.records.StatisticFunc;
 import xyz.spc.serve.guest.func.records.TombFunc;
+import xyz.spc.serve.guest.func.users.UserClusterFunc;
 import xyz.spc.serve.guest.func.users.UsersFunc;
 
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -22,13 +26,14 @@ import java.util.Map;
 public class UsersFlow {
 
     //Feign
-    private final UsersClient usersClient;
+    private final ClustersClient clustersClient;
 
     //Func
     private final UsersFunc usersFunc;
     private final LevelFunc levelFunc;
     private final TombFunc tombFunc;
     private final StatisticFunc statisticFunc;
+    private final UserClusterFunc userClusterFunc;
 
 
     /**
@@ -83,7 +88,7 @@ public class UsersFlow {
     /**
      * 获取用户信息
      */
-    public UserGreatVO getUserInfoWithGroups(Long id) {
+    public UserGreatVO getUserInfoWithClusters(Long id) {
         //获得用户基础联表三张信息
         UserGreatVO userGreatVO = usersFunc.getUserInfo(id);
 
@@ -92,15 +97,25 @@ public class UsersFlow {
         userGreatVO.setLevelName(levelVO.getName());
         userGreatVO.setLevelFloor(levelVO.getFloor());
 
-        //todo 等群组上线后再开启
-        //查用户加入的群组ids
-//        List<Long> groupIds = usersFunc.getUsersGroupIds(id);
-//
-//        //通过ids去 Group 模块 找群组名
-//        userGreatVO.setGroupNames(usersClient.getGroupNames(groupIds));
+
+        //中间表查用户加入的群组ids集合
+        List<Long> groupIds = userClusterFunc.getUsersClusterIds(id);
+
+        //Cluster 模块Feign找对应群组名
+        userGreatVO.setClusterNames(clustersClient.getClusterNamesByIds(groupIds));
 
         return userGreatVO;
     }
+
+    /**
+     * 查用户加入的群组ids集合 (清单)
+     */
+    public List<Long> getUserClusterIds() {
+
+        Long userId = Objects.requireNonNull(UserContext.getUI());
+        return userClusterFunc.getUsersClusterIds(userId);
+    }
+
 
     /**
      * 更新用户信息
@@ -123,5 +138,16 @@ public class UsersFlow {
 
         //用户: 注销用户基础联表三张信息
         usersFunc.killUserAccount(id);
+    }
+
+    /**
+     * 获取用户等级
+     */
+    public Integer getUserLevelFloor(Long id) {
+        //获取对应的等级 id
+        Long tmp = usersFunc.getUserLevelFloor(id);
+
+        //查看对应id的等级的层级
+        return levelFunc.getLevelInfo(tmp).getFloor();
     }
 }

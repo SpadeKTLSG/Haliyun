@@ -31,8 +31,8 @@ public class Collect extends BaseModel {
      * 收藏类型 动态0 文件1 群组2
      */
     private Integer type;
-    public static final int TYPE_DYNAMIC = 0;
+    public static final int TYPE_POST = 0;
     public static final int TYPE_FILE = 1;
-    public static final int TYPE_GROUP = 2;
+    public static final int TYPE_CLUSTER = 2;
 
 }

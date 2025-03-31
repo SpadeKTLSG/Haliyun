@@ -28,6 +28,6 @@ public interface ReqRespCT {
     /**
      * 默认分页大小
      */
-    long DEFAULT_PAGE_SIZE = 10L;
+    Integer DEFAULT_PAGE_SIZE = 10;
 
 }

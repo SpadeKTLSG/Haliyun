@@ -20,7 +20,7 @@ public class FileDO extends BaseDO {
 
     private Long userId;
 
-    private Long groupId;
+    private Long clusterId;
 
     private String name;
 

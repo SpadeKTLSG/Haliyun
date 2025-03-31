@@ -22,7 +22,7 @@ public class TombDTO extends BaseDTO {
 
     private Long maxCoin;
 
-    private String bigintestGroup;
+    private String bigintestCluster;
 
     private LocalDateTime deepestNignt;
 

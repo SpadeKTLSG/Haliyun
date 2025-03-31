@@ -20,13 +20,13 @@ public class UserFuncDO extends BaseDO {
 
     private Integer vip;
 
-    private Integer createGroupCount;
+    private Integer createClusterCount;
 
-    private Integer createGroupMax;
+    private Integer createClusterMax;
 
-    private Integer joinGroupCount;
+    private Integer joinClusterCount;
 
-    private Integer joinGroupMax;
+    private Integer joinClusterMax;
 
     private Long coin;
 

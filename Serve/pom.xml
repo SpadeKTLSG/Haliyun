@@ -19,7 +19,7 @@
     <modules>
         <module>Auxiliary</module>
         <module>Data</module>
-        <module>Group</module>
+        <module>Cluster</module>
         <module>Guest</module>
         <module>Guide</module>
         <module>Money</module>

@@ -36,22 +36,22 @@ public class UserFunc extends BaseModel {
     /**
      * 当前创建群组数
      */
-    private Integer createGroupCount;
+    private Integer createClusterCount;
 
     /**
      * 最大创建群组数
      */
-    private Integer createGroupMax;
+    private Integer createClusterMax;
 
     /**
      * 当前加入群组数
      */
-    private Integer joinGroupCount;
+    private Integer joinClusterCount;
 
     /**
      * 最大加入群组数
      */
-    private Integer joinGroupMax;
+    private Integer joinClusterMax;
 
     /**
      * 硬币数 (指平台硬币)

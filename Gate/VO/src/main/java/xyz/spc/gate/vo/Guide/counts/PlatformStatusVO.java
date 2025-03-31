@@ -16,7 +16,7 @@ public class PlatformStatusVO extends BaseVO {
 
     private Long userCount;
 
-    private Long groupCount;
+    private Long clusterCount;
 
     private Long fileCount;
 

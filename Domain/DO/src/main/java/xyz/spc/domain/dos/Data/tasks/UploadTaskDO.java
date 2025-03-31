@@ -12,7 +12,7 @@ import xyz.spc.domain.dos.BaseDO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@TableName("file_func")
+@TableName("upload_task")
 public class UploadTaskDO extends BaseDO {
 
     private Long id;

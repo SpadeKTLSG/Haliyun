@@ -16,7 +16,7 @@ public class SelfMailDO extends BaseDO {
 
     private Long id;
 
-    private Long groupId;
+    private Long clusterId;
 
     private Long senderId;
 

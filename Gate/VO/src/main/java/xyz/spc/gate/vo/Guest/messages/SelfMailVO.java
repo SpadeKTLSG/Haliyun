@@ -14,7 +14,7 @@ public class SelfMailVO extends BaseVO {
 
     private Long id;
 
-    private Long groupId;
+    private Long clusterId;
 
     private Long senderId;
 

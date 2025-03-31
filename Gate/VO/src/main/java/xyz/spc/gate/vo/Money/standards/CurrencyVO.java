@@ -14,7 +14,7 @@ public class CurrencyVO extends BaseVO {
 
     private Long id;
 
-    private Long groupId;
+    private Long clusterId;
 
     private String name;
 

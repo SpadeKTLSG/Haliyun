@@ -333,4 +333,9 @@ public class UsersFunc {
     public void killUserAccount(Long id) {
         usersRepo.userService.updateById(UserDO.builder().id(id).status(User.STATUS_STOP).build());
     }
+
+    public Long getUserLevelFloor(Long id) {
+        return usersRepo.userFuncService.getById(id).getLevelId();
+    }
+
 }

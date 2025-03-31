@@ -145,10 +145,10 @@ spring:
                 redis-rate-limiter.replenishRate: 100000 # 每秒允许的请求数 : 十万
                 redis-rate-limiter.burstCapacity: 200000 # 突发请求的最大数量: 二十万
                 key-resolver: "#{@ipKeyResolver}" # 使用IP地址作为限流的key, 创建一个Limit Config
-        - id: group-service
-          uri: lb://group-app
+        - id: cluster-service
+          uri: lb://cluster-app
           predicates:
-            - Path=/Group/**
+            - Path=/Cluster/**
           filters:
             - name: RequestRateLimiter
               args:

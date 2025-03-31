@@ -54,13 +54,13 @@ public class UserGreatVO extends BaseVO {
 
     private Integer vip;
 
-    private Integer createGroupCount;
+    private Integer createClusterCount;
 
-    private Integer createGroupMax;
+    private Integer createClusterMax;
 
-    private Integer joinGroupCount;
+    private Integer joinClusterCount;
 
-    private Integer joinGroupMax;
+    private Integer joinClusterMax;
 
     private Long coin;
 
@@ -73,7 +73,7 @@ public class UserGreatVO extends BaseVO {
     /**
      * 用户加入的群组名
      */
-    private List<String> groupNames;
+    private List<String> clusterNames;
 
     /**
      * 等级层级

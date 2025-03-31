@@ -16,7 +16,7 @@ public class PlatformStatusDTO extends BaseDTO {
 
     private Long userCount;
 
-    private Long groupCount;
+    private Long clusterCount;
 
     private Long fileCount;
 

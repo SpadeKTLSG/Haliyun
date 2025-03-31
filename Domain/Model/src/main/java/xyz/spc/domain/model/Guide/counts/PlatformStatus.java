@@ -26,7 +26,7 @@ public class PlatformStatus extends BaseModel {
     /**
      * 群组数统计
      */
-    private Long groupCount;
+    private Long clusterCount;
 
     /**
      * 文件数统计

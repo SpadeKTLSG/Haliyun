@@ -18,7 +18,7 @@ public class FileDTO extends BaseDTO {
 
     private Long userId;
 
-    private Long groupId;
+    private Long clusterId;
 
     private String name;
 

@@ -37,7 +37,7 @@ public class Tomb extends BaseModel {
     /**
      * 参加或创建的群组的最长生存时间
      */
-    private String bigintestGroup;
+    private String bigintestCluster;
 
     /**
      * 最晚登陆时间

@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import xyz.spc.common.constant.Guest.UsersValiGroups;
+import xyz.spc.common.constant.Guest.UsersValiClusters;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.validate.Xss;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
@@ -27,6 +27,7 @@ import xyz.spc.serve.auxiliary.config.senti.CustomBlockHandler;
 import xyz.spc.serve.auxiliary.config.senti.SentinelPath;
 import xyz.spc.serve.guest.flow.UsersFlow;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -45,15 +46,14 @@ public class UsersControl {
     //! Client
 
     @GetMapping("/user_map")
-    @Operation(summary = "远程调用获得用户Map")
     public Map<Object, Object> getUserMap(@RequestParam("tokenKey") String tokenKey) {
         return redisTemplate.opsForHash().entries(tokenKey);
     }
     //http://localhost:10000/Guest/users/user_map
 
-    @GetMapping("/user_tl")
 
     @Deprecated
+    @GetMapping("/user_tl")
     public Result<Object> getUserMap() {
         return Result.success(UserContext.getUser());
     }
@@ -65,11 +65,20 @@ public class UsersControl {
      * <极度热点, 暴露功能>
      */
     @GetMapping("/user_mark")
-    @Operation(summary = "登陆用户获得TL中的用户标志信息")
     public Result<Map<String, String>> getUserMark(@RequestParam String account) {
         return Result.success(usersFlow.getUserMark(account));
     }
     //http://localhost:10000/Guest/users/user_mark
+
+
+    /**
+     * 查用户加入的群组id清单
+     */
+    @GetMapping("/user_clusters")
+    public Result<List<Long>> getUserClusterIds() {
+        return Result.success(usersFlow.getUserClusterIds());
+    }
+    //http://localhost:10000/Guest/users/user_clusters
 
 
     //! Func
@@ -106,7 +115,7 @@ public class UsersControl {
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
     public Result<String> login(
             @RequestBody
-            @Validated({UsersValiGroups.Common.class, UsersValiGroups.Login.class}) //登陆校验组, 减少Service层校验
+            @Validated({UsersValiClusters.Common.class, UsersValiClusters.Login.class}) //登陆校验组, 减少Service层校验
             UserDTO userDTO
     ) {
         String token = usersFlow.login(userDTO);
@@ -135,7 +144,7 @@ public class UsersControl {
     @Parameters(@Parameter(name = "userLoginDTO", description = "用户登录DTO", required = true))
     public Result<String> register(
             @RequestBody
-            @Validated({UsersValiGroups.Common.class, UsersValiGroups.Register.class})
+            @Validated({UsersValiClusters.Common.class, UsersValiClusters.Register.class})
             UserDTO userDTO
     ) {
         return usersFlow.register(userDTO) ? Result.success("注册成功") : Result.fail("注册失败");
@@ -183,7 +192,9 @@ public class UsersControl {
     @Operation(summary = "查用户信息")
     @Parameter(name = "id", description = "用户id", required = true)
     public Result<UserGreatVO> getUserInfo(@NotNull @RequestParam("id") Long id) {
-        return Result.success(usersFlow.getUserInfoWithGroups(id));
+        return Result.success(usersFlow.getUserInfoWithClusters(id));
     }
     //http://localhost:10000/Guest/users/user_info
+
+
 }

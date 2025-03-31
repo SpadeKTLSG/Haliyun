@@ -1,11 +1,12 @@
 package xyz.spc.common.funcpack.page;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Data;
 import xyz.spc.common.constant.ReqRespCT;
 
 import java.io.Serializable;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -15,44 +16,51 @@ import java.util.stream.Collectors;
  */
 @Data
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PageResponse<T> implements Serializable {
 
 
     /**
      * 当前页
      */
-    private Long current;
+    private Integer current;
 
     /**
      * 每页显示条数
      */
-    private Long size;
+    private Integer size;
 
     /**
      * 总数
      */
-    private Long total;
+    private Integer total;
 
     /**
      * 查询数据列表
      */
     private List<T> records;
 
-    public PageResponse(long current) {
+    public PageResponse() {
+
+    }
+
+    public PageResponse(int current) {
         this(current, ReqRespCT.DEFAULT_PAGE_SIZE, 0);
     }
 
-    public PageResponse(long current, long size) {
+    public PageResponse(int current, int size) {
         this(current, size, 0);
     }
 
-    public PageResponse(long current, long size, long total) {
-        this(current, size, total, Collections.emptyList());
+    public PageResponse(int current, int size, int total) {
+        this(current, size, total, new ArrayList<>());
     }
 
-    public PageResponse(long current, long size, long total, List<T> records) {
+    public PageResponse(int current, int size, int total, List<T> records) {
         if (current > 1) {
             this.current = current;
+        } else {
+            this.current = 1;
         }
         this.size = size;
         this.total = total;

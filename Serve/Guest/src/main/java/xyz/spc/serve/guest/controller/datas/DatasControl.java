@@ -2,7 +2,6 @@ package xyz.spc.serve.guest.controller.datas;
 
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,7 +51,6 @@ public class DatasControl {
      */
     @GetMapping("/collect/count")
     @Operation(summary = "查用户收藏总览情况")
-    @Parameter(name = "id", description = "用户id", required = true)
     public Result<CollectCountVO> getUserDataOfAllCollect( ) {
         return Result.success(datasFlow.getUserDataOfAllCollect());
     }
@@ -64,7 +62,6 @@ public class DatasControl {
      */
     @GetMapping("/collect/data/post")
     @Operation(summary = "查用户 动态 收藏信息")
-    @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<PostShowVO>> getUserDataOfPost(
 
             @RequestParam("current") Integer current,
@@ -80,7 +77,6 @@ public class DatasControl {
      */
     @GetMapping("/collect/data/file")
     @Operation(summary = "查用户 文件 收藏信息")
-    @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<FileShowVO>> getUserDataOfFile(
 
             @RequestParam("current") Integer current,
@@ -96,7 +92,6 @@ public class DatasControl {
      */
     @GetMapping("/collect/data/cluster")
     @Operation(summary = "查用户 群组 收藏信息")
-    @Parameter(name = "id", description = "用户id", required = true)
     public Result<PageResponse<ClusterVO>> getUserDataOfCluster(
 
             @RequestParam("current") Integer current,

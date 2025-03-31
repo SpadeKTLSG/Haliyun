@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import xyz.spc.common.funcpack.Result;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.cluster.flow.ClustersFlow;
@@ -59,22 +60,24 @@ public class ClustersControl {
      * 大厅群组分页查询 (查所有群组)
      */
     @GetMapping("/hall/all")
-    List<ClusterVO> getHallClusters(
-            @RequestParam(value = "page", defaultValue = "1") Integer page,
+    Result<List<ClusterVO>> getHallClusters(
+            @RequestParam(value = "current", defaultValue = "1") Integer current,
             @RequestParam(value = "size", defaultValue = "10") Integer size
     ) {
-        return clustersFlow.getHallClusters(page, size);
+        return Result.success(clustersFlow.getHallClusters(current, size));
     }
+    //http://localhost:10000/Cluster/clusters/hall/all?page=1&size=10
 
     /**
      * 小院群组分页查询 (查自己加入的群组)
      */
     @GetMapping("/yard/all")
-    List<ClusterVO> getYardClusters(
-            @RequestParam(value = "page", defaultValue = "1") Integer page,
+    Result<List<ClusterVO>> getYardClusters(
+            @RequestParam(value = "current", defaultValue = "1") Integer current,
             @RequestParam(value = "size", defaultValue = "10") Integer size
     ) {
-        return clustersFlow.getYardClusters(page, size);
+        return Result.success(clustersFlow.getYardClusters(current, size));
     }
+    //http://localhost:10000/Cluster/clusters/yard/all?page=1&size=10
 
 }

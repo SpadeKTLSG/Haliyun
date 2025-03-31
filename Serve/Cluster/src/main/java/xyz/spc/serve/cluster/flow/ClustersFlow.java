@@ -69,14 +69,14 @@ public class ClustersFlow {
     /**
      * 直接分页查询所有群组 (简单VO 列表, 用于展示数据和进一步的入口)
      */
-    public List<ClusterVO> getHallClusters(Integer page, Integer size) {
-        return clustersFunc.getHallClusters(page, size);
+    public List<ClusterVO> getHallClusters(Integer current, Integer size) {
+        return clustersFunc.getHallClusters(current, size);
     }
 
     /**
      * 用户id来进行分页查询群组 (简单VO 列表, 用于展示数据和进一步的入口)
      */
-    public List<ClusterVO> getYardClusters(Integer page, Integer size) {
+    public List<ClusterVO> getYardClusters(Integer current, Integer size) {
 
 
         Long userId = Objects.requireNonNull(UserContext.getUI());
@@ -89,7 +89,7 @@ public class ClustersFlow {
         List<ClusterDO> clusterList = clustersFunc.getClusterByIdBatch(clusterIds);
 
         // 手动处理分页返回 (处理类型组装分页返回值)
-        int currentPage = page;
+        int currentPage = current;
         int pageSize = size;
         int fromIndex = (currentPage - 1) * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, clusterList.size());

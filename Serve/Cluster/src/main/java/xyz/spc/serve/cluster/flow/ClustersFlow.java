@@ -61,4 +61,18 @@ public class ClustersFlow {
                 .toList();
 
     }
+
+    /**
+     * 直接分页查询所有群组 (简单VO 列表, 用于展示数据和进一步的入口)
+     */
+    public List<ClusterVO> getHallClusters(Integer page, Integer size) {
+        return clustersFunc.getHallClusters(page, size);
+    }
+
+    /**
+     * 用户id来进行分页查询群组 (简单VO 列表, 用于展示数据和进一步的入口)
+     */
+    public List<ClusterVO> getYardClusters(Integer page, Integer size) {
+        return clustersFunc.getYardClusters(page, size);
+    }
 }

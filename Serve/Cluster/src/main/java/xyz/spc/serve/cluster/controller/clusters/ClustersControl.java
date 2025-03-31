@@ -3,10 +3,7 @@ package xyz.spc.serve.cluster.controller.clusters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.cluster.flow.ClustersFlow;
@@ -40,8 +37,44 @@ public class ClustersControl {
      * id 批量查询群组
      */
     @PostMapping("/cluster/batch")
-    List<ClusterVO> getClusterByIdBatch(@RequestBody List<Long> pagedClusterIds){
+    List<ClusterVO> getClusterByIdBatch(@RequestBody List<Long> pagedClusterIds) {
         return clustersFlow.getClusterByIdBatch(pagedClusterIds);
+    }
+
+    //! Func
+
+
+    //! DELETE
+
+
+    //! ADD
+
+
+    //! UPDATE
+
+
+    //! Query
+
+    /**
+     * 大厅群组分页查询 (查所有群组)
+     */
+    @GetMapping("/hall/all")
+    List<ClusterVO> getHallClusters(
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size
+    ) {
+        return clustersFlow.getHallClusters(page, size);
+    }
+
+    /**
+     * 小院群组分页查询 (查自己加入的群组)
+     */
+    @GetMapping("/yard/all")
+    List<ClusterVO> getYardClusters(
+            @RequestParam(value = "page", defaultValue = "1") Integer page,
+            @RequestParam(value = "size", defaultValue = "10") Integer size
+    ) {
+        return clustersFlow.getYardClusters(page, size);
     }
 
 }

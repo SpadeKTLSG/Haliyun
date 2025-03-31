@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.spc.common.funcpack.Result;
+import xyz.spc.common.funcpack.page.PageRequest;
+import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.domain.dos.Cluster.clusters.ClusterDO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
@@ -69,14 +71,27 @@ public class ClustersFlow {
     /**
      * 直接分页查询所有群组 (简单VO 列表, 用于展示数据和进一步的入口)
      */
-    public List<ClusterVO> getHallClusters(Integer current, Integer size) {
-        return clustersFunc.getHallClusters(current, size);
+    public PageResponse<ClusterVO> getHallClusters(PageRequest pageRequest) {
+        List<ClusterVO> tmp = clustersFunc.getHallClusters(pageRequest.getCurrent(), pageRequest.getSize());
+
+        if (tmp == null || tmp.isEmpty()) {
+            return new PageResponse<>(pageRequest.getCurrent(), pageRequest.getSize(), 0, null);
+        }
+
+        PageResponse<ClusterVO> res = new PageResponse<>(
+                pageRequest.getCurrent(),
+                pageRequest.getSize(),
+                tmp.size(),
+                tmp
+        );
+
+        return res;
     }
 
     /**
      * 用户id来进行分页查询群组 (简单VO 列表, 用于展示数据和进一步的入口)
      */
-    public List<ClusterVO> getYardClusters(Integer current, Integer size) {
+    public PageResponse<ClusterVO> getYardClusters(PageRequest pageRequest) {
 
 
         Long userId = Objects.requireNonNull(UserContext.getUI());
@@ -89,14 +104,14 @@ public class ClustersFlow {
         List<ClusterDO> clusterList = clustersFunc.getClusterByIdBatch(clusterIds);
 
         // 手动处理分页返回 (处理类型组装分页返回值)
-        int currentPage = current;
-        int pageSize = size;
+        int currentPage = pageRequest.getCurrent();
+        int pageSize = pageRequest.getSize();
         int fromIndex = (currentPage - 1) * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, clusterList.size());
 
         // 避免越界
         if (fromIndex >= clusterList.size()) {
-            return List.of();
+            return new PageResponse<>(currentPage, pageSize, clusterList.size(), List.of());
         }
 
         // 获取当前页的 ClusterDO
@@ -116,7 +131,16 @@ public class ClustersFlow {
             return clusterVO;
         }).toList();
 
-        return pagedClusterVOList;
+
+        // 构建分页响应
+        PageResponse<ClusterVO> res = new PageResponse<>(
+                pageRequest.getCurrent(),
+                pageRequest.getSize(),
+                clusterList.size(),
+                pagedClusterVOList
+        );
+
+        return res;
 
     }
 }

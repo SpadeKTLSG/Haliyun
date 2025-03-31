@@ -51,5 +51,23 @@ public class ClusterGreatVO extends BaseVO {
 
     private String remarks;
 
-    // 临时字段
+    // 临时字段 T-model
+
+    // 公告信息
+
+    private String noticeName;
+
+    private String noticeContent;
+
+    // 货币信息
+
+    private String currencyName;
+
+    private Float currencyExchangeRate;
+
+    private String currencyPic;
+
+    // 评论信息(清单)
+
+
 }

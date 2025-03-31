@@ -156,13 +156,13 @@ public class ClustersFlow {
 
         //2 补充字段Tmodel
 
-        //2.1 补充NoticeDO
+        //2.1 补充 NoticeDO
 
 
-        //2.2 补充CurrencyDO
+        //2.2 补充 CurrencyDO
 
 
-        //2.3 补充RemarkDOS
+        //2.3 补充 RemarkDOS
 
     }
 }

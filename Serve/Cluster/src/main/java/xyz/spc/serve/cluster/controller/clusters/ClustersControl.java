@@ -4,8 +4,10 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
+import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
+import xyz.spc.gate.vo.Cluster.clusters.ClusterGreatVO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.cluster.flow.ClustersFlow;
@@ -61,11 +63,11 @@ public class ClustersControl {
      * 大厅群组分页查询 (查所有群组)
      */
     @GetMapping("/hall/all")
-    PageResponse<List<ClusterVO>> getHallClusters(
+    Result<PageResponse<ClusterVO>> getHallClusters(
             @RequestParam(value = "current", defaultValue = "1") Integer current,
             @RequestParam(value = "size", defaultValue = "10") Integer size
     ) {
-        return clustersFlow.getHallClusters(new PageRequest(current, size));
+        return Result.success(clustersFlow.getHallClusters(new PageRequest(current, size)));
     }
     //http://localhost:10000/Cluster/clusters/hall/all?page=1&size=10
 
@@ -73,12 +75,20 @@ public class ClustersControl {
      * 小院群组分页查询 (查自己加入的群组)
      */
     @GetMapping("/yard/all")
-    PageResponse<List<ClusterVO>> getYardClusters(
+    Result<PageResponse<ClusterVO>> getYardClusters(
             @RequestParam(value = "current", defaultValue = "1") Integer current,
             @RequestParam(value = "size", defaultValue = "10") Integer size
     ) {
-        return clustersFlow.getYardClusters(new PageRequest(current, size));
+        return Result.success(clustersFlow.getYardClusters(new PageRequest(current, size)));
     }
     //http://localhost:10000/Cluster/clusters/yard/all?page=1&size=10
 
+    /**
+     * id 查单个群组全部信息
+     */
+    @GetMapping("/hall/one")
+    Result<ClusterGreatVO> getAllClusterById(@RequestParam Long id) {
+        return Result.success(clustersFlow.getAllClusterById(id));
+    }
+    //http://localhost:10000/Cluster/clusters/hall/one?id=...
 }

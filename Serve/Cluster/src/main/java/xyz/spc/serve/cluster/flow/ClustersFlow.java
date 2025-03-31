@@ -7,6 +7,7 @@ import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.domain.dos.Cluster.clusters.ClusterDO;
+import xyz.spc.gate.vo.Cluster.clusters.ClusterGreatVO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.infra.feign.Guest.UsersClient;
@@ -141,6 +142,14 @@ public class ClustersFlow {
         );
 
         return res;
+
+    }
+
+
+    /**
+     * 联表查询群组信息
+     */
+    public ClusterGreatVO getAllClusterById(Long id) {
 
     }
 }

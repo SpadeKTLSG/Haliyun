@@ -20,5 +20,7 @@ public class RemarkDO extends BaseDO {
 
     private Integer type;
 
+    private String content;
+
     private Long likes;
 }

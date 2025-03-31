@@ -17,5 +17,7 @@ public class RemarkDTO extends BaseDTO {
 
     private Integer type;
 
+    private String content;
+
     private Long likes;
 }

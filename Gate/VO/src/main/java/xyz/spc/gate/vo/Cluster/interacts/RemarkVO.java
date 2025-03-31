@@ -17,5 +17,7 @@ public class RemarkVO extends BaseVO {
 
     private Integer type;
 
+    private String content;
+
     private Long likes;
 }

@@ -31,6 +31,11 @@ public class Remark extends BaseModel {
     public static final int TYPE_POST = 2;
 
     /**
+     * 评论内容 (非空)
+     */
+    private String content;
+
+    /**
      * 点赞数 (可重复点击)
      */
     private Long likes;

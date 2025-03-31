@@ -9,6 +9,7 @@ import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.levels.LevelVO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
+import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.guest.func.levels.LevelFunc;
 import xyz.spc.serve.guest.func.records.StatisticFunc;
 import xyz.spc.serve.guest.func.records.TombFunc;
@@ -17,6 +18,7 @@ import xyz.spc.serve.guest.func.users.UsersFunc;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -104,6 +106,16 @@ public class UsersFlow {
 
         return userGreatVO;
     }
+
+    /**
+     * 查用户加入的群组ids集合 (清单)
+     */
+    public List<Long> getUserClusterIds() {
+
+        Long userId = Objects.requireNonNull(UserContext.getUI());
+        return userClusterFunc.getUsersClusterIds(userId);
+    }
+
 
     /**
      * 更新用户信息

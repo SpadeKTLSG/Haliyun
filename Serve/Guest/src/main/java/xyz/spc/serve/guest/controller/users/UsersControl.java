@@ -27,6 +27,7 @@ import xyz.spc.serve.auxiliary.config.senti.CustomBlockHandler;
 import xyz.spc.serve.auxiliary.config.senti.SentinelPath;
 import xyz.spc.serve.guest.flow.UsersFlow;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -68,6 +69,16 @@ public class UsersControl {
         return Result.success(usersFlow.getUserMark(account));
     }
     //http://localhost:10000/Guest/users/user_mark
+
+
+    /**
+     * 查用户加入的群组id清单
+     */
+    @GetMapping("/user_clusters")
+    public Result<List<Long>> getUserClusterIds() {
+        return Result.success(usersFlow.getUserClusterIds());
+    }
+    //http://localhost:10000/Guest/users/user_clusters
 
 
     //! Func
@@ -184,4 +195,6 @@ public class UsersControl {
         return Result.success(usersFlow.getUserInfoWithClusters(id));
     }
     //http://localhost:10000/Guest/users/user_info
+
+
 }

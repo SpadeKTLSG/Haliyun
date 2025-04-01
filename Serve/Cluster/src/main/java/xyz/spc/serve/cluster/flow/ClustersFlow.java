@@ -157,7 +157,7 @@ public class ClustersFlow {
         //2 补充字段Tmodel
 
         //2.0 补充 UserDO
-        // 需要多对多联表查询组对应的人
+        // 直接查GreatVO 里面的 userId找到对应的 UserDO 即可
 
 
         //2.1 补充 NoticeDO

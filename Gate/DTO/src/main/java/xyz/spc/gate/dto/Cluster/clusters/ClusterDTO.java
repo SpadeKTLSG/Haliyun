@@ -14,6 +14,8 @@ public class ClusterDTO extends BaseDTO {
 
     private Long id;
 
+    private Long creatorUserId;
+
     private String name;
 
     private String nickname;

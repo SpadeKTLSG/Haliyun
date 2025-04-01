@@ -157,6 +157,7 @@ public class ClustersFlow {
         //2 补充字段Tmodel
 
         //2.0 补充 UserDO
+        // 需要多对多联表查询组对应的人
 
 
         //2.1 补充 NoticeDO
@@ -169,6 +170,6 @@ public class ClustersFlow {
 
 
         //3 组装返回
-        return clusterGreatVO; //todo 4.1发版
+        return clusterGreatVO;
     }
 }

@@ -21,6 +21,8 @@ public class ClusterGreatVO extends BaseVO {
 
     private String name;
 
+    private Long creatorUserId;
+
     private String nickname;
 
     private String pic;

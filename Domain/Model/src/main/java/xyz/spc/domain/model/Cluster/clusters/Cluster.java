@@ -18,6 +18,11 @@ public class Cluster extends BaseModel {
     private Long id;
 
     /**
+     * 创建者用户id
+     */
+    private Long creatorUserId;
+
+    /**
      * 群组名称
      */
     private String name;

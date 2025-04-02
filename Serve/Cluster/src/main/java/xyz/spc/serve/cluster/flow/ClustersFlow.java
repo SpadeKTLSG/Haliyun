@@ -11,8 +11,8 @@ import xyz.spc.domain.dos.Cluster.functions.NoticeDO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterGreatVO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.gate.vo.Guest.users.UserVO;
-import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.infra.feign.Guest.UsersClient;
+import xyz.spc.infra.feign.Money.StandardsClient;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.cluster.func.clusters.ClustersFunc;
 import xyz.spc.serve.cluster.func.functions.NoticeFunc;
@@ -28,8 +28,9 @@ public class ClustersFlow {
 
 
     //Feign
-    private final ClustersClient clustersClient;
     private final UsersClient usersClient;
+    private final StandardsClient standardsClient;
+
 
     //Func
     private final ClustersFunc clustersFunc;
@@ -190,7 +191,7 @@ public class ClustersFlow {
         String currencyPic = "";
 
         // 直接查 Money模块 的 CurrencyDO 信息 by id
-
+        standardsClient.
 
         //? 2.3 补充 RemarkDOS
 

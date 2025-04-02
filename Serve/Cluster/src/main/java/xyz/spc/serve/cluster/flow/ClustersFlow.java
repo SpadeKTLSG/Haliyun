@@ -156,20 +156,45 @@ public class ClustersFlow {
 
         //2 补充字段Tmodel
 
-        //2.0 补充 UserDO
+
+        //? 2.0 补充 UserDO
+
+        String userAccount = "";
+        Integer userisAdmin = 0;
         // 直接查GreatVO 里面的 userId找到对应的 UserDO 即可
 
 
-        //2.1 补充 NoticeDO
+        //? 2.1 补充 NoticeDO
+
+        String noticeName = "";
+        String noticeContent = "";
 
 
-        //2.2 补充 CurrencyDO
+        //? 2.2 补充 CurrencyDO
+
+        String currencyName = "";
+        Float currencyExchangeRate = 0f;
+        String currencyPic = "";
 
 
-        //2.3 补充 RemarkDOS
+
+        //? 2.3 补充 RemarkDOS
+
+        List<String> content = List.of();
+
+
 
 
         //3 组装返回
+        clusterGreatVO.setUserAccount(userAccount);
+        clusterGreatVO.setUserisAdmin(userisAdmin);
+        clusterGreatVO.setNoticeName(noticeName);
+        clusterGreatVO.setNoticeContent(noticeContent);
+        clusterGreatVO.setCurrencyName(currencyName);
+        clusterGreatVO.setCurrencyExchangeRate(currencyExchangeRate);
+        clusterGreatVO.setCurrencyPic(currencyPic);
+        clusterGreatVO.setContent(content);
+
         return clusterGreatVO;
     }
 }

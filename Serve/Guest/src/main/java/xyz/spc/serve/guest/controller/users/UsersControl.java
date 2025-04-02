@@ -19,6 +19,7 @@ import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.validate.Xss;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
+import xyz.spc.gate.vo.Guest.users.UserVO;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.auxiliary.config.ratelimit.LimitTypeEnum;
@@ -80,6 +81,15 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/user_clusters
 
+
+    /**
+     * 通过用户id获取用户简单VO信息 (账号 / 是否管理员)
+     */
+    @GetMapping( "/user_simple")
+    Result<UserVO> getUserDOInfo(Long creatorUserId){
+        return Result.success(usersFlow.getUserDOInfo(creatorUserId));
+    }
+    //http://localhost:10000/Guest/users/user_simple?creatorUserId=1
 
     //! Func
 

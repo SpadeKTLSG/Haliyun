@@ -9,6 +9,7 @@ import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.domain.dos.Cluster.clusters.ClusterDO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterGreatVO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
+import xyz.spc.gate.vo.Guest.users.UserVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.infra.feign.Guest.UsersClient;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
@@ -30,6 +31,7 @@ public class ClustersFlow {
 
     //Func
     private final ClustersFunc clustersFunc;
+    private final NoticeFunc noticeFunc;
 
 
     public List<String> getClusterNamesByIds(List<Long> groupIds) {
@@ -161,13 +163,17 @@ public class ClustersFlow {
 
         String userAccount = "";
         Integer userisAdmin = 0;
-        // 直接查GreatVO 里面的 userId找到对应的 UserDO 即可
+        // 直接查 GreatVO 里面的 userId找到对应的 UserDO 即可
+        UserVO tmp = usersClient.getUserDOInfo(clusterGreatVO.getCreatorUserId()).getData();
 
+        userAccount = tmp.getAccount();
+        userisAdmin = tmp.getAdmin();
 
         //? 2.1 补充 NoticeDO
 
         String noticeName = "";
         String noticeContent = "";
+        // 直接查 群组功能 Notice by id
 
 
         //? 2.2 补充 CurrencyDO
@@ -177,12 +183,9 @@ public class ClustersFlow {
         String currencyPic = "";
 
 
-
         //? 2.3 补充 RemarkDOS
 
         List<String> content = List.of();
-
-
 
 
         //3 组装返回

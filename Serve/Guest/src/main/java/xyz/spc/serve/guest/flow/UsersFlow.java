@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.levels.LevelVO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
+import xyz.spc.gate.vo.Guest.users.UserVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.guest.func.levels.LevelFunc;
@@ -149,5 +150,12 @@ public class UsersFlow {
 
         //查看对应id的等级的层级
         return levelFunc.getLevelInfo(tmp).getFloor();
+    }
+
+    /**
+     * 获取用户信息
+     */
+    public UserVO getUserDOInfo(Long creatorUserId) {
+        return usersFunc.getUserDOInfo(creatorUserId);
     }
 }

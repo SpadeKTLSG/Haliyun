@@ -31,6 +31,7 @@ import xyz.spc.domain.dos.Guest.users.UserFuncDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
+import xyz.spc.gate.vo.Guest.users.UserVO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
@@ -334,8 +335,24 @@ public class UsersFunc {
         usersRepo.userService.updateById(UserDO.builder().id(id).status(User.STATUS_STOP).build());
     }
 
+    /**
+     * 获取用户等级层级信息
+     */
     public Long getUserLevelFloor(Long id) {
         return usersRepo.userFuncService.getById(id).getLevelId();
     }
 
+    /**
+     * 简单获得用户信息
+     */
+    public UserVO getUserDOInfo(Long creatorUserId) {
+        UserDO tmp = usersRepo.userService.getById(creatorUserId);
+
+        UserVO res = UserVO.builder()
+                .admin(tmp.getAdmin())
+                .account(tmp.getAccount())
+                .build();
+
+        return res;
+    }
 }

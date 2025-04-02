@@ -12,9 +12,9 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class ClusterVO extends BaseVO {
 
-    private String id;
+    private Long id;
 
-    private String creatorUserId;
+    private Long creatorUserId;
 
     private String name;
 

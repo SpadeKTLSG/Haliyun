@@ -37,5 +37,5 @@ public interface UsersClient {
      * 通过用户id获取用户简单VO信息 (账号 / 是否管理员)
      */
     @GetMapping(BASE_URL + "/user_simple")
-    Result<UserVO> getUserDOInfo(Long creatorUserId);
+    Result<UserVO> getUserDOInfo(@RequestParam Long creatorUserId);
 }

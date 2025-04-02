@@ -11,7 +11,7 @@ import xyz.spc.infra.repo.Money.standards.CurrencyService;
 @Service
 @Data
 @RequiredArgsConstructor
-public class StandardsRepo {
+public class CurrencyRepo {
 
     public final CurrencyService currencyService;
     public final CurrencyMapper currencyMapper;

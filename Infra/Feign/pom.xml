@@ -23,6 +23,12 @@
             <version>3.0.0-RELEASE</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>xyz.spc.domain.dos</groupId>
+            <artifactId>DO</artifactId>
+            <version>3.0.0-RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 

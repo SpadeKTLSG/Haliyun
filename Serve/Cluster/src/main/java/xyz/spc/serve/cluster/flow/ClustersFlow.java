@@ -8,6 +8,7 @@ import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.domain.dos.Cluster.clusters.ClusterDO;
 import xyz.spc.domain.dos.Cluster.functions.NoticeDO;
+import xyz.spc.domain.dos.Money.standards.CurrencyDO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterGreatVO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.gate.vo.Guest.users.UserVO;
@@ -191,11 +192,18 @@ public class ClustersFlow {
         String currencyPic = "";
 
         // 直接查 Money模块 的 CurrencyDO 信息 by id
-        standardsClient.
+        CurrencyDO currencyById = standardsClient.getCurrencyById(clusterGreatVO.getCurrencyId()).getData();
+
+        currencyName = currencyById.getName();
+        currencyExchangeRate = currencyById.getExchangeRate();
+        currencyPic = currencyById.getPic();
 
         //? 2.3 补充 RemarkDOS
 
         List<String> content = List.of();
+
+        //! 查询群组的评论, 默认展示高赞的三条, 组装为List, 按照赞数降序排序.
+        // 直接查 群组互动 RemarkDO by clusterid + type == 0
 
 
         //3 组装返回

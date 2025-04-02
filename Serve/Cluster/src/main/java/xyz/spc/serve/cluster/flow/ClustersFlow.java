@@ -173,6 +173,7 @@ public class ClustersFlow {
         String userAccount = "";
         Integer userisAdmin = 0;
         // 直接查 GreatVO 里面的 userId找到对应的 UserDO 即可
+        //? 一般RPC, 直接用Result 包一层是推荐的, 因为可以被复用到前端 (不考虑性能) 这种写法可以, 下面的也可以
         Result<UserVO> res1 = usersClient.getUserDOInfo(clusterGreatVO.getCreatorUserId());
         if (Objects.equals(res1.getCode(), ReqRespCT.FAIL_CODE)) {
             throw new ServiceException(ServerError.SERVICE_RPC_ERROR);
@@ -188,7 +189,12 @@ public class ClustersFlow {
         String noticeName = "";
         String noticeContent = "";
         // 直接查 群组功能 Notice by id
-        NoticeDO noticeById = noticeFunc.getNoticeById(clusterGreatVO.getNoticeId());
+        NoticeDO noticeById = Optional.ofNullable(noticeFunc.getNoticeById(clusterGreatVO.getNoticeId())).orElse(
+                NoticeDO.builder()
+                        .name("没有公告哦")
+                        .content("这里什么都么有")
+                        .build()
+        );
 
         noticeName = noticeById.getName();
         noticeContent = noticeById.getContent();

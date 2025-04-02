@@ -1,11 +1,11 @@
 package xyz.spc.serve.cluster.func.interacts;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.spc.domain.dos.Cluster.interacts.RemarkDO;
+import xyz.spc.domain.model.Cluster.interacts.Remark;
 import xyz.spc.infra.special.Cluster.interacts.RemarksRepo;
 
 import java.util.List;
@@ -30,15 +30,14 @@ public class RemarkFunc {
 
         //0. clusterId 查找 type == 0 && targetId == clusterId 的所有对象, 根据点赞数进行降序排序
 
-        //1. 使用分页查询来初步降低查询的对象数量
-        Page<RemarkDO> page = new Page<>(1, amount);
-        List<RemarkDO> remarks = remarksRepo.remarkService.page(
-                page,
+        //1. 对象数量控制
+        List<RemarkDO> remarks = remarksRepo.remarkService.list(
                 Wrappers.lambdaQuery(RemarkDO.class)
                         .eq(RemarkDO::getTargetId, clusterId)
-                        .eq(RemarkDO::getType, 0)
+                        .eq(RemarkDO::getType, Remark.TYPE_CLUSTER)
                         .orderByDesc(RemarkDO::getLikes)
-        ).getRecords();
+                        .last("LIMIT " + amount)
+        );
 
 
         //2. 取出前 amount 个对象的 content

@@ -7,6 +7,7 @@ import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.domain.dos.Cluster.clusters.ClusterDO;
+import xyz.spc.domain.dos.Cluster.functions.NoticeDO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterGreatVO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.gate.vo.Guest.users.UserVO;
@@ -14,6 +15,7 @@ import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.infra.feign.Guest.UsersClient;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.cluster.func.clusters.ClustersFunc;
+import xyz.spc.serve.cluster.func.functions.NoticeFunc;
 
 import java.util.List;
 import java.util.Objects;
@@ -164,16 +166,21 @@ public class ClustersFlow {
         String userAccount = "";
         Integer userisAdmin = 0;
         // 直接查 GreatVO 里面的 userId找到对应的 UserDO 即可
-        UserVO tmp = usersClient.getUserDOInfo(clusterGreatVO.getCreatorUserId()).getData();
+        UserVO userById = usersClient.getUserDOInfo(clusterGreatVO.getCreatorUserId()).getData();
 
-        userAccount = tmp.getAccount();
-        userisAdmin = tmp.getAdmin();
+        userAccount = userById.getAccount();
+        userisAdmin = userById.getAdmin();
+
 
         //? 2.1 补充 NoticeDO
 
         String noticeName = "";
         String noticeContent = "";
         // 直接查 群组功能 Notice by id
+        NoticeDO noticeById = noticeFunc.getNoticeById(clusterGreatVO.getNoticeId());
+
+        noticeName = noticeById.getName();
+        noticeContent = noticeById.getContent();
 
 
         //? 2.2 补充 CurrencyDO
@@ -181,6 +188,8 @@ public class ClustersFlow {
         String currencyName = "";
         Float currencyExchangeRate = 0f;
         String currencyPic = "";
+
+        // 直接查 Money模块 的 CurrencyDO 信息 by id
 
 
         //? 2.3 补充 RemarkDOS

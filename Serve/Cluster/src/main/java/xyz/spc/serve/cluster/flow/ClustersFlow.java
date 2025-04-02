@@ -3,7 +3,10 @@ package xyz.spc.serve.cluster.flow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.constant.ReqRespCT;
 import xyz.spc.common.funcpack.Result;
+import xyz.spc.common.funcpack.errorcode.ServerError;
+import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.domain.dos.Cluster.clusters.ClusterDO;
@@ -170,10 +173,14 @@ public class ClustersFlow {
         String userAccount = "";
         Integer userisAdmin = 0;
         // 直接查 GreatVO 里面的 userId找到对应的 UserDO 即可
-        UserVO userById = usersClient.getUserDOInfo(clusterGreatVO.getCreatorUserId()).getData();
+        Result<UserVO> res1 = usersClient.getUserDOInfo(clusterGreatVO.getCreatorUserId());
+        if (Objects.equals(res1.getCode(), ReqRespCT.FAIL_CODE)) {
+            throw new ServiceException(ServerError.SERVICE_RPC_ERROR);
+        }
 
-        userAccount = userById.getAccount();
-        userisAdmin = userById.getAdmin();
+
+        userAccount = res1.getData().getAccount();
+        userisAdmin = res1.getData().getAdmin();
 
 
         //? 2.1 补充 NoticeDO

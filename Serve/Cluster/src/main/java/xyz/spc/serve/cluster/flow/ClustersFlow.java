@@ -17,6 +17,7 @@ import xyz.spc.infra.feign.Money.StandardsClient;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.cluster.func.clusters.ClustersFunc;
 import xyz.spc.serve.cluster.func.functions.NoticeFunc;
+import xyz.spc.serve.cluster.func.interacts.RemarkFunc;
 
 import java.util.List;
 import java.util.Objects;
@@ -36,6 +37,7 @@ public class ClustersFlow {
     //Func
     private final ClustersFunc clustersFunc;
     private final NoticeFunc noticeFunc;
+    private final RemarkFunc remarkFunc;
 
 
     public List<String> getClusterNamesByIds(List<Long> groupIds) {
@@ -200,11 +202,14 @@ public class ClustersFlow {
 
         //? 2.3 补充 RemarkDOS
 
-        List<String> content = List.of();
 
         //! 查询群组的评论, 默认展示高赞的三条, 组装为List, 按照赞数降序排序.
         // 直接查 群组互动 RemarkDO by clusterid + type == 0
 
+        List<String> content = remarkFunc.getRemark4ClusterHallShow(
+                clusterGreatVO.getId(),
+                3
+        );
 
         //3 组装返回
         clusterGreatVO.setUserAccount(userAccount);

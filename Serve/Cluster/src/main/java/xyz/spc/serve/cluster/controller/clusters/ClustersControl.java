@@ -87,7 +87,7 @@ public class ClustersControl {
      * id 查单个群组全部信息
      */
     @GetMapping("/hall/one")
-    Result<ClusterGreatVO> getAllClusterById(@RequestParam Long id) {
+    Result<ClusterGreatVO> getAllClusterById(@RequestParam String id) {
         return Result.success(clustersFlow.getAllClusterById(id));
     }
     //http://localhost:10000/Cluster/clusters/hall/one?id=...

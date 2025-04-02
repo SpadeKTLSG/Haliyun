@@ -157,10 +157,10 @@ public class ClustersFlow {
     /**
      * 联表查询群组信息
      */
-    public ClusterGreatVO getAllClusterById(Long id) {
+    public ClusterGreatVO getAllClusterById(String id) {
 
         //1 联表查询三张表
-        ClusterGreatVO clusterGreatVO = clustersFunc.getClusterInfo(id);
+        ClusterGreatVO clusterGreatVO = Objects.requireNonNull(clustersFunc.getClusterInfo(id));
 
         //2 补充字段Tmodel
 

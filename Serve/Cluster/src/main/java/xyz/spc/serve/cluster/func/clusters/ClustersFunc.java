@@ -116,7 +116,7 @@ public class ClustersFunc {
     /**
      * 添加群组, 插入三张表
      */
-    public void createCluster(ClusterDTO clusterDTO) {
+    public Long createCluster(ClusterDTO clusterDTO) {
 
         //基本没有校验限制, 确认前端nickname 和name非空, 其他空.
         String name = clusterDTO.getName();
@@ -171,6 +171,6 @@ public class ClustersFunc {
         clustersRepo.clusterFuncService.save(clusterFuncDO);
 
         log.debug("群组: {} , 由用户: {} 注册成功: ", name, UserContext.getUA());
-
+        return id;
     }
 }

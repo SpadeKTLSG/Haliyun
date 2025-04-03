@@ -246,9 +246,9 @@ public class ClustersFlow {
     public void createCluster(ClusterDTO clusterDTO) {
 
         //1. 创建群组
-        clustersFunc.createCluster(clusterDTO);
+        Long id = clustersFunc.createCluster(clusterDTO);
 
-        //2. 把群主加到群里面
-
+        //2. 把群主加到群里面 (Feign 不保证调用成功, 后面出错了需要用消息来进行补偿尝试 todo)
+        usersClient.joinCluster(id);
     }
 }

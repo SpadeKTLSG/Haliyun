@@ -2,6 +2,7 @@ package xyz.spc.infra.feign.Guest;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.gate.vo.Guest.users.UserVO;
@@ -38,4 +39,11 @@ public interface UsersClient {
      */
     @GetMapping(BASE_URL + "/user_simple")
     Result<UserVO> getUserDOInfo(@RequestParam Long creatorUserId);
+
+
+    /**
+     * 当前用户加入群组
+     */
+    @PostMapping(BASE_URL + "/cluster/join")
+    Result<Object> joinCluster(@RequestParam Long clusterId);
 }

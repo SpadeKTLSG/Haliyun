@@ -92,6 +92,7 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/user_simple?creatorUserId=1
 
+
     /**
      * 当前用户加入群组
      */
@@ -100,6 +101,7 @@ public class UsersControl {
         usersFlow.joinCluster(clusterId);
         return Result.success();
     }
+    //http://localhost:10000/Guest/users/cluster/join?clusterId=1
 
 
     //! Func

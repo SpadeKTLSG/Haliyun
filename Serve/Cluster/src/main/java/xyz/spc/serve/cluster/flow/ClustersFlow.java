@@ -3,6 +3,7 @@ package xyz.spc.serve.cluster.flow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.common.constant.ReqRespCT;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.errorcode.ServerError;
@@ -12,6 +13,7 @@ import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.domain.dos.Cluster.clusters.ClusterDO;
 import xyz.spc.domain.dos.Cluster.functions.NoticeDO;
 import xyz.spc.domain.dos.Money.standards.CurrencyDO;
+import xyz.spc.gate.dto.Cluster.clusters.ClusterDTO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterGreatVO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.gate.vo.Guest.users.UserVO;
@@ -235,5 +237,13 @@ public class ClustersFlow {
         clusterGreatVO.setContent(content);
 
         return clusterGreatVO;
+    }
+
+    /**
+     * 创建群组, 三张表插入
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void createCluster(ClusterDTO clusterDTO) {
+        clustersFunc.createCluster(clusterDTO);
     }
 }

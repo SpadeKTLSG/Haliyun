@@ -41,4 +41,15 @@ public class Cluster extends BaseModel {
      * 群组容量
      */
     private Integer popVolume;
+
+
+    /**
+     * 默认群组容量
+     */
+    public static final Integer BASIC_POP_VOLUME = 32;
+
+    /**
+     * VIP群组容量
+     */
+    public static final Integer BASIC_POP_VOLUME_VIP = 1024;
 }

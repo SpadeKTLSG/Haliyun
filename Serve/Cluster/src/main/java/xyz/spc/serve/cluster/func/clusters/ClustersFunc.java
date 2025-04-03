@@ -6,12 +6,17 @@ import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.funcpack.picture.PictureCT;
+import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.domain.dos.Cluster.clusters.ClusterDO;
 import xyz.spc.domain.dos.Cluster.clusters.ClusterDetailDO;
 import xyz.spc.domain.dos.Cluster.clusters.ClusterFuncDO;
+import xyz.spc.domain.model.Cluster.clusters.Cluster;
+import xyz.spc.gate.dto.Cluster.clusters.ClusterDTO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterGreatVO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.infra.special.Cluster.clusters.ClustersRepo;
+import xyz.spc.serve.auxiliary.common.context.UserContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +106,45 @@ public class ClustersFunc {
                 .leftJoin(ClusterFuncDO.class, ClusterFuncDO::getId, ClusterDO::getId)
                 .eq(ClusterDO::getId, id)
         );
+
+    }
+
+    /**
+     * 添加群组, 插入三张表
+     */
+    public void createCluster(ClusterDTO clusterDTO) {
+
+        //基本没有校验限制, 确认前端nickname 和name非空, 其他空.
+        String name = clusterDTO.getName();
+        String nickname = clusterDTO.getNickname();
+
+        // 插入三张表, 生成对应的统一ID
+        Long id = SnowflakeIdUtil.nextId();
+
+        //? 插入 ClusterDO
+        ClusterDO clusterDO = ClusterDO.builder()
+                .id(id)
+                .creatorUserId(UserContext.getUI())
+                .name(name)
+                .nickname(nickname)
+                .pic(PictureCT.DEFAULT_PIC)
+                .popVolume(Cluster.BASIC_POP_VOLUME) // VIP 后续手动触发群组容量提升, 这里一视同仁
+                .build();
+        clustersRepo.clusterMapper.insert(clusterDO);
+
+
+        //? 插入 ClusterDetailDO
+        ClusterDetailDO clusterDetailDO = ClusterDetailDO.builder()
+                .id(id)
+                .build();
+        clustersRepo.clusterDetailMapper.insert(clusterDetailDO);
+
+
+        //? 插入 ClusterFuncDO
+        ClusterFuncDO clusterFuncDO = ClusterFuncDO.builder()
+                .id(id)
+                .build();
+        clustersRepo.clusterFuncMapper.insert(clusterFuncDO);
 
     }
 }

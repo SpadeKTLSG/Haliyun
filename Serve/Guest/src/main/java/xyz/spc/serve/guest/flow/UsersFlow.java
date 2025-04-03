@@ -158,4 +158,15 @@ public class UsersFlow {
     public UserVO getUserDOInfo(Long creatorUserId) {
         return usersFunc.getUserDOInfo(creatorUserId);
     }
+
+    /**
+     * 将当前 Context 的用户 (id) 加入群组 (id)
+     */
+    public void joinCluster(Long clusterId) {
+        Long userId = Objects.requireNonNull(UserContext.getUI());
+        userClusterFunc.joinCluster(userId, clusterId);
+    }
+
+
+
 }

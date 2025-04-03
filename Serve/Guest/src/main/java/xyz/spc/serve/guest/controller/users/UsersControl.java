@@ -44,6 +44,7 @@ public class UsersControl {
     private final UsersFlow usersFlow;
     private final RedisTemplate<Object, Object> redisTemplate;
 
+
     //! Client
 
     @GetMapping("/user_map")
@@ -90,6 +91,16 @@ public class UsersControl {
         return Result.success(usersFlow.getUserDOInfo(creatorUserId));
     }
     //http://localhost:10000/Guest/users/user_simple?creatorUserId=1
+
+    /**
+     * 当前用户加入群组
+     */
+    @PostMapping("/cluster/join")
+    Result<Object> joinCluster(@RequestParam Long clusterId) {
+        usersFlow.joinCluster(clusterId);
+        return Result.success();
+    }
+
 
     //! Func
 

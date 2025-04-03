@@ -38,7 +38,7 @@ public class UserCluster extends BaseModel {
      * 集合名称
      */
     private String collect;
-    public static final String COLLECT_DEFAULT = "default";
+    public static final String COLLECT_DEFAULT = "默认群组集";
 
     /**
      * 排序

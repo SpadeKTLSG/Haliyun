@@ -134,7 +134,8 @@ public class ClustersFunc {
                 .pic(PictureCT.DEFAULT_PIC)
                 .popVolume(Cluster.BASIC_POP_VOLUME) // VIP 后续手动触发群组容量提升, 这里一视同仁
                 .build();
-        clustersRepo.clusterMapper.insert(clusterDO);
+
+        clustersRepo.clusterService.save(clusterDO);
 
 
         //? 插入 ClusterDetailDO
@@ -152,7 +153,8 @@ public class ClustersFunc {
                 .usedSpace(0L) // 已使用空间为0
                 .totalSpace(UnitUtil.toGBSize4Long(ClusterDetail.BASIC_TOTAL_SPACE)) // 默认用户总空间 (转化为GB大小)
                 .build();
-        clustersRepo.clusterDetailMapper.insert(clusterDetailDO);
+
+        clustersRepo.clusterDetailService.save(clusterDetailDO);
 
 
         //? 插入 ClusterFuncDO
@@ -165,7 +167,8 @@ public class ClustersFunc {
                 .coinStock(ClusterFunc.DEFAULT_COIN_STOCK)  // 默认硬币储备
                 .remark(ClusterFunc.DEFAULT_REMARK) // 默认评论(类似备注, 是群主写的, 不是另一个RemarkDO )
                 .build();
-        clustersRepo.clusterFuncMapper.insert(clusterFuncDO);
+
+        clustersRepo.clusterFuncService.save(clusterFuncDO);
 
         log.debug("群组: {} , 由用户: {} 注册成功: ", name, UserContext.getUA());
 

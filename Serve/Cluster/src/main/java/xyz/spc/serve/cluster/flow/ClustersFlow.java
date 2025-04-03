@@ -244,6 +244,11 @@ public class ClustersFlow {
      */
     @Transactional(rollbackFor = Exception.class)
     public void createCluster(ClusterDTO clusterDTO) {
+
+        //1. 创建群组
         clustersFunc.createCluster(clusterDTO);
+
+        //2. 把群主加到群里面
+
     }
 }

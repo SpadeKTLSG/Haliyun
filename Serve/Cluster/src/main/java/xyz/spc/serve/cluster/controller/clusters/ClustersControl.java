@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
+import xyz.spc.gate.dto.Cluster.clusters.ClusterDTO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterGreatVO;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
@@ -53,6 +54,15 @@ public class ClustersControl {
 
     //! ADD
 
+    /**
+     * 小院创建群组 (就传递两个名称 name,nickname)
+     */
+    @PostMapping("create")
+    Result<Object> createCluster(@RequestBody ClusterDTO clusterDTO) {
+        clustersFlow.createCluster(clusterDTO);
+        return Result.success();
+    }
+    //http://localhost:10000/Cluster/clusters/create
 
     //! UPDATE
 

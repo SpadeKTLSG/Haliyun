@@ -53,7 +53,7 @@ public class ClusterGreatVO extends BaseVO {
 
     private Long coinStock;
 
-    private String remarks;
+    private String remark;
 
 
     // 临时字段 T-model

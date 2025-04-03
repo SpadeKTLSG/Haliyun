@@ -36,5 +36,6 @@ public class ClusterDetail extends BaseModel {
      * 总容量
      */
     private Long totalSpace;
+    public  static final Long BASIC_TOTAL_SPACE = 1024L * 1024L * 1024L * 10L; // 10GB
 
 }

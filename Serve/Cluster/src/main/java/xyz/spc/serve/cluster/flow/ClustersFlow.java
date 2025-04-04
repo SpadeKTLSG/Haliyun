@@ -285,10 +285,15 @@ public class ClustersFlow {
      */
     public void exitCluster(Long clusterId) {
 
-        //1. 退出操作, 删除关联
+        //1. 鉴权判断: 群主不可以退出自己的群组, 其他人可以!
+        if (clustersFunc.checkClusterCreatorEqual(clusterId)) {
+            throw new ClientException("群主不可以退出自己的群组");
+        }
+
+        //2. 退出操作, 删除关联
         usersClient.quitCluster(clusterId);
 
-        //2. 交由对方服务实现计数维护.
+        //3. 交由对方服务实现计数维护.
     }
 
     /**

@@ -53,4 +53,10 @@ public interface UsersClient {
      */
     @DeleteMapping(BASE_URL + "/cluster/quit")
     Result<Object> quitCluster(@RequestParam Long clusterId);
+
+    /**
+     * 所有人退出群组
+     */
+    @DeleteMapping(BASE_URL + "/cluster/every_quit")
+    void everyQuitCluster(@RequestParam Long clusterId);
 }

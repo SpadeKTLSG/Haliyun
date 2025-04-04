@@ -177,4 +177,11 @@ public class UsersFlow {
         Long userId = Objects.requireNonNull(UserContext.getUI());
         userClusterFunc.quitCluster(userId, clusterId);
     }
+
+    /**
+     * 将所有人退出对应群组
+     */
+    public void everyQuitCluster(Long clusterId) {
+        userClusterFunc.everyQuitCluster(clusterId);
+    }
 }

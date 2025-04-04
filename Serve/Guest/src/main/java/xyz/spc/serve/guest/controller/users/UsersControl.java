@@ -114,6 +114,15 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/cluster/quit?clusterId=1
 
+    /**
+     * 所有人退出某群组
+     */
+    @DeleteMapping("/cluster/every_quit")
+    void everyQuitCluster(@RequestParam Long clusterId) {
+        usersFlow.everyQuitCluster(clusterId);
+    }
+    //http://localhost:10000/Guest/users/cluster/every_quit?clusterId=1
+
     //! Func
 
     /**

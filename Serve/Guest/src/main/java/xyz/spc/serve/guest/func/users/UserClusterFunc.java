@@ -80,4 +80,15 @@ public class UserClusterFunc {
                         .eq(UserClusterDO::getClusterId, clusterId)
         );
     }
+
+    /**
+     * 删除 * - clusterId 关系
+     */
+    public void everyQuitCluster(Long clusterId) {
+
+        userClusterRepo.userClusterMapper.delete(
+                Wrappers.lambdaQuery(UserClusterDO.class)
+                        .eq(UserClusterDO::getClusterId, clusterId)
+        );
+    }
 }

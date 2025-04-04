@@ -1,11 +1,13 @@
 package xyz.spc.serve.cluster.func.clusters;
 
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.constant.DelEnum;
 import xyz.spc.common.funcpack.picture.PictureCT;
 import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.common.util.collecUtil.JsonUtil;
@@ -64,7 +66,10 @@ public class ClustersFunc {
             return List.of();
         }
 
-        return clustersRepo.clusterMapper.selectBatchIds(pagedClusterIds);
+        return clustersRepo.clusterMapper.selectBatchIds(Wrappers.lambdaQuery(ClusterDO.class)
+                .eq(ClusterDO::getDelFlag, DelEnum.NORMAL.getStatusCode()) // 逻辑删除处理
+                .in(ClusterDO::getId, pagedClusterIds) // 批量查询
+        );
     }
 
     /**
@@ -74,7 +79,9 @@ public class ClustersFunc {
         // 分页查询群组对象
         List<ClusterDO> clusterList = clustersRepo.clusterMapper.selectPage(
                 new Page<>(page, size),
-                null
+                Wrappers.lambdaQuery(ClusterDO.class)
+                        .eq(ClusterDO::getDelFlag, DelEnum.NORMAL.getStatusCode()) // 逻辑删除处理
+                        .orderByDesc(ClusterDO::getCreateTime) //从新到旧排序
         ).getRecords();
 
         if (clusterList == null || clusterList.isEmpty()) {
@@ -180,13 +187,28 @@ public class ClustersFunc {
     public void deleteCluster(Long clusterId) {
 
         // 逻辑删除群组表
-        clustersRepo.clusterMapper.deleteById(clusterId);
+        clustersRepo.clusterService.update(
+                null,
+                Wrappers.lambdaUpdate(ClusterDO.class)
+                        .eq(ClusterDO::getId, clusterId)
+                        .set(ClusterDO::getDelFlag, DelEnum.DELETE.getStatusCode())
+        );
 
         // 逻辑删除群组详情表
-        clustersRepo.clusterDetailMapper.deleteById(clusterId);
+        clustersRepo.clusterDetailService.update(
+                null,
+                Wrappers.lambdaUpdate(ClusterDetailDO.class)
+                        .eq(ClusterDetailDO::getId, clusterId)
+                        .set(ClusterDetailDO::getDelFlag, DelEnum.DELETE.getStatusCode())
+        );
 
         // 逻辑删除群组功能表
-        clustersRepo.clusterFuncMapper.deleteById(clusterId);
+        clustersRepo.clusterFuncService.update(
+                null,
+                Wrappers.lambdaUpdate(ClusterFuncDO.class)
+                        .eq(ClusterFuncDO::getId, clusterId)
+                        .set(ClusterFuncDO::getDelFlag, DelEnum.DELETE.getStatusCode())
+        );
 
         log.debug("群组: {} , 由用户: {} 删除成功: ", clusterId, UserContext.getUA());
     }

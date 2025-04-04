@@ -252,4 +252,20 @@ public class ClustersFlow {
         //2. 把群主加到群里面 (Feign 不保证调用成功, 后面出错了需要用消息来进行补偿尝试 todo)
         usersClient.joinCluster(id);
     }
+
+    /**
+     * 删除群组 - 逻辑修改对应字段
+     */
+    public void deleteCluster(Long clusterId) {
+
+        //1. 逻辑修改群组表
+        clustersFunc.deleteCluster(clusterId);
+
+
+        //2. 退群 = 删除 (这里是删除!) 群组用户关联 的 对应条目记录 (这个因为没有什么必要保存 (中间表), 所以简化了)
+        usersClient.quitCluster(clusterId);
+
+        //(3. 如果群组自定义了货币, 可以选择使用定时任务将其进行逻辑删除下线 (不可直接删除, 因为有用户没使用完)
+        // -> 注册定时任务事件, 隔一段时间进行扫描无人使用的删除群组的货币, 将其逻辑下线掉.
+    }
 }

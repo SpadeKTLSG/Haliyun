@@ -57,4 +57,16 @@ public class UserClusterFunc {
         userClusterRepo.userClusterService.save(tmp);
 
     }
+
+    /**
+     * 删除 userId - clusterId 关系
+     */
+    public void quitCluster(Long userId, Long clusterId) {
+
+        userClusterRepo.userClusterMapper.delete(
+                Wrappers.lambdaQuery(UserClusterDO.class)
+                        .eq(UserClusterDO::getUserId, userId)
+                        .eq(UserClusterDO::getClusterId, clusterId)
+        );
+    }
 }

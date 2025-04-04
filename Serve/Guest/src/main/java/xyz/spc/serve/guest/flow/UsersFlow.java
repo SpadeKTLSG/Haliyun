@@ -167,6 +167,13 @@ public class UsersFlow {
         userClusterFunc.joinCluster(userId, clusterId);
     }
 
+    /**
+     * 将当前 Context 的用户 (id) 退出群组 (id)
+     */
+    public void quitCluster(Long clusterId) {
 
-
+        //退群 = 删除 (这里是删除!) 群组用户关联 的 对应条目记录 (这个因为没有什么必要保存 (中间表), 所以简化了)
+        Long userId = Objects.requireNonNull(UserContext.getUI());
+        userClusterFunc.quitCluster(userId, clusterId);
+    }
 }

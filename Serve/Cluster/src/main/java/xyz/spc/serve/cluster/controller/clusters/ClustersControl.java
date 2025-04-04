@@ -54,6 +54,12 @@ public class ClustersControl {
     /**
      * 小院删除群组
      */
+    @DeleteMapping("/delete")
+    Result<Object> deleteCluster(@RequestParam Long clusterId) {
+        clustersFlow.deleteCluster(clusterId);
+        return Result.success();
+    }
+    //http://localhost:10000/Cluster/clusters/delete?clusterId=...
 
 
     //! ADD

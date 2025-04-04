@@ -86,8 +86,8 @@ public class UsersControl {
     /**
      * 通过用户id获取用户简单VO信息 (账号 / 是否管理员)
      */
-    @GetMapping( "/user_simple")
-    Result<UserVO> getUserDOInfo(@RequestParam Long creatorUserId){
+    @GetMapping("/user_simple")
+    Result<UserVO> getUserDOInfo(@RequestParam Long creatorUserId) {
         return Result.success(usersFlow.getUserDOInfo(creatorUserId));
     }
     //http://localhost:10000/Guest/users/user_simple?creatorUserId=1
@@ -103,6 +103,16 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/cluster/join?clusterId=1
 
+
+    /**
+     * 当前用户退出群组
+     */
+    @DeleteMapping("/cluster/quit")
+    Result<Object> quitCluster(@RequestParam Long clusterId) {
+        usersFlow.quitCluster(clusterId);
+        return Result.success();
+    }
+    //http://localhost:10000/Guest/users/cluster/quit?clusterId=1
 
     //! Func
 

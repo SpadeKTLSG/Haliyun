@@ -1,6 +1,7 @@
 package xyz.spc.infra.feign.Guest;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -46,4 +47,10 @@ public interface UsersClient {
      */
     @PostMapping(BASE_URL + "/cluster/join")
     Result<Object> joinCluster(@RequestParam Long clusterId);
+
+    /**
+     * 当前用户退出群组
+     */
+    @DeleteMapping(BASE_URL + "/cluster/quit")
+    Result<Object> quitCluster(@RequestParam Long clusterId);
 }

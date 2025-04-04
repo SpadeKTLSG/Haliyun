@@ -173,4 +173,21 @@ public class ClustersFunc {
         log.debug("群组: {} , 由用户: {} 注册成功: ", name, UserContext.getUA());
         return id;
     }
+
+    /**
+     * 逻辑删除群组修改del字段
+     */
+    public void deleteCluster(Long clusterId) {
+
+        // 逻辑删除群组表
+        clustersRepo.clusterMapper.deleteById(clusterId);
+
+        // 逻辑删除群组详情表
+        clustersRepo.clusterDetailMapper.deleteById(clusterId);
+
+        // 逻辑删除群组功能表
+        clustersRepo.clusterFuncMapper.deleteById(clusterId);
+
+        log.debug("群组: {} , 由用户: {} 删除成功: ", clusterId, UserContext.getUA());
+    }
 }

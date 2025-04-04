@@ -268,4 +268,13 @@ public class ClustersFlow {
         //(3. 如果群组自定义了货币, 可以选择使用定时任务将其进行逻辑删除下线 (不可直接删除, 因为有用户没使用完)
         // -> 注册定时任务事件, 隔一段时间进行扫描无人使用的删除群组的货币, 将其逻辑下线掉.
     }
+
+    /**
+     * 加入群组 创建对应关系
+     */
+    public void joinHallCluster(Long clusterId) {
+
+        // 直接复用接口
+        usersClient.joinCluster(clusterId);
+    }
 }

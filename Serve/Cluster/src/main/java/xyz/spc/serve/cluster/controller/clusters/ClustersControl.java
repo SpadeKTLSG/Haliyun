@@ -48,6 +48,16 @@ public class ClustersControl {
 
     //! Func
 
+    /**
+     * 大厅加入群组
+     */
+    @PostMapping("/hall/join")
+    Result<Object> joinHallCluster(@RequestParam Long clusterId) {
+        clustersFlow.joinHallCluster(clusterId);
+        return Result.success();
+    }
+    //http://localhost:10000/Cluster/clusters/hall/join?clusterId=...
+
 
     //! DELETE
 

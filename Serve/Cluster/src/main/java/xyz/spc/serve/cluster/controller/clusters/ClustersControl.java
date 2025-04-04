@@ -51,6 +51,10 @@ public class ClustersControl {
 
     //! DELETE
 
+    /**
+     * 小院删除群组
+     */
+
 
     //! ADD
 

@@ -162,6 +162,7 @@ public class UsersFlow {
     /**
      * 将当前 Context 的用户 (id) 加入群组 (id)
      */
+    @Transactional(rollbackFor = Exception.class)
     public void joinCluster(Long clusterId) {
         Long userId = Objects.requireNonNull(UserContext.getUI());
         userClusterFunc.joinCluster(userId, clusterId);

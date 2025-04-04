@@ -254,6 +254,7 @@ public class ClustersFlow {
         usersClient.creatorJoinCluster(clusterId);
     }
 
+
     /**
      * 删除群组 - 逻辑修改对应字段
      */
@@ -273,6 +274,7 @@ public class ClustersFlow {
         //4. 删除群组后, 所有人 都需要退出
         usersClient.everyQuitCluster(clusterId);
     }
+
 
     /**
      * 加入群组 创建对应关系

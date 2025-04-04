@@ -363,6 +363,7 @@ public class UsersFunc {
     /**
      * 操作用户 创建 群组的数量 ( + / - by amount)
      */
+    @CacheEvict(key = "'getUserInfoById' + #userId", value = "user")
     public void opUserCreateClusterCount(Long userId, String opType, int amount) {
 
         //更新UserFunc id == id 的记录(一条) 的对应字段
@@ -392,6 +393,7 @@ public class UsersFunc {
     /**
      * 操作用户 加入 群组的数量 ( + / - by amount)
      */
+    @CacheEvict(key = "'getUserInfoById' + #userId", value = "user")
     public void opUserJoinClusterCount(Long userId, String opType, int amount) {
 
         //更新UserFunc id == id 的记录(一条) 的对应字段

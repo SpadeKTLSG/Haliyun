@@ -181,6 +181,7 @@ public class UsersFlow {
     public void creatorJoinCluster(Long clusterId) {
 
         Long userId = Objects.requireNonNull(UserContext.getUI());
+
         // 加入群组表操作
         userClusterFunc.joinCluster(userId, clusterId);
 

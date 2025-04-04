@@ -62,7 +62,7 @@ public class ClustersControl {
     //! DELETE
 
     /**
-     * 小院删除群组
+     * 小院删除(解散)群组
      */
     @DeleteMapping("/delete")
     Result<Object> deleteCluster(@RequestParam Long clusterId) {
@@ -70,6 +70,16 @@ public class ClustersControl {
         return Result.success();
     }
     //http://localhost:10000/Cluster/clusters/delete?clusterId=...
+
+    /**
+     * 小院退出群组
+     */
+    @DeleteMapping("/exit")
+    Result<Object> exitCluster(@RequestParam Long clusterId) {
+        clustersFlow.exitCluster(clusterId);
+        return Result.success();
+    }
+    //http://localhost:10000/Cluster/clusters/exit?clusterId=...
 
 
     //! ADD

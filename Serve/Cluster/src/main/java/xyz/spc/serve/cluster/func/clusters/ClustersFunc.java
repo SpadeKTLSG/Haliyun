@@ -66,7 +66,7 @@ public class ClustersFunc {
             return List.of();
         }
 
-        return clustersRepo.clusterMapper.selectList( Wrappers.lambdaQuery(ClusterDO.class)
+        return clustersRepo.clusterMapper.selectList(Wrappers.lambdaQuery(ClusterDO.class)
                 .eq(ClusterDO::getDelFlag, DelEnum.NORMAL.getStatusCode()) // 逻辑删除处理
                 .in(ClusterDO::getId, pagedClusterIds) // 批量查询
         );
@@ -211,5 +211,29 @@ public class ClustersFunc {
         );
 
         log.debug("群组: {} , 由用户: {} 删除成功: ", clusterId, UserContext.getUA());
+    }
+
+    /**
+     * 检查群组id对应的创建者是否是当前用户
+     */
+    public boolean checkClusterCreatorEqual(Long clusterId) {
+
+        //1. 查出对应的群组 ClusterDO
+        ClusterDO clusterDO = clustersRepo.clusterMapper.selectOne(
+                Wrappers.lambdaQuery(ClusterDO.class)
+                        .eq(ClusterDO::getId, clusterId)
+                        .eq(ClusterDO::getDelFlag, DelEnum.NORMAL.getStatusCode()) // 逻辑删除处理
+        );
+
+        //2. 获取群组创建人id
+        Long creatorUserId = clusterDO.getCreatorUserId();
+
+        //3. 判断是否相等
+        if (creatorUserId.equals(UserContext.getUI())) {
+            return true;
+        } else {
+            log.error("用户: {} 试图删除群组 => {}, 但不是群主, 无法删除", UserContext.getUA(), clusterId);
+            return false;
+        }
     }
 }

@@ -256,9 +256,14 @@ public class ClustersFlow {
 
 
     /**
-     * 删除群组 - 逻辑修改对应字段
+     * 删除 (解散) 群组 - 逻辑修改对应字段
      */
     public void deleteCluster(Long clusterId) {
+
+        // 鉴权判断: 只有群主可以删除本群组, 其他不行
+        if (!clustersFunc.checkClusterCreatorEqual(clusterId)) {
+            throw new ClientException("你不是群主, 无法解散本群组");
+        }
 
         //1. 逻辑修改群组表
         clustersFunc.deleteCluster(clusterId);
@@ -275,6 +280,16 @@ public class ClustersFlow {
         usersClient.everyQuitCluster(clusterId);
     }
 
+    /**
+     * 普通群成员退出群组
+     */
+    public void exitCluster(Long clusterId) {
+
+        //1. 退出操作, 删除关联
+        usersClient.quitCluster(clusterId);
+
+        //2. 交由对方服务实现计数维护.
+    }
 
     /**
      * 加入群组 创建对应关系
@@ -292,4 +307,5 @@ public class ClustersFlow {
             throw new ClientException(res.getMessage());
         }
     }
+
 }

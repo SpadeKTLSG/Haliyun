@@ -329,7 +329,7 @@ public class UsersFunc {
 
 
     /**
-     * 注销账号-用户三张表 - 实际只修改状态字段
+     * 注销账号-用户三张表 - 实际只修改状态字段, 还没到逻辑删除这步
      */
     public void killUserAccount(Long id) {
         usersRepo.userService.updateById(UserDO.builder().id(id).status(User.STATUS_STOP).build());

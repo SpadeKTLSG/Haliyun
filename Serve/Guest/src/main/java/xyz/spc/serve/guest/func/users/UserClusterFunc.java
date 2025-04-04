@@ -82,13 +82,28 @@ public class UserClusterFunc {
     }
 
     /**
-     * 删除 * - clusterId 关系
+     * 删除 * - clusterId 关系, 记录下受影响的 userId 到列表后续维护对应的记录数量
      */
-    public void everyQuitCluster(Long clusterId) {
+    public List<Long> everyQuitCluster(Long clusterId) {
 
+
+        // 查询 clusterId == input 的所有的用户id到list
+        List<UserClusterDO> temp = userClusterRepo.userClusterMapper.selectList(
+                Wrappers.lambdaQuery(UserClusterDO.class)
+                        .eq(UserClusterDO::getClusterId, clusterId)
+        );
+
+        // 执行删除
         userClusterRepo.userClusterMapper.delete(
                 Wrappers.lambdaQuery(UserClusterDO.class)
                         .eq(UserClusterDO::getClusterId, clusterId)
         );
+
+        // 转化为id List
+        List<Long> res = temp.stream()
+                .map(UserClusterDO::getUserId)
+                .toList();
+
+        return res;
     }
 }

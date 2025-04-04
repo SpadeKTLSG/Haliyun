@@ -49,6 +49,12 @@ public interface UsersClient {
     Result<Object> joinCluster(@RequestParam Long clusterId);
 
     /**
+     * 群主加入群组
+     */
+    @PostMapping(BASE_URL + "/cluster/creator_join")
+    void creatorJoinCluster(@RequestParam Long clusterId);
+
+    /**
      * 当前用户退出群组
      */
     @DeleteMapping(BASE_URL + "/cluster/quit")
@@ -59,4 +65,5 @@ public interface UsersClient {
      */
     @DeleteMapping(BASE_URL + "/cluster/every_quit")
     void everyQuitCluster(@RequestParam Long clusterId);
+
 }

@@ -2,6 +2,7 @@ package xyz.spc.serve.guest.func.users;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.github.yulichang.wrapper.UpdateJoinWrapper;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import xyz.spc.common.constant.Guest.users.LoginCacheKey;
 import xyz.spc.common.constant.Guest.users.LoginCommonCT;
+import xyz.spc.common.constant.SystemSpecialCT;
 import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.common.funcpack.exception.ServiceException;
@@ -342,6 +344,7 @@ public class UsersFunc {
         return usersRepo.userFuncService.getById(id).getLevelId();
     }
 
+
     /**
      * 简单获得用户信息
      */
@@ -354,5 +357,64 @@ public class UsersFunc {
                 .build();
 
         return res;
+    }
+
+
+    /**
+     * 操作用户 创建 群组的数量 ( + / - by amount)
+     */
+    public void opUserCreateClusterCount(Long userId, String opType, int amount) {
+
+        //更新UserFunc id == id 的记录(一条) 的对应字段
+
+        //查出对应的记录
+        UserFuncDO userFuncDO = usersRepo.userFuncService.getById(userId);
+
+
+        // 判断操作类型
+        if(opType.equals(SystemSpecialCT.ADD)) {
+            //增加 amount
+            usersRepo.userFuncService.update(Wrappers.lambdaUpdate(UserFuncDO.class)
+                    .eq(UserFuncDO::getId, userId)
+                    .set(UserFuncDO::getCreateClusterCount,userFuncDO.getCreateClusterCount() + amount)
+            );
+
+        } else if (opType.equals(SystemSpecialCT.SUB)) {
+            //减少 amount
+            usersRepo.userFuncService.update(Wrappers.lambdaUpdate(UserFuncDO.class)
+                    .eq(UserFuncDO::getId, userId)
+                    .set(UserFuncDO::getCreateClusterCount,userFuncDO.getCreateClusterCount() - amount)
+            );
+        }
+
+    }
+
+    /**
+     * 操作用户 加入 群组的数量 ( + / - by amount)
+     */
+    public void opUserJoinClusterCount(Long userId, String opType, int amount) {
+
+        //更新UserFunc id == id 的记录(一条) 的对应字段
+
+        //查出对应的记录
+        UserFuncDO userFuncDO = usersRepo.userFuncService.getById(userId);
+
+
+        // 判断操作类型
+
+        if(opType.equals(SystemSpecialCT.ADD)) {
+            //增加 amount
+            usersRepo.userFuncService.update(Wrappers.lambdaUpdate(UserFuncDO.class)
+                    .eq(UserFuncDO::getId, userId)
+                    .set(UserFuncDO::getJoinClusterCount,userFuncDO.getJoinClusterCount() + amount)
+            );
+
+        } else if (opType.equals(SystemSpecialCT.SUB)) {
+            //减少 amount
+            usersRepo.userFuncService.update(Wrappers.lambdaUpdate(UserFuncDO.class)
+                    .eq(UserFuncDO::getId, userId)
+                    .set(UserFuncDO::getJoinClusterCount,userFuncDO.getJoinClusterCount() - amount)
+            );
+        }
     }
 }

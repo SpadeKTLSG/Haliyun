@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import xyz.spc.common.constant.SystemSpecialCT;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.levels.LevelVO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
@@ -164,8 +165,31 @@ public class UsersFlow {
      */
     @Transactional(rollbackFor = Exception.class)
     public void joinCluster(Long clusterId) {
+
         Long userId = Objects.requireNonNull(UserContext.getUI());
+
+        // 加入群组表操作
         userClusterFunc.joinCluster(userId, clusterId);
+
+        // 维护 UserFunc 的加入群组数量
+        usersFunc.opUserJoinClusterCount(userId, SystemSpecialCT.ADD, 1);
+    }
+
+    /**
+     * 将当前 Context 的用户 (id) 加入群组 (id), 但是是群主
+     */
+    public void creatorJoinCluster(Long clusterId) {
+
+        Long userId = Objects.requireNonNull(UserContext.getUI());
+        // 加入群组表操作
+        userClusterFunc.joinCluster(userId, clusterId);
+
+        // 维护 UserFunc 的创建群组数量
+        usersFunc.opUserCreateClusterCount(userId, SystemSpecialCT.ADD, 1);
+
+        // 维护 UserFunc 的加入群组数量
+        usersFunc.opUserJoinClusterCount(userId, SystemSpecialCT.ADD, 1);
+
     }
 
     /**
@@ -175,13 +199,30 @@ public class UsersFlow {
 
         //退群 = 删除 (这里是删除!) 群组用户关联 的 对应条目记录 (这个因为没有什么必要保存 (中间表), 所以简化了)
         Long userId = Objects.requireNonNull(UserContext.getUI());
+
+        // 群组表操作
         userClusterFunc.quitCluster(userId, clusterId);
+
+        // 维护 UserFunc 的加入群组数量
+        usersFunc.opUserJoinClusterCount(userId, SystemSpecialCT.SUB, 1);
     }
 
     /**
-     * 将所有人退出对应群组
+     * 将所有人退出对应群组 (群主摧毁了群)
      */
     public void everyQuitCluster(Long clusterId) {
-        userClusterFunc.everyQuitCluster(clusterId);
+
+        // 维护群组表的所有人退出
+        List<Long> findUsers = userClusterFunc.everyQuitCluster(clusterId);
+
+        // 维护 UserFunc 的创建群组数量
+        usersFunc.opUserCreateClusterCount(UserContext.getUI(), SystemSpecialCT.SUB, 1);
+
+        // 对List中每个用户执行维护加入数量操作
+        for (Long userId : findUsers) {
+            usersFunc.opUserJoinClusterCount(userId, SystemSpecialCT.SUB, 1);
+        }
     }
+
+
 }

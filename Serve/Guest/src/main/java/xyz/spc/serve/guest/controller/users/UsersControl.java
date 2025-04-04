@@ -105,6 +105,16 @@ public class UsersControl {
 
 
     /**
+     * 群主加入群组
+     */
+    @PostMapping("/cluster/creator_join")
+    void creatorJoinCluster(@RequestParam Long clusterId){
+        usersFlow.creatorJoinCluster(clusterId);
+    }
+    //http://localhost:10000/Guest/users/cluster/creator_join?id=1
+
+
+    /**
      * 当前用户退出群组
      */
     @DeleteMapping("/cluster/quit")

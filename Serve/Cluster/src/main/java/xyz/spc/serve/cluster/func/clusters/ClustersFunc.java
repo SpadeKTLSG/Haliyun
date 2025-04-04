@@ -66,7 +66,7 @@ public class ClustersFunc {
             return List.of();
         }
 
-        return clustersRepo.clusterMapper.selectBatchIds(Wrappers.lambdaQuery(ClusterDO.class)
+        return clustersRepo.clusterMapper.selectList( Wrappers.lambdaQuery(ClusterDO.class)
                 .eq(ClusterDO::getDelFlag, DelEnum.NORMAL.getStatusCode()) // 逻辑删除处理
                 .in(ClusterDO::getId, pagedClusterIds) // 批量查询
         );

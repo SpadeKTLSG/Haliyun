@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.common.constant.ReqRespCT;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.errorcode.ServerError;
+import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
@@ -274,7 +275,13 @@ public class ClustersFlow {
      */
     public void joinHallCluster(Long clusterId) {
 
-        // 直接复用接口
-        usersClient.joinCluster(clusterId);
+        //? Feign 调用情况下, 涉及到对方远程接口的抛异常回滚问题 (分布式事务) 简单解决: 一对一模式下, 直接接受返回值进行判断. 失败了就手动同步抛异常
+        //? 如果是复杂的嵌套调用, 会使用文档里面的已经设计好的 延迟一致性方案 (消息队列), 之后会有特定的场景处理这个问题
+
+        // 直接复用接口. 但是需要处理失败情况
+        Result<Object> res = usersClient.joinCluster(clusterId);
+        if (Objects.equals(res.getCode(), ReqRespCT.FAIL_CODE)) {
+            throw new ClientException(res.getMessage());
+        }
     }
 }

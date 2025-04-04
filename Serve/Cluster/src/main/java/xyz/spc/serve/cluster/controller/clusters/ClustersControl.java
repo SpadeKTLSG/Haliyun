@@ -77,7 +77,7 @@ public class ClustersControl {
     /**
      * 小院创建群组 (就传递两个名称 name,nickname)
      */
-    @PostMapping("create")
+    @PostMapping("/create")
     Result<Object> createCluster(@RequestBody ClusterDTO clusterDTO) {
         clustersFlow.createCluster(clusterDTO);
         return Result.success();

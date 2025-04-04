@@ -69,6 +69,7 @@ public class ClustersFunc {
         return clustersRepo.clusterMapper.selectList(Wrappers.lambdaQuery(ClusterDO.class)
                 .eq(ClusterDO::getDelFlag, DelEnum.NORMAL.getStatusCode()) // 逻辑删除处理
                 .in(ClusterDO::getId, pagedClusterIds) // 批量查询
+                .orderByDesc(ClusterDO::getCreateTime) //从新到旧排序
         );
     }
 

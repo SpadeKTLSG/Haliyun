@@ -18,6 +18,11 @@ public class Cluster extends BaseModel {
     private Long id;
 
     /**
+     * 创建者用户id
+     */
+    private Long creatorUserId;
+
+    /**
      * 群组名称
      */
     private String name;
@@ -36,4 +41,6 @@ public class Cluster extends BaseModel {
      * 群组容量
      */
     private Integer popVolume;
+    public static final Integer BASIC_POP_VOLUME = 32;
+    public static final Integer BASIC_POP_VOLUME_VIP = 1024;
 }

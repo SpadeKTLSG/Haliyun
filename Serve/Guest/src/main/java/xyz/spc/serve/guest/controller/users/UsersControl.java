@@ -19,6 +19,7 @@ import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.validate.Xss;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
+import xyz.spc.gate.vo.Guest.users.UserVO;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.auxiliary.config.ratelimit.LimitTypeEnum;
@@ -42,6 +43,7 @@ public class UsersControl {
     // Flow
     private final UsersFlow usersFlow;
     private final RedisTemplate<Object, Object> redisTemplate;
+
 
     //! Client
 
@@ -80,6 +82,56 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/user_clusters
 
+
+    /**
+     * 通过用户id获取用户简单VO信息 (账号 / 是否管理员)
+     */
+    @GetMapping("/user_simple")
+    Result<UserVO> getUserDOInfo(@RequestParam Long creatorUserId) {
+        return Result.success(usersFlow.getUserDOInfo(creatorUserId));
+    }
+    //http://localhost:10000/Guest/users/user_simple?creatorUserId=1
+
+
+    /**
+     * 当前用户加入群组
+     */
+    @PostMapping("/cluster/join")
+    Result<Object> joinCluster(@RequestParam Long clusterId) {
+        usersFlow.joinCluster(clusterId);
+        return Result.success();
+    }
+    //http://localhost:10000/Guest/users/cluster/join?clusterId=1
+
+
+    /**
+     * 群主加入群组
+     */
+    @PostMapping("/cluster/creator_join")
+    void creatorJoinCluster(@RequestParam Long clusterId){
+        usersFlow.creatorJoinCluster(clusterId);
+    }
+    //http://localhost:10000/Guest/users/cluster/creator_join?id=1
+
+
+    /**
+     * 当前用户退出群组
+     */
+    @DeleteMapping("/cluster/quit")
+    Result<Object> quitCluster(@RequestParam Long clusterId) {
+        usersFlow.quitCluster(clusterId);
+        return Result.success();
+    }
+    //http://localhost:10000/Guest/users/cluster/quit?clusterId=1
+
+    /**
+     * 所有人退出某群组
+     */
+    @DeleteMapping("/cluster/every_quit")
+    void everyQuitCluster(@RequestParam Long clusterId) {
+        usersFlow.everyQuitCluster(clusterId);
+    }
+    //http://localhost:10000/Guest/users/cluster/every_quit?clusterId=1
 
     //! Func
 

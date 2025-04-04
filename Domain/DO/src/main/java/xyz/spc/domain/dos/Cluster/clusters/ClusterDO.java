@@ -16,6 +16,8 @@ public class ClusterDO extends BaseDO {
 
     private Long id;
 
+    private Long creatorUserId;
+
     private String name;
 
     private String nickname;

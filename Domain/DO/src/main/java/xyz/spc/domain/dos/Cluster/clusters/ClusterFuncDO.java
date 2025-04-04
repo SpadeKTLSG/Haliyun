@@ -26,5 +26,5 @@ public class ClusterFuncDO extends BaseDO {
 
     private Long coinStock;
 
-    private String remarks;
+    private String remark;
 }

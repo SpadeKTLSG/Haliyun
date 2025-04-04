@@ -39,6 +39,13 @@ public final class UnitUtil {
     }
 
     /**
+     * 转化为GB单位大小 - 取Long整数
+     */
+    public static long toGBSize4Long(long size) {
+        return size / 1024 / 1024 / 1024;
+    }
+
+    /**
      * 将文件大小转换为可读单位
      *
      * @param bytes 字节数

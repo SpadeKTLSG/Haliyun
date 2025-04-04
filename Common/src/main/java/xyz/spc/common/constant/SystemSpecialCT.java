@@ -19,4 +19,16 @@ public interface SystemSpecialCT {
      * GBK 字符集
      */
     String GBK = "GBK";
+
+
+    /**
+     * 加法
+     */
+    String ADD = "+";
+
+
+    /**
+     * 减法
+     */
+    String SUB = "-";
 }

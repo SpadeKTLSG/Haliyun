@@ -24,5 +24,5 @@ public class ClusterFuncDTO extends BaseDTO {
 
     private Long coinStock;
 
-    private String remarks;
+    private String remark;
 }

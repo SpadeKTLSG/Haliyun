@@ -24,5 +24,5 @@ public class ClusterFuncVO extends BaseVO {
 
     private Long coinStock;
 
-    private String remarks;
+    private String remark;
 }

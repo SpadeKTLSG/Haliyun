@@ -2,6 +2,7 @@ package xyz.spc.serve.guest.func.users;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import com.github.yulichang.wrapper.UpdateJoinWrapper;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import xyz.spc.common.constant.Guest.users.LoginCacheKey;
 import xyz.spc.common.constant.Guest.users.LoginCommonCT;
+import xyz.spc.common.constant.SystemSpecialCT;
 import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.common.funcpack.exception.ServiceException;
@@ -31,6 +33,7 @@ import xyz.spc.domain.dos.Guest.users.UserFuncDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
+import xyz.spc.gate.vo.Guest.users.UserVO;
 import xyz.spc.infra.special.Guest.users.UsersRepo;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
@@ -328,14 +331,92 @@ public class UsersFunc {
 
 
     /**
-     * 注销账号-用户三张表 - 实际只修改状态字段
+     * 注销账号-用户三张表 - 实际只修改状态字段, 还没到逻辑删除这步
      */
     public void killUserAccount(Long id) {
         usersRepo.userService.updateById(UserDO.builder().id(id).status(User.STATUS_STOP).build());
     }
 
+    /**
+     * 获取用户等级层级信息
+     */
     public Long getUserLevelFloor(Long id) {
         return usersRepo.userFuncService.getById(id).getLevelId();
     }
 
+
+    /**
+     * 简单获得用户信息
+     */
+    public UserVO getUserDOInfo(Long creatorUserId) {
+        UserDO tmp = usersRepo.userService.getById(creatorUserId);
+
+        UserVO res = UserVO.builder()
+                .admin(tmp.getAdmin())
+                .account(tmp.getAccount())
+                .build();
+
+        return res;
+    }
+
+
+    /**
+     * 操作用户 创建 群组的数量 ( + / - by amount)
+     */
+    @CacheEvict(key = "'getUserInfoById' + #userId", value = "user")
+    public void opUserCreateClusterCount(Long userId, String opType, int amount) {
+
+        //更新UserFunc id == id 的记录(一条) 的对应字段
+
+        //查出对应的记录
+        UserFuncDO userFuncDO = usersRepo.userFuncService.getById(userId);
+
+
+        // 判断操作类型
+        if(opType.equals(SystemSpecialCT.ADD)) {
+            //增加 amount
+            usersRepo.userFuncService.update(Wrappers.lambdaUpdate(UserFuncDO.class)
+                    .eq(UserFuncDO::getId, userId)
+                    .set(UserFuncDO::getCreateClusterCount,userFuncDO.getCreateClusterCount() + amount)
+            );
+
+        } else if (opType.equals(SystemSpecialCT.SUB)) {
+            //减少 amount
+            usersRepo.userFuncService.update(Wrappers.lambdaUpdate(UserFuncDO.class)
+                    .eq(UserFuncDO::getId, userId)
+                    .set(UserFuncDO::getCreateClusterCount,userFuncDO.getCreateClusterCount() - amount)
+            );
+        }
+
+    }
+
+    /**
+     * 操作用户 加入 群组的数量 ( + / - by amount)
+     */
+    @CacheEvict(key = "'getUserInfoById' + #userId", value = "user")
+    public void opUserJoinClusterCount(Long userId, String opType, int amount) {
+
+        //更新UserFunc id == id 的记录(一条) 的对应字段
+
+        //查出对应的记录
+        UserFuncDO userFuncDO = usersRepo.userFuncService.getById(userId);
+
+
+        // 判断操作类型
+
+        if(opType.equals(SystemSpecialCT.ADD)) {
+            //增加 amount
+            usersRepo.userFuncService.update(Wrappers.lambdaUpdate(UserFuncDO.class)
+                    .eq(UserFuncDO::getId, userId)
+                    .set(UserFuncDO::getJoinClusterCount,userFuncDO.getJoinClusterCount() + amount)
+            );
+
+        } else if (opType.equals(SystemSpecialCT.SUB)) {
+            //减少 amount
+            usersRepo.userFuncService.update(Wrappers.lambdaUpdate(UserFuncDO.class)
+                    .eq(UserFuncDO::getId, userId)
+                    .set(UserFuncDO::getJoinClusterCount,userFuncDO.getJoinClusterCount() - amount)
+            );
+        }
+    }
 }

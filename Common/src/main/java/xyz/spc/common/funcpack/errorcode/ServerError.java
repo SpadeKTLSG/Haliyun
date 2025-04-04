@@ -20,6 +20,7 @@ public enum ServerError {
     SERVICE_BREAK_ERROR("B1003", "系统熔断"),
     SERVICE_DOWN_ERROR("B1004", "系统宕机"),
     SERVICE_UNKNOW_ERROR("B1005", "系统未知错误"),
+    SERVICE_RPC_ERROR("B1006", "系统远程调用错误"),
 
     // ========== 二级宏观错误码 系统容灾 ==========
     SERVICE_CIRCUIT_BREAKER_ERROR("B2001", "系统限流"),

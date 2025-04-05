@@ -46,6 +46,15 @@ public class ClustersControl {
         return clustersFlow.getClusterByIdBatch(pagedClusterIds);
     }
 
+    /**
+     * 判断群组创建者是否是这个用户
+     */
+    @GetMapping("/cluster/creator/check")
+    boolean checkClusterCreatorEqual(@RequestParam Long clusterId, @RequestParam Long myUserId) {
+        return clustersFlow.checkClusterCreatorEqual(clusterId, myUserId);
+    }
+
+
     //! Func
 
     /**

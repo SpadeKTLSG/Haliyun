@@ -351,4 +351,11 @@ public class ClustersFlow {
         return clustersFunc.getClusterEzOfMe(clusterIds);
     }
 
+
+    /**
+     * 判断群组创建者是否是这个用户
+     */
+    public boolean checkClusterCreatorEqual(Long clusterId, Long myUserId) {
+        return clustersFunc.checkClusterCreatorEqual(clusterId, myUserId);
+    }
 }

@@ -308,9 +308,14 @@ public class ClustersFlow {
         }
 
         //2. 退出操作, 删除关联
-        usersClient.kickOutPopOfCluster(clusterId, userId);
+        Result<Object> res = usersClient.kickOutPopOfCluster(clusterId, userId);
 
         //3. 交由对方服务实现计数维护.
+
+        //4. 需要处理失败情况
+        if (Objects.equals(res.getCode(), ReqRespCT.FAIL_CODE)) {
+            throw new ClientException(res.getMessage());
+        }
     }
 
     /**

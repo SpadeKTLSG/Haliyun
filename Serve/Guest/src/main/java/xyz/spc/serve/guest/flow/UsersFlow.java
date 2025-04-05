@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.common.constant.SystemSpecialCT;
+import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.levels.LevelVO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
@@ -217,7 +218,7 @@ public class UsersFlow {
         //1. 判断 myUserId 是否目标群组的群主
         Long myUserId = Objects.requireNonNull(UserContext.getUI());
         if (!clustersClient.checkClusterCreatorEqual(clusterId, myUserId)) {
-            throw new RuntimeException("你不是这个群组的群主, 无法随意踹人!!!");
+            throw new ClientException("你不是这个群组的群主, 无法随意踹人!!!");
         }
 
         //2. 群组表操作

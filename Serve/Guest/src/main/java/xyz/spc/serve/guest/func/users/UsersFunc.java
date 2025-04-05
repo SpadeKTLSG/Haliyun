@@ -16,6 +16,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.constant.DelEnum;
 import xyz.spc.common.constant.Guest.users.LoginCacheKey;
 import xyz.spc.common.constant.Guest.users.LoginCommonCT;
 import xyz.spc.common.constant.SystemSpecialCT;
@@ -442,13 +443,36 @@ public class UsersFunc {
         return userIds;
     }
 
+
     /**
      * 通过用户id批量查询用户信息
-     * @param userIds
-     * @return
      */
     public List<UserVO> getUserInfoByIds(List<Long> userIds) {
 
+        // 通过用户id批量查询用户信息
+        List<UserDO> userList = usersRepo.userService.list(Wrappers.lambdaQuery(UserDO.class)
+                .in(UserDO::getId, userIds)
+                .eq(UserDO::getStatus, User.STATUS_NORMAL) // 账号状态正常
+                .eq(UserDO::getDelFlag, DelEnum.NORMAL) // 逻辑删除处理
+        );
 
+        if (userList == null || userList.isEmpty()) {
+            return List.of();
+        }
+
+        // 将对象清单转换为UserVO清单
+        List<UserVO> userVOList = new ArrayList<>();
+        for (UserDO user : userList) {
+            UserVO userVO = UserVO.builder()
+
+                    // 补充 VO 展示信息
+                    .id(user.getId())
+                    .account(user.getAccount())
+                    .build();
+
+            userVOList.add(userVO);
+        }
+
+        return userVOList;
     }
 }

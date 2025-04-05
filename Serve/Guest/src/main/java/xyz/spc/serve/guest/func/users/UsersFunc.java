@@ -27,6 +27,7 @@ import xyz.spc.common.util.collecUtil.StringUtil;
 import xyz.spc.common.util.encryptUtil.MD5Util;
 import xyz.spc.common.util.userUtil.PhoneUtil;
 import xyz.spc.common.util.userUtil.codeUtil;
+import xyz.spc.domain.dos.Guest.users.UserClusterDO;
 import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.domain.dos.Guest.users.UserDetailDO;
 import xyz.spc.domain.dos.Guest.users.UserFuncDO;
@@ -40,10 +41,7 @@ import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
 import xyz.spc.serve.auxiliary.config.redis.tool.RedisCacheGeneral;
 import xyz.spc.serve.guest.common.enums.UsersChainMarkEnum;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 
@@ -373,18 +371,18 @@ public class UsersFunc {
 
 
         // 判断操作类型
-        if(opType.equals(SystemSpecialCT.ADD)) {
+        if (opType.equals(SystemSpecialCT.ADD)) {
             //增加 amount
             usersRepo.userFuncService.update(Wrappers.lambdaUpdate(UserFuncDO.class)
                     .eq(UserFuncDO::getId, userId)
-                    .set(UserFuncDO::getCreateClusterCount,userFuncDO.getCreateClusterCount() + amount)
+                    .set(UserFuncDO::getCreateClusterCount, userFuncDO.getCreateClusterCount() + amount)
             );
 
         } else if (opType.equals(SystemSpecialCT.SUB)) {
             //减少 amount
             usersRepo.userFuncService.update(Wrappers.lambdaUpdate(UserFuncDO.class)
                     .eq(UserFuncDO::getId, userId)
-                    .set(UserFuncDO::getCreateClusterCount,userFuncDO.getCreateClusterCount() - amount)
+                    .set(UserFuncDO::getCreateClusterCount, userFuncDO.getCreateClusterCount() - amount)
             );
         }
 
@@ -404,19 +402,53 @@ public class UsersFunc {
 
         // 判断操作类型
 
-        if(opType.equals(SystemSpecialCT.ADD)) {
+        if (opType.equals(SystemSpecialCT.ADD)) {
             //增加 amount
             usersRepo.userFuncService.update(Wrappers.lambdaUpdate(UserFuncDO.class)
                     .eq(UserFuncDO::getId, userId)
-                    .set(UserFuncDO::getJoinClusterCount,userFuncDO.getJoinClusterCount() + amount)
+                    .set(UserFuncDO::getJoinClusterCount, userFuncDO.getJoinClusterCount() + amount)
             );
 
         } else if (opType.equals(SystemSpecialCT.SUB)) {
             //减少 amount
             usersRepo.userFuncService.update(Wrappers.lambdaUpdate(UserFuncDO.class)
                     .eq(UserFuncDO::getId, userId)
-                    .set(UserFuncDO::getJoinClusterCount,userFuncDO.getJoinClusterCount() - amount)
+                    .set(UserFuncDO::getJoinClusterCount, userFuncDO.getJoinClusterCount() - amount)
             );
         }
+    }
+
+    /**
+     * 获取群组的用户id清单
+     */
+    public List<Long> getClusterUserIdList(Long clusterId) {
+
+        // 通过群组id获取对应中间表对象清单
+        List<UserClusterDO> userIdList = usersRepo.userClusterService.list(Wrappers.lambdaQuery(UserClusterDO.class)
+                .eq(UserClusterDO::getClusterId, clusterId)
+                .eq(UserClusterDO::getDelFlag, 0) // 逻辑删除处理
+        );
+
+        if (userIdList == null || userIdList.isEmpty()) {
+            return List.of();
+        }
+
+        //将对象清单转换为id清单
+        List<Long> userIds = new ArrayList<>();
+        for (UserClusterDO userClusterDO : userIdList) {
+            userIds.add(userClusterDO.getUserId());
+        }
+
+        return userIds;
+    }
+
+    /**
+     * 通过用户id批量查询用户信息
+     * @param userIds
+     * @return
+     */
+    public List<UserVO> getUserInfoByIds(List<Long> userIds) {
+
+
     }
 }

@@ -81,6 +81,15 @@ public class ClustersControl {
     }
     //http://localhost:10000/Cluster/clusters/exit?clusterId=...
 
+    /**
+     * 将目标踢出某群组
+     */
+    @DeleteMapping("/kick_cluster")
+    Result<Object> kickCluster(@RequestParam Long clusterId, @RequestParam Long userId) {
+        clustersFlow.kickCluster(clusterId, userId);
+        return Result.success();
+    }
+    //http://localhost:10000/Cluster/clusters/kick_cluster?clusterId=1&userId=2
 
     //! ADD
 

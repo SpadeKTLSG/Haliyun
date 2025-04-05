@@ -296,6 +296,23 @@ public class ClustersFlow {
         //3. 交由对方服务实现计数维护.
     }
 
+
+    /**
+     * 将目标踢出某群组
+     */
+    public void kickCluster(Long clusterId, Long userId) {
+
+        //1. 鉴权判断: 群主不可以退出他对应的群组, 其他人可以!
+        if (clustersFunc.checkClusterCreatorEqual(clusterId, userId)) {
+            throw new ClientException("群主不可以退出自己的群组");
+        }
+
+        //2. 退出操作, 删除关联
+        usersClient.kickOutPopOfCluster(clusterId, userId);
+
+        //3. 交由对方服务实现计数维护.
+    }
+
     /**
      * 加入群组 创建对应关系
      */
@@ -333,4 +350,5 @@ public class ClustersFlow {
         //2. 批量查询群组基本存储对象信息
         return clustersFunc.getClusterEzOfMe(clusterIds);
     }
+
 }

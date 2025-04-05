@@ -449,11 +449,16 @@ public class UsersFunc {
      */
     public List<UserVO> getUserInfoByIds(List<Long> userIds) {
 
+        // 检查 userIds 是否为空
+        if (userIds == null || userIds.isEmpty()) {
+            return List.of();
+        }
+
         // 通过用户id批量查询用户信息
         List<UserDO> userList = usersRepo.userService.list(Wrappers.lambdaQuery(UserDO.class)
                 .in(UserDO::getId, userIds)
                 .eq(UserDO::getStatus, User.STATUS_NORMAL) // 账号状态正常
-                .eq(UserDO::getDelFlag, DelEnum.NORMAL) // 逻辑删除处理
+                .eq(UserDO::getDelFlag, DelEnum.NORMAL.getStatusCode()) // 逻辑删除处理
         );
 
         if (userList == null || userList.isEmpty()) {

@@ -214,10 +214,18 @@ public class ClustersFunc {
         log.debug("群组: {} , 由用户: {} 删除成功: ", clusterId, UserContext.getUA());
     }
 
+
     /**
      * 检查群组id对应的创建者是否是当前用户
      */
     public boolean checkClusterCreatorEqual(Long clusterId) {
+        return checkClusterCreatorEqual(clusterId, UserContext.getUI());
+    }
+
+    /**
+     * 检查群组id对应的创建者是否是目标用户
+     */
+    public boolean checkClusterCreatorEqual(Long clusterId, Long userId) {
 
         //1. 查出对应的群组 ClusterDO
         ClusterDO clusterDO = clustersRepo.clusterMapper.selectOne(
@@ -229,14 +237,15 @@ public class ClustersFunc {
         //2. 获取群组创建人id
         Long creatorUserId = clusterDO.getCreatorUserId();
 
-        //3. 判断是否相等
-        if (creatorUserId.equals(UserContext.getUI())) {
+        //3. 判断是否和目标对象相等
+        if (creatorUserId.equals(userId)) {
             return true;
         } else {
-            log.error("用户: {} 试图删除群组 => {}, 但不是群主, 无法删除", UserContext.getUA(), clusterId);
+            log.error("用户: {} 试图删除群组 => {}, 但不是群主, 无法删除", userId, clusterId);
             return false;
         }
     }
+
 
     /**
      * 获取我加入的群组信息, 用于群组信息页面

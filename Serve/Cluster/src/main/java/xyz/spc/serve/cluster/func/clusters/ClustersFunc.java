@@ -237,4 +237,35 @@ public class ClustersFunc {
             return false;
         }
     }
+
+    /**
+     * 获取我加入的群组信息, 用于群组信息页面
+     */
+    public List<ClusterVO> getClusterEzOfMe(List<Long> ids) {
+
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+
+        // 批量查询群组对象
+        List<ClusterDO> clusterList = clustersRepo.clusterMapper.selectBatchIds(ids);
+
+        if (clusterList == null || clusterList.isEmpty()) {
+            return List.of();
+        }
+
+        // 补充信息
+        return clusterList.stream()
+                .map(cluster -> {
+                    ClusterVO clusterVO = new ClusterVO();
+
+                    // 需要查出基本信息: id, 名称, 人员容量 用于展示
+                    clusterVO.setId(cluster.getId());
+                    clusterVO.setName(cluster.getName());
+                    clusterVO.setPopVolume(cluster.getPopVolume());
+
+                    return clusterVO;
+                })
+                .toList();
+    }
 }

@@ -313,4 +313,24 @@ public class ClustersFlow {
         }
     }
 
+    /**
+     * 获取我加入的群组简单信息清单
+     */
+    public List<ClusterVO> getClusterEzOfMe() {
+
+        //1. 获取用户加入的群组清单
+        List<Long> clusterIds = null;
+        Result<List<Long>> res = usersClient.getUserClusterIds();
+
+        if (Objects.equals(res.getCode(), ReqRespCT.SUCCESS_CODE)) {
+            clusterIds = res.getData();
+        }
+
+        if (clusterIds == null || clusterIds.isEmpty()) {
+            return List.of();
+        }
+
+        //2. 批量查询群组基本存储对象信息
+        return clustersFunc.getClusterEzOfMe(clusterIds);
+    }
 }

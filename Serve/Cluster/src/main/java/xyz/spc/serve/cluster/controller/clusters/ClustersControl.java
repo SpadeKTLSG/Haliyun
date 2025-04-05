@@ -94,6 +94,7 @@ public class ClustersControl {
     }
     //http://localhost:10000/Cluster/clusters/create
 
+
     //! UPDATE
 
 
@@ -131,4 +132,14 @@ public class ClustersControl {
         return Result.success(clustersFlow.getAllClusterById(id));
     }
     //http://localhost:10000/Cluster/clusters/hall/one?id=...
+
+
+    /**
+     * 查询我自己的群组清单, 简单展示 (支撑 群组信息界面)
+     */
+    @GetMapping("/clusterEzOfMe")
+    Result<List<ClusterVO>> getClusterEzOfMe() {
+        return Result.success(clustersFlow.getClusterEzOfMe());
+    }
+    //http://localhost:10000/Cluster/clusters/clusterEzOfMe
 }

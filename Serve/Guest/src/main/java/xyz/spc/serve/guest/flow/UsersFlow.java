@@ -202,10 +202,18 @@ public class UsersFlow {
         //退群 = 删除 (这里是删除!) 群组用户关联 的 对应条目记录 (这个因为没有什么必要保存 (中间表), 所以简化了)
         Long userId = Objects.requireNonNull(UserContext.getUI());
 
-        // 群组表操作
+        kickOutPopOfCluster(clusterId, userId);
+    }
+
+    /**
+     * 将目标用户踢出某群组
+     */
+    public void kickOutPopOfCluster(Long clusterId, Long userId) {
+
+        //1. 群组表操作
         userClusterFunc.quitCluster(userId, clusterId);
 
-        // 维护 UserFunc 的加入群组数量
+        //2. 维护 UserFunc 的加入群组数量
         usersFunc.opUserJoinClusterCount(userId, SystemSpecialCT.SUB, 1);
     }
 
@@ -239,4 +247,6 @@ public class UsersFlow {
 
         return userVOList;
     }
+
+
 }

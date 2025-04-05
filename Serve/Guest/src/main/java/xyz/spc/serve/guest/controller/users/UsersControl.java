@@ -124,6 +124,17 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/cluster/quit?clusterId=1
 
+
+    /**
+     * 踢出某群的某人
+     */
+    @DeleteMapping("/cluster/kick_out")
+    Result<Object> kickOutPopOfCluster(@RequestParam Long clusterId, @RequestParam Long userId) {
+        usersFlow.kickOutPopOfCluster(clusterId, userId);
+        return Result.success();
+    }
+    //http://localhost:10000/Guest/users/cluster/kick_out?clusterId=1&userId=2
+
     /**
      * 所有人退出某群组
      */

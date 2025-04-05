@@ -61,9 +61,16 @@ public interface UsersClient {
     Result<Object> quitCluster(@RequestParam Long clusterId);
 
     /**
+     * 踢出某群的某人
+     */
+    @DeleteMapping(BASE_URL + "/cluster/kick_out")
+    Result<Object> kickOutPopOfCluster(@RequestParam Long clusterId, @RequestParam Long userId);
+
+    /**
      * 所有人的退出群组
      */
     @DeleteMapping(BASE_URL + "/cluster/every_quit")
     void everyQuitCluster(@RequestParam Long clusterId);
+
 
 }

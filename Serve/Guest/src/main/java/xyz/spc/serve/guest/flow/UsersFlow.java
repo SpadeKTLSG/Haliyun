@@ -202,18 +202,28 @@ public class UsersFlow {
         //退群 = 删除 (这里是删除!) 群组用户关联 的 对应条目记录 (这个因为没有什么必要保存 (中间表), 所以简化了)
         Long userId = Objects.requireNonNull(UserContext.getUI());
 
-        kickOutPopOfCluster(clusterId, userId);
-    }
-
-    /**
-     * 将目标用户踢出某群组
-     */
-    public void kickOutPopOfCluster(Long clusterId, Long userId) {
-
         //1. 群组表操作
         userClusterFunc.quitCluster(userId, clusterId);
 
         //2. 维护 UserFunc 的加入群组数量
+        usersFunc.opUserJoinClusterCount(userId, SystemSpecialCT.SUB, 1);
+    }
+
+    /**
+     * 将目标用户踢出某群组, 需要群主资格
+     */
+    public void kickOutPopOfCluster(Long clusterId, Long userId) {
+
+        //1. 判断 myUserId 是否目标群组的群主
+        Long myUserId = Objects.requireNonNull(UserContext.getUI());
+        if (!clustersClient.checkClusterCreatorEqual(clusterId, myUserId)) {
+            throw new RuntimeException("你不是这个群组的群主, 无法随意踹人!!!");
+        }
+
+        //2. 群组表操作
+        userClusterFunc.quitCluster(userId, clusterId);
+
+        //3. 维护 UserFunc 的加入群组数量
         usersFunc.opUserJoinClusterCount(userId, SystemSpecialCT.SUB, 1);
     }
 

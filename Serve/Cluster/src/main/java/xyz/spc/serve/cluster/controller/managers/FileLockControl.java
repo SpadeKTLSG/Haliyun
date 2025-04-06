@@ -1,4 +1,4 @@
-package xyz.spc.serve.cluster.controller.functions;
+package xyz.spc.serve.cluster.controller.managers;
 
 
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -10,11 +10,9 @@ import xyz.spc.serve.auxiliary.config.log.MLog;
 
 @Slf4j
 @MLog
-@Tag(name = "Clusters", description = "群组功能合集")
-@RequestMapping("/Cluster/functions")
+@Tag(name = "Clusters", description = "群组管理合集")
+@RequestMapping("/Cluster/managers")
 @RestController
 @RequiredArgsConstructor
-public class ClusterLevelPrefixControl {
-
-
+public class FileLockControl {
 }

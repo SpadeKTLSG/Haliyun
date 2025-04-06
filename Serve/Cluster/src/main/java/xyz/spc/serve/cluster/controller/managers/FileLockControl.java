@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.spc.serve.auxiliary.config.log.MLog;
+import xyz.spc.serve.cluster.flow.FunctionsFlow;
 
 @Slf4j
 @MLog
@@ -15,4 +16,24 @@ import xyz.spc.serve.auxiliary.config.log.MLog;
 @RestController
 @RequiredArgsConstructor
 public class FileLockControl {
+
+    // Flow
+    private final FunctionsFlow functionsFlow;
+
+
+    //! Client
+
+
+    //! Func
+
+
+    //! ADD
+
+
+    //! DELETE
+
+
+    //! UPDATE
+
+    //! Query
 }

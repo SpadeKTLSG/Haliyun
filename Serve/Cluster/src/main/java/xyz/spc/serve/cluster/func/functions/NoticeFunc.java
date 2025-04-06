@@ -22,4 +22,11 @@ public class NoticeFunc {
     public NoticeDO getNoticeById(Long noticeId) {
         return noticeRepo.noticeService.getById(noticeId);
     }
+
+    /**
+     * 通过 DO 对象更新公告
+     */
+    public void updateNoticeByDO(NoticeDO tmp) {
+        noticeRepo.noticeService.updateById(tmp);
+    }
 }

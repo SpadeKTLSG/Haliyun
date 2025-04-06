@@ -277,4 +277,21 @@ public class ClustersFunc {
                 })
                 .toList();
     }
+
+    /**
+     * 用群组id获取群组公告id
+     */
+    public Long getNoticeIdByClusterId(Long clusterId) {
+
+        // 通过群组id 找到 ClusterFuncDO -> 公告id
+        ClusterFuncDO clusterFuncDO = clustersRepo.clusterFuncService.getOne(
+                Wrappers.lambdaQuery(ClusterFuncDO.class)
+                        .eq(ClusterFuncDO::getId, clusterId)
+                        .eq(ClusterFuncDO::getDelFlag, DelEnum.NORMAL.getStatusCode()) // 逻辑删除处理
+        );
+
+        Long noticeId = clusterFuncDO.getNoticeId();
+
+        return noticeId;
+    }
 }

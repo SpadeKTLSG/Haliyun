@@ -16,6 +16,9 @@ public class NoticeFunc {
      */
     private final NoticeRepo noticeRepo;
 
+    /**
+     * 根据id获取公告
+     */
     public NoticeDO getNoticeById(Long noticeId) {
         return noticeRepo.noticeService.getById(noticeId);
     }

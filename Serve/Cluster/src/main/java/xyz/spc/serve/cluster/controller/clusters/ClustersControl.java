@@ -68,6 +68,19 @@ public class ClustersControl {
     //http://localhost:10000/Cluster/clusters/hall/join?clusterId=...
 
 
+    //! ADD
+
+    /**
+     * 小院创建群组 (就传递两个名称 name,nickname)
+     */
+    @PostMapping("/create")
+    Result<Object> createCluster(@RequestBody ClusterDTO clusterDTO) {
+        clustersFlow.createCluster(clusterDTO);
+        return Result.success();
+    }
+    //http://localhost:10000/Cluster/clusters/create
+
+
     //! DELETE
 
     /**
@@ -100,17 +113,6 @@ public class ClustersControl {
     }
     //http://localhost:10000/Cluster/clusters/kick_cluster?clusterId=1&userId=2
 
-    //! ADD
-
-    /**
-     * 小院创建群组 (就传递两个名称 name,nickname)
-     */
-    @PostMapping("/create")
-    Result<Object> createCluster(@RequestBody ClusterDTO clusterDTO) {
-        clustersFlow.createCluster(clusterDTO);
-        return Result.success();
-    }
-    //http://localhost:10000/Cluster/clusters/create
 
 
     //! UPDATE

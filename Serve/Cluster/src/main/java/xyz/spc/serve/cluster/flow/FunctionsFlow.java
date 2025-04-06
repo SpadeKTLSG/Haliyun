@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.spc.domain.dos.Cluster.functions.NoticeDO;
+import xyz.spc.gate.dto.Cluster.functions.NoticeDTO;
 import xyz.spc.gate.vo.Cluster.functions.NoticeVO;
 import xyz.spc.serve.cluster.func.clusters.ClustersFunc;
 import xyz.spc.serve.cluster.func.functions.NoticeFunc;
@@ -47,4 +48,6 @@ public class FunctionsFlow {
         return res;
     }
 
+    public void addNotice(NoticeDTO noticeDTO) {
+    }
 }

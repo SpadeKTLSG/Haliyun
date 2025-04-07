@@ -3,6 +3,7 @@ package xyz.spc.serve.cluster.flow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.domain.dos.Cluster.functions.NoticeDO;
 import xyz.spc.gate.dto.Cluster.functions.NoticeDTO;
 import xyz.spc.gate.vo.Cluster.functions.NoticeVO;
@@ -33,7 +34,9 @@ public class FunctionsFlow {
         Long noticeId = clustersFunc.getNoticeIdByClusterId(clusterId);
 
         //2. 通过 NoticeFunc 得到公告
-        NoticeDO tmp = Optional.ofNullable(noticeFunc.getNoticeById(noticeId)).orElseThrow();
+        NoticeDO tmp = Optional.ofNullable(noticeFunc.getNoticeById(noticeId)).orElseThrow(
+                () -> new ClientException("公告已经不存在了, 无法查看!!!")
+        );
 
 
         //3. 记录阅读数, 并保存
@@ -83,7 +86,9 @@ public class FunctionsFlow {
         //1. 更新公告内容, 复用
 
         //1.1 获取之前的公告信息
-        NoticeDO tmp = noticeFunc.getNoticeById(noticeDTO.getId());
+        NoticeDO tmp = Optional.ofNullable(noticeFunc.getNoticeById(noticeDTO.getId())).orElseThrow(
+                () -> new ClientException("公告已经不存在了, 无法更新!!!")
+        );
 
         //1.2 更新公告内容, 阅读数不能动
         tmp.setName(noticeDTO.getName());

@@ -47,6 +47,8 @@ public class NoticeFunc {
 
         noticeRepo.noticeService.save(tmp);
 
+        // note: 由于希望群公告是唯一的, 因此需要把之前的公告给删掉 或者 就限制如果群有公告了就不插入新的. 这个前端直接屏蔽掉了
+
         return id;
     }
 

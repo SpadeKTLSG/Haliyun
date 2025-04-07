@@ -34,9 +34,9 @@ public class NoticeControl {
     /**
      * 添加群公告
      */
-    @PostMapping("/notice")
-    public Result<Object> addNotice(@RequestBody NoticeDTO noticeDTO) {
-        functionsFlow.addNotice(noticeDTO);
+    @PostMapping("/notice/{clusterId}")
+    public Result<Object> addNotice(@RequestBody NoticeDTO noticeDTO, @PathVariable Long clusterId) {
+        functionsFlow.addNotice(clusterId, noticeDTO);
         return Result.success();
     }
     //http://localhost:10000/Cluster/functions/notice

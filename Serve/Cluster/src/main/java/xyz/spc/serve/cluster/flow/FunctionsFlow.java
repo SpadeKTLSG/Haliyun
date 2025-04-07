@@ -48,6 +48,17 @@ public class FunctionsFlow {
         return res;
     }
 
-    public void addNotice(NoticeDTO noticeDTO) {
+    /**
+     * 添加公告
+     */
+    public void addNotice(Long clusterId, NoticeDTO noticeDTO) {
+
+        //1. Notice 落库
+        Long noticeId = noticeFunc.addNotice(noticeDTO);
+
+
+        //2. 把 cluster 的 noticeId 更新为这个公告的 id
+        clustersFunc.updateNoticeId(clusterId, noticeId);
+
     }
 }

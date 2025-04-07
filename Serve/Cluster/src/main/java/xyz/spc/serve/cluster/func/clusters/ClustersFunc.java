@@ -294,4 +294,20 @@ public class ClustersFunc {
 
         return noticeId;
     }
+
+    /**
+     * 更新群组公告id
+     */
+    public void updateNoticeId(Long clusterId, Long noticeId) {
+
+        // 更新群组公告id
+        clustersRepo.clusterFuncService.update(
+                null,
+                Wrappers.lambdaUpdate(ClusterFuncDO.class)
+                        .eq(ClusterFuncDO::getId, clusterId)
+                        .eq(ClusterFuncDO::getDelFlag, DelEnum.NORMAL.getStatusCode()) // 逻辑删除处理
+                        .set(ClusterFuncDO::getNoticeId, noticeId)
+        );
+
+    }
 }

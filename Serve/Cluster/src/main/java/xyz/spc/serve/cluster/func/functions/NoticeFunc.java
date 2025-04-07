@@ -3,7 +3,9 @@ package xyz.spc.serve.cluster.func.functions;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.domain.dos.Cluster.functions.NoticeDO;
+import xyz.spc.gate.dto.Cluster.functions.NoticeDTO;
 import xyz.spc.infra.special.Cluster.functions.NoticeRepo;
 
 @Slf4j
@@ -28,5 +30,23 @@ public class NoticeFunc {
      */
     public void updateNoticeByDO(NoticeDO tmp) {
         noticeRepo.noticeService.updateById(tmp);
+    }
+
+    /**
+     * 添加公告
+     */
+    public Long addNotice(NoticeDTO noticeDTO) {
+
+        Long id = SnowflakeIdUtil.nextId();
+
+        NoticeDO tmp = NoticeDO.builder()
+                .id(id)
+                .name(noticeDTO.getName())
+                .content(noticeDTO.getContent())
+                .build();
+
+        noticeRepo.noticeService.save(tmp);
+
+        return id;
     }
 }

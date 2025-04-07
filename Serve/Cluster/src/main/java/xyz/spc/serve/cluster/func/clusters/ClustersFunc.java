@@ -272,6 +272,9 @@ public class ClustersFunc {
                     clusterVO.setId(cluster.getId());
                     clusterVO.setName(cluster.getName());
                     clusterVO.setPopVolume(cluster.getPopVolume());
+                    clusterVO.setCreatorUserId(cluster.getCreatorUserId()); // 必须补充群主id, 用于操作鉴权等场景
+                    // note: 部分安全性低场景前端短路实现可以使用前端直接把这个群主id拿去判断Context中的userId是否相等, 这样就不需要再查数据库了
+                    // 但是不推荐, 最后还是要在后端做保护, 以免被人恶意篡改. 实现的对应见 两处: Notice模块 + 群组信息模块
 
                     return clusterVO;
                 })

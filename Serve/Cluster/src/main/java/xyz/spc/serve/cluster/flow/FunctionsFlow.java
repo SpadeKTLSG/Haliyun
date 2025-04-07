@@ -56,9 +56,40 @@ public class FunctionsFlow {
         //1. Notice 落库
         Long noticeId = noticeFunc.addNotice(noticeDTO);
 
-
         //2. 把 cluster 的 noticeId 更新为这个公告的 id
         clustersFunc.updateNoticeId(clusterId, noticeId);
+    }
+
+    /**
+     * 删除公告
+     */
+    public void deleteNotice(Long clusterId, Long noticeId) {
+
+        //1. 删除公告
+        noticeFunc.delNoticeById(noticeId);
+
+        //2. 更新 cluster 的 noticeId 为 null (复用更新接口)
+        clustersFunc.updateNoticeId(clusterId, null);
+    }
+
+    /**
+     * 更新公告
+     */
+    public void updateNotice(NoticeDTO noticeDTO) {
+
+        //1. 更新公告内容, 复用
+
+        //1.1 获取之前的公告信息
+        NoticeDO tmp = noticeFunc.getNoticeById(noticeDTO.getId());
+
+        //1.2 更新公告内容, 阅读数不能动
+        tmp.setName(noticeDTO.getName());
+        tmp.setContent(noticeDTO.getContent());
+
+        //1.3 落库
+        noticeFunc.updateNoticeByDO(tmp);
+
+        //2. 只是更新不需要调整
 
     }
 }

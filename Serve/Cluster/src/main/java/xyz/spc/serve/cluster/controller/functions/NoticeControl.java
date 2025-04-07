@@ -47,9 +47,9 @@ public class NoticeControl {
     /**
      * 删除群公告
      */
-    @DeleteMapping("/notice")
-    public Result<Object> deleteNotice(@RequestParam Long noticeId) {
-        functionsFlow.deleteNotice(noticeId);
+    @DeleteMapping("/notice/{clusterId}")
+    public Result<Object> deleteNotice(@RequestParam Long noticeId, @PathVariable Long clusterId) {
+        functionsFlow.deleteNotice(clusterId, noticeId);
         return Result.success();
     }
     //http://localhost:10000/Cluster/functions/notice?noticeId=1

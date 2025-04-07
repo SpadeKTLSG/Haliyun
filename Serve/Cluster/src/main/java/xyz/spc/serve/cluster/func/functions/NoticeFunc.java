@@ -49,4 +49,11 @@ public class NoticeFunc {
 
         return id;
     }
+
+    /**
+     * id删除公告
+     */
+    public void delNoticeById(Long noticeId) {
+        noticeRepo.noticeService.removeById(noticeId);
+    }
 }

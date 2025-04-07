@@ -9,6 +9,8 @@ import xyz.spc.gate.vo.Cluster.functions.NoticeVO;
 import xyz.spc.serve.cluster.func.clusters.ClustersFunc;
 import xyz.spc.serve.cluster.func.functions.NoticeFunc;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -31,7 +33,8 @@ public class FunctionsFlow {
         Long noticeId = clustersFunc.getNoticeIdByClusterId(clusterId);
 
         //2. 通过 NoticeFunc 得到公告
-        NoticeDO tmp = noticeFunc.getNoticeById(noticeId);
+        NoticeDO tmp = Optional.ofNullable(noticeFunc.getNoticeById(noticeId)).orElseThrow();
+
 
         //3. 记录阅读数, 并保存
         tmp.setReadCount(tmp.getReadCount() + 1);

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class HdfsRepo {
 
-    //Use Toolkit...
+    //主要对工具类进行封装
 
 
 }

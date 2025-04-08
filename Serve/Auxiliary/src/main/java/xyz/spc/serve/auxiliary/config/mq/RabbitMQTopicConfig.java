@@ -28,13 +28,13 @@ public class RabbitMQTopicConfig {
     // 上传任务使用消息队列
     @Bean
     public Queue tasksUploadQueue() {
-        return new Queue("tasks_upload_queue");
+        return new Queue(TasksMQCompo.UPLOAD_QUEUE);
     }
 
     // 下载任务使用消息队列
     @Bean
     public Queue tasksDownloadQueue() {
-        return new Queue("tasks_download_queue");
+        return new Queue(TasksMQCompo.DOWNLOAD_QUEUE);
     }
 
     /**
@@ -48,16 +48,15 @@ public class RabbitMQTopicConfig {
     // 上传任务使用交换机
     @Bean
     public FanoutExchange tasksUploadExchange() {
-        return new FanoutExchange("tasks_upload_exchange");
+        return new FanoutExchange(TasksMQCompo.UPLOAD_EXCHANGE);
     }
 
 
     // 下载任务使用交换机
     @Bean
     public FanoutExchange tasksDownloadExchange() {
-        return new FanoutExchange("tasks_download_exchange");
+        return new FanoutExchange(TasksMQCompo.DOWNLOAD_EXCHANGE);
     }
-
 
 
     /**

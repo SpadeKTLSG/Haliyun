@@ -36,7 +36,8 @@ public class TasksControl {
             //? note: 关于树形结构的废案, 详情见个人笔记
     ) {
 
-        tasksFlow.uploadFile(file, clusterId, pid);
+        // pid 字段忽略掉
+        tasksFlow.uploadFile(file, clusterId);
         return Result.success();
     }
 

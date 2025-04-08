@@ -7,6 +7,7 @@ import org.apache.hadoop.fs.FSDataOutputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
+import org.springframework.stereotype.Component;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +22,7 @@ import java.nio.charset.StandardCharsets;
  * HDFS上传下载工具类 (IO)
  */
 @Slf4j
+@Component
 public final class HdfsIOUtil {
 
 

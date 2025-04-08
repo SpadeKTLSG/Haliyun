@@ -28,12 +28,25 @@ public class HdfsRepo {
      * 判断HDFS的存活性
      */
     public boolean isHDFSAlive() {
-        try (FileSystem dfs = Optional.ofNullable(HdfsFuncUtil.getDfs())
+
+        try (FileSystem tmp = Optional.ofNullable(HdfsFuncUtil.getDfs())
                 .orElseThrow(() -> new ServiceException("系统出问题啦!"))) {
-            return true;
+
+            // 确认存在
+            if (tmp == null) {
+                return false;
+            }
+
+            // 通过检查根路径是否存在判别存活性
+            if (!tmp.exists(new org.apache.hadoop.fs.Path("/"))) {
+                return false;
+            }
+
         } catch (IOException e) {
             return false;
         }
+
+        return true;
     }
 
 }

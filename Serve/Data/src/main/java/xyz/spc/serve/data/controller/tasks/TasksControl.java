@@ -10,8 +10,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.spc.common.funcpack.Result;
+import xyz.spc.common.funcpack.errorcode.ServerError;
+import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.data.flow.TasksFlow;
+
+import java.io.IOException;
 
 @Slf4j
 @MLog
@@ -38,7 +42,12 @@ public class TasksControl {
     ) {
 
         // pid 字段忽略掉
-        tasksFlow.uploadFile(file, clusterId, userId);
+        try {
+            tasksFlow.uploadFile(file, clusterId, userId);
+        } catch (IOException e) {
+            throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
+        }
+
         return Result.success();
     }
 

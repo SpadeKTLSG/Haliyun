@@ -12,6 +12,8 @@ import xyz.spc.serve.data.func.files.FilesFunc;
 import xyz.spc.serve.data.func.tasks.DownloadTaskFunc;
 import xyz.spc.serve.data.func.tasks.UploadTaskFunc;
 
+import java.io.IOException;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -35,7 +37,7 @@ public class TasksFlow {
      * @param file      上传的文件对象
      * @param clusterId 群组id
      */
-    public void uploadFile(MultipartFile file, Long clusterId, Long userId) {
+    public void uploadFile(MultipartFile file, Long clusterId, Long userId) throws IOException {
 
         // 实现上传文件中转存储对应机器位置
         uploadTaskFunc.handleTempUpload(file, userId, clusterId);

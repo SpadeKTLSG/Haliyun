@@ -27,6 +27,8 @@ public class FilesControl {
     private final FilesFlow filesFlow;
 
 
+    //! Client
+
     /**
      * id 批量查询 Post 动态
      */
@@ -34,5 +36,7 @@ public class FilesControl {
     List<FileShowVO> getFileByIdBatch(@RequestBody List<Long> fileIds){
         return filesFlow.getFileByIdBatch(fileIds);
     }
+
+
 
 }

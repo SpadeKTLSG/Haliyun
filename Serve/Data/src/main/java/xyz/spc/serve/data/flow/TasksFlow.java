@@ -41,13 +41,16 @@ public class TasksFlow {
         // 用户id, 之后直接用这个传递
         Long userId = UserContext.getUI();
 
-        // Func 层实现文件中转存储及任务记录创建（包括调用 UploadUtil）
-        Long taskId = tasksFunc.processUpload(file, userId, clusterId, pid);
+        // 实现上传文件中转存储对应机器位置
+        uploadTaskFunc.handleTempUpload(file, userId, clusterId);
+
+        // 任务记录创建
+        Long taskId = uploadTaskFunc.taskGen(file, userId, clusterId);
 
         // 调用 MQ 发送消息, 消息仅仅包含 Long 任务id, 直接从数据库找出对应行的任务进行异步的 本地缓存 -> HDFS 即可
         mqProducer.convertAndSend(
                 TasksMQCompo.UPLOAD_EXCHANGE,
-                TasksMQCompo.UPLOAD_EXCHANGE,
+                "", //简单绑定不需要 routingKey
                 taskId
         );
     }

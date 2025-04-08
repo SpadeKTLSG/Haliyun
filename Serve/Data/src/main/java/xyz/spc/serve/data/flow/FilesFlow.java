@@ -71,6 +71,6 @@ public class FilesFlow {
      * 预热一下 HDFS, 获取一下看看
      */
     public boolean tryAcquireDataSystem() {
-      return  filesFunc.isHDFSAlive();
+        return filesFunc.isHDFSAlive();
     }
 }

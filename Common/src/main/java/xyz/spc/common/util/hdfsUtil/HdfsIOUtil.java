@@ -1,6 +1,7 @@
 package xyz.spc.common.util.hdfsUtil;
 
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -25,7 +26,7 @@ import java.nio.charset.StandardCharsets;
 @Component
 public final class HdfsIOUtil {
 
-
+    @Getter
     private static final FileSystem dfs = HdfsContext.getFileSystem();
 
     /**

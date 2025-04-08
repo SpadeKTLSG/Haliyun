@@ -1,5 +1,6 @@
 package xyz.spc.common.util.hdfsUtil;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.*;
 import org.springframework.stereotype.Component;
@@ -18,6 +19,8 @@ import java.util.List;
 @Component
 public class HdfsQueryUtil {
 
+
+    @Getter
     private static final FileSystem dfs = HdfsContext.getFileSystem();
 
 

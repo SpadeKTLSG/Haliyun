@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.spc.domain.dos.Data.files.FileDO;
 import xyz.spc.infra.special.Data.files.FilesRepo;
+import xyz.spc.infra.special.Data.hdfs.HdfsRepo;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class FilesFunc {
      * Repo
      */
     private final FilesRepo filesRepo;
-
+    private final HdfsRepo hdfsRepo;
 
     /**
      * 根据ids批量查询文件
@@ -28,5 +29,12 @@ public class FilesFunc {
             return List.of();
         }
         return filesRepo.fileMapper.selectBatchIds(fileIds);
+    }
+
+    /**
+     * 确认 HDFS 的存活
+     */
+    public boolean isHDFSAlive() {
+        return hdfsRepo.isHDFSAlive();
     }
 }

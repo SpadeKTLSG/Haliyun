@@ -43,8 +43,11 @@ public class FilesControl {
      */
     @PostMapping("/hotting")
     Result<Object> hotDataSystem() {
-
-        return Result.success("HDFS / Data 模块正常运行中!");
+        if (filesFlow.tryAcquireDataSystem()) {
+            return Result.success("HDFS / Data 模块正常运行中!");
+        } else {
+            return Result.fail("HDFS / Data 模块正在维护中, 请稍后再试!");
+        }
     }
 
 }

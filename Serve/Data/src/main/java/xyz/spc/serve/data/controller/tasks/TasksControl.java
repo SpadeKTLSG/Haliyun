@@ -31,13 +31,14 @@ public class TasksControl {
     @PostMapping("/upload/file")
     public Result<Object> uploadFile(
             @RequestParam("file") MultipartFile file, //上传文件对象
+            @RequestParam("userId") Long userId,  // 用户id 由于没有登录鉴权, 不得不直接传入
             @RequestParam("clusterId") Long clusterId,
             @RequestParam(value = "pid", defaultValue = "0") Long pid // 未来拟合的需求: 在页面的对应位置点击了上传之后, 应该设置对应的pid为文件夹的id
             //? note: 关于树形结构的废案, 详情见个人笔记
     ) {
 
         // pid 字段忽略掉
-        tasksFlow.uploadFile(file, clusterId);
+        tasksFlow.uploadFile(file, clusterId, userId);
         return Result.success();
     }
 

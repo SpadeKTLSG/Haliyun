@@ -14,10 +14,12 @@ import java.io.IOException;
 @Slf4j
 @Component
 public final class HdfsContext {
+
     /**
      * 文件系统
      */
     private FileSystem fileSystem = null;
+
     /**
      * 配置
      */
@@ -32,6 +34,8 @@ public final class HdfsContext {
      * 本地磁盘工作根目录 (开发环境个人PC)
      */
     public static final String PC_WORK_DIR = "D:/CODE/HaliyunAll/Data/";
+
+
 
     private HdfsContext() {
         try {

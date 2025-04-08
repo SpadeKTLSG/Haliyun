@@ -6,7 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import xyz.spc.common.util.hdfsUtil.HdfsFuncUtil;
+import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.serve.auxiliary.config.mq.TasksMQCompo;
+import xyz.spc.serve.data.func.files.FilesFunc;
+import xyz.spc.serve.data.func.tasks.DownloadTaskFunc;
+import xyz.spc.serve.data.func.tasks.UploadTaskFunc;
 
 import java.io.File;
 
@@ -14,6 +18,14 @@ import java.io.File;
 @Component
 @RequiredArgsConstructor
 public class MqTaskConsumer {
+
+    // Feign
+    private final ClustersClient clustersClient;
+
+    // Func
+    private final FilesFunc filesFunc;
+    private final DownloadTaskFunc downloadTaskFunc;
+    private final UploadTaskFunc uploadTaskFunc;
 
 
     /**

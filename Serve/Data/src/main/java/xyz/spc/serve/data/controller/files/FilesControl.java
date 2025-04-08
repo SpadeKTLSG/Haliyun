@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.spc.common.funcpack.Result;
 import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.data.flow.FilesFlow;
@@ -33,10 +34,17 @@ public class FilesControl {
      * id 批量查询 Post 动态
      */
     @PostMapping("/file/batch")
-    List<FileShowVO> getFileByIdBatch(@RequestBody List<Long> fileIds){
+    List<FileShowVO> getFileByIdBatch(@RequestBody List<Long> fileIds) {
         return filesFlow.getFileByIdBatch(fileIds);
     }
 
+    /**
+     * 数据系统预热
+     */
+    @PostMapping("/hotting")
+    Result<Object> hotDataSystem() {
 
+        return Result.success("HDFS / Data 模块正常运行中!");
+    }
 
 }

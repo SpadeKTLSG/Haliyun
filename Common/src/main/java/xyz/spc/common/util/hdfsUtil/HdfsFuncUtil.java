@@ -1,7 +1,9 @@
 package xyz.spc.common.util.hdfsUtil;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.*;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
@@ -10,10 +12,12 @@ import java.io.IOException;
  * HDFS功能工具类 (Add/Update/Delete)
  */
 @Slf4j
+@Component
 public final class HdfsFuncUtil {
 
-    private static final FileSystem dfs = HdfsContext.getFileSystem();
 
+    @Getter
+    private static final FileSystem dfs = HdfsContext.getFileSystem();
 
     /**
      * 尝试创建目录
@@ -97,6 +101,9 @@ public final class HdfsFuncUtil {
         // 采用递归删除文件
         return dfs.delete(new Path(path), recursive);
     }
+
+
+
 
 
     /**

@@ -37,11 +37,6 @@ public class HdfsRepo {
                 return false;
             }
 
-            // 通过检查根路径是否存在判别存活性
-            if (!tmp.exists(new org.apache.hadoop.fs.Path("/"))) {
-                return false;
-            }
-
         } catch (IOException e) {
             return false;
         }

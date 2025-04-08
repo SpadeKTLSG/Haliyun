@@ -27,7 +27,7 @@ public final class UploadUtil {
      * 以默认配置进行文件上传
      *
      * @param file 上传的文件
-     * @return 文件名称
+     * @return 成功后的文件全路径名称
      */
     public static String upload(MultipartFile file) throws IOException {
         try {
@@ -40,9 +40,10 @@ public final class UploadUtil {
     /**
      * 根据文件路径上传
      *
-     * @param baseDir 相对应用的基目录
-     * @param file    上传的文件
-     * @return 文件名称
+     * @param baseDir  相对应用的基目录
+     * @param file     上传的文件
+     * @param fileName 文件名称, 空就使用原本文件的名称
+     * @return 成功后的文件全路径名称
      */
     public static String upload(String baseDir, MultipartFile file, String fileName) throws IOException {
         try {

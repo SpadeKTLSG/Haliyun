@@ -27,7 +27,7 @@ public class UploadTaskFunc {
     /**
      * 文件上传的中转存储
      */
-    public void handleTempUpload(MultipartFile file, Long userId, Long clusterId) throws IOException {
+    public String handleTempUpload(MultipartFile file, Long userId, Long clusterId) throws IOException {
         String basePath = UploadDownloadCT.UPLOAD_DEFAULT_PATH;
 
         // 查找到本机上的中转目录
@@ -45,16 +45,18 @@ public class UploadTaskFunc {
         }
 
         // 将文件存储至中转目录 并 返回存储后文件的相对路径
-        String localFilePath = UploadUtil.upload(basePath, file, file.getName());
+        String localFilePath = UploadUtil.upload(basePath, file, null);
 
-        //todo
+        return localFilePath;
     }
+
 
     /**
      * 任务表的任务创建
      */
-    public Long taskGen(MultipartFile file, Long userId, Long clusterId) {
-
+    public Long taskGen(Long fileId, String fileName, Long userId) {
         return 1L;
+        //todo
     }
+
 }

@@ -63,17 +63,26 @@ public final class UploadUtil {
      * @throws IOException                    读写文件出错时
      */
     public static String upload(String baseDir, MultipartFile file, String[] allowedExtension, String fileName) throws IOException {
+
         int fileNamelength = Objects.requireNonNull(file.getOriginalFilename()).length();
+
+        // 文件名长度校验
         if (fileNamelength > UploadDownloadCT.DEFAULT_FILE_NAME_LENGTH) {
             throw new ClientException(String.valueOf(UploadDownloadCT.DEFAULT_FILE_NAME_LENGTH));
         }
 
+        // 文件扩展名校验
         assertAllowed(file, allowedExtension);
 
+        // 如果不指定文件名, 就用上传文件本身的文件名
         if (StringUtil.isBlank(fileName)) fileName = extractFilename(file);
 
+        // 文件传递
         String absPath = getAbsoluteFile(baseDir, fileName).getAbsolutePath();
+
         file.transferTo(Paths.get(absPath));
+
+
         return getPathFileName(baseDir, fileName);
     }
 
@@ -108,7 +117,7 @@ public final class UploadUtil {
 
 
     /**
-     * 文件大小校验
+     * 文件类型 (扩展名) 校验
      */
     public static void assertAllowed(MultipartFile file, String[] allowedExtension) throws ClientException {
         long size = file.getSize();

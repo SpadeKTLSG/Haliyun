@@ -91,14 +91,38 @@ public final class UploadUtil {
      */
     public static String extractFilename(MultipartFile file) {
 
-        return String.format("%s_%d.%s",
+        // 使用自定义的编码方式:  原文件名 + "#" + 确定的随机ID + "." + 原扩展名
+        return String.format("%s#%d.%s",
                 FilenameUtils.getBaseName(file.getOriginalFilename()),
                 nextId(),
                 getExtension(file)
         );
     }
 
+    /**
+     * 解码文件名
+     */
+    public static String unExtractFilename(String fileName) {
 
+        // 从上面自定义的编码方式中提取出原文件名
+        String[] fileNameParts = fileName.split("#");
+
+        // 源文件没有类型
+        if (fileNameParts.length == 1) {
+            return fileNameParts[0];
+        }
+
+        return fileNameParts[0] + "." + fileNameParts[1].split("\\.")[1];
+
+    }
+
+
+    /**
+     * 获取文件的绝对路径
+     *
+     * @param uploadDir 上传目录
+     * @param fileName  文件名
+     */
     public static File getAbsoluteFile(String uploadDir, String fileName) throws IOException {
         File desc = new File(uploadDir + File.separator + fileName);
 
@@ -113,6 +137,13 @@ public final class UploadUtil {
         return desc;
     }
 
+    /**
+     * 获取文件的相对路径
+     *
+     * @param uploadDir 上传目录
+     * @param fileName  文件名
+     * @return 相对路径
+     */
     public static String getPathFileName(String uploadDir, String fileName) {
         int dirLastIndex = uploadDir.length() + 1;
         String currentDir = org.apache.commons.lang3.StringUtils.substring(uploadDir, dirLastIndex);

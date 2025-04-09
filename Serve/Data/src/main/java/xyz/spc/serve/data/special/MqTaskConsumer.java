@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.gate.vo.Data.files.FileGreatVO;
 import xyz.spc.gate.vo.Data.tasks.UploadTaskVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
@@ -15,7 +16,10 @@ import xyz.spc.serve.data.func.tasks.DownloadTaskFunc;
 import xyz.spc.serve.data.func.tasks.UploadTaskFunc;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Map;
+
+import static cn.hutool.core.io.FileUtil.getInputStream;
 
 @Slf4j
 @Component
@@ -37,14 +41,12 @@ public class MqTaskConsumer {
      * 根据 taskId 从数据库查找任务记录，并使用 HdfsFuncUtil 移动文件到 HDFS
      */
     @RabbitListener(queues = TasksMQCompo.UPLOAD_QUEUE)
-    public void processUploadTask(Map<String, Object> taskMap) {
+    @Transactional(rollbackFor = Exception.class, timeout = 30)
+    public void processUploadTask(Map<String, Object> taskMap) throws Exception {
 
         // 1 获取任务 ID 和本地文件路径
         Long taskId = (Long) taskMap.get("taskId");
         String localFilePath = (String) taskMap.get("localFilePath");
-
-
-        Long userId, clusterId;
 
         // 2 从任务表里面获取任务信息 + 文件信息
         UploadTaskVO uploadTaskVO = uploadTaskFunc.getTaskInfo(taskId);
@@ -58,19 +60,23 @@ public class MqTaskConsumer {
 
         // 5 获取到本地磁盘的文件 (流)
         File localFile = new File(localFilePath);
+        InputStream is = getInputStream(localFile);
 
 
-        // 6 调用 HdfsFuncUtil 中对应方法, 将对应的文件对象移动到 HDFS
+        // 6 正式执行上传操作, 更新任务表信息.
 
-        boolean success = hdfsRepo.
+        //  调用 HdfsFuncUtil 中对应方法, 将对应的文件对象上传到 HDFS
+        boolean success = hdfsRepo.upload2HDFS(hdfsTargetPath, is);
+
 
         if (success) {
 
             // TODO: 更新任务状态为“完成”（状态码 3）至数据库
         } else {
             log.error("任务ID {} 文件导入 HDFS失败", taskId);
-            // TODO: 异常补偿、重试等处理
             // todo 发送风控消息到风控模块, 手动补偿 + 系统信息获取
+            // 回滚任务表信息
+
         }
 
     }

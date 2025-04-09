@@ -6,8 +6,10 @@ import org.apache.hadoop.fs.FileSystem;
 import org.springframework.stereotype.Service;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.util.hdfsUtil.HdfsFuncUtil;
+import xyz.spc.common.util.hdfsUtil.HdfsIOUtil;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 
 @Slf4j
@@ -18,10 +20,7 @@ public class HdfsRepo {
     //? 主要对工具类进行封装. 业务层代码统一调用这个方法 (做业务导向的封装)
 
 
-    /**
-     * HDFS 工具类
-     */
-    private final HdfsFuncUtil util;
+    // HdfsFuncUtil util;
 
 
     /**
@@ -43,5 +42,21 @@ public class HdfsRepo {
 
         return true;
     }
+
+
+    /**
+     * 本地磁盘文件导入到HDFS, InputStream模式
+     */
+    public boolean upload2HDFS(String tagetPath, InputStream is) throws Exception {
+
+        try {
+            HdfsIOUtil.upByIS(tagetPath, is);
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
 
 }

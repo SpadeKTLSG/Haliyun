@@ -14,7 +14,7 @@ public class FileDetailVO extends BaseVO {
 
     private Long id;
 
-    private String desc;
+    private String describe;
 
     private Long downloadTime;
 

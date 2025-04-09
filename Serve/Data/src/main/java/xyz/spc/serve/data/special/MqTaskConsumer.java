@@ -66,27 +66,37 @@ public class MqTaskConsumer {
         // 6 正式执行上传操作, 更新任务表信息.
         uploadTaskFunc.startTask(taskId);
 
-        //  调用 HdfsFuncUtil 中对应方法, 将对应的文件对象上传到 HDFS
+        // 7 调用 HdfsFuncUtil 中对应方法, 将对应的文件对象上传到 HDFS
         boolean success = hdfsRepo.upload2HDFS(hdfsTargetPath, is);
 
 
         if (success) {
 
-
-            // 更新任务表信息为完成
+            // 8 更新任务表信息为完成
             uploadTaskFunc.completeTask(taskId);
 
-            // 记录用户操作日志等日志操作
+            // 9 记录用户操作日志等日志操作
             // (note: 未来可以根据操作任务表的情况进行日志对应记录顺序. 但是这边因为本地转移到HDFS基本是单机无差别业务, 所以就不考虑了)
             //todo
 
         } else {
             log.error("任务ID {} 本地磁盘文件导入 HDFS失败", taskId);
-            // todo 发送风控消息到风控模块, 手动补偿 + 系统信息获取
 
-            // 失败任务表信息
+            // 8 失败任务表信息
             uploadTaskFunc.failTask(taskId);
+
+            // 9 记录用户操作日志等日志操作, 方便后续人工介入
+            // todo
+
+            // 10 记录风控日志, 增添风控 Line (条目)
+            // todo
+
+            // 11 发送管理员站内用户消息, 提示问题介入
+            // todo
         }
+
+
+        // END
 
     }
 }

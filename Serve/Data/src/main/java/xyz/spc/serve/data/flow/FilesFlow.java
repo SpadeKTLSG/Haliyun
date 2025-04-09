@@ -78,7 +78,7 @@ public class FilesFlow {
     }
 
     /**
-     * 分页获取群组中的文件列表
+     * 分页获取群组中的文件列表 (List)
      */
     public PageResponse<FileGreatVO> getGroupFilePage(Long clusterId, PageRequest pageRequest) {
         //分页的思路和之前还是一样, 变成手动逻辑分页, 先查出需要的ids, 然后再批量查询
@@ -97,6 +97,8 @@ public class FilesFlow {
         //3.3 FileFuncDO
 
         //3.4 Merge into FileGreatVO
+
+        //4. 补充 Lock / Tag / 有效期 等 传递信息 => 取消, 放到 Detail 的接口里面进行单个查询详情
 
         //4 将 List res 封装返回
     }

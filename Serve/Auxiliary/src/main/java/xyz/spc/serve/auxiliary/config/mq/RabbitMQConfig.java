@@ -32,6 +32,7 @@ public class RabbitMQConfig {
     }
 
 
+
     /**
      * RabbitMQ重试模板
      */

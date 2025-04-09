@@ -50,4 +50,22 @@ public class FilesControl {
         }
     }
 
+    //! Func
+
+    //! ADD
+
+
+    //! DELETE
+
+
+    //! UPDATE
+
+
+
+    //! Query
+
+    /**
+     * 分页获取群组中的文件列表
+     */
+
 }

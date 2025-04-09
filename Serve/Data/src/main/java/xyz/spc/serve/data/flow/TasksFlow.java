@@ -52,7 +52,7 @@ public class TasksFlow {
                 .clusterId(clusterId)
                 .build();
 
-        Long file_id = filesFunc.createFile(tmp);
+        Long file_id = filesFunc.createFile(tmp, file.getSize());
 
         // 任务记录创建到批处理表, 生成对应记录
         Long taskId = uploadTaskFunc.taskGen(file_id, file.getOriginalFilename(), userId);

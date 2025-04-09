@@ -67,7 +67,7 @@ public class FilesFunc {
         // FileDetail
         FileDetailDO fileDetailDO = FileDetailDO.builder()
                 .id(file_id)
-                .desc("")
+                .dscr("用户上传文件") // 描述
                 .downloadTime(0L)
                 .size(size) //大小
                 .path("") // 废弃字段 : 路径
@@ -81,7 +81,7 @@ public class FilesFunc {
         FileFuncDO fileFuncDO = FileFuncDO.builder()
                 .id(file_id)
                 .tag(0L) // 文件标签
-                .lock(0L) // 文件锁
+                .fileLock(0L) // 文件锁
                 .status(FileFunc.STATUS_NORMAL) // 文件状态: 正常
                 .validDateType(FileFunc.VALID_DATE_TYPE_FOREVER) // 有效期类型: 永久有效
                 .validDate(null) // 有效期: null

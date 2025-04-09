@@ -22,7 +22,7 @@ public class LevelDTO extends BaseDTO {
 
     private Long grow;
 
-    private String describe;
+    private String dscr;
 
     private String remark;
 

@@ -14,7 +14,7 @@ public class FileDetailDTO extends BaseDTO {
 
     private Long id;
 
-    private String describe;
+    private String dscr;
 
     private Long downloadTime;
 

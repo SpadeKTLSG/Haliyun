@@ -23,9 +23,9 @@ public class FileFunc extends BaseModel {
     private Long tag;
 
     /**
-     * -> Lock 锁
+     * -> Lock 文件锁
      */
-    private Long lock;
+    private Long fileLock;
 
     /**
      * 状态 (0正常, 1停用, 2封禁)

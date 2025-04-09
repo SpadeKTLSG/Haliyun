@@ -17,7 +17,7 @@ public class FileDetailDO extends BaseDO {
 
     private Long id;
 
-    private String describe;
+    private String dscr;
 
     private Long downloadTime;
 

@@ -16,7 +16,7 @@ public class FileFuncVO extends BaseVO {
 
     private Long tag;
 
-    private Long lock;
+    private Long fileLock;
 
     private Integer status;
 

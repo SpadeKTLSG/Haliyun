@@ -14,6 +14,7 @@ import xyz.spc.serve.data.func.tasks.DownloadTaskFunc;
 import xyz.spc.serve.data.func.tasks.UploadTaskFunc;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -44,10 +45,11 @@ public class TasksFlow {
         String localFilePath = uploadTaskFunc.handleTempUpload(file, userId, clusterId);
 
         // 创建对应的文件对象 (临时) - 组装入参
+        String type = Objects.requireNonNull(file.getOriginalFilename()).substring(file.getOriginalFilename().lastIndexOf(".") + 1);
 
         FileDTO tmp = FileDTO.builder()
                 .name(file.getOriginalFilename())
-                .type(file.getContentType())
+                .type(type)
                 .userId(userId)
                 .clusterId(clusterId)
                 .build();

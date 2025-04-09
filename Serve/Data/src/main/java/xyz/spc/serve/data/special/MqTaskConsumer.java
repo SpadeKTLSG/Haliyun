@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import xyz.spc.common.constant.UploadDownloadCT;
 import xyz.spc.gate.vo.Data.files.FileGreatVO;
 import xyz.spc.gate.vo.Data.tasks.UploadTaskVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
@@ -15,7 +16,6 @@ import xyz.spc.serve.data.func.files.FilesFunc;
 import xyz.spc.serve.data.func.tasks.DownloadTaskFunc;
 import xyz.spc.serve.data.func.tasks.UploadTaskFunc;
 
-import java.io.File;
 import java.io.InputStream;
 
 import static cn.hutool.core.io.FileUtil.getInputStream;
@@ -34,6 +34,7 @@ public class MqTaskConsumer {
     private final UploadTaskFunc uploadTaskFunc;
     private final HdfsRepo hdfsRepo;
 
+
     /**
      * ! 上传任务 后续处理 本地 -> HDFS
      * 监听上传任务队列 处理文件导入 HDFS 任务
@@ -41,10 +42,14 @@ public class MqTaskConsumer {
      */
     @RabbitListener(queues = TasksMQCompo.UPLOAD_QUEUE)
     @Transactional(rollbackFor = Exception.class, timeout = 30)
-    public void processUploadTask(Long taskId, String localFilePath)  {
+    public void processUploadTask(Object[] input) {
+        // 1 获取任务 ID 和本地文件路径
+        Long taskId = (Long) input[0];
+        String localFilePath = (String) input[1];
+
 
         try {
-            // 1 获取任务 ID 和本地文件路径
+
 
             // 2 从任务表里面获取任务信息 + 文件信息
             UploadTaskVO uploadTaskVO = uploadTaskFunc.getTaskInfo(taskId);
@@ -57,8 +62,7 @@ public class MqTaskConsumer {
             hdfsTargetPath = hdfsTargetPath + fileGreatVO.getUserId() + "/" + fileGreatVO.getClusterId() + "/" + fileGreatVO.getName();
 
             // 5 获取到本地磁盘的文件 (流)
-            File localFile = new File(localFilePath);
-            InputStream is = getInputStream(localFilePath);
+            InputStream is = getInputStream(UploadDownloadCT.UPLOAD_DEFAULT_PATH + localFilePath);
 
 
             // 6 正式执行上传操作, 更新任务表信息.
@@ -96,7 +100,8 @@ public class MqTaskConsumer {
 
             // END
         } catch (Exception e) {
-           // 记录异常, 不能抛出, 记录日志
+            // 记录异常, 不能抛出, 记录日志
+            log.error("任务ID {} 本地磁盘文件导入 HDFS失败", taskId, e);
             //todo
         }
 

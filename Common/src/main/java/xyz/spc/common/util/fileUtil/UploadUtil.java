@@ -2,7 +2,6 @@ package xyz.spc.common.util.fileUtil;
 
 
 import org.apache.commons.io.FilenameUtils;
-import org.apache.hadoop.util.StringUtils;
 import org.apache.tomcat.util.http.fileupload.impl.FileSizeLimitExceededException;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.spc.common.constant.UploadDownloadCT;
@@ -92,7 +91,11 @@ public final class UploadUtil {
      */
     public static String extractFilename(MultipartFile file) {
 
-        return StringUtils.format("{}_{}.{}", FilenameUtils.getBaseName(file.getOriginalFilename()), nextId(), getExtension(file));
+        return String.format("%s_%d.%s",
+                FilenameUtils.getBaseName(file.getOriginalFilename()),
+                nextId(),
+                getExtension(file)
+        );
     }
 
 

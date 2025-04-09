@@ -10,6 +10,7 @@ import xyz.spc.domain.dos.Data.files.FileDetailDO;
 import xyz.spc.domain.dos.Data.files.FileFuncDO;
 import xyz.spc.domain.model.Data.files.FileFunc;
 import xyz.spc.gate.dto.Data.files.FileDTO;
+import xyz.spc.gate.vo.Data.files.FileGreatVO;
 import xyz.spc.infra.special.Data.files.FilesRepo;
 import xyz.spc.infra.special.Data.hdfs.HdfsRepo;
 
@@ -91,5 +92,45 @@ public class FilesFunc {
 
         // 返回 File id, 用于在批处理后台读取进行 HDFS 上传
         return file_id;
+    }
+
+    /**
+     * 用id 获取三张表信息
+     */
+    public FileGreatVO getFileInfo(Long fileId) {
+
+        // File
+        FileDO fileDO = filesRepo.fileMapper.selectById(fileId);
+
+        // FileDetail
+        FileDetailDO fileDetailDO = filesRepo.fileDetailMapper.selectById(fileId);
+
+        // FileFunc
+        FileFuncDO fileFuncDO = filesRepo.fileFuncMapper.selectById(fileId);
+
+        if (fileDO == null || fileDetailDO == null || fileFuncDO == null) {
+            return null;
+        }
+
+
+
+        return FileGreatVO.builder()
+                .id(fileDO.getId())
+                .pid(fileDO.getPid())
+                .userId(fileDO.getUserId())
+                .clusterId(fileDO.getClusterId())
+                .name(fileDO.getName())
+                .type(fileDO.getType())
+                .dscr(fileDetailDO.getDscr())
+                .downloadTime(fileDetailDO.getDownloadTime())
+                .size(fileDetailDO.getSize())
+                .path(fileDetailDO.getPath())
+                .diskPath(fileDetailDO.getDiskPath())
+                .tag(fileFuncDO.getTag())
+                .fileLock(fileFuncDO.getFileLock())
+                .status(fileFuncDO.getStatus())
+                .validDateType(fileFuncDO.getValidDateType())
+                .validDate(fileFuncDO.getValidDate())
+                .build();
     }
 }

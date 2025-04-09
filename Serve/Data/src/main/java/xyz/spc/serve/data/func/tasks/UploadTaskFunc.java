@@ -10,6 +10,7 @@ import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.common.util.fileUtil.UploadUtil;
 import xyz.spc.domain.dos.Data.tasks.UploadTaskDO;
 import xyz.spc.domain.model.Data.tasks.UploadTask;
+import xyz.spc.gate.vo.Data.tasks.UploadTaskVO;
 import xyz.spc.infra.special.Data.hdfs.HdfsRepo;
 import xyz.spc.infra.special.Data.tasks.TasksRepo;
 
@@ -79,4 +80,28 @@ public class UploadTaskFunc {
         return id;
     }
 
+    /**
+     * 通过 id 查具体的任务信息
+     */
+    public UploadTaskVO getTaskInfo(Long taskId) {
+
+        // 获取
+        UploadTaskDO uploadTaskDO = tasksRepo.uploadTaskService.getById(taskId);
+
+        if (uploadTaskDO == null) {
+            throw new ServiceException("任务不存在");
+        }
+
+        return UploadTaskVO.builder()
+                .id(uploadTaskDO.getId())
+                .fileId(uploadTaskDO.getFileId())
+                .fileName(uploadTaskDO.getFileName())
+                .pid(uploadTaskDO.getPid())
+                .userId(uploadTaskDO.getUserId())
+                .status(uploadTaskDO.getStatus())
+                .fileSizeTotal(uploadTaskDO.getFileSizeTotal())
+                .fileSizeOk(uploadTaskDO.getFileSizeOk())
+                .executor(uploadTaskDO.getExecutor())
+                .build();
+    }
 }

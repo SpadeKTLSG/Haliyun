@@ -26,7 +26,7 @@ public class UploadTaskFunc {
      */
     private final TasksRepo tasksRepo;
     private final HdfsRepo hdfsRepo;
-    private final UploadTaskRepo uploadTaskFunc;
+
 
     /**
      * 文件上传的中转存储
@@ -71,10 +71,12 @@ public class UploadTaskFunc {
                 .status(UploadTask.STATUS_NOT_START) //未开始
                 .fileSizeTotal(0L)  // 文件总大小 (模拟)
                 .fileSizeOk(0L) // 已完成的文件大小 (模拟)
+                .executor(UploadTask.EXECUTOR_LOCAL) // 执行器 (本地)
                 .build();
 
+        tasksRepo.uploadTaskService.save(uploadTaskDO);
 
-
+        return id;
     }
 
 }

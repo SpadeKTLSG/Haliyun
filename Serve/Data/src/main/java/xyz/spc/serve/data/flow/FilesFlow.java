@@ -4,6 +4,8 @@ package xyz.spc.serve.data.flow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.funcpack.page.PageRequest;
+import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.domain.dos.Data.files.FileDO;
 import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
@@ -72,5 +74,11 @@ public class FilesFlow {
      */
     public boolean tryAcquireDataSystem() {
         return filesFunc.isHDFSAlive();
+    }
+
+    /**
+     * 分页获取群组中的文件列表
+     */
+    public PageResponse<FileShowVO> getGroupFilePage(Long clusterId, PageRequest pageRequest) {
     }
 }

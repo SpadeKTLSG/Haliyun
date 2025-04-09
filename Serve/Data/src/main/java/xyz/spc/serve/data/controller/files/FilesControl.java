@@ -1,14 +1,14 @@
 package xyz.spc.serve.data.controller.files;
 
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.funcpack.Result;
+import xyz.spc.common.funcpack.page.PageRequest;
+import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.data.flow.FilesFlow;
@@ -67,5 +67,17 @@ public class FilesControl {
     /**
      * 分页获取群组中的文件列表
      */
+    @GetMapping("/file/group_files")
+    @Operation(summary = "分页查群组内的文件列表")
+    public Result<PageResponse<FileShowVO>> getGroupFilePage(
+
+            @RequestParam("clusterId") Long clusterId,
+            @RequestParam("current") Integer current,
+            @RequestParam("size") Integer size
+    ) {
+        return Result.success(filesFlow.getGroupFilePage(clusterId, new PageRequest(current, size)));
+    }
+    //http://localhost:10000/Data/files/file/group_files?clusterId=...&current=1&size=10
+
 
 }

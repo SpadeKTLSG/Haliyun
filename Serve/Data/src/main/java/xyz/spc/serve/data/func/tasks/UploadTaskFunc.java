@@ -1,5 +1,6 @@
 package xyz.spc.serve.data.func.tasks;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -103,5 +104,42 @@ public class UploadTaskFunc {
                 .fileSizeOk(uploadTaskDO.getFileSizeOk())
                 .executor(uploadTaskDO.getExecutor())
                 .build();
+    }
+
+    /**
+     * 上传任务开始
+     */
+    public void startTask(Long taskId) {
+
+        tasksRepo.uploadTaskService.update(Wrappers.lambdaUpdate(UploadTaskDO.class)
+                .set(UploadTaskDO::getStatus, UploadTask.STATUS_RUNNING) // 运行中
+                .eq(UploadTaskDO::getId, taskId) // 任务id
+                .eq(UploadTaskDO::getExecutor, UploadTask.EXECUTOR_LOCAL) // note: 绑定对应执行机器, 实现唯一对应. 本地执行器
+        );
+
+    }
+
+    /**
+     * 上传任务完成
+     */
+    public void completeTask(Long taskId) {
+
+        tasksRepo.uploadTaskService.update(Wrappers.lambdaUpdate(UploadTaskDO.class)
+                .set(UploadTaskDO::getStatus, UploadTask.STATUS_FINISH) // 完成
+                .eq(UploadTaskDO::getId, taskId) // 任务id
+                .eq(UploadTaskDO::getExecutor, UploadTask.EXECUTOR_LOCAL) // note: 绑定对应执行机器, 实现唯一对应. 本地执行器
+        );
+    }
+
+    /**
+     * 登记失败任务
+     */
+    public void failTask(Long taskId) {
+
+        tasksRepo.uploadTaskService.update(Wrappers.lambdaUpdate(UploadTaskDO.class)
+                .set(UploadTaskDO::getStatus, UploadTask.STATUS_FAIL) // 失败
+                .eq(UploadTaskDO::getId, taskId) // 任务id
+                .eq(UploadTaskDO::getExecutor, UploadTask.EXECUTOR_LOCAL) // note: 绑定对应执行机器, 实现唯一对应. 本地执行器
+        );
     }
 }

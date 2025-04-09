@@ -29,8 +29,8 @@ public class TasksControl {
     private final TasksFlow tasksFlow;
 
     /**
-     * 上传文件接口 (无网关/MVC鉴权限制)
-     * 将文件先存储到本机中转区
+     * 上传文件接口
+     * ? note: 上传文件接口 无网关/MVC鉴权限制
      */
     @PostMapping("/upload/file")
     public Result<Object> uploadFile(

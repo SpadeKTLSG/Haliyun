@@ -55,7 +55,7 @@ public class TasksFlow {
         Long file_id = filesFunc.createFile(tmp, file.getSize());
 
         // 任务记录创建到批处理表, 生成对应记录
-        Long taskId = uploadTaskFunc.taskGen(file_id, file.getOriginalFilename(), userId);
+        Long taskId = uploadTaskFunc.taskGen(file_id, file.getOriginalFilename(), userId, localFilePath);
 
         // 调用 MQ 发送消息, 消息仅仅包含 Long 任务id, 直接从数据库找出对应行的任务进行异步的 本地缓存 -> HDFS 即可
         mqProducer.convertAndSend(

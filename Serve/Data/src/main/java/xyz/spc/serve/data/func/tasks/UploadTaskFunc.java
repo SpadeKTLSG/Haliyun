@@ -54,7 +54,7 @@ public class UploadTaskFunc {
     /**
      * 任务表的任务创建
      */
-    public Long taskGen(Long fileId, String fileName, Long userId) {
+    public Long taskGen(Long fileId, String fileName, Long userId, String tempFilePath) {
         return 1L;
         //todo
     }

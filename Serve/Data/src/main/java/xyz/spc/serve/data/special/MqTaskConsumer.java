@@ -29,12 +29,12 @@ public class MqTaskConsumer {
 
 
     /**
-     * 监听上传任务队列，处理文件导入 HDFS
-     * 此处仅模拟，根据 taskId 从数据库查找任务记录，并使用 HdfsFuncUtil 移动文件到 HDFS
+     * 监听上传任务队列 处理文件导入 HDFS 任务
+     * 根据 taskId 从数据库查找任务记录，并使用 HdfsFuncUtil 移动文件到 HDFS
      */
     @RabbitListener(queues =  TasksMQCompo.UPLOAD_QUEUE)
     public void processUploadTask(Long taskId) {
-        log.info("开始处理上传任务，任务ID: {}", taskId);
+
 
         // TODO：根据 taskId 查询任务记录（UploadTaskDO），这里模拟直接构造文件路径
         // 例如从数据库中查出的文件中转路径：

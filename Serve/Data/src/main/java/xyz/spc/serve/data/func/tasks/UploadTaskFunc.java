@@ -6,7 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.spc.common.constant.UploadDownloadCT;
 import xyz.spc.common.funcpack.exception.ServiceException;
+import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.common.util.fileUtil.UploadUtil;
+import xyz.spc.domain.dos.Data.tasks.UploadTaskDO;
+import xyz.spc.domain.model.Data.tasks.UploadTask;
 import xyz.spc.infra.special.Data.hdfs.HdfsRepo;
 import xyz.spc.infra.special.Data.tasks.TasksRepo;
 
@@ -23,6 +26,7 @@ public class UploadTaskFunc {
      */
     private final TasksRepo tasksRepo;
     private final HdfsRepo hdfsRepo;
+    private final UploadTaskRepo uploadTaskFunc;
 
     /**
      * 文件上传的中转存储
@@ -55,8 +59,22 @@ public class UploadTaskFunc {
      * 任务表的任务创建
      */
     public Long taskGen(Long fileId, String fileName, Long userId, String tempFilePath) {
-        return 1L;
-        //todo
+
+        Long id = SnowflakeIdUtil.nextId();
+
+        UploadTaskDO uploadTaskDO = UploadTaskDO.builder()
+                .id(id)
+                .fileId(fileId)
+                .fileName(fileName)
+                .pid(fileId)
+                .userId(userId)
+                .status(UploadTask.STATUS_NOT_START) //未开始
+                .fileSizeTotal(0L)  // 文件总大小 (模拟)
+                .fileSizeOk(0L) // 已完成的文件大小 (模拟)
+                .build();
+
+
+
     }
 
 }

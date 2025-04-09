@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
+import xyz.spc.gate.vo.Data.files.FileGreatVO;
 import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.data.flow.FilesFlow;
@@ -69,7 +70,7 @@ public class FilesControl {
      */
     @GetMapping("/file/group_files")
     @Operation(summary = "分页查群组内的文件列表")
-    public Result<PageResponse<FileShowVO>> getGroupFilePage(
+    public Result<PageResponse<FileGreatVO>> getGroupFilePage(
 
             @RequestParam("clusterId") Long clusterId,
             @RequestParam("current") Integer current,

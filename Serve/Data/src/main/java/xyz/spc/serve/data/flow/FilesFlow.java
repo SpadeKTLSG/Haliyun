@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.domain.dos.Data.files.FileDO;
+import xyz.spc.gate.vo.Data.files.FileGreatVO;
 import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.serve.data.func.files.FilesFunc;
@@ -79,6 +80,24 @@ public class FilesFlow {
     /**
      * 分页获取群组中的文件列表
      */
-    public PageResponse<FileShowVO> getGroupFilePage(Long clusterId, PageRequest pageRequest) {
+    public PageResponse<FileGreatVO> getGroupFilePage(Long clusterId, PageRequest pageRequest) {
+        //分页的思路和之前还是一样, 变成手动逻辑分页, 先查出需要的ids, 然后再批量查询
+
+        //1. 获取这个群组中所有文件的 ids
+
+
+        //2. 根据ids + page分页信息算出需要查询的 File* ids
+
+        //3. 根据ids 发起批量查询, 获取到需要的文件对象 * 3 => 整理到汇总 VO, 注意联系前端业务展示
+
+        //3.1 FileDO
+
+        //3.2 FileDetailDO
+
+        //3.3 FileFuncDO
+
+        //3.4 Merge into FileGreatVO
+
+        //4 将 List res 封装返回
     }
 }

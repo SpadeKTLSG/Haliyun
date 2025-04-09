@@ -58,7 +58,7 @@ public class UploadTaskFunc {
     /**
      * 任务表的任务创建
      */
-    public Long taskGen(Long fileId, String fileName, Long userId, String tempFilePath) {
+    public Long taskGen(Long fileId, String fileName, Long userId) {
 
         Long id = SnowflakeIdUtil.nextId();
 

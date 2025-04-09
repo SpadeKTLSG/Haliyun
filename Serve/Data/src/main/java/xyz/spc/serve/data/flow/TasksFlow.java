@@ -14,6 +14,8 @@ import xyz.spc.serve.data.func.tasks.DownloadTaskFunc;
 import xyz.spc.serve.data.func.tasks.UploadTaskFunc;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 @Slf4j
@@ -57,13 +59,18 @@ public class TasksFlow {
         Long file_id = filesFunc.createFile(tmp, file.getSize());
 
         // 任务记录创建到批处理表, 生成对应记录
-        Long taskId = uploadTaskFunc.taskGen(file_id, file.getOriginalFilename(), userId, localFilePath);
+        Long taskId = uploadTaskFunc.taskGen(file_id, file.getOriginalFilename(), userId);
+
+        // 简单封装任务id和本地文件路径到发送的消息中
+        Map<String, Object> taskMap = new HashMap<>();
+        taskMap.put("taskId", taskId);
+        taskMap.put("localFilePath", localFilePath);
 
         // 调用 MQ 发送消息, 消息仅仅包含 Long 任务id, 直接从数据库找出对应行的任务进行异步的 本地缓存 -> HDFS 即可
         mqProducer.convertAndSend(
                 TasksMQCompo.UPLOAD_EXCHANGE,
                 "", //简单绑定不需要 routingKey
-                taskId
+                taskMap
         );
     }
 }

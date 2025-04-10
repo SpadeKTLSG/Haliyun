@@ -8,7 +8,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.gate.dto.Data.files.FileDTO;
 import xyz.spc.gate.vo.Data.files.FileGreatVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
@@ -17,9 +16,8 @@ import xyz.spc.serve.data.func.files.FilesFunc;
 import xyz.spc.serve.data.func.tasks.DownloadTaskFunc;
 import xyz.spc.serve.data.func.tasks.UploadTaskFunc;
 
-import java.io.*;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
 
 @Slf4j
@@ -101,43 +99,19 @@ public class TasksFlow {
 
 
         // 4 定位到对应文件对象 + 进行本地缓存的文件对象重命名避免冲突
-        downloadTaskFunc.locateRenameFile(fileName, firstFileDiskPath, creatorUserId, fromClusterId);
-
-        File file = new File(firstFileDiskPath);
-        if (!file.exists()) {
-            throw new ServiceException("文件不存在");
-        }
+        File realLocalTempFile = downloadTaskFunc.locateRenameFile(fileName, firstFileDiskPath, creatorUserId, fromClusterId);
 
 
-        // 5 执行异步下载任务登记 (由于解耦和异步处理并无太多提升, 简化了)
+        // 5 (异步) 登记下载次数等信息
+        filesFunc.addUserDownloadTimes(fileId);
 
-
-
-
-
-
-        // 6 登记下载次数等信息
+        // 6 下载任务表登记完成
+        downloadTaskFunc.completeTask(fileId);
 
 
         // 7 文件返回用户综合
+        downloadTaskFunc.download2Client(realLocalTempFile, response);
 
-        // 设置响应头
-        response.reset();
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition",
-                "attachment;filename=" + URLEncoder.encode(file.getName(), StandardCharsets.UTF_8));
 
-        try (InputStream in = new FileInputStream(file);
-             OutputStream out = response.getOutputStream()) {
-
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = in.read(buffer)) != -1) {
-                out.write(buffer, 0, len);
-            }
-            out.flush();
-        } catch (IOException e) {
-            throw new ServiceException("下载失败");
-        }
     }
 }

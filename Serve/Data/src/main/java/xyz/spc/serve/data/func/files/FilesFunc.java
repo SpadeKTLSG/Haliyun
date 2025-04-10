@@ -1,6 +1,7 @@
 package xyz.spc.serve.data.func.files;
 
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -213,6 +214,18 @@ public class FilesFunc {
         filesRepo.fileFuncMapper.delete(
                 new MPJLambdaWrapper<>(FileFuncDO.class)
                         .eq(FileFuncDO::getId, fileId)
+        );
+    }
+
+    /**
+     * 增加用户下载次数
+     * ? 自增 SQL 示例
+     */
+    public void addUserDownloadTimes(Long fileId) {
+
+        filesRepo.fileDetailService.update(Wrappers.lambdaUpdate(FileDetailDO.class)
+                .setSql("download_time = download_time + 1") // 使用 setSql 实现 自增
+                .eq(FileDetailDO::getId, fileId) // 文件id
         );
     }
 }

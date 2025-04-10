@@ -1,11 +1,13 @@
 package xyz.spc.serve.data.func.tasks;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import xyz.spc.common.constant.UploadDownloadCT;
+import xyz.spc.common.funcpack.errorcode.ServerError;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.domain.dos.Data.tasks.DownloadTaskDO;
@@ -14,8 +16,9 @@ import xyz.spc.gate.vo.Data.tasks.DownloadTaskVO;
 import xyz.spc.infra.special.Data.hdfs.HdfsRepo;
 import xyz.spc.infra.special.Data.tasks.TasksRepo;
 
-import java.io.File;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import static cn.hutool.core.io.FileUtil.getOutputStream;
 
@@ -142,7 +145,7 @@ public class DownloadTaskFunc {
 
         } catch (Exception e) {
             throw new ServiceException("下载时 获取本地文件失败");
-        } finally{
+        } finally {
             // 关闭流
             if (os != null) {
                 try {
@@ -153,6 +156,48 @@ public class DownloadTaskFunc {
             }
         }
 
+
+    }
+
+    /**
+     * 定位到上面的文件对象
+     * ? note: 进行本地缓存的文件对象重命名避免冲突 + 移动到下载根目录, 无需使用, 因为一是保证在对应位置无重名情况, 二是下载直接返回源文件即可
+     */
+    public File locateRenameFile(String fileName, String firstFileDiskPath, Long creatorUserId, Long fromClusterId) {
+
+        // 1 获取到本地磁盘接受到的文件
+        File file = new File(firstFileDiskPath);
+        if (!file.exists()) {
+            throw new ServiceException("下载过程系统的临时文件对象不存在");
+        }
+
+        return file;
+    }
+
+    /**
+     * 响应客户
+     */
+    public void download2Client(File realLocalTempFile, HttpServletResponse response) {
+
+        // 比较标准的用户下载模式代码
+
+        // 设置响应头
+        response.reset();
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-Disposition", "attachment;filename=" + URLEncoder.encode(realLocalTempFile.getName(), StandardCharsets.UTF_8));
+
+        // 设置响应内容
+        try (InputStream in = new FileInputStream(realLocalTempFile); OutputStream out = response.getOutputStream()) {
+
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = in.read(buffer)) != -1) {
+                out.write(buffer, 0, len);
+            }
+            out.flush();
+        } catch (IOException e) {
+            throw new ServiceException(ServerError.SERVICE_ERROR);
+        }
 
     }
 }

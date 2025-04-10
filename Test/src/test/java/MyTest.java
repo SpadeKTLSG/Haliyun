@@ -2,6 +2,8 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import xyz.spc.common.util.hdfsUtil.HdfsFuncUtil;
+import xyz.spc.common.util.hdfsUtil.HdfsQueryUtil;
 import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.infra.mapper.Guest.users.UserMapper;
 import xyz.spc.serve.guest.GuestAPP;
@@ -16,11 +18,10 @@ public class MyTest {
     @Test
     public void test() throws Exception {
         System.out.println("test: ");
-//
-//        HdfsIOUtil.downFile("TEST/测试文件.txt", HdfsContext.PC_WORK_DIR + "TEST/测试文件.txt");
-//        HdfsFuncUtil.deleteF("TEST/测试文件2.txt");
-//        System.out.println(HdfsQueryUtil.chechMD5("TEST/测试文件.txt"));
-//        System.out.println(HdfsFuncUtil.trashEnabled());
+
+        HdfsFuncUtil.deleteF("TEST/测试文件2.txt");
+        System.out.println(HdfsQueryUtil.chechMD5("TEST/测试文件.txt"));
+        System.out.println(HdfsFuncUtil.trashEnabled());
 
     }
 

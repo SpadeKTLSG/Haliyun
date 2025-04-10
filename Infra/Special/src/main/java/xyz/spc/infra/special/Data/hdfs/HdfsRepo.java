@@ -8,7 +8,6 @@ import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.util.hdfsUtil.HdfsFuncUtil;
 import xyz.spc.common.util.hdfsUtil.HdfsIOUtil;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Optional;
 
@@ -24,23 +23,12 @@ public class HdfsRepo {
 
 
     /**
-     * 判断HDFS的存活性
+     * 判断HDFS的存活性: 确认当前连接存在 (不要关闭)
      */
     public boolean isHDFSAlive() {
+        FileSystem tmp = Optional.ofNullable(HdfsFuncUtil.getDfs()).orElseThrow(() -> new ServiceException("HDFS系统出问题啦!"));
 
-        try (FileSystem tmp = Optional.ofNullable(HdfsFuncUtil.getDfs())
-                .orElseThrow(() -> new ServiceException("系统出问题啦!"))) {
-
-            // 确认存在
-            if (tmp == null) {
-                return false;
-            }
-
-        } catch (IOException e) {
-            return false;
-        }
-
-        return true;
+        return tmp != null;
     }
 
 
@@ -48,8 +36,12 @@ public class HdfsRepo {
      * 本地磁盘文件导入到HDFS, InputStream模式
      */
     public boolean upload2HDFS(String tagetPath, InputStream is) throws Exception {
+        if (!isHDFSAlive()) {
+            return false;
+        }
 
         try {
+
             HdfsIOUtil.upByIS(tagetPath, is);
         } catch (Exception e) {
             return false;

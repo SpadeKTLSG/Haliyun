@@ -3,7 +3,6 @@ package xyz.spc.common.util.hdfsUtil;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.*;
-import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -16,7 +15,6 @@ import java.util.List;
  * HDFS查询工具类 (Query)
  */
 @Slf4j
-@Component
 public class HdfsQueryUtil {
 
 

@@ -98,23 +98,28 @@ public class TasksFlow {
 
 
         // 3 发起 HDFS 下载请求到本地磁盘缓存
-        downloadTaskFunc.handleTempDownload(fileId, fileName, creatorUserId, fromClusterId);
+        String firstFileDiskPath = downloadTaskFunc.handleTempDownload(fileName, creatorUserId, fromClusterId);
 
-        // 4 执行异步下载任务登记 (由于解耦和异步处理并无太多提升, 简化了)
+        // 4 定位到对应文件对象 + 进行本地缓存的文件对象重命名避免冲突
+        downloadTaskFunc.locateRenameFile(fileName, firstFileDiskPath, creatorUserId, fromClusterId);
 
-
-        String fileDiskPath = "D:\\CODE\\HaliyunAll\\Data\\耐鸽王春招进度.xlsx";
-
-        File file = new File(fileDiskPath);
+        File file = new File(firstFileDiskPath);
         if (!file.exists()) {
             throw new ServiceException("文件不存在");
         }
 
-        // 5 定位本地缓存的文件对象
+
+        // 5 执行异步下载任务登记 (由于解耦和异步处理并无太多提升, 简化了)
+
+
+
+
+
 
         // 6 登记下载次数等信息
 
-        // 7 文件返回用户, 结束处理
+
+        // 7 文件返回用户综合
 
         // 设置响应头
         response.reset();

@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.constant.UploadDownloadCT;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.domain.dos.Data.tasks.DownloadTaskDO;
@@ -12,6 +13,8 @@ import xyz.spc.domain.model.Data.tasks.DownloadTask;
 import xyz.spc.gate.vo.Data.tasks.DownloadTaskVO;
 import xyz.spc.infra.special.Data.hdfs.HdfsRepo;
 import xyz.spc.infra.special.Data.tasks.TasksRepo;
+
+import java.io.OutputStream;
 
 @Slf4j
 @Service
@@ -48,7 +51,6 @@ public class DownloadTaskFunc {
         tasksRepo.downloadTaskService.save(downTaskDO);
 
     }
-
 
 
     /**
@@ -114,4 +116,24 @@ public class DownloadTaskFunc {
         );
     }
 
+
+    /**
+     * HDFS 下载到本地 Temp 文件
+     */
+    public String handleTempDownload(String fileName, Long creatorUserId, Long fromClusterId) {
+
+        String filePathInHDFS = "/"; // HDFS 文件路径
+        filePathInHDFS = filePathInHDFS + creatorUserId + "/" + fromClusterId + "/" + fileName;
+
+        // 准备本地输出流环境
+        String basePath = UploadDownloadCT.DOWNLOAD_DEFAULT_PATH;
+        String tempFilePath = basePath + fileName;
+        OutputStream os;
+
+        boolean success = hdfsRepo.download4HDFS(filePathInHDFS
+
+        if (!success) {
+            throw new ServiceException("上传 HDFS 失败"); //手动抛出异常
+        }
+    }
 }

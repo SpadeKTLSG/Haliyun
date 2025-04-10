@@ -125,13 +125,23 @@ public class FilesFlow {
     @Async
     public void rollBackFileCreate4Failure(Long fileId) {
 
-        // 1 直接删除文件表的记录 (因为是创建失败, 无逻辑删除)
-        filesFunc.deleteFileAll(fileId);
+        try {
+            // 1 直接删除文件表的记录 (因为是创建失败, 无逻辑删除)
+            filesFunc.deleteFileAll(fileId);
 
-        // 2 处理 锁 等逻辑
-        // 因为是创建失败, 所以不需要处理其他的逻辑
 
-        // 3 HDFS 无需操作, 因为没有上传成功的文件, 文件夹无所谓会定时任务清理
+            // 2 处理 锁 等逻辑
+            // 因为是创建失败, 文件刚刚创建, 不需要处理其他的逻辑
+
+
+            // 3 HDFS 无需操作, 因为没有上传成功的文件, 文件夹无所谓会定时任务清理
+
+
+        } catch (Exception ignore) {
+            //因为是最终一致性的异步操作, 这里不能抛出异常, 改为记录日志 + 风控日志
+            log.error("上传文件失败后的分布式事务回滚 操作失败, 文件ID: {}", fileId);
+        }
+
     }
 
 }

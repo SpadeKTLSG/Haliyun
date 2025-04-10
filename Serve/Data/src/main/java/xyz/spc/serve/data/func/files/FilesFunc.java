@@ -194,4 +194,21 @@ public class FilesFunc {
 
         return res;
     }
+
+
+    /**
+     * 联表删除文件对象
+     * ? note: 联表删除
+     */
+    public void deleteFileAll(Long fileId) {
+
+        filesRepo.fileMapper.deleteJoin(
+                new MPJLambdaWrapper<>(FileDO.class)
+                        .leftJoin(FileDetailDO.class, FileDetailDO::getId, FileDO::getId)
+                        .leftJoin(FileFuncDO.class, FileFuncDO::getId, FileDO::getId)
+                        .eq(FileDO::getId, fileId)
+        );
+
+
+    }
 }

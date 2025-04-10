@@ -4,7 +4,6 @@ package xyz.spc.serve.data.flow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -76,12 +75,5 @@ public class TasksFlow {
     }
 
 
-    /**
-     * 上传文件失败后的分布式事务回滚: 最终一致性实现
-     */
-    @Async
-    public void rollBackFileCreate4Failure(Long fileId) {
-        // 删除文件表的记录
-        filesFunc.deleteFile(fileId);
-    }
+
 }

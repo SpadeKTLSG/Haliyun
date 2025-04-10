@@ -169,4 +169,29 @@ public class FilesFunc {
 
         return res;
     }
+
+
+    /**
+     * 根据ids批量 联表查询文件
+     */
+    public List<FileGreatVO> queryAllFileInfoByIds(List<Long> pagedFileIds) {
+        if (pagedFileIds == null || pagedFileIds.isEmpty()) {
+            return List.of();
+        }
+
+        // 联表查询基操: 把需要的类型放在入参, 实际的MPJLambdaWrapper会自动推导 (放DO)
+        List<FileGreatVO> res = filesRepo.fileMapper.selectJoinList(FileGreatVO.class,
+                new MPJLambdaWrapper<FileDO>()
+                        // 偷懒全都查了
+                        .selectAll(FileDO.class)
+                        .selectAll(FileDetailDO.class)
+                        .selectAll(FileFuncDO.class)
+                        .leftJoin(FileDetailDO.class, FileDetailDO::getId, FileDO::getId)
+                        .leftJoin(FileFuncDO.class, FileFuncDO::getId, FileDO::getId)
+                        .eq(FileFuncDO::getStatus, FileFunc.STATUS_NORMAL) // 只查询正常的文件
+                        .in(FileDO::getId, pagedFileIds) // 批量查询
+        );
+
+        return res;
+    }
 }

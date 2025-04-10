@@ -83,6 +83,16 @@ public class FilesFlow {
     public PageResponse<FileGreatVO> getGroupFilePage(Long clusterId, PageRequest pageRequest) {
         //分页的思路和之前还是一样, 变成手动逻辑分页, 先查出需要的ids, 然后再批量查询
 
+        //        <el-table-column prop="name" label="文件名"></el-table-column>
+        //        <el-table-column prop="type" label="文件类型"></el-table-column>
+        //        <el-table-column prop="dscr" label="描述"></el-table-column>
+        //        <el-table-column prop="downloadTime" label="下载次数"></el-table-column>
+        //        <el-table-column prop="size" label="文件大小"></el-table-column>
+        //        <el-table-column prop="status" label="状态"></el-table-column>
+        //
+        //        <el-table-column prop="createTime" label="创建时间"></el-table-column>
+        //        <el-table-column prop="updateTime" label="更新时间"></el-table-column>
+
         //1. 获取这个群组中所有文件的 ids
 
 

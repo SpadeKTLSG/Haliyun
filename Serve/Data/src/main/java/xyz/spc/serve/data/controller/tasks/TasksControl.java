@@ -14,10 +14,6 @@ import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.data.flow.TasksFlow;
 
-import java.io.*;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
-
 @Slf4j
 @MLog
 @Tag(name = "Tasks", description = "文件任务合集")
@@ -48,51 +44,31 @@ public class TasksControl {
         // pid 字段忽略掉
         try {
             tasksFlow.uploadFile(file, clusterId, userId);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
         }
 
         return Result.success();
     }
 
+
     /**
      * 下载文件接口
-     * 唯一定位文件：文件对象 id, userId, clusterId
      */
     @GetMapping("/download/file")
-    public void downloadFile(
-            @RequestParam("id") Long fileId,
+    public Result<Object> downloadFile(
+            @RequestParam("id") Long fileId, // 从前端查出的需要的文件对象 id
             @RequestParam("userId") Long userId,
             @RequestParam("clusterId") Long clusterId,
             HttpServletResponse response
     ) {
-        // 从数据库或文件存储中查找文件记录，获取文件磁盘路径（此处仅作示例）
-        // 例如：String fileDiskPath = filesFunc.getFileDiskPath(fileId, userId, clusterId);
-        String fileDiskPath = "D:\\CODE\\HaliyunAll\\DATA\\" + fileId + ".dat"; // 示例路径，请按实际逻辑修改
-
-        File file = new File(fileDiskPath);
-        if (!file.exists()) {
-            throw new ServiceException("文件不存在");
+        try {
+            tasksFlow.downloadFile(fileId, userId, clusterId, response);
+        } catch (Exception e) {
+            throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
         }
 
-        // 设置响应头（可调用你已实现的工具方法进行流输出）
-        response.reset();
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-Disposition",
-                "attachment;filename=" + URLEncoder.encode(file.getName(), StandardCharsets.UTF_8));
-
-        try (InputStream in = new FileInputStream(file);
-             OutputStream out = response.getOutputStream()) {
-
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = in.read(buffer)) != -1) {
-                out.write(buffer, 0, len);
-            }
-            out.flush();
-        } catch (IOException e) {
-            throw new ServiceException("下载失败");
-        }
+        return Result.success();
     }
 
 

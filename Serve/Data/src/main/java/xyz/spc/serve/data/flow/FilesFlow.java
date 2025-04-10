@@ -149,15 +149,14 @@ public class FilesFlow {
      */
     public void deleteFile(Long fileId) {
 
-        // 鉴权: 数据库层鉴权, 判别当前用户是否有权限删除这个文件对象:
-        //
+        // 1.获取文件对象
+        FileGreatVO fileGreatDTO = filesFunc.getFileInfo(fileId);
 
+        // 2.鉴权: 数据库层鉴权, 判别当前用户是否有权限删除这个文件对象:
 
+        // 2.1 责任链处理 + 与业务互动 热插拔
 
+        // 3. 执行删除
 
-
-        // 与业务互动:
-
-        //
     }
 }

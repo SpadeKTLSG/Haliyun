@@ -8,9 +8,12 @@ import org.springframework.stereotype.Service;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.common.funcpack.page.PageResponse;
 import xyz.spc.domain.dos.Data.files.FileDO;
+import xyz.spc.domain.model.Data.files.File;
 import xyz.spc.gate.vo.Data.files.FileGreatVO;
 import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
+import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
+import xyz.spc.serve.data.common.enums.FilesChainMarkEnum;
 import xyz.spc.serve.data.func.files.FilesFunc;
 
 import java.util.List;
@@ -27,6 +30,11 @@ public class FilesFlow {
 
     //Func
     private final FilesFunc filesFunc;
+
+    /**
+     * 责任链
+     */
+    private final AbstractChainContext<File, FileGreatVO> abstractChainContext;
 
 
     /**
@@ -153,10 +161,12 @@ public class FilesFlow {
         FileGreatVO fileGreatVO = filesFunc.getFileInfo(fileId);
 
         // 2.鉴权: 数据库层鉴权, 判别当前用户是否有权限删除这个文件对象:
-
         // 2.1 责任链处理 + 与业务互动 热插拔
+        abstractChainContext.handler(FilesChainMarkEnum.FILE_DELETE_FILTER.name(), new File(), fileGreatVO);
 
         // 3. 执行删除
-
+        filesFunc.deleteFileAll(fileId);
     }
+
+
 }

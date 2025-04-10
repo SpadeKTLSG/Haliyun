@@ -94,7 +94,7 @@ public class FilesFlow {
         //        <el-table-column prop="updateTime" label="更新时间"></el-table-column>
 
         //1. 获取这个群组中所有文件的 ids
-
+        List<Long> groupFileIds = filesFunc.getGroupFileIds(clusterId);
 
         //2. 根据ids + page分页信息算出需要查询的 File* ids
 

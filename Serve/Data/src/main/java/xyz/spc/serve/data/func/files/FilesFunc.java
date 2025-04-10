@@ -1,6 +1,7 @@
 package xyz.spc.serve.data.func.files;
 
 
+import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -113,7 +114,6 @@ public class FilesFunc {
         }
 
 
-
         return FileGreatVO.builder()
                 .id(fileDO.getId())
                 .pid(fileDO.getPid())
@@ -132,5 +132,41 @@ public class FilesFunc {
                 .validDateType(fileFuncDO.getValidDateType())
                 .validDate(fileFuncDO.getValidDate())
                 .build();
+    }
+
+    /**
+     * 获取群组中的所有正常的文件id
+     */
+    public List<Long> getGroupFileIds(Long clusterId) {
+
+        if (clusterId == null) {
+            return List.of();
+        }
+
+        //? note: 联表List批量查询, 使用 MPJLambdaWrapper 模拟 (这个代码风格很熟悉, 哈哈哈)
+        // 但是如果只需要 id 字段, 可以简化select的列直接拿出来
+/*
+        List<FileDO> tmp = filesRepo.fileMapper.selectJoinList(FileDO.class,
+                new MPJLambdaWrapper<FileDO>()
+                        .selectAll(FileDO.class)
+                        .leftJoin(FileFuncDO.class, FileFuncDO::getId, FileDO::getId)
+                        .eq(FileDO::getClusterId, clusterId)
+                        .eq(FileFuncDO::getStatus, FileFunc.STATUS_NORMAL)
+                        .orderByDesc(FileDO::getUpdateTime)
+        );
+          List<Long> res = tmp.stream().map(FileDO::getId).toList();
+           return res;
+*/
+
+        List<Long> res = filesRepo.fileMapper.selectJoinList(Long.class,
+                new MPJLambdaWrapper<FileDO>()
+                        .select(FileDO::getId)
+                        .leftJoin(FileFuncDO.class, FileFuncDO::getId, FileDO::getId)
+                        .eq(FileDO::getClusterId, clusterId)
+                        .eq(FileFuncDO::getStatus, FileFunc.STATUS_NORMAL)
+                        .orderByDesc(FileDO::getUpdateTime)
+        );
+
+        return res;
     }
 }

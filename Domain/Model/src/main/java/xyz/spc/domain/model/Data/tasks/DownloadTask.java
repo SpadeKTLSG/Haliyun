@@ -64,5 +64,6 @@ public class DownloadTask extends BaseModel {
      * 负责节点
      */
     private String executor;
+    public static final String EXECUTOR_LOCAL = "local"; // 本地
 
 }

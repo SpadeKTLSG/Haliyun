@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.gate.dto.Data.files.FileDTO;
+import xyz.spc.gate.vo.Data.files.FileGreatVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.serve.auxiliary.config.mq.TasksMQCompo;
 import xyz.spc.serve.data.func.files.FilesFunc;
@@ -83,18 +84,25 @@ public class TasksFlow {
     /**
      * 下载文件流处理
      */
-    public void downloadFile(Long fileId, Long userId, Long clusterId, HttpServletResponse response) {
-
-        // 1  获取对应文件对象
+    public void downloadFile(Long fileId, Long creatortUserId, Long fromClusterId, HttpServletResponse response) {
 
 
+        // 1 获取对应文件对象
+        FileGreatVO fileGreatVO = filesFunc.getFileInfo(fileId);
+        String fileName = fileGreatVO.getName(); // 文件名称
 
-        // 2 定位 HDFS 文件路径
+        // 2 创建对应下载任务
+        downloadTaskFunc.taskGen(fileId, fileName, creatortUserId);
+
+        //  定位 HDFS 文件路径
 
 
         // 3 发起 HDFS 下载请求到本地磁盘缓存
+        downloadTaskFunc.handleTempDownload(fileId, fileName, fromClusterId, creatortUserId);
 
         // 4 执行异步下载任务登记 (由于解耦和异步处理并无太多提升, 简化了)
+
+
         String fileDiskPath = "D:\\CODE\\HaliyunAll\\Data\\耐鸽王春招进度.xlsx";
 
         File file = new File(fileDiskPath);

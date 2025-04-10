@@ -54,6 +54,7 @@ public class MqTaskConsumer {
         Long taskId = (Long) input[0];
         String localFilePath = (String) input[1];
         Long fileId = 0L;
+        InputStream is = null;
 
         try {
 
@@ -70,7 +71,8 @@ public class MqTaskConsumer {
             hdfsTargetPath = hdfsTargetPath + fileGreatVO.getUserId() + "/" + fileGreatVO.getClusterId() + "/" + fileGreatVO.getName();
 
             // 5 获取到本地磁盘的文件 (流)
-            InputStream is = getInputStream(UploadDownloadCT.UPLOAD_DEFAULT_PATH + localFilePath);
+            String tempFilePath = UploadDownloadCT.UPLOAD_DEFAULT_PATH + localFilePath;
+            is = getInputStream(tempFilePath);
 
 
             // 6 正式执行上传操作, 更新任务表信息.
@@ -95,7 +97,7 @@ public class MqTaskConsumer {
 
 
             // END
-        } catch (Exception e) {
+        } catch (Exception e) { // 消息队列中不要抛出异常
 
             // 0 抛出异常触发下方代码块逻辑, 统一走分布式事务 (最终一致性)
 
@@ -120,6 +122,15 @@ public class MqTaskConsumer {
             //todo
 
             // 6 发送管理员站内用户消息, 提示问题介入
+        } finally {
+            // 7 关闭流
+            if (is != null) {
+                try {
+                    is.close();
+                } catch (Exception e) {
+                    log.error("关闭流失败", e);
+                }
+            }
         }
 
     }

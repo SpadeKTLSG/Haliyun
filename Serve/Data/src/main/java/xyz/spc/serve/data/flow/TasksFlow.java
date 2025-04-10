@@ -91,14 +91,14 @@ public class TasksFlow {
         FileGreatVO fileGreatVO = filesFunc.getFileInfo(fileId);
         String fileName = fileGreatVO.getName(); // 文件名称
 
+
         // 2 创建对应下载任务
         downloadTaskFunc.taskGen(fileId, fileName, creatorUserId);
-
-        //  定位 HDFS 文件路径
 
 
         // 3 发起 HDFS 下载请求到本地磁盘缓存
         String firstFileDiskPath = downloadTaskFunc.handleTempDownload(fileName, creatorUserId, fromClusterId);
+
 
         // 4 定位到对应文件对象 + 进行本地缓存的文件对象重命名避免冲突
         downloadTaskFunc.locateRenameFile(fileName, firstFileDiskPath, creatorUserId, fromClusterId);

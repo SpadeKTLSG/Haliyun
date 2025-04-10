@@ -7,11 +7,14 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.common.constant.UploadDownloadCT;
+import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.gate.vo.Data.files.FileGreatVO;
 import xyz.spc.gate.vo.Data.tasks.UploadTaskVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.infra.special.Data.hdfs.HdfsRepo;
 import xyz.spc.serve.auxiliary.config.mq.TasksMQCompo;
+import xyz.spc.serve.data.flow.FilesFlow;
+import xyz.spc.serve.data.flow.TasksFlow;
 import xyz.spc.serve.data.func.files.FilesFunc;
 import xyz.spc.serve.data.func.tasks.DownloadTaskFunc;
 import xyz.spc.serve.data.func.tasks.UploadTaskFunc;
@@ -27,6 +30,10 @@ public class MqTaskConsumer {
 
     // Feign
     private final ClustersClient clustersClient;
+
+    // Flow
+    private final TasksFlow tasksFlow;
+    private final FilesFlow filesFlow;
 
     // Func
     private final FilesFunc filesFunc;
@@ -46,7 +53,7 @@ public class MqTaskConsumer {
         // 1 获取任务 ID 和本地文件路径
         Long taskId = (Long) input[0];
         String localFilePath = (String) input[1];
-
+        Long fileId = 0L;
 
         try {
 
@@ -56,6 +63,7 @@ public class MqTaskConsumer {
 
             // 3 通过任务信息定位具体的文件信息
             FileGreatVO fileGreatVO = filesFunc.getFileInfo(uploadTaskVO.getFileId());
+            fileId = fileGreatVO.getId();
 
             // 4 确定 HDFS 存储的目标路径, 唯一定位方法为 根目录Path + 用户id + 群组id + 文件名称(内含唯一id)
             String hdfsTargetPath = "/";
@@ -82,27 +90,36 @@ public class MqTaskConsumer {
                 //todo
 
             } else {
-                log.error("任务ID {} 本地磁盘文件导入 HDFS失败", taskId);
-
-                // 8 失败任务表信息
-                uploadTaskFunc.failTask(taskId);
-
-                // 9 记录用户操作日志等日志操作, 方便后续人工介入
-                // todo
-
-                // 10 记录风控日志, 增添风控 Line (条目)
-                // todo
-
-                // 11 发送管理员站内用户消息, 提示问题介入
-                // todo
+                throw new ServiceException("上传 HDFS 失败"); //手动抛出异常走下方逻辑
             }
 
 
             // END
         } catch (Exception e) {
-            // 记录异常, 不能抛出, 记录日志
+
+            // 0 抛出异常触发下方代码块逻辑, 统一走分布式事务 (最终一致性)
+
+            // 1 记录异常, 这个是 MQ 的处理, 不能进行抛出, 记录日志
             log.error("任务ID {} 本地磁盘文件导入 HDFS失败", taskId, e);
+
+            // 2 (异步) 执行文件表的回滚操作, 可以记录对应文件失败请求信息
+            if (fileId == 0L) {
+                log.error("文件ID获取失败, 无法进行回滚操作");
+                // 重大故障!!!
+            }
+            filesFlow.rollBackFileCreate4Failure(fileId);
+
+            // 3 (异步) 任务表的回滚操作, 采用断开连接的方式 (谈到避免后续冲突相同上传操作, UUID能进行托底)
+            uploadTaskFunc.failTask(taskId);
+
+            // 4 记录用户操作日志等日志操作, 方便后续人工介入
+            // todo
+
+            // 5 记录风控日志, 增添风控 Line (条目)
+
             //todo
+
+            // 6 发送管理员站内用户消息, 提示问题介入
         }
 
     }

@@ -144,4 +144,20 @@ public class FilesFlow {
 
     }
 
+    /**
+     * 删除文件对象
+     */
+    public void deleteFile(Long fileId) {
+
+        // 鉴权: 数据库层鉴权, 判别当前用户是否有权限删除这个文件对象:
+        //
+
+
+
+
+
+        // 与业务互动:
+
+        //
+    }
 }

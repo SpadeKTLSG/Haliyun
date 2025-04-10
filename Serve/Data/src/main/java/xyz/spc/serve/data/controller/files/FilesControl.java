@@ -58,6 +58,20 @@ public class FilesControl {
 
     //! DELETE
 
+    /**
+     * 删除文件
+     */
+    @DeleteMapping("/file/delete")
+    @Operation(summary = "删除文件")
+    public Result<Object> deleteFile(
+            @RequestParam("fileId") Long fileId
+    ) {
+        filesFlow.deleteFile(fileId);
+        return Result.success();
+    }
+    //http://localhost:10000/Data/files/file/delete?fileId=...&clusterId=...&userId=...
+
+
 
     //! UPDATE
 

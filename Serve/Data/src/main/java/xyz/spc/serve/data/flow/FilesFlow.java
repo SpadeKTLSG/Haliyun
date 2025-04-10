@@ -150,7 +150,7 @@ public class FilesFlow {
     public void deleteFile(Long fileId) {
 
         // 1.获取文件对象
-        FileGreatVO fileGreatDTO = filesFunc.getFileInfo(fileId);
+        FileGreatVO fileGreatVO = filesFunc.getFileInfo(fileId);
 
         // 2.鉴权: 数据库层鉴权, 判别当前用户是否有权限删除这个文件对象:
 

@@ -198,17 +198,21 @@ public class FilesFunc {
 
     /**
      * 联表删除文件对象
-     * ? note: 联表删除
+     * ? note: 联表删除 -> 单个删除, 不支持三张表一起删
      */
     public void deleteFileAll(Long fileId) {
 
-        filesRepo.fileMapper.deleteJoin(
+        filesRepo.fileMapper.delete(
                 new MPJLambdaWrapper<>(FileDO.class)
-                        .leftJoin(FileDetailDO.class, FileDetailDO::getId, FileDO::getId)
-                        .leftJoin(FileFuncDO.class, FileFuncDO::getId, FileDO::getId)
                         .eq(FileDO::getId, fileId)
         );
-
-
+        filesRepo.fileDetailMapper.delete(
+                new MPJLambdaWrapper<>(FileDetailDO.class)
+                        .eq(FileDetailDO::getId, fileId)
+        );
+        filesRepo.fileFuncMapper.delete(
+                new MPJLambdaWrapper<>(FileFuncDO.class)
+                        .eq(FileFuncDO::getId, fileId)
+        );
     }
 }

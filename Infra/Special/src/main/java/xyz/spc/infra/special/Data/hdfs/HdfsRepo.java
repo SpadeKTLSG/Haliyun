@@ -9,6 +9,7 @@ import xyz.spc.common.util.hdfsUtil.HdfsFuncUtil;
 import xyz.spc.common.util.hdfsUtil.HdfsIOUtil;
 
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Optional;
 
 @Slf4j
@@ -50,5 +51,20 @@ public class HdfsRepo {
         return true;
     }
 
+    /**
+     * HDFS文件下载到本地磁盘, OutputStream模式
+     */
+    public boolean download4HDFS(String targetPath, OutputStream os) throws Exception {
+        if (!isHDFSAlive()) {
+            return false;
+        }
 
+        try {
+            HdfsIOUtil.downByOS(targetPath, os);
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
 }

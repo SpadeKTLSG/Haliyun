@@ -84,7 +84,7 @@ public class TasksFlow {
     /**
      * 下载文件流处理
      */
-    public void downloadFile(Long fileId, Long creatortUserId, Long fromClusterId, HttpServletResponse response) {
+    public void downloadFile(Long fileId, Long creatorUserId, Long fromClusterId, HttpServletResponse response) {
 
 
         // 1 获取对应文件对象
@@ -92,13 +92,13 @@ public class TasksFlow {
         String fileName = fileGreatVO.getName(); // 文件名称
 
         // 2 创建对应下载任务
-        downloadTaskFunc.taskGen(fileId, fileName, creatortUserId);
+        downloadTaskFunc.taskGen(fileId, fileName, creatorUserId);
 
         //  定位 HDFS 文件路径
 
 
         // 3 发起 HDFS 下载请求到本地磁盘缓存
-        downloadTaskFunc.handleTempDownload(fileId, fileName, fromClusterId, creatortUserId);
+        downloadTaskFunc.handleTempDownload(fileId, fileName, creatorUserId, fromClusterId);
 
         // 4 执行异步下载任务登记 (由于解耦和异步处理并无太多提升, 简化了)
 

@@ -45,6 +45,7 @@ public class MessagesFlow {
         // 2 查询 发件箱 / 收件箱 原生字段
         List<SelfMailDO> tmp = selfMailFunc.listMyMes(userId, orderType);
 
+
         // 3 补充 群组名称
         List<Long> clusterIds = tmp.stream()
                 .map(SelfMailDO::getClusterId)
@@ -61,9 +62,42 @@ public class MessagesFlow {
         List<String> userAccountByIds = usersFunc.getUserAccountByIds(userIds);
 
 
+        // 5 组装, 拼装 Tmodel
+        List<SelfMailVO> res = tmp.stream()
+                .map(
+                        selfMailDO -> {
+                            SelfMailVO selfMailVO = new SelfMailVO();
 
-        // 7 组装, 拼装 Tmodel
-        List<SelfMailVO> res;
+                            selfMailVO.setId(selfMailDO.getId());
+
+                            // 发件者信息
+                            selfMailVO.setSenderId(selfMailDO.getSenderId());
+                            selfMailVO.setSenderName(userAccountByIds.get(userIds.indexOf(selfMailDO.getSenderId())));
+
+                            // 收件者信息
+                            selfMailVO.setReceiverId(selfMailDO.getReceiverId());
+                            selfMailVO.setReceiverName(userAccountByIds.get(userIds.indexOf(selfMailDO.getReceiverId())));
+
+                            // 群组信息
+                            selfMailVO.setClusterId(selfMailDO.getClusterId());
+                            selfMailVO.setClusterName(clusterNamesByIds.get(clusterIds.indexOf(selfMailDO.getClusterId())));
+
+                            // 信件信息
+                            selfMailVO.setHeader(selfMailDO.getHeader());
+                            selfMailVO.setBody(selfMailDO.getBody());
+
+                            // 信件状态
+                            selfMailVO.setStatus(selfMailDO.getStatus());
+                            selfMailVO.setDrop(selfMailDO.getDrop());
+
+
+                            return selfMailVO;
+                        }
+                ).toList();
+
+
+
+        return res;
     }
 
 

@@ -28,4 +28,13 @@ public class SelfMailVO extends BaseVO {
 
     private String body;
 
+
+    //? Tmodel
+
+    private String clusterName; // 群组名称
+
+    private String senderName; // 发送者名称
+
+    private String receiverName; // 接收人名称
+
 }

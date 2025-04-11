@@ -166,6 +166,49 @@ public class MessagesFlow {
     }
 
 
+    /**
+     * 发送消息 (创建对应的行, 通过字段标记消息状态)
+     */
     public void sendMes(@NonNull SelfMailDTO selfMailDTO) {
+
+        // 1 鉴权判断非空 (直接解包模式)
+        //? 这里可以简单点鉴权, 直接把需要的字段拿出来判断
+
+        // 2 创建对应行, 初始状态
+
+        // 组装 DO
+
+        // 执行
+
+        // 3 返回用户成功 (解耦)
+
+        // 4 (异步) 投递消息, 更新状态
+
+    }
+
+
+    /**
+     * 获取用户下的未读消息数量 (收件人为自己, 并且状态为未读)
+     */
+    public Integer getUnreadCount() {
+
+        // 1 获取用户ID
+        Long userId = UserContext.getUI();
+
+        // 2 查出数量
+    }
+
+
+    /**
+     * 删除消息 (双方对等 - 通过状态字段查询来实现) 默认仅收件人和发件人可操作
+     */
+    public void deleteMes(Long mesId) {
+
+        // 1 查询原生字段 消息
+
+        // 2 业务鉴权
+
+        // 3 删除消息 - 直接删除, 无逻辑删除必要
+
     }
 }

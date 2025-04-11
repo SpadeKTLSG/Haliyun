@@ -54,7 +54,7 @@ public class MessagesControl {
     @DeleteMapping("/delete/{mesId}")
     public Result<Object> deleteMes(
             @PathVariable Long mesId
-    ){
+    ) {
         messagesFlow.deleteMes(mesId);
         return Result.success();
     }
@@ -99,7 +99,11 @@ public class MessagesControl {
 
 
     /**
-     * 判断用户有无未读消息 (首页刷新的场景) - 直接返回未读消息数量, 首页展示
+     * 判断当前用户有无未读消息 (首页刷新的场景) - 直接返回未读消息数量, 首页展示
      */
+    @GetMapping("/unread/count")
+    public Result<Integer> getUnreadCount() {
+        return Result.success(messagesFlow.getUnreadCount());
+    }
 
 }

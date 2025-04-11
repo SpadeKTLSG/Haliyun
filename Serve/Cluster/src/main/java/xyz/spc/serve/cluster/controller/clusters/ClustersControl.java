@@ -46,6 +46,15 @@ public class ClustersControl {
         return clustersFlow.getClusterByIdBatch(pagedClusterIds);
     }
 
+    /**
+     * 判断群组创建者是否是这个用户
+     */
+    @GetMapping("/cluster/creator/check")
+    boolean checkClusterCreatorEqual(@RequestParam Long clusterId, @RequestParam Long myUserId) {
+        return clustersFlow.checkClusterCreatorEqual(clusterId, myUserId);
+    }
+
+
     //! Func
 
     /**
@@ -57,6 +66,19 @@ public class ClustersControl {
         return Result.success();
     }
     //http://localhost:10000/Cluster/clusters/hall/join?clusterId=...
+
+
+    //! ADD
+
+    /**
+     * 小院创建群组 (就传递两个名称 name,nickname)
+     */
+    @PostMapping("/create")
+    Result<Object> createCluster(@RequestBody ClusterDTO clusterDTO) {
+        clustersFlow.createCluster(clusterDTO);
+        return Result.success();
+    }
+    //http://localhost:10000/Cluster/clusters/create
 
 
     //! DELETE
@@ -81,18 +103,17 @@ public class ClustersControl {
     }
     //http://localhost:10000/Cluster/clusters/exit?clusterId=...
 
-
-    //! ADD
-
     /**
-     * 小院创建群组 (就传递两个名称 name,nickname)
+     * 将目标踢出某群组
      */
-    @PostMapping("/create")
-    Result<Object> createCluster(@RequestBody ClusterDTO clusterDTO) {
-        clustersFlow.createCluster(clusterDTO);
+    @DeleteMapping("/kick_cluster")
+    Result<Object> kickCluster(@RequestParam Long clusterId, @RequestParam Long userId) {
+        clustersFlow.kickCluster(clusterId, userId);
         return Result.success();
     }
-    //http://localhost:10000/Cluster/clusters/create
+    //http://localhost:10000/Cluster/clusters/kick_cluster?clusterId=1&userId=2
+
+
 
     //! UPDATE
 
@@ -131,4 +152,14 @@ public class ClustersControl {
         return Result.success(clustersFlow.getAllClusterById(id));
     }
     //http://localhost:10000/Cluster/clusters/hall/one?id=...
+
+
+    /**
+     * 查询我自己的群组清单, 简单展示 (支撑 群组信息界面)
+     */
+    @GetMapping("/clusterEzOfMe")
+    Result<List<ClusterVO>> getClusterEzOfMe() {
+        return Result.success(clustersFlow.getClusterEzOfMe());
+    }
+    //http://localhost:10000/Cluster/clusters/clusterEzOfMe
 }

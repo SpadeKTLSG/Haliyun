@@ -40,7 +40,7 @@ public class Level extends BaseModel {
     /**
      * 等级描述
      */
-    private String desc;
+    private String dscr;
 
     /**
      * 备注

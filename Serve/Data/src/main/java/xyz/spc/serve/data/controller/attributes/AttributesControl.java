@@ -1,4 +1,4 @@
-package xyz.spc.serve.guest.controller.records;
+package xyz.spc.serve.data.controller.attributes;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
@@ -6,25 +6,22 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.spc.serve.auxiliary.config.log.MLog;
-import xyz.spc.serve.guest.flow.RecordsFlow;
 
 @Slf4j
 @MLog
-@Tag(name = "Records", description = "用户记录合集")
-@RequestMapping("/Guest/records")
+@Tag(name = "Files", description = "文件属性合集")
+@RequestMapping("/Data/attributes")
 @RestController
 @RequiredArgsConstructor
-public class RecordsControl {
+public class AttributesControl {
 
     // Flow
-    private final RecordsFlow recordsFlow;
-
+    // private final AttributesFlow attributesFlow;
 
     //! Client
 
 
     //! Func
-
 
     //! ADD
 
@@ -34,5 +31,8 @@ public class RecordsControl {
 
     //! UPDATE
 
+
+
     //! Query
+
 }

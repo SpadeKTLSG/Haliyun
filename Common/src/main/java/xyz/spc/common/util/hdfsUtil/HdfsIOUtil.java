@@ -1,6 +1,9 @@
 package xyz.spc.common.util.hdfsUtil;
 
 
+import jakarta.activation.MimetypesFileTypeMap;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FSDataOutputStream;
@@ -8,8 +11,6 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.io.IOUtils;
 
-import javax.activation.MimetypesFileTypeMap;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,7 +24,7 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public final class HdfsIOUtil {
 
-
+    @Getter
     private static final FileSystem dfs = HdfsContext.getFileSystem();
 
     /**

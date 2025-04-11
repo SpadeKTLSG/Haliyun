@@ -43,27 +43,34 @@ public interface UsersClient {
 
 
     /**
-     * 当前用户加入群组
+     * 当前用户的加入群组
      */
     @PostMapping(BASE_URL + "/cluster/join")
     Result<Object> joinCluster(@RequestParam Long clusterId);
 
     /**
-     * 群主加入群组
+     * 群主的加入群组
      */
     @PostMapping(BASE_URL + "/cluster/creator_join")
     void creatorJoinCluster(@RequestParam Long clusterId);
 
     /**
-     * 当前用户退出群组
+     * 当前用户的退出群组
      */
     @DeleteMapping(BASE_URL + "/cluster/quit")
     Result<Object> quitCluster(@RequestParam Long clusterId);
 
     /**
-     * 所有人退出群组
+     * 踢出某群的某人
+     */
+    @DeleteMapping(BASE_URL + "/cluster/kick_out")
+    Result<Object> kickOutPopOfCluster(@RequestParam Long clusterId, @RequestParam Long userId);
+
+    /**
+     * 所有人的退出群组
      */
     @DeleteMapping(BASE_URL + "/cluster/every_quit")
     void everyQuitCluster(@RequestParam Long clusterId);
+
 
 }

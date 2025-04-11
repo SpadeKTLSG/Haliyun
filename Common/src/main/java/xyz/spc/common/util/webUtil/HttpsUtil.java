@@ -2,6 +2,7 @@ package xyz.spc.common.util.webUtil;
 
 
 import cn.hutool.core.util.StrUtil;
+import jakarta.servlet.ServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -10,7 +11,6 @@ import xyz.spc.common.constant.HttpStatusCT;
 import xyz.spc.common.util.collecUtil.StringUtil;
 
 import javax.net.ssl.*;
-import javax.servlet.ServletRequest;
 import java.io.*;
 import java.net.*;
 import java.nio.charset.StandardCharsets;

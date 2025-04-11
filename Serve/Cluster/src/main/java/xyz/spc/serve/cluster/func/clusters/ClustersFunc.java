@@ -214,10 +214,18 @@ public class ClustersFunc {
         log.debug("群组: {} , 由用户: {} 删除成功: ", clusterId, UserContext.getUA());
     }
 
+
     /**
      * 检查群组id对应的创建者是否是当前用户
      */
     public boolean checkClusterCreatorEqual(Long clusterId) {
+        return checkClusterCreatorEqual(clusterId, UserContext.getUI());
+    }
+
+    /**
+     * 检查群组id对应的创建者是否是目标用户
+     */
+    public boolean checkClusterCreatorEqual(Long clusterId, Long userId) {
 
         //1. 查出对应的群组 ClusterDO
         ClusterDO clusterDO = clustersRepo.clusterMapper.selectOne(
@@ -229,12 +237,80 @@ public class ClustersFunc {
         //2. 获取群组创建人id
         Long creatorUserId = clusterDO.getCreatorUserId();
 
-        //3. 判断是否相等
-        if (creatorUserId.equals(UserContext.getUI())) {
+        //3. 判断是否和目标对象相等
+        if (creatorUserId.equals(userId)) {
             return true;
         } else {
-            log.error("用户: {} 试图删除群组 => {}, 但不是群主, 无法删除", UserContext.getUA(), clusterId);
+            log.error("用户: {} 试图删除群组 => {}, 但不是群主, 无法删除", userId, clusterId);
             return false;
         }
+    }
+
+
+    /**
+     * 获取我加入的群组信息, 用于群组信息页面
+     */
+    public List<ClusterVO> getClusterEzOfMe(List<Long> ids) {
+
+        if (ids == null || ids.isEmpty()) {
+            return List.of();
+        }
+
+        // 批量查询群组对象
+        List<ClusterDO> clusterList = clustersRepo.clusterMapper.selectBatchIds(ids);
+
+        if (clusterList == null || clusterList.isEmpty()) {
+            return List.of();
+        }
+
+        // 补充信息
+        return clusterList.stream()
+                .map(cluster -> {
+                    ClusterVO clusterVO = new ClusterVO();
+
+                    // 需要查出基本信息: id, 名称, 人员容量 用于展示
+                    clusterVO.setId(cluster.getId());
+                    clusterVO.setName(cluster.getName());
+                    clusterVO.setPopVolume(cluster.getPopVolume());
+                    clusterVO.setCreatorUserId(cluster.getCreatorUserId()); // 必须补充群主id, 用于操作鉴权等场景
+                    // note: 部分安全性低场景前端短路实现可以使用前端直接把这个群主id拿去判断Context中的userId是否相等, 这样就不需要再查数据库了
+                    // 但是不推荐, 最后还是要在后端做保护, 以免被人恶意篡改. 实现的对应见 两处: Notice模块 + 群组信息模块
+
+                    return clusterVO;
+                })
+                .toList();
+    }
+
+    /**
+     * 用群组id获取群组公告id
+     */
+    public Long getNoticeIdByClusterId(Long clusterId) {
+
+        // 通过群组id 找到 ClusterFuncDO -> 公告id
+        ClusterFuncDO clusterFuncDO = clustersRepo.clusterFuncService.getOne(
+                Wrappers.lambdaQuery(ClusterFuncDO.class)
+                        .eq(ClusterFuncDO::getId, clusterId)
+                        .eq(ClusterFuncDO::getDelFlag, DelEnum.NORMAL.getStatusCode()) // 逻辑删除处理
+        );
+
+        Long noticeId = clusterFuncDO.getNoticeId();
+
+        return noticeId;
+    }
+
+    /**
+     * 更新群组公告id
+     */
+    public void updateNoticeId(Long clusterId, Long noticeId) {
+
+        // 更新群组公告id
+        clustersRepo.clusterFuncService.update(
+                null,
+                Wrappers.lambdaUpdate(ClusterFuncDO.class)
+                        .eq(ClusterFuncDO::getId, clusterId)
+                        .eq(ClusterFuncDO::getDelFlag, DelEnum.NORMAL.getStatusCode()) // 逻辑删除处理
+                        .set(ClusterFuncDO::getNoticeId, noticeId)
+        );
+
     }
 }

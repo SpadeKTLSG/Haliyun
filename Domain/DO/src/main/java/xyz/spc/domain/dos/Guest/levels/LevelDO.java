@@ -24,7 +24,7 @@ public class LevelDO extends BaseDO {
 
     private Long grow;
 
-    private String desc;
+    private String dscr;
 
     private String remark;
 

@@ -19,7 +19,7 @@ public class FileFuncDO extends BaseDO {
 
     private Long tag;
 
-    private Long lock;
+    private Long fileLock;
 
     private Integer status;
 

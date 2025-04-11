@@ -272,6 +272,8 @@ auth:
     - /Guest/users/register
     - /Guest/users/code
     - /Guest/users/user_map
+    - /Data/tasks/upload/**
+    - /Data/tasks/download/**
     - /Pub/fronts/nav
     - /swagger-ui/**
     - /swagger-ui.html

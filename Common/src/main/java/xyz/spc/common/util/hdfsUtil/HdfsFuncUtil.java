@@ -1,5 +1,6 @@
 package xyz.spc.common.util.hdfsUtil;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.hadoop.fs.*;
 
@@ -12,8 +13,9 @@ import java.io.IOException;
 @Slf4j
 public final class HdfsFuncUtil {
 
-    private static final FileSystem dfs = HdfsContext.getFileSystem();
 
+    @Getter
+    private static final FileSystem dfs = HdfsContext.getFileSystem();
 
     /**
      * 尝试创建目录
@@ -97,6 +99,9 @@ public final class HdfsFuncUtil {
         // 采用递归删除文件
         return dfs.delete(new Path(path), recursive);
     }
+
+
+
 
 
     /**

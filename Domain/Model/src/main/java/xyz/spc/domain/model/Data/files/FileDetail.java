@@ -23,7 +23,7 @@ public class FileDetail extends BaseModel {
     /**
      * 描述
      */
-    private String desc;
+    private String dscr;
 
     /**
      * 下载次数

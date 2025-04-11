@@ -1,11 +1,13 @@
 package xyz.spc.serve.guest.flow;
 
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.common.constant.SystemSpecialCT;
+import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.levels.LevelVO;
 import xyz.spc.gate.vo.Guest.users.UserGreatVO;
@@ -201,10 +203,28 @@ public class UsersFlow {
         //退群 = 删除 (这里是删除!) 群组用户关联 的 对应条目记录 (这个因为没有什么必要保存 (中间表), 所以简化了)
         Long userId = Objects.requireNonNull(UserContext.getUI());
 
-        // 群组表操作
+        //1. 群组表操作
         userClusterFunc.quitCluster(userId, clusterId);
 
-        // 维护 UserFunc 的加入群组数量
+        //2. 维护 UserFunc 的加入群组数量
+        usersFunc.opUserJoinClusterCount(userId, SystemSpecialCT.SUB, 1);
+    }
+
+    /**
+     * 将目标用户踢出某群组, 需要群主资格
+     */
+    public void kickOutPopOfCluster(Long clusterId, Long userId) {
+
+        //1. 判断 myUserId 是否目标群组的群主
+        Long myUserId = Objects.requireNonNull(UserContext.getUI());
+        if (!clustersClient.checkClusterCreatorEqual(clusterId, myUserId)) {
+            throw new ClientException("你不是这个群组的群主, 无法随意踹人!!!");
+        }
+
+        //2. 群组表操作
+        userClusterFunc.quitCluster(userId, clusterId);
+
+        //3. 维护 UserFunc 的加入群组数量
         usersFunc.opUserJoinClusterCount(userId, SystemSpecialCT.SUB, 1);
     }
 
@@ -223,6 +243,20 @@ public class UsersFlow {
         for (Long userId : findUsers) {
             usersFunc.opUserJoinClusterCount(userId, SystemSpecialCT.SUB, 1);
         }
+    }
+
+    /**
+     * 获取群组中用户的基础清单, 之后可以根据需要发起对应用户详细信息的请求查询
+     */
+    public List<UserVO> getClusterUserList(@NotNull(message = "群组id不能为空") Long clusterId) {
+
+        //1. 查中间表中所有用户id清单
+        List<Long> toFind = usersFunc.getClusterUserIdList(clusterId);
+
+        //2. 用 id 查用户基础表中id清单的用户信息
+        List<UserVO> userVOList = usersFunc.getUserInfoByIds(toFind);
+
+        return userVOList;
     }
 
 

@@ -4,6 +4,8 @@ import cn.hutool.core.exceptions.ExceptionUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -11,8 +13,6 @@ import org.apache.commons.io.IOUtils;
 import xyz.spc.common.constant.UploadDownloadCT;
 import xyz.spc.common.funcpack.uuid.IdUtil;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;

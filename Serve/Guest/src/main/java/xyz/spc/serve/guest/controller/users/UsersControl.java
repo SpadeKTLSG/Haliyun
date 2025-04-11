@@ -108,7 +108,7 @@ public class UsersControl {
      * 群主加入群组
      */
     @PostMapping("/cluster/creator_join")
-    void creatorJoinCluster(@RequestParam Long clusterId){
+    void creatorJoinCluster(@RequestParam Long clusterId) {
         usersFlow.creatorJoinCluster(clusterId);
     }
     //http://localhost:10000/Guest/users/cluster/creator_join?id=1
@@ -123,6 +123,17 @@ public class UsersControl {
         return Result.success();
     }
     //http://localhost:10000/Guest/users/cluster/quit?clusterId=1
+
+
+    /**
+     * 踢出某群的某人
+     */
+    @DeleteMapping("/cluster/kick_out")
+    Result<Object> kickOutPopOfCluster(@RequestParam Long clusterId, @RequestParam Long userId) {
+        usersFlow.kickOutPopOfCluster(clusterId, userId);
+        return Result.success();
+    }
+    //http://localhost:10000/Guest/users/cluster/kick_out?clusterId=1&userId=2
 
     /**
      * 所有人退出某群组
@@ -248,5 +259,19 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/user_info
 
+
+    /**
+     * 获取某个群组中所有用户的清单
+     */
+    @GetMapping("/cluster/user_list")
+    @Operation(summary = "获取某个群组中所有用户的清单")
+    @Parameters(@Parameter(name = "clusterId", description = "群组id", required = true))
+    public Result<List<UserVO>> getClusterUserList(
+            @NotNull(message = "群组id不能为空")
+            @RequestParam("clusterId") Long clusterId
+    ) {
+        return Result.success(usersFlow.getClusterUserList(clusterId));
+    }
+    //http://localhost:10000/Guest/users/cluster/user_list?clusterId=1
 
 }

@@ -1,5 +1,6 @@
 package xyz.spc.gate.dto.Data.files;
 
+
 import lombok.*;
 import lombok.experimental.Accessors;
 import xyz.spc.gate.dto.BaseDTO;
@@ -10,9 +11,25 @@ import xyz.spc.gate.dto.BaseDTO;
 @Accessors(chain = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileDetailDTO extends BaseDTO {
+public class FileGreatDTO extends BaseDTO {
+
 
     private Long id;
+
+    private Long pid;
+
+    // FileVO
+
+    private Long userId;
+
+    private Long clusterId;
+
+    private String name;
+
+    private String type;
+
+
+    // FileDetailVO
 
     private String dscr;
 
@@ -23,4 +40,16 @@ public class FileDetailDTO extends BaseDTO {
     private String path;
 
     private String diskPath;
+
+    // FileFuncVO
+
+    private Long tag;
+
+    private Long fileLock;
+
+    private Integer status;
+
+    private Integer validDateType;
+
+    private String validDate;
 }

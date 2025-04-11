@@ -296,6 +296,28 @@ public class ClustersFlow {
         //3. 交由对方服务实现计数维护.
     }
 
+
+    /**
+     * 将目标踢出某群组
+     */
+    public void kickCluster(Long clusterId, Long userId) {
+
+        //1. 鉴权判断: 群主不可以退出他对应的群组, 其他人可以!
+        if (clustersFunc.checkClusterCreatorEqual(clusterId, userId)) {
+            throw new ClientException("群主不可以退出自己的群组");
+        }
+
+        //2. 退出操作, 删除关联
+        Result<Object> res = usersClient.kickOutPopOfCluster(clusterId, userId);
+
+        //3. 交由对方服务实现计数维护.
+
+        //4. 需要处理失败情况
+        if (Objects.equals(res.getCode(), ReqRespCT.FAIL_CODE)) {
+            throw new ClientException(res.getMessage());
+        }
+    }
+
     /**
      * 加入群组 创建对应关系
      */
@@ -313,4 +335,32 @@ public class ClustersFlow {
         }
     }
 
+    /**
+     * 获取我加入的群组简单信息清单
+     */
+    public List<ClusterVO> getClusterEzOfMe() {
+
+        //1. 获取用户加入的群组清单
+        List<Long> clusterIds = null;
+        Result<List<Long>> res = usersClient.getUserClusterIds();
+
+        if (Objects.equals(res.getCode(), ReqRespCT.SUCCESS_CODE)) {
+            clusterIds = res.getData();
+        }
+
+        if (clusterIds == null || clusterIds.isEmpty()) {
+            return List.of();
+        }
+
+        //2. 批量查询群组基本存储对象信息
+        return clustersFunc.getClusterEzOfMe(clusterIds);
+    }
+
+
+    /**
+     * 判断群组创建者是否是这个用户
+     */
+    public boolean checkClusterCreatorEqual(Long clusterId, Long myUserId) {
+        return clustersFunc.checkClusterCreatorEqual(clusterId, myUserId);
+    }
 }

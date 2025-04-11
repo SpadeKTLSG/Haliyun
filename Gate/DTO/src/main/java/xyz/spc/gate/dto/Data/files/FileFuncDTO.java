@@ -16,7 +16,7 @@ public class FileFuncDTO extends BaseDTO {
 
     private Long tag;
 
-    private Long lock;
+    private Long fileLock;
 
     private Integer status;
 

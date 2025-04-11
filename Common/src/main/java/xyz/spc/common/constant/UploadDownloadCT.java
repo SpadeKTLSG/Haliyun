@@ -23,12 +23,12 @@ public interface UploadDownloadCT {
     /**
      * 默认用户上传的文件路径
      */
-    String UPLOAD_DEFAULT_PATH = "D:\\upload";
+    String UPLOAD_DEFAULT_PATH = "D:/CODE/HaliyunAll/Data/upload";
 
     /**
      * 默认用户下载的文件路径
      */
-    String DOWNLOAD_DEFAULT_PATH = "D:\\download";
+    String DOWNLOAD_DEFAULT_PATH = "D:/CODE/HaliyunAll/Data/download";
 
     /**
      * 文件上传失败重试次数

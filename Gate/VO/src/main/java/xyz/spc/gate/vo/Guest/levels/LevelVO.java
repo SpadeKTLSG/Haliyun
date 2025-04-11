@@ -22,7 +22,7 @@ public class LevelVO extends BaseVO {
 
     private Long grow;
 
-    private String desc;
+    private String dscr;
 
     private String remark;
 

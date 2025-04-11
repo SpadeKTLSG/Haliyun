@@ -105,11 +105,14 @@ public class TasksFlow {
         // 5 (异步) 登记下载次数等信息
         filesFunc.addUserDownloadTimes(fileId);
 
+
         // 6 下载任务表登记完成
         downloadTaskFunc.completeTask(fileId);
 
+        // 7 (异步) 清理对应的临时文件
+        downloadTaskFunc.cleanTempFile(realLocalTempFile);
 
-        // 7 文件返回用户综合
+        // 8 文件返回用户综合
         downloadTaskFunc.download2Client(realLocalTempFile, response);
 
 

@@ -200,4 +200,23 @@ public class DownloadTaskFunc {
         }
 
     }
+
+    /**
+     * 下载业务中, 删除本地磁盘产生的临时文件
+     */
+    @Async
+    public void cleanTempFile(File realLocalTempFile) {
+
+        // 删除本地磁盘的临时文件
+        if (realLocalTempFile.exists()) {
+
+            boolean deleted = realLocalTempFile.delete();
+
+            if (!deleted) {
+                log.error("删除下载中的本地磁盘的临时文件失败");
+            }
+        } else {
+            log.warn("下载中的本地磁盘的临时文件不存在");
+        }
+    }
 }

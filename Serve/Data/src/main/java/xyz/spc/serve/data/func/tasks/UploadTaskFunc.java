@@ -144,4 +144,24 @@ public class UploadTaskFunc {
                 .eq(UploadTaskDO::getExecutor, UploadTask.EXECUTOR_LOCAL) // note: 绑定对应执行机器, 实现唯一对应. 本地执行器
         );
     }
+
+    /**
+     * 上传业务中, 删除本地磁盘产生的临时文件
+     */
+    @Async
+    public void cleanTempFile(File realLocalTempFile) {
+
+        // 删除本地磁盘的临时文件
+        if (realLocalTempFile.exists()) {
+
+            boolean deleted = realLocalTempFile.delete();
+
+            if (!deleted) {
+                log.error("删除上传中的本地磁盘的临时文件失败");
+            }
+        } else {
+            log.warn("上传中的本地磁盘临时文件 {} 不存在", realLocalTempFile.getAbsolutePath());
+        }
+    }
+
 }

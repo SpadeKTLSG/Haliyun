@@ -19,6 +19,7 @@ import xyz.spc.serve.data.func.files.FilesFunc;
 import xyz.spc.serve.data.func.tasks.DownloadTaskFunc;
 import xyz.spc.serve.data.func.tasks.UploadTaskFunc;
 
+import java.io.File;
 import java.io.InputStream;
 
 import static cn.hutool.core.io.FileUtil.getInputStream;
@@ -55,7 +56,7 @@ public class MqTaskConsumer {
         String localFilePath = (String) input[1];
         Long fileId = 0L;
         InputStream is = null;
-
+        String tempFilePath = "";
         try {
 
 
@@ -71,7 +72,7 @@ public class MqTaskConsumer {
             hdfsTargetPath = hdfsTargetPath + fileGreatVO.getUserId() + "/" + fileGreatVO.getClusterId() + "/" + fileGreatVO.getName();
 
             // 5 获取到本地磁盘的文件 (流)
-            String tempFilePath = UploadDownloadCT.UPLOAD_DEFAULT_PATH + localFilePath;
+            tempFilePath = UploadDownloadCT.UPLOAD_DEFAULT_PATH + localFilePath;
             is = getInputStream(tempFilePath);
 
 
@@ -123,12 +124,24 @@ public class MqTaskConsumer {
 
             // 6 发送管理员站内用户消息, 提示问题介入
         } finally {
-            // 7 关闭流
+            // 1 关闭流
             if (is != null) {
                 try {
                     is.close();
                 } catch (Exception e) {
                     log.error("关闭流失败", e);
+                }
+            }
+
+
+            // 2 删除本地磁盘的临时文件
+            if(!tempFilePath.isEmpty()) {
+                File realLocalTempFile = new File(tempFilePath);
+                try {
+                    // 删除本地磁盘的临时文件
+                    uploadTaskFunc.cleanTempFile(realLocalTempFile);
+                } catch (Exception e) {
+                    log.error("删除本地磁盘的临时文件失败", e);
                 }
             }
         }

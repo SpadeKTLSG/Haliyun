@@ -4,11 +4,9 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.funcpack.Result;
+import xyz.spc.gate.dto.Guest.messages.SelfMailDTO;
 import xyz.spc.gate.vo.Guest.messages.SelfMailVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.guest.flow.MessagesFlow;
@@ -35,8 +33,31 @@ public class MessagesControl {
 
     //! ADD
 
+    /**
+     * 自己 发送消息 到 用户 B
+     */
+    @PostMapping("/send")
+    public Result<Object> sendMes(
+            @NonNull @RequestBody SelfMailDTO selfMailDTO
+    ) {
+        messagesFlow.sendMes(selfMailDTO);
+        return Result.success();
+    }
+
 
     //! DELETE
+
+
+    /**
+     * 删除某条消息 (双方对等)
+     */
+    @DeleteMapping("/delete/{mesId}")
+    public Result<Object> deleteMes(
+            @PathVariable Long mesId
+    ){
+        messagesFlow.deleteMes(mesId);
+        return Result.success();
+    }
 
 
     //! UPDATE
@@ -75,5 +96,10 @@ public class MessagesControl {
     ) {
         return Result.success(messagesFlow.getMyMesDetail(mesId, orderType));
     }
+
+
+    /**
+     * 判断用户有无未读消息 (首页刷新的场景) - 直接返回未读消息数量, 首页展示
+     */
 
 }

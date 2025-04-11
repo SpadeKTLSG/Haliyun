@@ -1,5 +1,6 @@
 package xyz.spc.serve.guest.flow;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -7,6 +8,7 @@ import xyz.spc.common.funcpack.errorcode.ServerError;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.domain.dos.Guest.messages.SelfMailDO;
 import xyz.spc.domain.model.Guest.messages.SelfMail;
+import xyz.spc.gate.dto.Guest.messages.SelfMailDTO;
 import xyz.spc.gate.vo.Guest.messages.SelfMailVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.infra.feign.Guest.UsersClient;
@@ -164,4 +166,6 @@ public class MessagesFlow {
     }
 
 
+    public void sendMes(@NonNull SelfMailDTO selfMailDTO) {
+    }
 }

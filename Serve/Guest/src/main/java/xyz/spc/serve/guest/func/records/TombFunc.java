@@ -16,6 +16,7 @@ public class TombFunc {
      * @param userDTO
      */
     public void registerTomb(UserDTO userDTO) {
+        //todo
     }
 
 

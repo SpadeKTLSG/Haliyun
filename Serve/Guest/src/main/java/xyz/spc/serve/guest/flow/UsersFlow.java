@@ -70,13 +70,15 @@ public class UsersFlow {
     @Transactional(rollbackFor = Exception.class)
     public boolean register(UserDTO userDTO) {
 
-        //注册用户核心表
+        //1 注册用户核心表
         if (!usersFunc.registerCore(userDTO)) {
             return false;
         }
-        //注册统计表
+
+        //2 注册统计表
         statisticFunc.registerStatistics(userDTO);
-        //注册坟墓表
+
+        //3 注册坟墓表
         tombFunc.registerTomb(userDTO);
 
         return true;

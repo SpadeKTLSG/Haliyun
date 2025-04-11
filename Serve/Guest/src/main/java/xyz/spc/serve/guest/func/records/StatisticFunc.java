@@ -16,5 +16,6 @@ public class StatisticFunc {
      * @param userDTO
      */
     public void registerStatistics(UserDTO userDTO) {
+        //todo
     }
 }

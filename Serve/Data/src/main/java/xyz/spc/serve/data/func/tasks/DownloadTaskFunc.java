@@ -118,7 +118,7 @@ public class DownloadTaskFunc {
 
 
             // 准备本地输出流环境
-            String tempFilePath = UploadDownloadCT.DOWNLOAD_DEFAULT_PATH + fileName;
+            String tempFilePath = UploadDownloadCT.DOWNLOAD_DEFAULT_PATH + "/" + fileName;
             File tempFile = new File(tempFilePath);
 
             // 确保父目录存在

@@ -38,15 +38,17 @@ public class SelfMailFunc {
 
     /**
      * 查看我的消息列表
+     * ? 这个怎么说, 很贴近现实的情况 (你就把他真的当做一封信件就好了)
      *
      * @param userId    用户ID
      * @param orderType 0 收件箱 1 发件箱
      */
     public List<SelfMailDO> listMyMes(Long userId, Integer orderType) {
+        List<SelfMailDO> res;
 
         if (orderType.equals(0)) {
             // 收件箱
-            return selfMailsRepo.selfMailService.list(Wrappers.lambdaQuery(SelfMailDO.class)
+            res = selfMailsRepo.selfMailService.list(Wrappers.lambdaQuery(SelfMailDO.class)
                     .eq(SelfMailDO::getReceiverId, userId)
                     // 收件人只能看到状态为已经投递过来的以及已读的邮件
                     .in(SelfMailDO::getStatus, SelfMail.STATUS_DELIVER, SelfMail.STATUS_READ)
@@ -55,11 +57,15 @@ public class SelfMailFunc {
 
         } else {
             // 发件箱
-            return selfMailsRepo.selfMailService.list(Wrappers.lambdaQuery(SelfMailDO.class)
+            res = selfMailsRepo.selfMailService.list(Wrappers.lambdaQuery(SelfMailDO.class)
                     .eq(SelfMailDO::getSenderId, userId)
+                    // 发件人只能看到状态为没投递的以及创建未发送的邮件
+                    .in(SelfMailDO::getStatus, SelfMail.STATUS_CREATE, SelfMail.STATUS_SEND)
                     .orderByDesc(SelfMailDO::getCreateTime)
             );
         }
+
+        return res;
 
     }
 }

@@ -5,7 +5,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.errorcode.ServerError;
+import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.domain.dos.Guest.messages.SelfMailDO;
 import xyz.spc.domain.model.Guest.messages.SelfMail;
@@ -104,5 +106,19 @@ public class SelfMailFunc {
 
         return res;
 
+    }
+
+    /**
+     * id查询自己的消息详情
+     */
+    public SelfMailDO getMyMesDetailById(Long mesId) {
+
+        SelfMailDO selfMailDO = selfMailsRepo.selfMailService.getById(mesId);
+
+        if (selfMailDO == null) {
+            throw new ClientException(ClientError.USER_OBJECT_NOT_FOUND_ERROR);
+        }
+
+        return selfMailDO;
     }
 }

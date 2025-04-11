@@ -1,6 +1,5 @@
 package xyz.spc.serve.guest.flow;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -83,9 +82,8 @@ public class MessagesFlow {
                             selfMailVO.setClusterId(selfMailDO.getClusterId());
                             selfMailVO.setClusterName(clusterNamesByIds.get(clusterIds.indexOf(selfMailDO.getClusterId())));
 
-                            // 信件信息
+                            // 信件信息 : 列表无需展示 Body 内容
                             selfMailVO.setHeader(selfMailDO.getHeader());
-                            selfMailVO.setBody(selfMailDO.getBody());
 
                             // 信件状态
                             selfMailVO.setStatus(selfMailDO.getStatus());
@@ -97,18 +95,29 @@ public class MessagesFlow {
                 ).toList();
 
 
-
         return res;
-    }
-
-    public SelfMailVO getMyMesDetail(@NonNull Long mesId, @NonNull Integer orderType) {
     }
 
 
     /**
      * 查看消息详情
      */
-    //        // 5 逻辑修改 tmp 的对象为字段更新后的结果
-    //        // 6 (异步) 批量邮件Status字段状态更新 (区分类型)
+    public SelfMailVO getMyMesDetail(Long mesId, Integer orderType) {
+
+        // 1 查询原生字段
+        SelfMailDO tmp = selfMailFunc.getMyMesDetailById(mesId);
+
+        // 2 补充 群组名称
+
+        // 3 补充 发件人 + 收件人 名称
+
+        // 4 组装, 拼装 Tmodel
+
+        // 5 逻辑修改 tmp 的对象为字段更新后的结果
+
+        // 6 (异步) 反向批量邮件Status字段状态更新对应落库 (区分 orderType)
+    }
+
+
     //        selfMailFunc.updateMesStatus();
 }

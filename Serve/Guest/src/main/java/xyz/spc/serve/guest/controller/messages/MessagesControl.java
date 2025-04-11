@@ -58,4 +58,22 @@ public class MessagesControl {
     ) {
         return Result.success(messagesFlow.listMyMes(orderType));
     }
+
+
+    /**
+     * 查看消息详情 - 收件箱 / 发件箱
+     */
+    @GetMapping("/detail")
+    public Result<SelfMailVO> getMyMesDetail(
+            @RequestParam
+            @NonNull
+            Long mesId,
+
+            @RequestParam
+            @NonNull
+            Integer orderType
+    ) {
+        return Result.success(messagesFlow.getMyMesDetail(mesId, orderType));
+    }
+
 }

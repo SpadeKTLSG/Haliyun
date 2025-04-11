@@ -1,5 +1,6 @@
 package xyz.spc.serve.guest.flow;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -98,6 +99,9 @@ public class MessagesFlow {
 
 
         return res;
+    }
+
+    public SelfMailVO getMyMesDetail(@NonNull Long mesId, @NonNull Integer orderType) {
     }
 
 

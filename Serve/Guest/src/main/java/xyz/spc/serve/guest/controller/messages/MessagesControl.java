@@ -1,6 +1,7 @@
 package xyz.spc.serve.guest.controller.messages;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -50,7 +51,11 @@ public class MessagesControl {
      * ? 使用入参来判断是收件箱 (0) - 默认 还是发件箱 (1)
      */
     @GetMapping("/list")
-    public Result<List<SelfMailVO>> listMyMes(@RequestParam Integer orderType) {
+    public Result<List<SelfMailVO>> listMyMes(
+            @RequestParam
+            @NonNull
+            Integer orderType
+    ) {
         return Result.success(messagesFlow.listMyMes(orderType));
     }
 }

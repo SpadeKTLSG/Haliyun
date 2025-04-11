@@ -27,6 +27,7 @@ public interface ClustersClient {
     @PostMapping(BASE_URL + "/cluster/batch")
     List<ClusterVO> getClusterByIdBatch(@RequestBody List<Long> pagedClusterIds);
 
+
     /**
      * 判断群组创建者是否是这个用户
      */

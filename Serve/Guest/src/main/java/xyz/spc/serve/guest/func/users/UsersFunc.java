@@ -480,4 +480,36 @@ public class UsersFunc {
 
         return userVOList;
     }
+
+
+    /**
+     * 通过用户id批量查询用户账号
+     */
+    public List<String> getUserAccountByIds(List<Long> userIds) {
+
+        if (userIds == null || userIds.isEmpty()) {
+            return List.of();
+        }
+
+        // 通过用户id批量查询用户账号
+        List<UserDO> userList = usersRepo.userService.list(Wrappers.lambdaQuery(UserDO.class)
+                .in(UserDO::getId, userIds)
+                .eq(UserDO::getStatus, User.STATUS_NORMAL) // 账号状态正常
+                .eq(UserDO::getDelFlag, DelEnum.NORMAL.getStatusCode()) // 逻辑删除处理
+        );
+
+        if (userList == null || userList.isEmpty()) {
+            return List.of();
+        }
+
+        // 将对象清单转换为账号清单
+        List<String> accountList = new ArrayList<>();
+
+        userList.forEach(user -> {
+            String account = user.getAccount();
+            accountList.add(Objects.requireNonNullElse(account, "未知账号"));
+        });
+
+        return accountList;
+    }
 }

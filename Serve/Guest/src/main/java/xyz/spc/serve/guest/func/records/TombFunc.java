@@ -1,14 +1,19 @@
 package xyz.spc.serve.guest.func.records;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.constant.DelEnum;
+import xyz.spc.common.funcpack.errorcode.ServerError;
+import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.domain.dos.Guest.records.TombDO;
 import xyz.spc.infra.special.Guest.records.TombsRepo;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -43,5 +48,21 @@ public class TombFunc {
         tombsRepo.tombService.save(tombDO);
     }
 
+    /**
+     * 删除用户坟墓表 - 更新 逻辑删除
+     */
+    public void killUserAccountTomb(Long userId) {
 
+        // 1 查找
+        TombDO tombDO =  Optional.of(tombsRepo.tombService.getOne(
+                Wrappers.lambdaQuery(TombDO.class)
+                        .eq(TombDO::getUserId, userId)
+        )).orElseThrow(
+                () -> new ServiceException(ServerError.SERVICE_RESOURCE_ERROR)
+        );
+
+        // 2 更新
+        tombDO.setDelFlag(DelEnum.DELETE.getStatusCode());
+        tombsRepo.tombService.updateById(tombDO);
+    }
 }

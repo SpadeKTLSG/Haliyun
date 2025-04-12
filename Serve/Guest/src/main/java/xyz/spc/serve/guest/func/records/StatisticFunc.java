@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.constant.DelEnum;
 import xyz.spc.common.funcpack.errorcode.ServerError;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
@@ -54,7 +55,8 @@ public class StatisticFunc {
         );
 
 
-        statisticsDO.setS(rue);
+        // 2 更新
+        statisticsDO.setDelFlag(DelEnum.DELETE.getStatusCode());
         statisticssRepo.statisticsService.updateById(statisticsDO);
     }
 }

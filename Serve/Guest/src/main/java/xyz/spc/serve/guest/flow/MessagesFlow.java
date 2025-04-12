@@ -19,6 +19,7 @@ import xyz.spc.serve.guest.func.messages.SelfMailFunc;
 import xyz.spc.serve.guest.func.users.UsersFunc;
 
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -174,18 +175,42 @@ public class MessagesFlow {
     public void sendMes(@NonNull SelfMailDTO selfMailDTO) {
 
         // 1 鉴权判断非空 (直接解包模式)
-        //? 这里可以简单点鉴权, 直接把需要的字段拿出来判断
+        //? 这里可以简单点鉴权, 直接把需要的字段拿出来判断. 也影响了对应的下面业务方法. 是新的尝试
+
+
+        // 1.1 发送者ID (默认是自己)
+        Long senderId = Optional.ofNullable(selfMailDTO.getSenderId()).orElse(UserContext.getUI());
+
+        // 1.2 收件者ID, 空报错
+        Long receiverId = Optional.ofNullable(selfMailDTO.getReceiverId()).orElseThrow(
+                () -> new ClientException(ClientError.USER_OBJECT_NOT_FOUND_ERROR)
+        );
+
+        // 1.3 来自群组ID.
+        // note: 这里不一定要带上群组信息. 注意展示时候显示无群组即可, 只是附加的一个 Context Info
+
 
         // 2 创建对应行, 初始状态
+        SelfMailDO selfMailDO = SelfMailDO.builder()
+                .senderId(senderId)
+                .receiverId(receiverId)
+                .header(Optional.ofNullable(selfMailDTO.getHeader()).orElse("无标题"))
+                .body(Optional.ofNullable(selfMailDTO.getBody()).orElse("无内容"))
+                .clusterId(selfMailDTO.getClusterId())
+                .status(SelfMail.STATUS_SEND) // 初始状态 简单模拟, 直接跳过 (前端的中间状态)
+                .drop(SelfMail.DROP_NO) // 默认不删除
+                .build();
 
-        // 组装 DO
+        selfMailFunc.writeMes(selfMailDO);
 
-        // 执行
 
         // 3 返回用户成功 (解耦)
+        // 自动进行...... 然后就自动后台系统来做投递了
+
 
         // 4 (异步) 投递消息, 更新状态
-
+        // id 已经被创建了, 直接使用 DO 更新状态即可
+        selfMailFunc.updateMesStatusSpecial(List.of(selfMailDO), SelfMail.STATUS_DELIVER, 0); // 0 收件箱
     }
 
 
@@ -213,7 +238,7 @@ public class MessagesFlow {
         SelfMailDO tmp = selfMailFunc.getMyMesDetailById(mesId);
 
         // 2 业务鉴权
-        if(tmp.getSenderId().equals(UserContext.getUI()) || tmp.getReceiverId().equals(UserContext.getUI())) {
+        if (tmp.getSenderId().equals(UserContext.getUI()) || tmp.getReceiverId().equals(UserContext.getUI())) {
             throw new ClientException(ClientError.USER_OBJECT_NOT_FOUND_ERROR);
         }
 

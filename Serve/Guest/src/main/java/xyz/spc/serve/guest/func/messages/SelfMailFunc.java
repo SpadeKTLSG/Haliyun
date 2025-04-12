@@ -9,6 +9,7 @@ import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.errorcode.ServerError;
 import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.common.funcpack.exception.ServiceException;
+import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.domain.dos.Guest.messages.SelfMailDO;
 import xyz.spc.domain.model.Guest.messages.SelfMail;
 import xyz.spc.infra.special.Guest.messages.SelfMailsRepo;
@@ -140,7 +141,6 @@ public class SelfMailFunc {
 
     /**
      * id 删除对应消息行 (无逻辑删除)
-     *
      */
     public void deleteMesById(Long mesId) {
         // 1 删除
@@ -150,5 +150,22 @@ public class SelfMailFunc {
         if (!res) {
             throw new ClientException(ClientError.USER_OBJECT_NOT_FOUND_ERROR);
         }
+    }
+
+    /**
+     * 写入消息 (未投递)
+     * ?note, 这种交互模式其实不太好, 因为直接就把 DO 在 Flow 制作了. 最好还是进行流调用
+     */
+    public Long writeMes(SelfMailDO selfMailDO) {
+
+        // 1 补充 id
+        Long id = SnowflakeIdUtil.nextId();
+        selfMailDO.setId(id);
+
+        // 2 写入
+        selfMailsRepo.selfMailService.save(selfMailDO);
+
+        // 3 返回id
+        return id;
     }
 }

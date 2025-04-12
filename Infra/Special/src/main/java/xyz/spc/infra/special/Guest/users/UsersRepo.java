@@ -16,13 +16,13 @@ import xyz.spc.domain.dos.Guest.users.UserDetailDO;
 import xyz.spc.domain.dos.Guest.users.UserFuncDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
+import xyz.spc.infra.mapper.Guest.users.UserClusterMapper;
 import xyz.spc.infra.mapper.Guest.users.UserDetailMapper;
 import xyz.spc.infra.mapper.Guest.users.UserFuncMapper;
-import xyz.spc.infra.mapper.Guest.users.UserClusterMapper;
 import xyz.spc.infra.mapper.Guest.users.UserMapper;
+import xyz.spc.infra.repo.Guest.users.UserClusterService;
 import xyz.spc.infra.repo.Guest.users.UserDetailService;
 import xyz.spc.infra.repo.Guest.users.UserFuncService;
-import xyz.spc.infra.repo.Guest.users.UserClusterService;
 import xyz.spc.infra.repo.Guest.users.UserService;
 
 
@@ -94,7 +94,7 @@ public class UsersRepo {
         boolean isAdmin = userDTO.getAdmin() != 0;
         // 管理员注册需要额外的校验 使用一张贵宾表来记录信息. 需要时候去拉
 
-        // 注册插入三张表, 生成统一ID
+        // 注册插入三张表, 生成统一ID [分配给用户账户的唯一主键id, 重要!!!]
         Long id = SnowflakeIdUtil.nextId();
 
         //? 插入 UserDO
@@ -124,6 +124,8 @@ public class UsersRepo {
                 .registerCode(IdUtil.fastSimpleUUID())
                 .build();
         userFuncService.save(userFuncDO);
+
+        userDTO.setId(id); // 设置用户ID, 方便后续使用
 
         log.debug("用户: {} 注册成功: ", userDTO.getAccount());
     }

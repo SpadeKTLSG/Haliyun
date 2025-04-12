@@ -75,11 +75,11 @@ public class UsersFlow {
             return false;
         }
 
-        //2 注册统计表
-        statisticFunc.registerStatistics(userDTO);
+        //2 (异步) 注册统计表
+        statisticFunc.registerStatistics(userDTO.getId());
 
-        //3 注册坟墓表
-        tombFunc.registerTomb(userDTO);
+        //3 (异步) 注册坟墓表
+        tombFunc.registerTomb(userDTO.getId());
 
         return true;
     }

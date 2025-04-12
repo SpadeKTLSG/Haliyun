@@ -2,8 +2,8 @@ package xyz.spc.serve.guest.func.records;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import xyz.spc.gate.dto.Guest.users.UserDTO;
 
 @Slf4j
 @Service
@@ -12,10 +12,10 @@ public class TombFunc {
 
     /**
      * 注册坟墓表, 做有趣事情的记录
-     *
-     * @param userDTO
+     * ?warn: 此时 TL 里面是没有信息的, 还没注册
      */
-    public void registerTomb(UserDTO userDTO) {
+    @Async
+    public void registerTomb(Long userId) {
         //todo
     }
 

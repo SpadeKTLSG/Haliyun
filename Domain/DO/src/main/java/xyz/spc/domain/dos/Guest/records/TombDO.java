@@ -20,11 +20,11 @@ public class TombDO extends BaseDO {
 
     private Long userId;
 
-    private Integer createNo;
+    private Long createNo;
 
     private Long maxCoin;
 
-    private String bigintestCluster;
+    private Long bigintestCluster;
 
     private LocalDateTime deepestNignt;
 

@@ -27,7 +27,7 @@ public class Tomb extends BaseModel {
     /**
      * 用户注册排名
      */
-    private Integer createNo;
+    private Long createNo;
 
     /**
      * 最大硬币持有量(官方的硬币)
@@ -37,7 +37,7 @@ public class Tomb extends BaseModel {
     /**
      * 参加或创建的群组的最长生存时间
      */
-    private String bigintestCluster;
+    private Long bigintestCluster;
 
     /**
      * 最晚登陆时间

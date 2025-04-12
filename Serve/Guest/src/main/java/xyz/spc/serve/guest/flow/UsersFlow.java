@@ -136,14 +136,23 @@ public class UsersFlow {
      * 注销账号
      */
     public void killUserAccount(Long id) {
+
         //群组: 退出所有群组, 解绑关系
+        //todo
 
         //文件: 删除所有文件, 清理历史
+        //todo
 
-        //日志: 定时清理失效用户的日志, 降低管理日志压力
+        //日志: 清理用户的日志, 降低管理日志压力
+        //todo
 
-        //用户: 注销用户基础联表三张信息
+        //用户: 注销用户基础联表三张信息 - 逻辑删除
         usersFunc.killUserAccount(id);
+
+        //用户记录: 注销用户记录表 * 2 - 逻辑删除
+        statisticFunc.killUserAccountStatistics(id);
+        tombFunc.killUserAccountTomb(id);
+
     }
 
     /**

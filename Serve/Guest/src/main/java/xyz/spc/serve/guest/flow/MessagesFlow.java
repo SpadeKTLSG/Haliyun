@@ -196,6 +196,9 @@ public class MessagesFlow {
         Long userId = UserContext.getUI();
 
         // 2 查出数量
+        Integer count = selfMailFunc.getUnreadCount(userId);
+
+        return count;
     }
 
 

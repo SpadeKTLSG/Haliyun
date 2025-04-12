@@ -4,7 +4,9 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.errorcode.ServerError;
+import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.domain.dos.Guest.messages.SelfMailDO;
 import xyz.spc.domain.model.Guest.messages.SelfMail;
@@ -208,10 +210,15 @@ public class MessagesFlow {
     public void deleteMes(Long mesId) {
 
         // 1 查询原生字段 消息
+        SelfMailDO tmp = selfMailFunc.getMyMesDetailById(mesId);
 
         // 2 业务鉴权
+        if(tmp.getSenderId().equals(UserContext.getUI()) || tmp.getReceiverId().equals(UserContext.getUI())) {
+            throw new ClientException(ClientError.USER_OBJECT_NOT_FOUND_ERROR);
+        }
 
         // 3 删除消息 - 直接删除, 无逻辑删除必要
+        selfMailFunc.deleteMesById(mesId);
 
     }
 }

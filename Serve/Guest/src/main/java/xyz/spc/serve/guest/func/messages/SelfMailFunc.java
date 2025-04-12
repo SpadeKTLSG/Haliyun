@@ -138,4 +138,17 @@ public class SelfMailFunc {
         return (int) res;
     }
 
+    /**
+     * id 删除对应消息行 (无逻辑删除)
+     *
+     */
+    public void deleteMesById(Long mesId) {
+        // 1 删除
+        boolean res = selfMailsRepo.selfMailService.removeById(mesId);
+
+        // 2 判断
+        if (!res) {
+            throw new ClientException(ClientError.USER_OBJECT_NOT_FOUND_ERROR);
+        }
+    }
 }

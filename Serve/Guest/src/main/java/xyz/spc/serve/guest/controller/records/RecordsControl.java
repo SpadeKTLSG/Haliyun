@@ -34,6 +34,11 @@ public class RecordsControl {
 
     //! UPDATE
 
+
+    /**
+     * 增加对应累积信息字段通用接口
+     */
+
     //! Query
 
     /**

@@ -63,4 +63,27 @@ public class Statistics extends BaseModel {
     private Integer trick;
 
 
+    /**
+     * 统计的目标字段枚举
+     */
+    @Getter
+    public enum StatisticsField {
+
+        COMMENT("comment"),
+        DOWNLOAD("download"),
+        UPLOAD("upload"),
+        OUTLET("outlet"),
+        MAIL("mail"),
+        COLLECT("collect"),
+        LIKE("like"),
+        TRICK("trick");
+
+        private final String field;
+
+        StatisticsField(String field) {
+            this.field = field;
+        }
+
+    }
+
 }

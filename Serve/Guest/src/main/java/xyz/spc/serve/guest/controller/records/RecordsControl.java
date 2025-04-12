@@ -35,4 +35,9 @@ public class RecordsControl {
     //! UPDATE
 
     //! Query
+
+    /**
+     * 获取用户统计信息
+     * (单个人, 不分页)
+     */
 }

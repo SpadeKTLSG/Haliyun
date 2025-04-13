@@ -4,6 +4,9 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import xyz.spc.domain.model.BaseModel;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 /**
  * 统计
  */
@@ -78,7 +81,7 @@ public class Statistics extends BaseModel {
         LIKE("like"),
         TRICK("trick");
 
-        private final String field;
+        private  final String field;
 
         StatisticsField(String field) {
             this.field = field;
@@ -97,6 +100,13 @@ public class Statistics extends BaseModel {
             }
         }
         return false;
+    }
+
+    /**
+     * 获取所有的目标字段枚举名称
+     */
+    public List<String> getFieldName() {
+        return Stream.of(StatisticsField.values()).map(StatisticsField::getField).toList();
     }
 
 }

@@ -1,5 +1,6 @@
 package xyz.spc.serve.guest.func.records;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -58,5 +59,25 @@ public class StatisticFunc {
         // 2 更新
         statisticsDO.setDelFlag(DelEnum.DELETE.getStatusCode());
         statisticssRepo.statisticsService.updateById(statisticsDO);
+    }
+
+
+    /**
+     * 使用字段枚举通用化增加对应字段的方法 (+=1)
+     */
+    public void addSomeField(String fieldName, Long targetUserId) {
+
+        // 1 选择Wrapper
+        LambdaUpdateWrapper<StatisticsDO> lu = Optional.of(statisticssRepo.selectFieldWrapper(fieldName)).orElseThrow((
+                () -> new ServiceException(ServerError.SERVICE_ILLEGAL_ERROR)
+        ));
+
+        // 2 Wrapper 追加模式 and 对应条件: user
+        lu.and(
+                wrapper -> wrapper.eq(StatisticsDO::getUserId, targetUserId)
+        );
+
+        // 3 执行更新
+        statisticssRepo.statisticsService.update(lu);
     }
 }

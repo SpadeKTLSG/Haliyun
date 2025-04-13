@@ -41,6 +41,7 @@ public class RecordsFlow {
         }
 
         // 2 执行 +=1 操作, 下沉到 Repo层进行 分派
+        statisticFunc.addSomeField(fieldName, targetUserId);
     }
 
 

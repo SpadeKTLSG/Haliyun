@@ -11,6 +11,7 @@ import xyz.spc.common.funcpack.errorcode.ServerError;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.domain.dos.Guest.records.StatisticsDO;
+import xyz.spc.gate.vo.Guest.records.StatisticsVO;
 import xyz.spc.infra.special.Guest.records.StatisticssRepo;
 
 import java.util.Optional;
@@ -79,5 +80,31 @@ public class StatisticFunc {
 
         // 3 执行更新
         statisticssRepo.statisticsService.update(lu);
+    }
+
+    /**
+     * 获取用户统计信息
+     */
+    public StatisticsVO getUserStatistics(Long targetUserId) {
+
+        StatisticsDO one = statisticssRepo.statisticsService.getOne(
+                Wrappers.lambdaQuery(StatisticsDO.class)
+                        .eq(StatisticsDO::getUserId, targetUserId)
+        );
+
+        StatisticsVO res = StatisticsVO.builder()
+                .id(one.getId())
+                .userId(one.getUserId())
+                .comment(one.getComment())
+                .download(one.getDownload())
+                .upload(one.getUpload())
+                .outlet(one.getOutlet())
+                .mail(one.getMail())
+                .collect(one.getCollect())
+                .like(one.getLike())
+                .trick(one.getTrick())
+                .build();
+
+        return res;
     }
 }

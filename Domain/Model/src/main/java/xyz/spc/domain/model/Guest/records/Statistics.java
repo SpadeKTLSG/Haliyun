@@ -86,4 +86,17 @@ public class Statistics extends BaseModel {
 
     }
 
+
+    /**
+     * 判断对应的String是否属于上面的目标字段枚举
+     */
+    public boolean isFieldName(String fieldName) {
+        for (StatisticsField field : StatisticsField.values()) {
+            if (field.getField().equals(fieldName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

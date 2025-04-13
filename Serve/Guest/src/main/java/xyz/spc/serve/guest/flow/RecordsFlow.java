@@ -3,6 +3,9 @@ package xyz.spc.serve.guest.flow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.funcpack.errorcode.ServerError;
+import xyz.spc.common.funcpack.exception.ServiceException;
+import xyz.spc.domain.model.Guest.records.Statistics;
 import xyz.spc.gate.vo.Guest.records.StatisticsVO;
 import xyz.spc.infra.feign.Guest.UsersClient;
 import xyz.spc.serve.guest.func.records.StatisticFunc;
@@ -27,6 +30,17 @@ public class RecordsFlow {
      * 增加对应用户的累积信息字段通用接口 - 使用字段枚举通用化增加对应字段的方法 (+=1)
      */
     public void addSomeField(String fieldName, Long targetUserId) {
+
+        // 1 鉴权: 判断 这一 filedName 是否对应于 统计表的字段
+        // 使用充血模型
+        Statistics statistics = new Statistics();
+
+        boolean isFieldName = statistics.isFieldName(fieldName);
+        if (!isFieldName) {
+            throw new ServiceException(ServerError.SERVICE_ILLEGAL_ERROR);
+        }
+
+        // 2 执行 +=1 操作, 下沉到 Repo层进行 分派
     }
 
 

@@ -18,6 +18,7 @@ import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.guest.func.messages.SelfMailFunc;
 import xyz.spc.serve.guest.func.users.UsersFunc;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,9 +62,13 @@ public class MessagesFlow {
 
 
         // 4 补充 发件人 + 收件人 名称
-        List<Long> userIds = tmp.stream()
-                .map(SelfMailDO::getSenderId)
-                .toList();
+        List<Long> userIds = new ArrayList<>();
+
+        // 都需要添加到查询清单中
+        for (SelfMailDO selfMailDO : tmp) {
+            userIds.add(selfMailDO.getSenderId());
+            userIds.add(selfMailDO.getReceiverId());
+        }
 
         List<String> userAccountByIds = usersFunc.getUserAccountByIds(userIds);
 
@@ -84,16 +89,21 @@ public class MessagesFlow {
                             selfMailVO.setReceiverId(selfMailDO.getReceiverId());
                             selfMailVO.setReceiverName(userAccountByIds.get(userIds.indexOf(selfMailDO.getReceiverId())));
 
-                            // 群组信息
+                            // 群组信息 (这个可能为空)
                             selfMailVO.setClusterId(selfMailDO.getClusterId());
-                            selfMailVO.setClusterName(clusterNamesByIds.get(clusterIds.indexOf(selfMailDO.getClusterId())));
+
+                            if (clusterIds.contains(selfMailDO.getClusterId()) && !clusterNamesByIds.isEmpty()) {
+                                selfMailVO.setClusterName(clusterNamesByIds.get(clusterIds.indexOf(selfMailDO.getClusterId())));
+                            } else {
+                                selfMailVO.setClusterName("无群组上下文信息");
+                            }
 
                             // 信件信息 : 列表无需展示 Body 内容
                             selfMailVO.setHeader(selfMailDO.getHeader());
 
                             // 信件状态
                             selfMailVO.setStatus(selfMailDO.getStatus());
-                            selfMailVO.setDrop(selfMailDO.getDrop());
+                            selfMailVO.setDroped(selfMailDO.getDroped());
 
 
                             return selfMailVO;
@@ -151,7 +161,7 @@ public class MessagesFlow {
 
                 // 信件状态
                 .status(tmp.getStatus())
-                .drop(tmp.getDrop())
+                .droped(tmp.getDroped())
 
                 .build();
 
@@ -196,9 +206,9 @@ public class MessagesFlow {
                 .receiverId(receiverId)
                 .header(Optional.ofNullable(selfMailDTO.getHeader()).orElse("无标题"))
                 .body(Optional.ofNullable(selfMailDTO.getBody()).orElse("无内容"))
-                .clusterId(selfMailDTO.getClusterId())
+                .clusterId(selfMailDTO.getClusterId()) // 这个字段目前没有特别大的作用, 容忍了
                 .status(SelfMail.STATUS_SEND) // 初始状态 简单模拟, 直接跳过 (前端的中间状态)
-                .drop(SelfMail.DROP_NO) // 默认不删除
+                .droped(SelfMail.DROPED_NO) // 默认不删除
                 .build();
 
         selfMailFunc.writeMes(selfMailDO);

@@ -86,7 +86,7 @@ public class SelfMailFunc {
                 // 收件箱
                 res = selfMailsRepo.selfMailService.list(Wrappers.lambdaQuery(SelfMailDO.class)
                         .eq(SelfMailDO::getReceiverId, userId)
-                        .eq(SelfMailDO::getDrop, SelfMail.DROP_NO)
+                        .eq(SelfMailDO::getDroped, SelfMail.DROPED_NO)
 
                         // 收件人只能看到状态为已经投递过来的以及已读的邮件
                         .in(SelfMailDO::getStatus, SelfMail.STATUS_DELIVER, SelfMail.STATUS_READ)
@@ -98,7 +98,7 @@ public class SelfMailFunc {
                 // 发件箱
                 res = selfMailsRepo.selfMailService.list(Wrappers.lambdaQuery(SelfMailDO.class)
                         .eq(SelfMailDO::getSenderId, userId)
-                        .eq(SelfMailDO::getDrop, SelfMail.DROP_NO)
+                        .eq(SelfMailDO::getDroped, SelfMail.DROPED_NO)
 
                         // 发件人只能看到状态为没投递的以及创建未发送的邮件
                         .in(SelfMailDO::getStatus, SelfMail.STATUS_CREATE, SelfMail.STATUS_SEND)
@@ -133,7 +133,7 @@ public class SelfMailFunc {
 
         long res = selfMailsRepo.selfMailService.count(Wrappers.lambdaQuery(SelfMailDO.class)
                 .eq(SelfMailDO::getReceiverId, userId)
-                .eq(SelfMailDO::getDrop, SelfMail.DROP_NO)
+                .eq(SelfMailDO::getDroped, SelfMail.DROPED_NO)
                 .eq(SelfMailDO::getStatus, SelfMail.STATUS_DELIVER));
 
         return (int) res;

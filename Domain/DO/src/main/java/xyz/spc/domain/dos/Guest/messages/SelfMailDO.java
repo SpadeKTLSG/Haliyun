@@ -24,7 +24,7 @@ public class SelfMailDO extends BaseDO {
 
     private Integer status;
 
-    private Integer drop;
+    private Integer droped;
 
     private String header;
 

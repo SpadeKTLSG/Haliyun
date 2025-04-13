@@ -22,7 +22,7 @@ public class SelfMailVO extends BaseVO {
 
     private Integer status;
 
-    private Integer drop;
+    private Integer droped;
 
     private String header;
 

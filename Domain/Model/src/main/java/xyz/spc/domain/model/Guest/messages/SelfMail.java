@@ -14,7 +14,7 @@ import xyz.spc.domain.model.BaseModel;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SelfMail extends BaseModel {
-    
+
     private Long id;
 
     /**
@@ -44,9 +44,9 @@ public class SelfMail extends BaseModel {
     /**
      * 删除 0 未删除 1 已删除 (任意一方)
      */
-    private Integer drop;
-    public static final int DROP_NO = 0;
-    public static final int DROP_YES = 1;
+    private Integer droped;
+    public static final int DROPED_NO = 0;
+    public static final int DROPED_YES = 1;
 
     /**
      * 标题

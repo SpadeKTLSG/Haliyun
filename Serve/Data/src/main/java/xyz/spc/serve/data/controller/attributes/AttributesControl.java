@@ -3,10 +3,15 @@ package xyz.spc.serve.data.controller.attributes;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import xyz.spc.common.funcpack.Result;
+import xyz.spc.gate.vo.Data.attributes.FileTagVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.data.flow.AttributesFlow;
+
+import java.util.List;
 
 @Slf4j
 @MLog
@@ -50,13 +55,15 @@ public class AttributesControl {
      */
 
 
-
     //! Query
 
     /**
      * 查询自己所有标签
      */
-
+    @GetMapping("/tag")
+    public Result<List<FileTagVO>> getMyAllTags() {
+        return Result.success(attributesFlow.getAllTags());
+    }
 
 
 }

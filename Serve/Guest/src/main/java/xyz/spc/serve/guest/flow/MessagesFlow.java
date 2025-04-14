@@ -125,9 +125,16 @@ public class MessagesFlow {
 
         // 2 补充 群组名称 (复用)
         Long clusterId = tmp.getClusterId();
-        List<Long> clusterIds = List.of(clusterId);
+        String clusterName;
+        List<Long> clusterIds;
 
-        String clusterName = clustersClient.getClusterNamesByIds(clusterIds).get(0);
+        if (clusterId != null) {
+            clusterIds = List.of(clusterId);
+            clusterName = clustersClient.getClusterNamesByIds(clusterIds).get(0);
+        }else{
+            clusterName = "无群组上下文信息";
+        }
+
 
         // 3 补充 发件人 + 收件人 名称  (复用)
         Long senderId = tmp.getSenderId();

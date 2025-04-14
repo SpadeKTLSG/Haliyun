@@ -62,6 +62,15 @@ public class AttributesFlow {
     public void addTag(Long fileId, String tagName) {
 
         // 1 鉴权: 操作者必须是对应文件所在群的群主
+        // 1.1 查对应文件的信息
+        FileGreatVO oneFileAllInfo = filesFlow.getOneFileAllInfo(fileId);
+
+        // 1.2 找到对应群组id
+        Long clusterId = oneFileAllInfo.getClusterId();
+
+
+
+
     }
 
 
@@ -70,6 +79,16 @@ public class AttributesFlow {
      */
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
     public void deleteTag(Long fileId, String tagName) {
+
+        // 1 鉴权: 操作者必须是对应文件所在群的群主
+        // 1.1 查对应文件的信息
+        FileGreatVO oneFileAllInfo = filesFlow.getOneFileAllInfo(fileId);
+
+
+
+
+
+
     }
 
 

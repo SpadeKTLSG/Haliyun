@@ -84,7 +84,7 @@ public class AttributesControl {
     public Result<FileTagVO> getMyAllTags(
             @RequestParam Long fileId
     ) {
-        return Result.success(attributesFlow.getAllTags(fileId));
+        return Result.success(attributesFlow.getFileTag(fileId));
     }
 
 

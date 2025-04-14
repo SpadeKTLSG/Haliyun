@@ -80,6 +80,44 @@ public class FilesFlow {
     }
 
     /**
+     * 获取单个文件的所有信息
+     */
+    public FileGreatVO getOneFileAllInfo(Long fileId) {
+
+        // 1 查三张表
+        FileGreatVO tmp = filesFunc.getFileInfo(fileId);
+
+        // 2 补充群组查询信息
+        // 收集所有需要查询的 clusterId
+        List<Long> clusterIds = List.of(tmp.getClusterId());
+        // 批量查询 clusterName
+        List<String> clusterNames = clustersClient.getClusterNamesByIds(clusterIds);
+
+        // 3 补充信息
+        FileGreatVO res = FileGreatVO.builder()
+                .id(tmp.getId())
+                .pid(tmp.getPid())
+                .userId(tmp.getUserId())
+                .clusterId(tmp.getClusterId())
+                .name(tmp.getName())
+                .type(tmp.getType())
+                // Detail
+                .dscr(tmp.getDscr())
+                .downloadTime(tmp.getDownloadTime())
+                .size(tmp.getSize())
+                .path(tmp.getPath())
+                .diskPath(tmp.getDiskPath())
+                // Func
+                .tag(tmp.getTag())
+                .fileLock(tmp.getFileLock())
+                .status(tmp.getStatus())
+                .validDateType(tmp.getValidDateType())
+                .validDate(tmp.getValidDate())
+                .build();
+        return res;
+    }
+
+    /**
      * 预热一下 HDFS, 获取一下看看
      */
     public boolean tryAcquireDataSystem() {

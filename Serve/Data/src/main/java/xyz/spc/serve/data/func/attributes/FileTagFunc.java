@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 import xyz.spc.domain.dos.Data.attributes.FileTagDO;
 import xyz.spc.infra.special.Data.attributes.AttributesRepo;
 
-import java.util.List;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -17,13 +15,14 @@ public class FileTagFunc {
     /**
      * Repo
      */
-     private final AttributesRepo attributesRepo;
+    private final AttributesRepo attributesRepo;
 
 
     /**
-     * 根据
-     * @return
+     * id 查找
      */
-    public List<FileTagDO> getAllTags() {
+    public FileTagDO getById(Long tagId) {
+        return attributesRepo.fileTagService.getById(tagId);
     }
+
 }

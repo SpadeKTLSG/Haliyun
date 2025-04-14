@@ -6,10 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.reactive.TransactionalOperator;
+import xyz.spc.domain.dos.Data.attributes.FileTagDO;
 import xyz.spc.gate.vo.Data.attributes.FileTagVO;
+import xyz.spc.gate.vo.Data.files.FileGreatVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.serve.data.func.attributes.FileTagFunc;
+import xyz.spc.serve.data.func.files.FilesFunc;
 
 @Slf4j
 @Service
@@ -17,22 +19,38 @@ import xyz.spc.serve.data.func.attributes.FileTagFunc;
 public class AttributesFlow {
 
 
-    //Feign
+    // Feign
     private final ClustersClient clustersClient;
 
-    //Func
+    // Flow
+    private final FilesFlow filesFlow;
+
+
+    // Func
     private final FileTagFunc fileTagFunc;
-    private final TransactionalOperator transactionalOperator;
+    private final FilesFunc filesFunc;
 
 
     /**
      * 查询对应文件id的指向的标签
      */
-    public FileTagVO getAllTags(Long fileId) {
+    public FileTagVO getFileTag(Long fileId) {
 
+        // 1 查对应文件的Func
+        FileGreatVO oneFileAllInfo = filesFlow.getOneFileAllInfo(fileId);
 
-        // 2 通过
+        // 2 通过Func, 找到 tag -> Tag
+        Long tagId = oneFileAllInfo.getTag();
 
+        // 3 id查
+        FileTagDO tmp = fileTagFunc.getById(tagId);
+
+        // 4 转化为VO
+        FileTagVO res = FileTagVO.builder()
+                .id(tmp.getId())
+                .name(tmp.getName())
+                .status(tmp.getStatus())
+                .build();
 
         return res;
     }

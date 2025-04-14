@@ -129,7 +129,7 @@ public class SelfMailFunc {
     /**
      * 获取用户下的未读消息数量 (收件人为自己, 且状态为未读)
      */
-    public Integer getUnreadCount(Long userId) {
+    public Integer  getUnreadCount(Long userId) {
 
         long res = selfMailsRepo.selfMailService.count(Wrappers.lambdaQuery(SelfMailDO.class)
                 .eq(SelfMailDO::getReceiverId, userId)

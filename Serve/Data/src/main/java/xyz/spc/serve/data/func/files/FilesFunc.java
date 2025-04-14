@@ -228,4 +228,28 @@ public class FilesFunc {
                 .eq(FileDetailDO::getId, fileId) // 文件id
         );
     }
+
+
+    /**
+     * 更新文件File
+     */
+    public void updateFile(FileDO fileDO) {
+        filesRepo.fileService.updateById(fileDO);
+    }
+
+
+    /**
+     * 更新文件FileDetail
+     */
+    public void updateFileDetail(FileDetailDO fileDetailDO) {
+        filesRepo.fileDetailService.updateById(fileDetailDO);
+    }
+
+    /**
+     * 更新文件FileFunc
+     */
+    public void updateFileFunc(FileFuncDO fileFuncDO) {
+        filesRepo.fileFuncService.updateById(fileFuncDO);
+    }
+
 }

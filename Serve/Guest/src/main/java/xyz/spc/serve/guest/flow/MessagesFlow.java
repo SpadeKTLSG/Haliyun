@@ -174,7 +174,7 @@ public class MessagesFlow {
 
 
         // 5 逻辑修改 tmp 的对象为字段更新后的结果
-        if (orderType == 1 && tmp.getStatus().equals(SelfMail.STATUS_DELIVER)) {
+        if (orderType == 0 && tmp.getStatus().equals(SelfMail.STATUS_DELIVER)) {
             tmp.setStatus(SelfMail.STATUS_READ); //设置已阅
         }
 
@@ -255,7 +255,7 @@ public class MessagesFlow {
         SelfMailDO tmp = selfMailFunc.getMyMesDetailById(mesId);
 
         // 2 业务鉴权
-        if (tmp.getSenderId().equals(UserContext.getUI()) || tmp.getReceiverId().equals(UserContext.getUI())) {
+        if (!tmp.getSenderId().equals(UserContext.getUI()) && !tmp.getReceiverId().equals(UserContext.getUI())) {
             throw new ClientException(ClientError.USER_OBJECT_NOT_FOUND_ERROR);
         }
 

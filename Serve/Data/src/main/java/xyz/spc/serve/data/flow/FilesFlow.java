@@ -207,4 +207,8 @@ public class FilesFlow {
     }
 
 
+    public boolean amICreatorOfFileCluster(Long fileId) {
+
+         }
+
 }

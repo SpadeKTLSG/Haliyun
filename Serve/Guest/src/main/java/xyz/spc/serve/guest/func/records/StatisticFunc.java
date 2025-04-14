@@ -87,9 +87,11 @@ public class StatisticFunc {
      */
     public StatisticsVO getUserStatistics(Long targetUserId) {
 
-        StatisticsDO one = statisticssRepo.statisticsService.getOne(
+        StatisticsDO one = Optional.ofNullable(statisticssRepo.statisticsService.getOne(
                 Wrappers.lambdaQuery(StatisticsDO.class)
                         .eq(StatisticsDO::getUserId, targetUserId)
+        )).orElseThrow(
+                () -> new ServiceException(ServerError.SERVICE_RESOURCE_ERROR)
         );
 
         StatisticsVO res = StatisticsVO.builder()
@@ -101,7 +103,7 @@ public class StatisticFunc {
                 .outlet(one.getOutlet())
                 .mail(one.getMail())
                 .collect(one.getCollect())
-                .like(one.getLike())
+                .likes(one.getLikes())
                 .trick(one.getTrick())
                 .build();
 

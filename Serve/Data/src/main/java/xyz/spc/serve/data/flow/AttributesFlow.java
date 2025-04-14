@@ -4,13 +4,12 @@ package xyz.spc.serve.data.flow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import xyz.spc.domain.dos.Data.attributes.FileTagDO;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.reactive.TransactionalOperator;
 import xyz.spc.gate.vo.Data.attributes.FileTagVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.serve.data.func.attributes.FileTagFunc;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Slf4j
 @Service
@@ -23,27 +22,47 @@ public class AttributesFlow {
 
     //Func
     private final FileTagFunc fileTagFunc;
+    private final TransactionalOperator transactionalOperator;
 
 
     /**
-     * 获取自己创建的所有标签对象list
+     * 查询对应文件id的指向的标签
      */
-    public List<FileTagVO> getAllTags() {
-
-        List<FileTagDO> tmp = fileTagFunc.getAllTags();
+    public FileTagVO getAllTags(Long fileId) {
 
 
-        // 2 某人很熟悉的处理方法
-        List<FileTagVO> res = new ArrayList<>();
-        tmp.forEach(tag -> {
-                    FileTagVO fileTagVO = FileTagVO.builder()
-                            .id(tag.getId())
-                            .status(tag.getStatus())
-                            .name(tag.getName())
-                            .build();
-                    res.add(fileTagVO);
-                }
-        );
+        // 2 通过
 
+
+        return res;
+    }
+
+    /**
+     * 创建对应文件的标签
+     */
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void addTag(Long fileId, String tagName) {
+
+        // 1 鉴权: 操作者必须是对应文件所在群的群主
+    }
+
+
+    /**
+     * 删除对应文件的标签
+     */
+    @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
+    public void deleteTag(Long fileId, String tagName) {
+    }
+
+
+    /**
+     * 更新对应文件的标签
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void updateTag(Long fileId, String tagName) {
+
+        // 1 直接调用先删除后添加
+        this.deleteTag(fileId, tagName);
+        this.addTag(fileId, tagName);
     }
 }

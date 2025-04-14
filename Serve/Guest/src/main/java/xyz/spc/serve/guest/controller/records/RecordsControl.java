@@ -3,10 +3,7 @@ package xyz.spc.serve.guest.controller.records;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.gate.vo.Guest.records.StatisticsVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
@@ -44,8 +41,8 @@ public class RecordsControl {
      */
     @PutMapping("/statistic/add_some_field")
     public Result<Object> addSomeField(
-            String fieldName,
-            Long targetUserId
+            @RequestParam String fieldName,
+            @RequestParam Long targetUserId
     ) {
         recordsFlow.addSomeField(fieldName, targetUserId);
         return Result.success();
@@ -60,7 +57,7 @@ public class RecordsControl {
      */
     @GetMapping("/statistic/user_show")
     public Result<StatisticsVO> getUserStatistics(
-            Long targetUserId
+            @RequestParam Long targetUserId
     ) {
         return Result.success(recordsFlow.getUserStatistics(targetUserId));
     }

@@ -28,7 +28,7 @@ public class StatisticsVO extends BaseVO {
 
     private Integer collect;
 
-    private Integer like;
+    private Integer likes;
 
     private Integer trick;
 }

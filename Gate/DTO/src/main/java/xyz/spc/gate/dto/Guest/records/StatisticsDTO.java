@@ -28,7 +28,7 @@ public class StatisticsDTO extends BaseDTO {
 
     private Integer collect;
 
-    private Integer like;
+    private Integer likes;
 
     private Integer trick;
 }

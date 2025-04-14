@@ -58,7 +58,7 @@ public class Statistics extends BaseModel {
     /**
      * 累计点赞次数
      */
-    private Integer like;
+    private Integer likes;
 
     /**
      * 累计干坏事次数
@@ -78,7 +78,7 @@ public class Statistics extends BaseModel {
         OUTLET("outlet"),
         MAIL("mail"),
         COLLECT("collect"),
-        LIKE("like"),
+        LIKES("likes"),
         TRICK("trick");
 
         private  final String field;

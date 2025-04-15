@@ -174,7 +174,7 @@ public class FilesFunc {
     /**
      * 获取群组中的所有正常的文件id, Name 进行模糊查询
      */
-    public List<Long> getGroupFileIds8Name(Long clusterId, Long fileName) {
+    public List<Long> getGroupFileIds8Name(Long clusterId, String fileName) {
 
         // 和上面差不多
 

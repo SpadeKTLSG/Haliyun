@@ -100,7 +100,7 @@ public class FilesControl {
     public Result<PageResponse<FileGreatVO>> getGroupFilePage8Name(
 
             @RequestParam("clusterId") Long clusterId,
-            @RequestParam("fileName") Long fileName,
+            @RequestParam("fileName") String fileName,
             @RequestParam("current") Integer current,
             @RequestParam("size") Integer size
 

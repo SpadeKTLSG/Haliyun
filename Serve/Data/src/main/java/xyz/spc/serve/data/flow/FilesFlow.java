@@ -169,7 +169,7 @@ public class FilesFlow {
     /**
      * 分页获取群组中的文件列表 (List), 根据文件名模糊查询筛选对应文件
      */
-    public PageResponse<FileGreatVO> getGroupFilePage8Name(Long clusterId, Long fileName, PageRequest pageRequest) {
+    public PageResponse<FileGreatVO> getGroupFilePage8Name(Long clusterId, String fileName, PageRequest pageRequest) {
 
         //1. 获取这个群组中所有可能的文件的 ids (模糊匹配)
         List<Long> groupFileIds = filesFunc.getGroupFileIds8Name(clusterId, fileName);

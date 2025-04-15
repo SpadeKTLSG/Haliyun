@@ -248,8 +248,11 @@ public class FilesFunc {
     /**
      * 更新文件FileFunc
      */
-    public void updateFileFunc(FileFuncDO fileFuncDO) {
-        filesRepo.fileFuncService.updateById(fileFuncDO);
+    public void updateFileFunc(Long tagID, Long fileId) {
+        filesRepo.fileFuncService.update(Wrappers.lambdaUpdate(FileFuncDO.class)
+                .set(FileFuncDO::getTag, tagID)
+                .eq(FileFuncDO::getId, fileId)
+        );
     }
 
 }

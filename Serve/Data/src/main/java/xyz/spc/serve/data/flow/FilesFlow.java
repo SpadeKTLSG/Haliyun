@@ -12,6 +12,7 @@ import xyz.spc.domain.model.Data.files.File;
 import xyz.spc.gate.vo.Data.files.FileGreatVO;
 import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
+import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
 import xyz.spc.serve.data.common.enums.FilesChainMarkEnum;
 import xyz.spc.serve.data.func.files.FilesFunc;
@@ -207,8 +208,24 @@ public class FilesFlow {
     }
 
 
+    /**
+     * 判断我是不是这个文件的所在群组的群主
+     */
     public boolean amICreatorOfFileCluster(Long fileId) {
 
-         }
+        // 1 查对应文件的信息
+        FileGreatVO oneFileAllInfo = this.getOneFileAllInfo(fileId);
+
+        // 2 找到对应群组id
+        Long clusterId = oneFileAllInfo.getClusterId();
+
+        // 3 判断我是不是这个群组的群主
+        Long myUserId = UserContext.getUI();
+
+        boolean amIMaster = clustersClient.checkClusterCreatorEqual(clusterId, myUserId);
+
+        return amIMaster;
+    }
+
 
 }

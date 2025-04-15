@@ -9,13 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.domain.dos.Data.attributes.FileTagDO;
+import xyz.spc.domain.dos.Data.files.FileDO;
 import xyz.spc.domain.model.Data.attributes.FileTag;
 import xyz.spc.gate.vo.Data.attributes.FileTagVO;
 import xyz.spc.gate.vo.Data.files.FileGreatVO;
+import xyz.spc.gate.vo.Data.files.FileVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.serve.data.func.attributes.FileTagFunc;
 import xyz.spc.serve.data.func.files.FilesFunc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -133,9 +136,19 @@ public class AttributesFlow {
     }
 
     /**
-     * 通过标签来查询该标签下的我的所有文件, 做 FileVO 的列表展示即可
+     * 通过标签来查询该标签下的所有文件, 做 FileVO 的列表展示即可
      */
-    public List<FileTagVO> getMyFilesByTag(Long tagId) {
+    public List<FileVO> getFilesByTag(Long tagId) {
+
+        // 鉴权通过前端界面来做, 用户默认只能查自己接触到的标签内容
+
+        // 1 通过tagId查找文件列表
+        List<FileDO> tmp = filesFunc.getFilesByTagId(tagId);
+
+        // 2 处理
+        List<FileVO> res = new ArrayList<>();
+
+
 
     }
 

@@ -255,4 +255,22 @@ public class FilesFunc {
         );
     }
 
+
+    /**
+     * 通过标签id查找文件列表
+     * ? note 使用 JoinList 进行联表批量查询
+     */
+    public List<FileDO> getFilesByTagId(Long tagId) {
+
+        List<FileDO> res = filesRepo.fileMapper.selectJoinList(FileDO.class,
+                new MPJLambdaWrapper<FileDO>()
+                        .selectAll(FileDO.class)
+                        .leftJoin(FileFuncDO.class, FileFuncDO::getId, FileDO::getId)
+                        .eq(FileFuncDO::getTag, tagId)
+                        .eq(FileFuncDO::getStatus, FileFunc.STATUS_NORMAL)
+        );
+
+        return res;
+    }
+
 }

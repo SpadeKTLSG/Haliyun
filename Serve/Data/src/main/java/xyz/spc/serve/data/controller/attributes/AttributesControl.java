@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.gate.vo.Data.attributes.FileTagVO;
+import xyz.spc.gate.vo.Data.files.FileVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.data.flow.AttributesFlow;
 
@@ -28,13 +29,13 @@ public class AttributesControl {
     //! Func
 
     /**
-     * 通过标签来查询该标签下的我的所有文件, 做 FileVO 的列表展示即可
+     * 通过标签来查询该标签下的所有文件, 做 FileVO 的列表展示即可
      */
     @GetMapping("/tag/file4tag")
-    public Result<List<FileTagVO>> getAllMyFilesByTag(
+    public Result<List<FileVO>> getAllMyFilesByTag(
             @RequestParam Long tagId
     ) {
-        return Result.success(attributesFlow.getMyFilesByTag(tagId));
+        return Result.success(attributesFlow.getFilesByTag(tagId));
     }
 
 

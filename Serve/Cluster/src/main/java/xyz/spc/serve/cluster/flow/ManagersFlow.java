@@ -63,6 +63,8 @@ public class ManagersFlow {
                     .id(source.getId())
                     // 群组默认前端带入不需要
                     .userId(source.getUserId())
+
+                    // 补充用户信息
                     .account(userVOList.stream()
                             .filter(userVO -> userVO.getId().equals(source.getUserId()))
                             .findFirst()

@@ -4,14 +4,19 @@ package xyz.spc.serve.cluster.flow;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.funcpack.Result;
+import xyz.spc.common.funcpack.errorcode.ServerError;
+import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.funcpack.page.PageRequest;
 import xyz.spc.domain.dos.Cluster.managers.ClusterAuthDO;
 import xyz.spc.gate.vo.Cluster.managers.ClusterAuthVO;
+import xyz.spc.gate.vo.Guest.users.UserVO;
 import xyz.spc.infra.feign.Guest.UsersClient;
 import xyz.spc.serve.cluster.func.managers.ClusterAuthFunc;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -45,6 +50,10 @@ public class ManagersFlow {
         });
 
         // 2.2 批量查询对应账户的账户信息
+        Result<List<UserVO>> listResult = Optional.ofNullable(usersClient.getUserDOInfoBatch(userIds))
+                .orElseThrow(() -> new ServiceException(ServerError.SERVICE_RPC_ERROR));
+        List<UserVO> userVOList = listResult.getData();
+
 
         // 3 转化为对应 VO
         List<ClusterAuthVO> res = new ArrayList<>();
@@ -54,7 +63,11 @@ public class ManagersFlow {
                     .id(source.getId())
                     // 群组默认前端带入不需要
                     .userId(source.getUserId())
-                    .account()
+                    .account(userVOList.stream()
+                            .filter(userVO -> userVO.getId().equals(source.getUserId()))
+                            .findFirst()
+                            .orElseThrow(() -> new ServiceException(ServerError.SERVICE_RESOURCE_ERROR))
+                            .getAccount())
                     .canKick(source.getCanKick())
                     .canInvite(source.getCanInvite())
                     .canUpload(source.getCanUpload())
@@ -66,5 +79,6 @@ public class ManagersFlow {
             res.add(clusterAuthVO);
         });
 
+        return res;
     }
 }

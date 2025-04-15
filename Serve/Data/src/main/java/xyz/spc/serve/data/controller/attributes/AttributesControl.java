@@ -50,27 +50,58 @@ public class AttributesControl {
     /**
      * 删除某个文件的标签
      */
-    @DeleteMapping("/tag/{fileId}/{tagName}")
+    @DeleteMapping("/tag/{tagId}")
     public Result<Object> deleteMyTag(
-            @PathVariable Long fileId,
-            @PathVariable String tagName
+            @PathVariable Long tagId
     ) {
-        attributesFlow.deleteTag(fileId, tagName);
+        attributesFlow.deleteTag(tagId);
         return Result.success();
     }
 
 
     //! UPDATE
 
+
     /**
-     * 更新某个文件的标签 (add + delete)
+     * 重命名一个标签 (add + delete) | 不支持单单修改一个文件的标签
      */
-    @PutMapping("/tag/{fileId}/{tagName}")
-    public Result<Object> updateMyTag(
-            @PathVariable Long fileId,
+    @PutMapping("/tag/{tagId}/{tagName}")
+    public Result<Object> updateTag(
+            @PathVariable Long tagId,
             @PathVariable String tagName
     ) {
-        attributesFlow.updateTag(fileId, tagName);
+        attributesFlow.updateTag(tagId, tagName);
+        return Result.success();
+    }
+
+    /**
+     * 暂停一个标签
+     */
+    @PutMapping("/tag/pause/{tagId}")
+    public Result<Object> pauseTag(
+            @PathVariable Long tagId) {
+        attributesFlow.pauseTag(tagId);
+        return Result.success();
+    }
+
+    /**
+     * 冻结一个标签
+     */
+    @PutMapping("/tag/freeze/{tagId}")
+    public Result<Object> freezeTag(
+            @PathVariable Long tagId) {
+        attributesFlow.freezeTag(tagId);
+        return Result.success();
+    }
+
+
+    /**
+     * 正常化一个标签
+     */
+    @PutMapping("/tag/normal/{tagId}")
+    public Result<Object> normalTag(
+            @PathVariable Long tagId) {
+        attributesFlow.normalTag(tagId);
         return Result.success();
     }
 

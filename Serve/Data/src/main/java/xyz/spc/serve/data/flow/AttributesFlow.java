@@ -100,7 +100,7 @@ public class AttributesFlow {
      * 删除对应文件的标签
      */
     @Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRED)
-    public void deleteTag(Long fileId, String tagName) {
+    public void deleteTag(Long fileId) {
 
 
         // 1 鉴权
@@ -109,6 +109,9 @@ public class AttributesFlow {
         if (!filesFlow.amICreatorOfFileCluster(fileId)) {
             throw new ClientException(ClientError.USER_AUTH_ERROR);
         }
+
+        // 2 直接删除 (对应文件的关联关系不处理, 直接降级)
+        fileTagFunc.deleteTag(tagName);
 
 
     }

@@ -38,4 +38,12 @@ public class FileTagFunc {
 
         return id;
     }
+
+
+    /**
+     * 删除标签
+     */
+    public void deleteTag(String tagName) {
+
+    }
 }

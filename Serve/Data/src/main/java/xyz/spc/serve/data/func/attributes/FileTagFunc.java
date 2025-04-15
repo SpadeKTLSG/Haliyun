@@ -41,9 +41,9 @@ public class FileTagFunc {
 
 
     /**
-     * 删除标签
+     * 删除标签 (没有逻辑删除)
      */
-    public void deleteTag(String tagName) {
-
+    public void deleteTag(Long tagId) {
+        attributesRepo.fileTagService.removeById(tagId);
     }
 }

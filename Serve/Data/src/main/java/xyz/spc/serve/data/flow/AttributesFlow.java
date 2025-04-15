@@ -16,6 +16,8 @@ import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.serve.data.func.attributes.FileTagFunc;
 import xyz.spc.serve.data.func.files.FilesFunc;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -110,10 +112,12 @@ public class AttributesFlow {
             throw new ClientException(ClientError.USER_AUTH_ERROR);
         }
 
-        // 2 直接删除 (对应文件的关联关系不处理, 直接降级)
-        fileTagFunc.deleteTag(tagName);
+        // 2 找到对应文件的标签
+        FileTagVO tmp = this.getFileTag(fileId);
+        Long tagId = tmp.getId();
 
-
+        // 3 直接删除 (对应文件的关联关系不处理, 直接降级)
+        fileTagFunc.deleteTag(tagId);
     }
 
 
@@ -124,7 +128,19 @@ public class AttributesFlow {
     public void updateTag(Long fileId, String tagName) {
 
         // 1 直接调用先删除后添加
-        this.deleteTag(fileId, tagName);
+        this.deleteTag(fileId);
         this.addTag(fileId, tagName);
+    }
+
+    public List<FileTagVO> getMyFilesByTag(Long tagId) {
+    }
+
+    public void pauseTag(Long tagId) {
+    }
+
+    public void freezeTag(Long tagId) {
+    }
+
+    public void normalTag(Long tagId) {
     }
 }

@@ -9,6 +9,8 @@ import xyz.spc.gate.vo.Data.attributes.FileTagVO;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.data.flow.AttributesFlow;
 
+import java.util.List;
+
 @Slf4j
 @MLog
 @Tag(name = "Files", description = "文件属性合集")
@@ -26,8 +28,14 @@ public class AttributesControl {
     //! Func
 
     /**
-     * 通过标签来查询该标签下的我的文件, 做列表展示即可
+     * 通过标签来查询该标签下的我的所有文件, 做 FileVO 的列表展示即可
      */
+    @GetMapping("/tag/file4tag")
+    public Result<List<FileTagVO>> getAllMyFilesByTag(
+            @RequestParam Long tagId
+    ) {
+        return Result.success(attributesFlow.getMyFilesByTag(tagId));
+    }
 
 
     //! ADD

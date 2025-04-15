@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import xyz.spc.serve.auxiliary.config.log.MLog;
-import xyz.spc.serve.cluster.flow.FunctionsFlow;
+import xyz.spc.serve.cluster.flow.ManagersFlow;
 
 @Slf4j
 @MLog
@@ -17,7 +17,7 @@ import xyz.spc.serve.cluster.flow.FunctionsFlow;
 public class ClusterAuthControl {
 
     // Flow
-    private final FunctionsFlow functionsFlow;
+    private final ManagersFlow managersFlow;
 
 
     //! Client

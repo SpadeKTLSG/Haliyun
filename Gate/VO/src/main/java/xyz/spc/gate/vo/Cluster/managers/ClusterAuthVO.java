@@ -27,4 +27,8 @@ public class ClusterAuthVO extends BaseVO {
     private Integer canDownload;
 
     private Integer status;
+
+    // Tmodel
+
+    private String account;
 }

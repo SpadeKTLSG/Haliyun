@@ -273,4 +273,6 @@ public class FilesFunc {
         return res;
     }
 
+    public List<Long> getGroupFileIds8Name(Long clusterId, Long fileName) {
+    }
 }

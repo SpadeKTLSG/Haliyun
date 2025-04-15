@@ -5,9 +5,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import xyz.spc.common.funcpack.page.PageRequest;
+import xyz.spc.domain.dos.Cluster.managers.ClusterAuthDO;
 import xyz.spc.gate.vo.Cluster.managers.ClusterAuthVO;
+import xyz.spc.infra.feign.Guest.UsersClient;
 import xyz.spc.serve.cluster.func.managers.ClusterAuthFunc;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -16,7 +19,7 @@ import java.util.List;
 public class ManagersFlow {
 
     //Feign
-
+    private final UsersClient usersClient;
 
     //Func
     private final ClusterAuthFunc clusterAuthFunc;
@@ -28,6 +31,40 @@ public class ManagersFlow {
      */
     public List<ClusterAuthVO> getAllClusterAuths(Long targetClusterId, PageRequest pageRequest) {
 
-        // 1 查基本对象信息
+        // 1 查分页的对应字段 (简单业务原生分页)
+        List<ClusterAuthDO> clusterAuthDOList = clusterAuthFunc.getAllClusterMemberAuths(targetClusterId, pageRequest);
+
+        // 2 补充对应 Tmodel : 用户账户
+
+        // 2.1 归拢需要查对应账户的 userIds
+
+        // 我稍微换了个写法, 不是 直接用 stream的
+        List<Long> userIds = new ArrayList<>();
+        clusterAuthDOList.forEach(clusterAuthDO -> {
+            userIds.add(clusterAuthDO.getUserId());
+        });
+
+        // 2.2 批量查询对应账户的账户信息
+
+        // 3 转化为对应 VO
+        List<ClusterAuthVO> res = new ArrayList<>();
+        clusterAuthDOList.forEach(source -> {
+
+            ClusterAuthVO clusterAuthVO = ClusterAuthVO.builder()
+                    .id(source.getId())
+                    // 群组默认前端带入不需要
+                    .userId(source.getUserId())
+                    .account()
+                    .canKick(source.getCanKick())
+                    .canInvite(source.getCanInvite())
+                    .canUpload(source.getCanUpload())
+                    .canDownload(source.getCanDownload())
+                    .status(source.getStatus())
+                    .build();
+
+
+            res.add(clusterAuthVO);
+        });
+
     }
 }

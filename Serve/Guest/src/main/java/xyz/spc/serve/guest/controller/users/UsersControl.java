@@ -92,6 +92,14 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/user_simple?creatorUserId=1
 
+    /**
+     * 通过用户ids获取用户简单VO信息 (账号 / 是否管理员) 批量查询
+     */
+    @GetMapping("/user_simple")
+    Result<List<UserVO>> getUserDOInfoBatch(@RequestParam Long creatorUserId) {
+        return Result.success(usersFlow.getUserDOInfo(creatorUserId));
+    }
+
 
     /**
      * 当前用户加入群组

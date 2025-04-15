@@ -132,15 +132,43 @@ public class AttributesFlow {
         this.addTag(fileId, tagName);
     }
 
+    /**
+     * 通过标签来查询该标签下的我的所有文件, 做 FileVO 的列表展示即可
+     */
     public List<FileTagVO> getMyFilesByTag(Long tagId) {
+
     }
 
+    /**
+     * 更新暂停标签
+     */
     public void pauseTag(Long tagId) {
+
+        // 这三个简单接口的鉴权通过前端界面来做, 用户默认只能修改自己群里的标签, 这个的鉴权外包出去作为调用
+
+        // 1 更新字段
+        fileTagFunc.updateTag4Status(tagId, FileTag.STATUS_PAUSE);
     }
 
+    /**
+     * 更新冻结标签
+     */
     public void freezeTag(Long tagId) {
+
+        // 这三个简单接口的鉴权通过前端界面来做, 用户默认只能修改自己群里的标签, 这个的鉴权外包出去作为调用
+
+        // 1 更新字段
+        fileTagFunc.updateTag4Status(tagId, FileTag.STATUS_FREEZE);
     }
 
+    /**
+     * 更新正常标签
+     */
     public void normalTag(Long tagId) {
+
+        // 这三个简单接口的鉴权通过前端界面来做, 用户默认只能修改自己群里的标签, 这个的鉴权外包出去作为调用
+
+        // 1 更新字段
+        fileTagFunc.updateTag4Status(tagId, FileTag.STATUS_NORMAL);
     }
 }

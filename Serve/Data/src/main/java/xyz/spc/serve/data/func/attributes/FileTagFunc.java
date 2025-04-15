@@ -1,6 +1,7 @@
 package xyz.spc.serve.data.func.attributes;
 
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -45,5 +46,15 @@ public class FileTagFunc {
      */
     public void deleteTag(Long tagId) {
         attributesRepo.fileTagService.removeById(tagId);
+    }
+
+
+    /**
+     * 更新标签 为 指定状态
+     */
+    public void updateTag4Status(Long tagId, int statusPause) {
+        attributesRepo.fileTagService.update(Wrappers.lambdaUpdate(FileTagDO.class)
+                .eq(FileTagDO::getId, tagId)
+                .set(FileTagDO::getStatus, statusPause));
     }
 }

@@ -95,9 +95,10 @@ public class UsersControl {
     /**
      * 通过用户ids获取用户简单VO信息 (账号 / 是否管理员) 批量查询
      */
-    @GetMapping("/user_simple")
-    Result<List<UserVO>> getUserDOInfoBatch(@RequestParam Long creatorUserId) {
-        return Result.success(usersFlow.getUserDOInfo(creatorUserId));
+    @PostMapping("/user_simple/batch")
+    Result<List<UserVO>> getUserDOInfoBatch(
+            @RequestBody List<Long> creatorUserIds) {
+        return Result.success(usersFlow.getUserDOInfoBatch(creatorUserIds));
     }
 
 

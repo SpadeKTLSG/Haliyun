@@ -358,6 +358,25 @@ public class UsersFunc {
         return res;
     }
 
+    /**
+     * 简单获得用户信息 批量
+     */
+    public List<UserVO> getUserDOInfoBatch(List<Long> creatorUserIds) {
+        List<UserDO> tmp =usersRepo.userService.listByIds(creatorUserIds);
+
+        List<UserVO> res = new ArrayList<>();
+        tmp.forEach(
+                user -> {
+                    UserVO userVO = UserVO.builder()
+                            .admin(user.getAdmin())
+                            .account(user.getAccount())
+                            .build();
+                    res.add(userVO);
+                }
+        );
+
+        return res;
+    }
 
     /**
      * 操作用户 创建 群组的数量 ( + / - by amount)
@@ -512,4 +531,6 @@ public class UsersFunc {
 
         return accountList;
     }
+
+
 }

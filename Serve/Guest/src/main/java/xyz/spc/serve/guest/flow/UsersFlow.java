@@ -271,4 +271,10 @@ public class UsersFlow {
     }
 
 
+    /**
+     * 通过用户ids获取用户简单VO信息 (账号 / 是否管理员) 批量查询
+     */
+    public List<UserVO> getUserDOInfoBatch(List<Long> creatorUserIds) {
+        return usersFunc.getUserDOInfoBatch(creatorUserIds);
+    }
 }

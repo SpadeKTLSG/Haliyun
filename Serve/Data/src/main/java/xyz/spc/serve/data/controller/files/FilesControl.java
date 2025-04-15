@@ -105,7 +105,7 @@ public class FilesControl {
             @RequestParam("size") Integer size
 
     ) {
-        return Result.success(filesFlow.getGroupFilePage8Name(clusterId, fileName, new PageRequest(current, size)));
+        return Result.success(filesFlow.getGroupFilePage8Name(clusterId, fileName.strip(), new PageRequest(current, size)));
     }
 
 

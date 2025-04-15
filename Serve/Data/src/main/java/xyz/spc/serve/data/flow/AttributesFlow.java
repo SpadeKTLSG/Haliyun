@@ -147,9 +147,22 @@ public class AttributesFlow {
 
         // 2 处理
         List<FileVO> res = new ArrayList<>();
+        tmp.forEach(
+                file -> {
+                    FileVO fileVO = FileVO.builder()
+                            .id(file.getId())
+                            .pid(file.getPid())
+                            .name(file.getName())
+                            .type(file.getType())
+                            .userId(file.getUserId())
+                            .clusterId(file.getClusterId())
+                            .build();
 
+                    res.add(fileVO);
+                }
+        );
 
-
+        return res;
     }
 
     /**

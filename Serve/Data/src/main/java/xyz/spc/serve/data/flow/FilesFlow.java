@@ -174,7 +174,37 @@ public class FilesFlow {
         //1. 获取这个群组中所有可能的文件的 ids (模糊匹配)
         List<Long> groupFileIds = filesFunc.getGroupFileIds8Name(clusterId, fileName);
 
+        //? 同上
 
+        //2. 根据ids + page分页信息算出需要查询的 File * ids
+        // 提前进行逻辑分页操作: 将 分页查询 降级为 批量查询, 对方服务只需要查询提供的 ids
+        int currentPage = pageRequest.getCurrent();
+        int pageSize = pageRequest.getSize();
+        int fromIndex = (currentPage - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, groupFileIds.size());
+
+        // 避免 越界
+        if (fromIndex >= groupFileIds.size()) {
+            return new PageResponse<>(currentPage, pageSize, groupFileIds.size(), List.of());
+        }
+
+        // 获取当前页的 File id
+        List<Long> pagedFileIds = groupFileIds.subList(fromIndex, toIndex);
+
+        //3. 根据ids 发起批量查询, 获取到需要的文件对象 * 3 => 整理到汇总 VO, 注意联系前端业务展示
+
+        //使用联表查询 Merge into FileGreatVO (没有分页)
+        List<FileGreatVO> fileGreatVOS = filesFunc.queryAllFileInfoByIds(pagedFileIds);
+
+        //4. 补充 Lock / Tag / 有效期 等 传递信息 => 取消, 放到 Detail 的接口里面进行单个查询详情
+
+        //4 将 List res 封装返回
+        return new PageResponse<>(
+                pageRequest.getCurrent(),
+                pageRequest.getSize(),
+                groupFileIds.size(),
+                fileGreatVOS
+        );
     }
 
 

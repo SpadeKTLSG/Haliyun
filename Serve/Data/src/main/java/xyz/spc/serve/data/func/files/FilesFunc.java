@@ -171,6 +171,30 @@ public class FilesFunc {
         return res;
     }
 
+    /**
+     * 获取群组中的所有正常的文件id, Name 进行模糊查询
+     */
+    public List<Long> getGroupFileIds8Name(Long clusterId, Long fileName) {
+
+        // 和上面差不多
+
+        if (clusterId == null) {
+            return List.of();
+        }
+
+        List<Long> res = filesRepo.fileMapper.selectJoinList(Long.class,
+                new MPJLambdaWrapper<FileDO>()
+                        .select(FileDO::getId)
+                        .leftJoin(FileFuncDO.class, FileFuncDO::getId, FileDO::getId)
+                        .eq(FileDO::getClusterId, clusterId)
+                        .like(FileDO::getName, fileName)
+                        .eq(FileFuncDO::getStatus, FileFunc.STATUS_NORMAL)
+                        .orderByDesc(FileDO::getUpdateTime)
+        );
+
+        return res;
+    }
+
 
     /**
      * 根据ids批量 联表查询文件
@@ -273,6 +297,5 @@ public class FilesFunc {
         return res;
     }
 
-    public List<Long> getGroupFileIds8Name(Long clusterId, Long fileName) {
-    }
+
 }

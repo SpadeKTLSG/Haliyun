@@ -84,6 +84,14 @@ public class TasksFlow {
 
 
     /**
+     * 上传文件批量处理接口
+     */
+    public void uploadFileBatch(MultipartFile[] files, Long clusterId, Long userId) {
+        System.out.println("test");
+
+    }
+
+    /**
      * 下载文件流处理
      */
     @Transactional(rollbackFor = Exception.class, timeout = 50)
@@ -153,4 +161,5 @@ public class TasksFlow {
         }
 
     }
+
 }

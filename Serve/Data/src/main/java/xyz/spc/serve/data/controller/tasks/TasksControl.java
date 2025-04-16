@@ -56,6 +56,22 @@ public class TasksControl {
      * 批量文件上传接口
      */
     @PostMapping("/upload/file/batch")
+    public Result<Object> uploadFileBatch(
+            @RequestParam("files") MultipartFile[] files, // 上传多个文件对象
+            @RequestParam("userId") Long userId,  // 用户id 由于没有登录鉴权, 不得不直接传入
+            @RequestParam("clusterId") Long clusterId,
+            @RequestParam(value = "pid", defaultValue = "0") Long pid // 未来拟合的需求: 在页面的对应位置点击了上传之后, 应该设置对应的pid为文件夹的id
+    ) {
+
+        // 批处理
+        try {
+            tasksFlow.uploadFileBatch(files, clusterId, userId);
+        } catch (Exception e) {
+            throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
+        }
+
+        return Result.success();
+    }
 
 
     /**
@@ -78,9 +94,9 @@ public class TasksControl {
     }
 
 
-    /**
-     * 批量文件下载接口
-     */
+/**
+ * 批量文件下载接口
+ */
 
 
     /**
@@ -100,14 +116,14 @@ public class TasksControl {
     }
 
 
-    //! ADD
+//! ADD
 
 
-    //! DELETE
+//! DELETE
 
 
-    //! UPDATE
+//! UPDATE
 
 
-    //! Query
+//! Query
 }

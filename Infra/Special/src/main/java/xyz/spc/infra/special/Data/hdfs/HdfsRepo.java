@@ -70,9 +70,10 @@ public class HdfsRepo {
 
     /**
      * HDFS文件复制
-     * @param hdfsSourcePath    HDFS 源文件路径
-     * @param hdfsTargetPath    HDFS 目标文件路径
-     * @return  true: 复制成功, false: 复制失败
+     *
+     * @param hdfsSourcePath HDFS 源文件路径
+     * @param hdfsTargetPath HDFS 目标文件路径
+     * @return true: 复制成功, false: 复制失败
      */
     public boolean copyByPath(String hdfsSourcePath, String hdfsTargetPath) {
         if (!isHDFSAlive()) {
@@ -84,5 +85,8 @@ public class HdfsRepo {
         } catch (Exception e) {
             return false;
         }
+
+
+        return true;
     }
 }

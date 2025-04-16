@@ -99,7 +99,7 @@ public class FilesFunc {
     /**
      * 完整拷贝文件对象, 返回新的文件对象 id
      */
-    public Long cpFile(FileGreatVO source) {
+    public Long cpFile(FileGreatVO source, Long targetClusterId) {
 
         //插入三张表
         Long file_id = SnowflakeIdUtil.nextId();
@@ -109,7 +109,7 @@ public class FilesFunc {
                 .id(file_id)
                 .pid(file_id)
                 .userId(source.getUserId()) // 保持创建者不变
-                .clusterId(source.getClusterId())
+                .clusterId(targetClusterId) // 新群组
                 .name(source.getName())
                 .type(source.getType())
                 .build();

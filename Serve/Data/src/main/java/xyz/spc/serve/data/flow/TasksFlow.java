@@ -135,7 +135,7 @@ public class TasksFlow {
         // 2 处理修改选项: 目前默认基本不变, 只是做完整拷贝
 
         // 3 落库文件对象
-        Long newFileId = filesFunc.cpFile(fileGreatVO);
+        Long newFileId = filesFunc.cpFile(fileGreatVO, targetClusterId);
 
         // 4 确定源文件 HDFS 存储的目标路径, 唯一定位方法为 根目录Path + 用户id + 群组id + 文件名称
         String hdfsSourcePath = "/";

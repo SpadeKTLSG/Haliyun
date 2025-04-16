@@ -1,5 +1,6 @@
 package xyz.spc.domain.dos.Guest.records;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -26,6 +27,7 @@ public class TombDO extends BaseDO {
 
     private Long bigintestCluster;
 
+    @TableField("deepest_night")
     private LocalDateTime deepestNignt;
 
     private LocalDateTime earlistMorning;

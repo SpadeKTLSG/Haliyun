@@ -122,6 +122,7 @@ public class UsersRepo {
         UserFuncDO userFuncDO = UserFuncDO.builder()
                 .id(id)
                 .registerCode(IdUtil.fastSimpleUUID())
+                .levelId(0L) // 注册时的用户等级
                 .build();
         userFuncService.save(userFuncDO);
 

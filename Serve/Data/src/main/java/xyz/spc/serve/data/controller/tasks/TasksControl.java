@@ -53,6 +53,11 @@ public class TasksControl {
 
 
     /**
+     * 批量文件上传接口
+     */
+
+
+    /**
      * 下载文件接口
      */
     @GetMapping("/download/file")
@@ -70,6 +75,11 @@ public class TasksControl {
 
         return Result.success();
     }
+
+
+    /**
+     * 批量文件下载接口
+     */
 
 
     /**

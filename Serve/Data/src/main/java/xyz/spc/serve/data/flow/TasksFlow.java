@@ -8,9 +8,11 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.gate.dto.Data.files.FileDTO;
 import xyz.spc.gate.vo.Data.files.FileGreatVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
+import xyz.spc.infra.special.Data.hdfs.HdfsRepo;
 import xyz.spc.serve.auxiliary.config.mq.TasksMQCompo;
 import xyz.spc.serve.data.func.files.FilesFunc;
 import xyz.spc.serve.data.func.tasks.DownloadTaskFunc;
@@ -33,6 +35,8 @@ public class TasksFlow {
     private final FilesFunc filesFunc;
     private final DownloadTaskFunc downloadTaskFunc;
     private final UploadTaskFunc uploadTaskFunc;
+
+    private final HdfsRepo hdfsRepo;
 
     // MQ
     private final RabbitTemplate mqProducer;
@@ -82,6 +86,7 @@ public class TasksFlow {
     /**
      * 下载文件流处理
      */
+    @Transactional(rollbackFor = Exception.class, timeout = 50)
     public void downloadFile(Long fileId, Long creatorUserId, Long fromClusterId, HttpServletResponse response) {
 
 
@@ -121,6 +126,30 @@ public class TasksFlow {
     /**
      * 分享文件处理
      */
+    @Transactional(rollbackFor = Exception.class, timeout = 50)
     public void shareFile(Long fileId, Long targetClusterId) {
+
+        // 1 获取对应源文件对象
+        FileGreatVO fileGreatVO = filesFunc.getFileInfo(fileId);
+
+        // 2 处理修改选项: 目前默认基本不变, 只是做完整拷贝
+
+        // 3 落库文件对象
+        Long newFileId = filesFunc.cpFile(fileGreatVO);
+
+        // 4 确定源文件 HDFS 存储的目标路径, 唯一定位方法为 根目录Path + 用户id + 群组id + 文件名称
+        String hdfsSourcePath = "/";
+        hdfsSourcePath = hdfsSourcePath + fileGreatVO.getUserId() + "/" + fileGreatVO.getClusterId() + "/" + fileGreatVO.getName();
+
+        // 5 确定目标文件 HDFS 存储的目标路径, 唯一定位方法为 根目录Path + 用户id + 目标群组id + 文件名称
+        String hdfsTargetPath = "/";
+        hdfsTargetPath = hdfsTargetPath + fileGreatVO.getUserId() + "/" + targetClusterId + "/" + fileGreatVO.getName();
+
+        // 6  调用 HdfsFuncUtil 中对应方法, 将对应的文件对象在 HDFS 拷贝
+        boolean success =  hdfsRepo.copyByPath(hdfsSourcePath, hdfsTargetPath);
+
+        if(!success) {
+            throw new ServiceException("HDFS 拷贝失败");
+        }
     }
 }

@@ -97,6 +97,54 @@ public class FilesFunc {
     }
 
     /**
+     * 完整拷贝文件对象, 返回新的文件对象 id
+     */
+    public Long cpFile(FileGreatVO source) {
+
+        //插入三张表
+        Long file_id = SnowflakeIdUtil.nextId();
+
+        // File
+        FileDO fileDO = FileDO.builder()
+                .id(file_id)
+                .pid(file_id)
+                .userId(source.getUserId()) // 保持创建者不变
+                .clusterId(source.getClusterId())
+                .name(source.getName())
+                .type(source.getType())
+                .build();
+
+        filesRepo.fileService.save(fileDO);
+
+        // FileDetail
+        FileDetailDO fileDetailDO = FileDetailDO.builder()
+                .id(file_id)
+                .dscr("用户分享文件") // 描述
+                .downloadTime(0L)
+                .size(source.getSize()) //大小
+                .path(source.getPath()) // 废弃字段 : 路径
+                .diskPath(source.getDiskPath())  // 废弃字段 : HDFS路径
+                .build();
+
+        filesRepo.fileDetailService.save(fileDetailDO);
+
+        // FileFunc
+        FileFuncDO fileFuncDO = FileFuncDO.builder()
+                .id(file_id)
+                .tag(source.getTag()) // 文件标签
+                .fileLock(0L) // 文件锁
+                .status(FileFunc.STATUS_NORMAL) // 文件状态: 正常
+                .validDateType(source.getValidDateType()) // 有效期类型: 永久有效
+                .validDate(source.getValidDate()) // 有效期: null
+                .build();
+
+        filesRepo.fileFuncService.save(fileFuncDO);
+
+
+        return file_id;
+    }
+
+    /**
      * 用id 获取三张表信息
      */
     public FileGreatVO getFileInfo(Long fileId) {

@@ -72,6 +72,23 @@ public class TasksControl {
     }
 
 
+    /**
+     * 分享文件接口
+     */
+    @PostMapping("/share/file")
+    public Result<Object> shareFile(
+            @RequestParam("fileId") Long fileId, // 从前端出需要的文件对象 id
+            @RequestParam("clusterId") Long targetClusterId
+    ) {
+        try {
+            tasksFlow.shareFile(fileId, targetClusterId);
+        } catch (Exception e) {
+            throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
+        }
+        return Result.success();
+    }
+
+
     //! ADD
 
 

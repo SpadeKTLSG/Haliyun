@@ -117,4 +117,10 @@ public class TasksFlow {
 
 
     }
+
+    /**
+     * 分享文件处理
+     */
+    public void shareFile(Long fileId, Long targetClusterId) {
+    }
 }

@@ -247,6 +247,10 @@ public class FilesFlow {
 
         // 3. 执行删除
         filesFunc.deleteFileAll(fileId);
+
+        // 4. 借助 Spring Event 使用 HDFS 解耦删除文件
+
+        //todo
     }
 
 

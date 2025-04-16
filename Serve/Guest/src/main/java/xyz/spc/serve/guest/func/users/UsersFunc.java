@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -283,7 +282,7 @@ public class UsersFunc {
     /**
      * 获取用户标记
      */
-    @Cacheable(key = "'getUserMark' + #account", value = "userMark")
+//    @Cacheable(key = "'getUserMark' + #account", value = "userMark")
     public Map<String, String> getUserMark(String account) {
         Map<String, String> userMark = new HashMap<>();
         //用account查userDO. 再联表查userDetailDO, 得到phone
@@ -304,7 +303,7 @@ public class UsersFunc {
     /**
      * 查用户三张表信息联表查询
      */
-    @Cacheable(key = "'getUserInfoById' + #id", value = "user")
+//    @Cacheable(key = "'getUserInfoById' + #id", value = "user")
     public UserGreatVO getUserInfo(Long id) {
         //MPJ联表查询 - 标准的经过拆分的对象的信息综合查询 (我只说一次)
         return usersRepo.userMapper.selectJoinOne(UserGreatVO.class, new MPJLambdaWrapper<UserDO>()
@@ -326,13 +325,21 @@ public class UsersFunc {
 //    @CacheEvict(key = "'getUserInfoById' + #userGreatVO.id", value = "user")
     public void updateUserInfo(UserGreatVO userGreatVO) {
 
+        Long userId = UserContext.getUI();
+
         //用工具类直接打入三个DO:
         UserDO userDO = new UserDO();
         UserDetailDO userDetailDO = new UserDetailDO();
         UserFuncDO userFuncDO = new UserFuncDO();
+
         BeanUtil.copyProperties(userGreatVO, userDO, CopyOptions.create().setIgnoreNullValue(true));
         BeanUtil.copyProperties(userGreatVO, userDetailDO, CopyOptions.create().setIgnoreNullValue(true));
         BeanUtil.copyProperties(userGreatVO, userFuncDO, CopyOptions.create().setIgnoreNullValue(true));
+
+        // id补充
+        userDO.setId(userId);
+        userDetailDO.setId(userId);
+        userFuncDO.setId(userId);
 
         // ? note 我只讲一遍: 联表更新 MPJ, 需要用到 UpdateJoinWrapper + setUpdateEntity (会自动忽略空属性更新)
 /*        usersRepo.userMapper.updateJoin(userDO, new UpdateJoinWrapper<>(UserDO.class)
@@ -344,7 +351,6 @@ public class UsersFunc {
                 .eq(UserDO::getId, userGreatVO.getId()));*/
 
         // ? 我只讲一遍, 上面的这个没效果, 还是老实用这个吧
-
         usersRepo.userService.updateById(userDO);
         usersRepo.userDetailService.updateById(userDetailDO);
         usersRepo.userFuncService.updateById(userFuncDO);

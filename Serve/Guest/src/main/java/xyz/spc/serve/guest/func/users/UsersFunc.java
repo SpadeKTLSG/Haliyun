@@ -4,13 +4,11 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
-import com.github.yulichang.wrapper.UpdateJoinWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.retry.annotation.Backoff;
@@ -325,7 +323,7 @@ public class UsersFunc {
     /**
      * 联表更新用户信息(Null值的字段不更新)
      */
-    @CacheEvict(key = "'getUserInfoById' + #userGreatVO.id", value = "user")
+//    @CacheEvict(key = "'getUserInfoById' + #userGreatVO.id", value = "user")
     public void updateUserInfo(UserGreatVO userGreatVO) {
 
         //用工具类直接打入三个DO:
@@ -336,14 +334,22 @@ public class UsersFunc {
         BeanUtil.copyProperties(userGreatVO, userDetailDO, CopyOptions.create().setIgnoreNullValue(true));
         BeanUtil.copyProperties(userGreatVO, userFuncDO, CopyOptions.create().setIgnoreNullValue(true));
 
-        //我只讲一遍: 联表更新 MPJ, 需要用到 UpdateJoinWrapper + setUpdateEntity (会自动忽略空属性更新)
-        usersRepo.userMapper.updateJoin(userDO, new UpdateJoinWrapper<>(UserDO.class)
+        // ? note 我只讲一遍: 联表更新 MPJ, 需要用到 UpdateJoinWrapper + setUpdateEntity (会自动忽略空属性更新)
+/*        usersRepo.userMapper.updateJoin(userDO, new UpdateJoinWrapper<>(UserDO.class)
                 //设置两个副表的 set 语句
                 .setUpdateEntity(userDetailDO, userFuncDO) //:使用传递的对象更新目标表的所有字段
                 //联表条件
                 .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId)
                 .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
-                .eq(UserDO::getId, userGreatVO.getId()));
+                .eq(UserDO::getId, userGreatVO.getId()));*/
+
+        // ? 我只讲一遍, 上面的这个没效果, 还是老实用这个吧
+
+        usersRepo.userService.updateById(userDO);
+        usersRepo.userDetailService.updateById(userDetailDO);
+        usersRepo.userFuncService.updateById(userFuncDO);
+
+
     }
 
 
@@ -399,7 +405,7 @@ public class UsersFunc {
     /**
      * 操作用户 创建 群组的数量 ( + / - by amount)
      */
-    @CacheEvict(key = "'getUserInfoById' + #userId", value = "user")
+//    @CacheEvict(key = "'getUserInfoById' + #userId", value = "user")
     public void opUserCreateClusterCount(Long userId, String opType, int amount) {
 
         //更新UserFunc id == id 的记录(一条) 的对应字段
@@ -429,7 +435,7 @@ public class UsersFunc {
     /**
      * 操作用户 加入 群组的数量 ( + / - by amount)
      */
-    @CacheEvict(key = "'getUserInfoById' + #userId", value = "user")
+//    @CacheEvict(key = "'getUserInfoById' + #userId", value = "user")
     public void opUserJoinClusterCount(Long userId, String opType, int amount) {
 
         //更新UserFunc id == id 的记录(一条) 的对应字段

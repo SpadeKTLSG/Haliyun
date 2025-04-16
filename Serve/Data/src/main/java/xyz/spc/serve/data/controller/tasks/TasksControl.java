@@ -55,6 +55,7 @@ public class TasksControl {
     /**
      * 批量文件上传接口
      */
+    @PostMapping("/upload/file/batch")
 
 
     /**

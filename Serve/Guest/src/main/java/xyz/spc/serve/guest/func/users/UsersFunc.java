@@ -23,6 +23,7 @@ import xyz.spc.common.constant.SystemSpecialCT;
 import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.common.funcpack.exception.ServiceException;
+import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.common.funcpack.uuid.UUID;
 import xyz.spc.common.util.collecUtil.StringUtil;
 import xyz.spc.common.util.encryptUtil.MD5Util;
@@ -41,6 +42,7 @@ import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
 import xyz.spc.serve.auxiliary.config.redis.tool.RedisCacheGeneral;
 import xyz.spc.serve.guest.common.enums.UsersChainMarkEnum;
+import xyz.spc.serve.guest.func.levels.LevelFunc;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -50,6 +52,12 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class UsersFunc {
+
+
+    /**
+     * Func
+     */
+    private final LevelFunc levelFunc;
 
     /**
      * Repo
@@ -252,7 +260,17 @@ public class UsersFunc {
             throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
         }
         try {
-            usersRepo.addUser(userDTO);
+
+            // 1  预生成id
+            Long userId = SnowflakeIdUtil.nextId();
+
+            // 2 初始化等级信息
+            Long levelId = levelFunc.initialUserLevel(userId);
+
+            // 3 注册用户核心表
+            usersRepo.addUser(userDTO, userId, levelId);
+
+
         } catch (ClientException ex) {
             throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
         } finally {
@@ -362,7 +380,7 @@ public class UsersFunc {
      * 简单获得用户信息 批量
      */
     public List<UserVO> getUserDOInfoBatch(List<Long> creatorUserIds) {
-        List<UserDO> tmp =usersRepo.userService.listByIds(creatorUserIds);
+        List<UserDO> tmp = usersRepo.userService.listByIds(creatorUserIds);
 
         List<UserVO> res = new ArrayList<>();
         tmp.forEach(

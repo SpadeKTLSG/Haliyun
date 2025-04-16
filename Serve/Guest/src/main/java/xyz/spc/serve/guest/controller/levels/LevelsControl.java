@@ -30,7 +30,11 @@ public class LevelsControl {
     //! Func
 
     //! ADD
-    // 管理员手填
+
+    /**
+     * 初始化用户等级 (用户注册时调用)
+     */
+
 
     //! DELETE
     // 管理员手填

@@ -350,7 +350,7 @@ public class UsersFunc {
                 .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
                 .eq(UserDO::getId, userGreatVO.getId()));*/
 
-        // ? 我只讲一遍, 上面的这个没效果, 还是老实用这个吧
+        // ? 我只讲一遍, 上面的这个没效果, 还是老实用这个吧... 也许是MPJ特性? 目前只有这个联表更新出问题了...
         usersRepo.userService.updateById(userDO);
         usersRepo.userDetailService.updateById(userDetailDO);
         usersRepo.userFuncService.updateById(userFuncDO);

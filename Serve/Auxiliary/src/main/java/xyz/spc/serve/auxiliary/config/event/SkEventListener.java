@@ -16,16 +16,6 @@ public class SkEventListener<T> {
         log.debug("监听到事件:{}", event);
 
         // 处理事件: 通过消息进行处理
-        String mes = event.getMessage();
-        switch (mes) {
-            case "deleteFileInHDFSBy2Id" ->{
-                handleFileUpload(event.getData());
-            }
-            default ->{
-                log.warn("未知事件类型: {}", event.getMessage());
-            }
-        }
-
     }
 
 }

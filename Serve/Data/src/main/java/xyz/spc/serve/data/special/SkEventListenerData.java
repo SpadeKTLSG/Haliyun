@@ -8,8 +8,6 @@ import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.serve.auxiliary.config.event.SkEvent;
 import xyz.spc.serve.data.func.files.FilesFunc;
 
-import java.util.Map;
-
 /**
  * 自定义Spring事件监听器  (数据模块)
  */
@@ -34,12 +32,9 @@ public class SkEventListenerData<T> {
         String mes = event.getMessage();
         switch (mes) {
 
-            case "deleteFileInHDFSBy2Id" -> {
-                Map<String, Long> data = (Map<String, Long>) event.getData();
-                Long clusterId = data.get("clusterId");
-                Long fileId = data.get("fileId");
-
-                filesFunc.deleteFileInHDFSBy2Id(fileId, clusterId);
+            case "deleteFileInHDFSByPath" -> {
+                String path = (String) event.getData();
+                filesFunc.deleteFileInHDFSByPath(path);
             }
             default -> {
                 log.warn("未知事件类型: {}", event.getMessage());

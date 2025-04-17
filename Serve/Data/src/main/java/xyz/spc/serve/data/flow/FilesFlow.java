@@ -18,9 +18,7 @@ import xyz.spc.serve.auxiliary.config.event.MyEventPublisher;
 import xyz.spc.serve.data.common.enums.FilesChainMarkEnum;
 import xyz.spc.serve.data.func.files.FilesFunc;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -44,7 +42,7 @@ public class FilesFlow {
     /**
      * 事件发布器
      */
-    private final MyEventPublisher<Map<String, Long>> publisher;
+    private final MyEventPublisher<String> publisher;
 
     /**
      * 根据id批量查询文件
@@ -258,16 +256,17 @@ public class FilesFlow {
 
         // 4. 借助 Spring Event 使用 HDFS 解耦删除文件. 需要传入唯一定位文件对象的 用户id + 目标群组id
 
-        // 4.1 构建事件对象
-        Map<String, Long> fileInfoMap = new HashMap<>();
-        fileInfoMap.put("userId", fileGreatVO.getUserId());
-        fileInfoMap.put("clusterId", fileGreatVO.getClusterId());
+        // 4.1 构建事件对象 : 提前构建 目标路径
+
+        String hdfsPath = "/";
+        hdfsPath = hdfsPath + fileGreatVO.getUserId() + "/" + fileGreatVO.getClusterId() + "/" + fileGreatVO.getName();
+
 
         // 4.2 标识事件
-        String eventMark = "deleteFileInHDFSBy2Id";
+        String eventMark = "deleteFileInHDFSByPath";
 
         // 4.3 发布事件
-        publisher.publishEvent(eventMark, fileInfoMap);
+        publisher.publishEvent(eventMark, hdfsPath);
 
     }
 

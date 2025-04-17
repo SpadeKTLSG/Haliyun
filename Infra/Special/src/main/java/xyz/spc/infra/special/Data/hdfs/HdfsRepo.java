@@ -89,4 +89,23 @@ public class HdfsRepo {
 
         return true;
     }
+
+
+    /**
+     * HDFS文件删除
+     */
+    public boolean deleteByPath(String hdfsPath) {
+        if (!isHDFSAlive()) {
+            return false;
+        }
+
+        try {
+            HdfsFuncUtil.deleteF(hdfsPath);
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

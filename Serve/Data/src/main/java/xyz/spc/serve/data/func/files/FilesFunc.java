@@ -6,6 +6,8 @@ import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.funcpack.errorcode.ServerError;
+import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.domain.dos.Data.files.FileDO;
 import xyz.spc.domain.dos.Data.files.FileDetailDO;
@@ -350,6 +352,11 @@ public class FilesFunc {
      * 通过 id 删除 HDFS 的文件对象
      * ? note: 这个是 Event 调用的方法, 没加异步了 (已经有一层异步)
      */
-    public void deleteFileInHDFSBy2Id(Long fileId, Long clusterId) {
+    public void deleteFileInHDFSByPath(String hdfsPath) {
+        boolean success = hdfsRepo.deleteByPath(hdfsPath);
+
+        if(!success) {
+            throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
+        }
     }
 }

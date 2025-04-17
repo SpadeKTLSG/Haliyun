@@ -193,8 +193,7 @@ public class TasksFlowBatch {
 
 
         // 5 进行文件压缩处理并返回用户
-
-//        todo
+        downloadTaskFunc.download2ClientBatch(fileResList, response);
 
         // 1.X 结束计时:
         long endTime = System.currentTimeMillis();

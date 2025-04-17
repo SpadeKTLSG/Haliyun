@@ -15,6 +15,8 @@ import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.data.flow.TasksFlow;
 import xyz.spc.serve.data.special.TasksFlowBatch;
 
+import java.util.List;
+
 @Slf4j
 @MLog
 @Tag(name = "Tasks", description = "文件任务合集")
@@ -101,13 +103,13 @@ public class TasksControl {
      */
     @GetMapping("/download/file/batch")
     public Result<Object> downloadFileBatch(
-            @RequestParam("id") Long fileId,
+            @RequestParam("ids")  List<Long>  fileIds,
             @RequestParam("userId") Long userId,
             @RequestParam("clusterId") Long clusterId,
             HttpServletResponse response
     ) {
         try {
-            tasksFlow.downloadFile(fileId, userId, clusterId, response);
+            tasksFlowBatch.downloadFileBatch(fileIds, userId, clusterId, response);
         } catch (Exception e) {
             throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
         }

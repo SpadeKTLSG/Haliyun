@@ -346,4 +346,10 @@ public class FilesFunc {
     }
 
 
+    /**
+     * 通过 id 删除 HDFS 的文件对象
+     * ? note: 这个是 Event 调用的方法, 没加异步了 (已经有一层异步)
+     */
+    public void deleteFileInHDFSBy2Id(Long fileId, Long clusterId) {
+    }
 }

@@ -14,10 +14,13 @@ import xyz.spc.gate.vo.Data.files.FileShowVO;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
+import xyz.spc.serve.auxiliary.config.event.MyEventPublisher;
 import xyz.spc.serve.data.common.enums.FilesChainMarkEnum;
 import xyz.spc.serve.data.func.files.FilesFunc;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -31,12 +34,17 @@ public class FilesFlow {
 
     //Func
     private final FilesFunc filesFunc;
+    private final TasksFlow tasksFlow;
 
     /**
      * 责任链
      */
     private final AbstractChainContext<File, FileGreatVO> abstractChainContext;
 
+    /**
+     * 事件发布器
+     */
+    private final MyEventPublisher<Map<String, Long>> publisher;
 
     /**
      * 根据id批量查询文件
@@ -248,9 +256,19 @@ public class FilesFlow {
         // 3. 执行删除
         filesFunc.deleteFileAll(fileId);
 
-        // 4. 借助 Spring Event 使用 HDFS 解耦删除文件
+        // 4. 借助 Spring Event 使用 HDFS 解耦删除文件. 需要传入唯一定位文件对象的 用户id + 目标群组id
 
-        //todo
+        // 4.1 构建事件对象
+        Map<String, Long> fileInfoMap = new HashMap<>();
+        fileInfoMap.put("userId", fileGreatVO.getUserId());
+        fileInfoMap.put("clusterId", fileGreatVO.getClusterId());
+
+        // 4.2 标识事件
+        String eventMark = "deleteFileInHDFSBy2Id";
+
+        // 4.3 发布事件
+        publisher.publishEvent(eventMark, fileInfoMap);
+
     }
 
 

@@ -31,7 +31,7 @@ public class StatisticsDO extends BaseDO {
 
     private Integer collect;
 
-    private Integer like;
+    private Integer likes;
 
     private Integer trick;
 

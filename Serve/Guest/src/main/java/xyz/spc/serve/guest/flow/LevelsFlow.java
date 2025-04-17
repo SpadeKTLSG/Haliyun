@@ -19,6 +19,12 @@ public class LevelsFlow {
     //Func
     private final LevelFunc levelFunc;
 
+    /**
+     * 初始化用户等级 (用户注册时调用)
+     */
+    public void initialUserLevel(Long userId) {
+        levelFunc.initialUserLevel(userId);
+    }
 
     /**
      * 获取等级信息

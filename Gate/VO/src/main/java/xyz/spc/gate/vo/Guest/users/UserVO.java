@@ -13,7 +13,7 @@ import xyz.spc.gate.vo.BaseVO;
 public class UserVO extends BaseVO {
 
 
-    private Long id;
+    private String id;
 
     private Integer admin;
 

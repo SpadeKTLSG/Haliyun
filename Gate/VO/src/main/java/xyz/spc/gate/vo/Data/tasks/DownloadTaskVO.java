@@ -12,15 +12,15 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class DownloadTaskVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long fileId;
+    private String fileId;
 
     private String fileName;
 
-    private Long pid;
+    private String pid;
 
-    private Long userId;
+    private String userId;
 
     private Integer status;
 

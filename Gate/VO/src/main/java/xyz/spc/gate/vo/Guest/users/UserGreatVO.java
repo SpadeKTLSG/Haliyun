@@ -15,7 +15,7 @@ import java.util.List;
 public class UserGreatVO extends BaseVO {
 
     //! id
-    private Long id;
+    private String id;
 
     //    UserVO
 
@@ -50,7 +50,7 @@ public class UserGreatVO extends BaseVO {
 
     //    UserFuncVO
 
-    private Long levelId;
+    private String levelId;
 
     private Integer vip;
 

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.common.constant.SystemSpecialCT;
+import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.levels.LevelVO;
@@ -70,14 +71,16 @@ public class UsersFlow {
     @Transactional(rollbackFor = Exception.class)
     public boolean register(UserDTO userDTO) {
 
-        //注册用户核心表
+        //1 注册用户核心表
         if (!usersFunc.registerCore(userDTO)) {
             return false;
         }
-        //注册统计表
-        statisticFunc.registerStatistics(userDTO);
-        //注册坟墓表
-        tombFunc.registerTomb(userDTO);
+
+        //2 (异步) 注册统计表
+        statisticFunc.registerStatistics(userDTO.getId());
+
+        //3 (异步) 注册坟墓表
+        tombFunc.registerTomb(userDTO.getId());
 
         return true;
     }
@@ -97,7 +100,7 @@ public class UsersFlow {
         UserGreatVO userGreatVO = usersFunc.getUserInfo(id);
 
         //补充查询基础信息: Level等级 => 名称和层级
-        LevelVO levelVO = levelFunc.getLevelInfo(userGreatVO.getLevelId());
+        LevelVO levelVO = levelFunc.getLevelInfo(Long.valueOf(userGreatVO.getLevelId()));
         userGreatVO.setLevelName(levelVO.getName());
         userGreatVO.setLevelFloor(levelVO.getFloor());
 
@@ -134,14 +137,21 @@ public class UsersFlow {
      * 注销账号
      */
     public void killUserAccount(Long id) {
+
         //群组: 退出所有群组, 解绑关系
+        //todo
 
         //文件: 删除所有文件, 清理历史
+        //todo
 
-        //日志: 定时清理失效用户的日志, 降低管理日志压力
 
-        //用户: 注销用户基础联表三张信息
+        //用户: 注销用户基础联表三张信息 - 逻辑删除
         usersFunc.killUserAccount(id);
+
+        //用户记录: 注销用户记录表 * 2 - 逻辑删除
+        statisticFunc.killUserAccountStatistics(id);
+        tombFunc.killUserAccountTomb(id);
+
     }
 
     /**
@@ -170,15 +180,29 @@ public class UsersFlow {
 
         Long userId = Objects.requireNonNull(UserContext.getUI());
 
+        // 鉴权: 判断对应群组满了没...没满才可以加入
+        Result<Object> r = clustersClient.checkClusterFull(clusterId);
+        if ((boolean) r.getData()) {
+            throw new ClientException("群组人数已满, 无法加入!!!");
+        }
+
+        // 鉴权: 判断当前用户是否已经加入了这个群组
+        if (userClusterFunc.checkUserJoinCluster(userId, clusterId)) {
+            throw new ClientException("你已经加入了这个群组, 无需重复加入");
+        }
+
         // 加入群组表操作
         userClusterFunc.joinCluster(userId, clusterId);
 
         // 维护 UserFunc 的加入群组数量
         usersFunc.opUserJoinClusterCount(userId, SystemSpecialCT.ADD, 1);
+
+        // 维护对应群组人员数量: +=1 (此方法目前无效果, 因为没有字段)
+        clustersClient.opClusterUserCount(clusterId, SystemSpecialCT.ADD, 1);
     }
 
     /**
-     * 将当前 Context 的用户 (id) 加入群组 (id), 但是是群主
+     * 将当前 Context 的用户 (id) 加入群组 (id), 但是是群主创建的
      */
     public void creatorJoinCluster(Long clusterId) {
 
@@ -260,4 +284,17 @@ public class UsersFlow {
     }
 
 
+    /**
+     * 通过用户ids获取用户简单VO信息 (账号 / 是否管理员) 批量查询
+     */
+    public List<UserVO> getUserDOInfoBatch(List<Long> creatorUserIds) {
+        return usersFunc.getUserDOInfoBatch(creatorUserIds);
+    }
+
+    /**
+     * 计算中间表获取对应群组中用户数量
+     */
+    public Integer getClusterUserCount(Long clusterId) {
+        return userClusterFunc.getClusterUserCount(clusterId);
+    }
 }

@@ -67,4 +67,45 @@ public class HdfsRepo {
 
         return true;
     }
+
+    /**
+     * HDFS文件复制
+     *
+     * @param hdfsSourcePath HDFS 源文件路径
+     * @param hdfsTargetPath HDFS 目标文件路径
+     * @return true: 复制成功, false: 复制失败
+     */
+    public boolean copyByPath(String hdfsSourcePath, String hdfsTargetPath) {
+        if (!isHDFSAlive()) {
+            return false;
+        }
+
+        try {
+            HdfsFuncUtil.copy(hdfsSourcePath, hdfsTargetPath);
+        } catch (Exception e) {
+            return false;
+        }
+
+
+        return true;
+    }
+
+
+    /**
+     * HDFS文件删除
+     */
+    public boolean deleteByPath(String hdfsPath) {
+        if (!isHDFSAlive()) {
+            return false;
+        }
+
+        try {
+            HdfsFuncUtil.deleteF(hdfsPath);
+        } catch (Exception e) {
+            return false;
+        }
+
+        return true;
+    }
+
 }

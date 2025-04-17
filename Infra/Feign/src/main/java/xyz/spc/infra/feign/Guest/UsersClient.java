@@ -1,10 +1,7 @@
 package xyz.spc.infra.feign.Guest;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import xyz.spc.common.funcpack.Result;
 import xyz.spc.gate.vo.Guest.users.UserVO;
 
@@ -41,6 +38,13 @@ public interface UsersClient {
     @GetMapping(BASE_URL + "/user_simple")
     Result<UserVO> getUserDOInfo(@RequestParam Long creatorUserId);
 
+    /**
+     * 通过用户id获取用户简单VO信息 (账号 / 是否管理员) 批量
+     */
+
+    @PostMapping(BASE_URL + "/user_simple/batch")
+    Result<List<UserVO>> getUserDOInfoBatch(@RequestBody List<Long> creatorUserIds);
+
 
     /**
      * 当前用户的加入群组
@@ -70,7 +74,11 @@ public interface UsersClient {
      * 所有人的退出群组
      */
     @DeleteMapping(BASE_URL + "/cluster/every_quit")
-    void everyQuitCluster(@RequestParam Long clusterId);
+    Result<Object> everyQuitCluster(@RequestParam Long clusterId);
 
-
+    /**
+     * 计算中间表获取对应群组中用户数量
+     */
+    @GetMapping(BASE_URL + "/cluster/user/count")
+    Result<Integer> getClusterUserCount(@RequestParam Long clusterId);
 }

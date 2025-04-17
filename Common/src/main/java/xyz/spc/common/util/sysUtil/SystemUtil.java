@@ -3,6 +3,7 @@ package xyz.spc.common.util.sysUtil;
 import lombok.Getter;
 
 import java.io.File;
+import java.nio.charset.Charset;
 
 /**
  * 系统工具
@@ -13,7 +14,7 @@ public final class SystemUtil {
      * 获取虚拟机的编码格式 可由-Dfile.encoding参数指定
      */
     @Getter
-    private static final String encoding = System.getProperty("file.encoding");
+    private static final String encoding = Charset.defaultCharset().displayName();
     /**
      * 获取操作系统一般情况下默认的编码: Linux是utf-8 Windows是gbk
      */

@@ -46,6 +46,7 @@ public enum ClientError {
 
     // ========== 二级宏观错误码 用户请求参数 ==========
     USER_PARAM_ERROR("A3001", "用户请求参数错误"),
+    USER_OBJECT_NOT_FOUND_ERROR("A3002", "用户请求对象不存在错误"),
 
     // ========== 二级宏观错误码 ... ==========
 

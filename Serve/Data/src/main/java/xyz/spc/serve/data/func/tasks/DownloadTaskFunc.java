@@ -19,6 +19,11 @@ import xyz.spc.infra.special.Data.tasks.TasksRepo;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static cn.hutool.core.io.FileUtil.getOutputStream;
 
@@ -65,7 +70,7 @@ public class DownloadTaskFunc {
             throw new ServiceException("任务不存在");
         }
 
-        return DownloadTaskVO.builder().id(downloadTaskDO.getId()).fileId(downloadTaskDO.getFileId()).fileName(downloadTaskDO.getFileName()).pid(downloadTaskDO.getPid()).userId(downloadTaskDO.getUserId()).status(downloadTaskDO.getStatus()).fileSizeTotal(downloadTaskDO.getFileSizeTotal()).fileSizeOk(downloadTaskDO.getFileSizeOk()).executor(downloadTaskDO.getExecutor()).build();
+        return DownloadTaskVO.builder().id(String.valueOf(downloadTaskDO.getId())).fileId(String.valueOf(downloadTaskDO.getFileId())).fileName(downloadTaskDO.getFileName()).pid(String.valueOf(downloadTaskDO.getPid())).userId(String.valueOf(downloadTaskDO.getUserId())).status(downloadTaskDO.getStatus()).fileSizeTotal(downloadTaskDO.getFileSizeTotal()).fileSizeOk(downloadTaskDO.getFileSizeOk()).executor(downloadTaskDO.getExecutor()).build();
     }
 
     /**
@@ -201,22 +206,69 @@ public class DownloadTaskFunc {
 
     }
 
+    public void download2ClientBatch(List<File> fileResList, HttpServletResponse response) {
+
+        // 1 设置 ZIP 响应头
+        response.reset();
+        response.setContentType("application/zip");
+        response.setHeader(
+                "Content-Disposition",
+                "attachment;filename=\"files_" + URLEncoder.encode("用户批量下载文件打包", StandardCharsets.UTF_8) + ".zip\""
+        );
+
+        // 2 进行文件压缩处理
+
+        // 3 打包并输出到客户端
+        try (ZipOutputStream zipOut = new ZipOutputStream(response.getOutputStream())) {
+
+            byte[] buffer = new byte[1024];
+
+            for (File file : fileResList) {
+
+                ZipEntry entry = new ZipEntry(file.getName());
+                zipOut.putNextEntry(entry);
+
+                // 读取文件并写入到压缩流
+                try (FileInputStream fis = new FileInputStream(file)) {
+                    int len;
+                    while ((len = fis.read(buffer)) > 0) {
+                        zipOut.write(buffer, 0, len);
+                    }
+                }
+
+                zipOut.closeEntry();
+            }
+
+            zipOut.finish();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     /**
      * 下载业务中, 删除本地磁盘产生的临时文件
+     * ? note: 不要下载一半就给人家删除了啊
      */
     @Async
     public void cleanTempFile(File realLocalTempFile) {
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.schedule(() -> {
+            // 删除本地磁盘的临时文件
+            if (realLocalTempFile.exists()) {
 
-        // 删除本地磁盘的临时文件
-        if (realLocalTempFile.exists()) {
+                boolean deleted = realLocalTempFile.delete();
 
-            boolean deleted = realLocalTempFile.delete();
-
-            if (!deleted) {
-                log.error("删除下载中的本地磁盘的临时文件失败");
+                if (!deleted) {
+                    log.error("删除下载中的本地磁盘的临时文件失败");
+                }
+            } else {
+                log.warn("下载中的本地磁盘的临时文件不存在");
             }
-        } else {
-            log.warn("下载中的本地磁盘的临时文件不存在");
-        }
+        }, 20, java.util.concurrent.TimeUnit.SECONDS); // 20秒后删除
+
+        // 关闭调度器
+        scheduler.shutdown();
     }
 }

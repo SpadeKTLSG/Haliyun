@@ -126,15 +126,15 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
             components[i] = "0x" + components[i];
         }
 
-        long mostSigBits = Long.decode(components[0]).longValue();
+        long mostSigBits = Long.decode(components[0]);
         mostSigBits <<= 16;
-        mostSigBits |= Long.decode(components[1]).longValue();
+        mostSigBits |= Long.decode(components[1]);
         mostSigBits <<= 16;
-        mostSigBits |= Long.decode(components[2]).longValue();
+        mostSigBits |= Long.decode(components[2]);
 
-        long leastSigBits = Long.decode(components[3]).longValue();
+        long leastSigBits = Long.decode(components[3]);
         leastSigBits <<= 48;
-        leastSigBits |= Long.decode(components[4]).longValue();
+        leastSigBits |= Long.decode(components[4]);
 
         return new UUID(mostSigBits, leastSigBits);
     }
@@ -413,11 +413,11 @@ public final class UUID implements java.io.Serializable, Comparable<UUID> {
     public int compareTo(UUID val) {
         // The ordering is intentionally set up so that the UUIDs
         // can simply be numerically compared as two numbers
+        //
+        //
         return (this.mostSigBits < val.mostSigBits ? -1 : //
                 (this.mostSigBits > val.mostSigBits ? 1 : //
-                        (this.leastSigBits < val.leastSigBits ? -1 : //
-                                (this.leastSigBits > val.leastSigBits ? 1 : //
-                                        0))));
+                        (Long.compare(this.leastSigBits, val.leastSigBits))));
     }
 
     /**

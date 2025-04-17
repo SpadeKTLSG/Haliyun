@@ -45,7 +45,7 @@ public class FunctionsFlow {
 
         //4. 转换成 NoticeVO
         NoticeVO res = NoticeVO.builder()
-                .id(tmp.getId())
+                .id(String.valueOf(tmp.getId()))
                 .name(tmp.getName())
                 .content(tmp.getContent())
                 .readCount(tmp.getReadCount())

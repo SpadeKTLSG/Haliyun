@@ -80,7 +80,8 @@ public class UsersControl {
     public Result<List<Long>> getUserClusterIds() {
         return Result.success(usersFlow.getUserClusterIds());
     }
-    //http://localhost:10000/Guest/users/user_clusters
+
+
 
 
     /**
@@ -91,6 +92,15 @@ public class UsersControl {
         return Result.success(usersFlow.getUserDOInfo(creatorUserId));
     }
     //http://localhost:10000/Guest/users/user_simple?creatorUserId=1
+
+    /**
+     * 通过用户ids获取用户简单VO信息 (账号 / 是否管理员) 批量查询
+     */
+    @PostMapping("/user_simple/batch")
+    Result<List<UserVO>> getUserDOInfoBatch(
+            @RequestBody List<Long> creatorUserIds) {
+        return Result.success(usersFlow.getUserDOInfoBatch(creatorUserIds));
+    }
 
 
     /**
@@ -135,14 +145,26 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/cluster/kick_out?clusterId=1&userId=2
 
+
     /**
      * 所有人退出某群组
      */
     @DeleteMapping("/cluster/every_quit")
-    void everyQuitCluster(@RequestParam Long clusterId) {
+    Result<Object> everyQuitCluster(@RequestParam Long clusterId) {
         usersFlow.everyQuitCluster(clusterId);
+        return Result.success();
     }
     //http://localhost:10000/Guest/users/cluster/every_quit?clusterId=1
+
+
+    /**
+     * 计算中间表获取对应群组中用户数量
+     */
+    @GetMapping("/cluster/user/count")
+    Result<Integer> getClusterUserCount(@RequestParam Long clusterId) {
+        return Result.success(usersFlow.getClusterUserCount(clusterId));
+    }
+
 
     //! Func
 
@@ -274,4 +296,17 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/cluster/user_list?clusterId=1
 
+
+    /**
+     * 查用户加入的群组id清单 - 只用于展示
+     */
+    @GetMapping("/user_clusters/show")
+    public Result<List<String>> getUserClusterIdsShow() {
+        List<Long> userClusterIds = usersFlow.getUserClusterIds();
+        List<String> res = userClusterIds.stream()
+                .map(String::valueOf)
+                .toList();
+
+        return Result.success(res);
+    }
 }

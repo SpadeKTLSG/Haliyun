@@ -32,7 +32,7 @@ public class FilesControl {
     //! Client
 
     /**
-     * id 批量查询 Post 动态
+     * id 批量查询文件, - Post 动态
      */
     @PostMapping("/file/batch")
     List<FileShowVO> getFileByIdBatch(@RequestBody List<Long> fileIds) {
@@ -72,9 +72,7 @@ public class FilesControl {
     //http://localhost:10000/Data/files/file/delete?fileId=...&clusterId=...&userId=...
 
 
-
     //! UPDATE
-
 
 
     //! Query
@@ -93,6 +91,22 @@ public class FilesControl {
         return Result.success(filesFlow.getGroupFilePage(clusterId, new PageRequest(current, size)));
     }
     //http://localhost:10000/Data/files/file/group_files?clusterId=...&current=1&size=10
+
+
+    /**
+     * 分页获取群组中的文件列表, 按照文件名进行模糊查询
+     */
+    @GetMapping("/file/group_files/name")
+    public Result<PageResponse<FileGreatVO>> getGroupFilePage8Name(
+
+            @RequestParam("clusterId") Long clusterId,
+            @RequestParam("fileName") String fileName,
+            @RequestParam("current") Integer current,
+            @RequestParam("size") Integer size
+
+    ) {
+        return Result.success(filesFlow.getGroupFilePage8Name(clusterId, fileName.strip(), new PageRequest(current, size)));
+    }
 
 
 }

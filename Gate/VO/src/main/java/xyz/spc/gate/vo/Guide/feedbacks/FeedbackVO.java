@@ -12,9 +12,9 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class FeedbackVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long userId;
+    private String userId;
 
     private String userAccount;
 

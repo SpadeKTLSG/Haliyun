@@ -12,7 +12,7 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class PlatformStatusVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
     private Long userCount;
 

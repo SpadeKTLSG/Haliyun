@@ -9,20 +9,19 @@ import org.springframework.stereotype.Service;
 import xyz.spc.common.constant.Guest.users.LoginCommonCT;
 import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.exception.ClientException;
-import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.common.funcpack.uuid.IdUtil;
 import xyz.spc.domain.dos.Guest.users.UserDO;
 import xyz.spc.domain.dos.Guest.users.UserDetailDO;
 import xyz.spc.domain.dos.Guest.users.UserFuncDO;
 import xyz.spc.domain.model.Guest.users.User;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
+import xyz.spc.infra.mapper.Guest.users.UserClusterMapper;
 import xyz.spc.infra.mapper.Guest.users.UserDetailMapper;
 import xyz.spc.infra.mapper.Guest.users.UserFuncMapper;
-import xyz.spc.infra.mapper.Guest.users.UserClusterMapper;
 import xyz.spc.infra.mapper.Guest.users.UserMapper;
+import xyz.spc.infra.repo.Guest.users.UserClusterService;
 import xyz.spc.infra.repo.Guest.users.UserDetailService;
 import xyz.spc.infra.repo.Guest.users.UserFuncService;
-import xyz.spc.infra.repo.Guest.users.UserClusterService;
 import xyz.spc.infra.repo.Guest.users.UserService;
 
 
@@ -89,17 +88,17 @@ public class UsersRepo {
     /**
      * 添加用户
      */
-    public void addUser(UserDTO userDTO) {
+    public void addUser(UserDTO userDTO, Long userId, Long levelId) {
 
         boolean isAdmin = userDTO.getAdmin() != 0;
         // 管理员注册需要额外的校验 使用一张贵宾表来记录信息. 需要时候去拉
 
-        // 注册插入三张表, 生成统一ID
-        Long id = SnowflakeIdUtil.nextId();
+        // 注册插入三张表, 生成统一ID [分配给用户账户的唯一主键id, 重要!!!]
+
 
         //? 插入 UserDO
         UserDO userDO = UserDO.builder()
-                .id(id)
+                .id(userId)
                 .admin(isAdmin ? 1 : 0)
                 .loginType(User.LOGIN_TYPE_ACCOUNT_PHONE)
                 .account(userDTO.getAccount())
@@ -110,7 +109,7 @@ public class UsersRepo {
 
         //? 插入 UserDetailDO
         UserDetailDO userDetailDO = UserDetailDO.builder()
-                .id(id)
+                .id(userId)
                 .phone(userDTO.getPhone())
                 .area(LoginCommonCT.DEFAULT_REGISTER_LOCATION)
                 .nickname(IdUtil.fastSimpleUUID().substring(0, 12))
@@ -120,10 +119,13 @@ public class UsersRepo {
 
         //? 插入 UserFuncDO
         UserFuncDO userFuncDO = UserFuncDO.builder()
-                .id(id)
+                .id(userId)
                 .registerCode(IdUtil.fastSimpleUUID())
+                .levelId(levelId) //对应用户等级
                 .build();
         userFuncService.save(userFuncDO);
+
+        userDTO.setId(userId); // 设置用户ID, 方便后续使用
 
         log.debug("用户: {} 注册成功: ", userDTO.getAccount());
     }

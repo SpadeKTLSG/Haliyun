@@ -12,9 +12,9 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class StatisticsVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long userId;
+    private String userId;
 
     private Integer comment;
 
@@ -28,7 +28,7 @@ public class StatisticsVO extends BaseVO {
 
     private Integer collect;
 
-    private Integer like;
+    private Integer likes;
 
     private Integer trick;
 }

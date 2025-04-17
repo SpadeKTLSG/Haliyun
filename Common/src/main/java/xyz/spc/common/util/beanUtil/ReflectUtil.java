@@ -13,7 +13,6 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 反射工具类合集. 提供调用getter/setter方法, 访问私有变量, 调用私有方法, 获取泛型类型Class, 被AOP过的真实类等工具函数.
@@ -37,7 +36,7 @@ public final class ReflectUtil {
      */
     public static Map<String, Object> beanToMap(Object bean) {
         PropertyDescriptor[] propertyDescriptorArray = getPropertyDescriptorArray(bean);
-        Map<String, Object> parameterMap = new HashMap<String, Object>();
+        Map<String, Object> parameterMap = new HashMap<>();
         for (PropertyDescriptor propertyDescriptor : propertyDescriptorArray) {
             Object value = getPropertyDescriptorValue(bean, propertyDescriptor);
             parameterMap.put(propertyDescriptor.getName(), value);
@@ -178,9 +177,7 @@ public final class ReflectUtil {
                     resultValue = method.invoke(bean);
                 }
 
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
@@ -224,9 +221,7 @@ public final class ReflectUtil {
         if (null != clazz) {
             try {
                 bean = clazz.newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
@@ -273,9 +268,7 @@ public final class ReflectUtil {
         if (null != clazz) {
             try {
                 bean = clazz.newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
@@ -286,8 +279,8 @@ public final class ReflectUtil {
      * 获取属性字段的注解属性
      */
     public static Annotation[] getFieldAnnotations(Object bean, PropertyDescriptor propertyDescriptor) {
-        List<Field> fieldList = Arrays.asList(bean.getClass().getDeclaredFields()).stream().filter(f -> f.getName().equals(propertyDescriptor.getName())).collect(Collectors.toList());
-        if (null != fieldList && fieldList.size() > 0) {
+        List<Field> fieldList = Arrays.stream(bean.getClass().getDeclaredFields()).filter(f -> f.getName().equals(propertyDescriptor.getName())).toList();
+        if (null != fieldList && !fieldList.isEmpty()) {
             return fieldList.get(0).getDeclaredAnnotations();
         }
         return null;
@@ -386,7 +379,7 @@ public final class ReflectUtil {
         try {
             return (E) method.invoke(obj, args);
         } catch (Exception e) {
-            String msg = "method: " + method + ", obj: " + obj + ", args: " + args;
+            String msg = "method: " + method + ", obj: " + obj + ", args: " + Arrays.toString(args);
             throw convertReflectionExceptionToUnchecked(msg, e);
         }
     }
@@ -430,7 +423,7 @@ public final class ReflectUtil {
             }
             return (E) method.invoke(obj, args);
         } catch (Exception e) {
-            String msg = "method: " + method + ", obj: " + obj + ", args: " + args;
+            String msg = "method: " + method + ", obj: " + obj + ", args: " + Arrays.toString(args);
             throw convertReflectionExceptionToUnchecked(msg, e);
         }
     }
@@ -451,7 +444,6 @@ public final class ReflectUtil {
                 makeAccessible(field);
                 return field;
             } catch (NoSuchFieldException e) {
-                continue;
             }
         }
         return null;
@@ -475,7 +467,6 @@ public final class ReflectUtil {
                 makeAccessible(method);
                 return method;
             } catch (NoSuchMethodException e) {
-                continue;
             }
         }
         return null;

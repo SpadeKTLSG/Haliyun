@@ -54,6 +54,25 @@ public class ClustersControl {
         return clustersFlow.checkClusterCreatorEqual(clusterId, myUserId);
     }
 
+    /**
+     * 判断对应群组人满了没有
+     */
+    @GetMapping("/cluster/full/check")
+    Result<Object> checkClusterFull(@RequestParam Long clusterId) {
+        return Result.success(clustersFlow.checkClusterFull(clusterId));
+    }
+
+    /**
+     * 操作对应群组人数 +=1
+     */
+    @PutMapping("/cluster/user/count")
+    void opClusterUserCount(
+            @RequestParam Long clusterId,
+            @RequestParam String opType,
+            @RequestParam int amount) {
+        clustersFlow.opClusterUserCount(clusterId, opType, amount);
+    }
+
 
     //! Func
 
@@ -112,7 +131,6 @@ public class ClustersControl {
         return Result.success();
     }
     //http://localhost:10000/Cluster/clusters/kick_cluster?clusterId=1&userId=2
-
 
 
     //! UPDATE

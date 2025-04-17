@@ -32,12 +32,12 @@ public class FileDeleteOwnerChainHandler implements FileDeleteChainFilter<File, 
         Long nowUserId = UserContext.getUI();
 
         // 查出文件的上传者, 和当前用户进行对比
-        auth = Objects.equals(fileGreatVO.getUserId(), nowUserId);
+        auth = Objects.equals(Long.parseLong(fileGreatVO.getUserId()), nowUserId);
 
 
         if(!auth){
             // 查出文件所在群的群主 (管理), 和当前用户进行对比
-            Long cluster_id = fileGreatVO.getClusterId();
+            Long cluster_id = Long.valueOf(fileGreatVO.getClusterId());
             auth = clustersClient.checkClusterCreatorEqual(cluster_id, nowUserId);
         }
 

@@ -3,6 +3,8 @@ package xyz.spc.serve.auxiliary.config.log;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.SystemClock;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializeConfig;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.Data;
@@ -17,8 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import xyz.spc.common.funcpack.exception.AbstractException;
 
 import java.lang.reflect.Method;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Slf4j
 @Aspect
@@ -43,6 +44,7 @@ public class MLogPrintAspect {
         String beginTime = DateUtil.now();
         Object result = null;
         boolean win = true;
+
         try {
             result = joinPoint.proceed(); //放行
         } catch (AbstractException e) {
@@ -53,9 +55,9 @@ public class MLogPrintAspect {
             Method targetMethod = joinPoint.getTarget().getClass().getDeclaredMethod(methodSignature.getName(), methodSignature.getMethod().getParameterTypes());
             //获取方法上的注解 MLog
             MLog logAnnotation = Optional.ofNullable(targetMethod.getAnnotation(MLog.class)).orElse(joinPoint.getTarget().getClass().getAnnotation(MLog.class));
+            Objects.requireNonNull(logAnnotation);
 
             //打印日志
-            Objects.requireNonNull(logAnnotation);
             MLogPrint logPrint = new MLogPrint();
             logPrint.setBeginTime(beginTime);
 
@@ -65,7 +67,7 @@ public class MLogPrintAspect {
             }
             //开启了打印出参
             if (logAnnotation.output()) {
-                logPrint.setOutputParams(result);
+                logPrint.setOutputParams(buildOutput(result));
             }
 
 
@@ -81,38 +83,70 @@ public class MLogPrintAspect {
             } catch (Exception ignored) {
             }
 
-            if (win) {
-                log.debug("[Win]:[{}] {}, \t executeTime: {}ms, \t info: {}", methodType, requestURI, SystemClock.now() - startTime, JSON.toJSONString(logPrint));
-            } else {
-                log.warn("[Fail]:[{}] {}, \t executeTime: {}ms, \t info: {}", methodType, requestURI, SystemClock.now() - startTime, JSON.toJSONString(logPrint));
+            // 安全序列化：过滤 MultipartFile 及 HttpServletRequest/Response
+            SerializeConfig config = SerializeConfig.getGlobalInstance();
+            try {
+                String infoJson = JSON.toJSONString(logPrint, config,
+                        SerializerFeature.DisableCircularReferenceDetect,
+                        SerializerFeature.WriteMapNullValue);
+
+
+                if (win) {
+                    log.debug("[Win]:[{}] {} executeTime: {}ms, info: {}", methodType, requestURI,
+                            System.currentTimeMillis() - startTime, infoJson);
+                } else {
+                    log.warn("[Fail]:[{}] {} executeTime: {}ms, info: {}", methodType, requestURI,
+                            System.currentTimeMillis() - startTime, infoJson);
+                }
+
+            } catch (Exception ex) {
+
+                // 序列化失败降级处理
+                String fallback = String.format("input=%s, output=%s",
+                        Arrays.toString(logPrint.getInputParams()), logPrint.getOutputParams());
+
+                if (win) {
+                    log.debug("[Win]:[{}] {} executeTime: {}ms, info: {}", methodType, requestURI,
+                            System.currentTimeMillis() - startTime, fallback);
+                } else {
+                    log.warn("[Fail]:[{}] {} executeTime: {}ms, info: {}", methodType, requestURI,
+                            System.currentTimeMillis() - startTime, fallback);
+                }
+
             }
 
         }
         return result;
     }
 
+
     /**
-     * 构建入参
+     * 构建可安全打印的入参
      */
     private Object[] buildInput(ProceedingJoinPoint joinPoint) {
         Object[] args = joinPoint.getArgs();
-        Object[] printArgs = new Object[args.length];
-
-        for (int i = 0; i < args.length; i++) {
-            if ((args[i] instanceof HttpServletRequest) || args[i] instanceof HttpServletResponse) {
-                continue;
-            }
-            if (args[i] instanceof byte[]) {
-                printArgs[i] = "byte array";
-            } else if (args[i] instanceof MultipartFile) {
-                printArgs[i] = "file";
+        List<Object> safe = new ArrayList<>();
+        for (Object arg : args) {
+            if (arg instanceof HttpServletRequest || arg instanceof HttpServletResponse) continue;
+            if (arg instanceof MultipartFile) {
+                safe.add(((MultipartFile) arg).getOriginalFilename());
             } else {
-                printArgs[i] = args[i];
+                safe.add(arg);
             }
         }
-
-        return printArgs;
+        return safe.toArray();
     }
+
+    /**
+     * 构建可安全打印的出参
+     */
+    private Object buildOutput(Object result) {
+        if (result instanceof MultipartFile) {
+            return ((MultipartFile) result).getOriginalFilename();
+        }
+        return result;
+    }
+
 
     @Data
     private static class MLogPrint {

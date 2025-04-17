@@ -12,20 +12,29 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class SelfMailVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long clusterId;
+    private String clusterId;
 
-    private Long senderId;
+    private String senderId;
 
-    private Long receiverId;
+    private String receiverId;
 
     private Integer status;
 
-    private Integer drop;
+    private Integer droped;
 
     private String header;
 
     private String body;
+
+
+    //? Tmodel
+
+    private String clusterName; // 群组名称
+
+    private String senderName; // 发送者名称
+
+    private String receiverName; // 接收人名称
 
 }

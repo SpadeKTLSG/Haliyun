@@ -12,9 +12,9 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class LoginLogVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long userId;
+    private String userId;
 
     private String account;
 
@@ -23,5 +23,6 @@ public class LoginLogVO extends BaseVO {
     private String ipv6;
 
     private Integer loginType;
+
 }
 

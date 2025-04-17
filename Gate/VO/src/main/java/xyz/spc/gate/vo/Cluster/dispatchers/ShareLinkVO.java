@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ShareLinkVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long fileId;
+    private String fileId;
 
     private String godAccount;
 

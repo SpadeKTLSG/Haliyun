@@ -4,6 +4,9 @@ import lombok.*;
 import lombok.experimental.Accessors;
 import xyz.spc.domain.model.BaseModel;
 
+import java.util.List;
+import java.util.stream.Stream;
+
 /**
  * 统计
  */
@@ -55,12 +58,55 @@ public class Statistics extends BaseModel {
     /**
      * 累计点赞次数
      */
-    private Integer like;
+    private Integer likes;
 
     /**
      * 累计干坏事次数
      */
     private Integer trick;
 
+
+    /**
+     * 统计的目标字段枚举
+     */
+    @Getter
+    public enum StatisticsField {
+
+        COMMENT("comment"),
+        DOWNLOAD("download"),
+        UPLOAD("upload"),
+        OUTLET("outlet"),
+        MAIL("mail"),
+        COLLECT("collect"),
+        LIKES("likes"),
+        TRICK("trick");
+
+        private  final String field;
+
+        StatisticsField(String field) {
+            this.field = field;
+        }
+
+    }
+
+
+    /**
+     * 判断对应的String是否属于上面的目标字段枚举
+     */
+    public boolean isFieldName(String fieldName) {
+        for (StatisticsField field : StatisticsField.values()) {
+            if (field.getField().equals(fieldName)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 获取所有的目标字段枚举名称
+     */
+    public List<String> getFieldName() {
+        return Stream.of(StatisticsField.values()).map(StatisticsField::getField).toList();
+    }
 
 }

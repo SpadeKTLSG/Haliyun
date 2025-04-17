@@ -4,14 +4,11 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.yulichang.wrapper.MPJLambdaWrapper;
-import com.github.yulichang.wrapper.UpdateJoinWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
@@ -23,6 +20,7 @@ import xyz.spc.common.constant.SystemSpecialCT;
 import xyz.spc.common.funcpack.errorcode.ClientError;
 import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.common.funcpack.exception.ServiceException;
+import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.common.funcpack.uuid.UUID;
 import xyz.spc.common.util.collecUtil.StringUtil;
 import xyz.spc.common.util.encryptUtil.MD5Util;
@@ -41,6 +39,7 @@ import xyz.spc.serve.auxiliary.common.context.UserContext;
 import xyz.spc.serve.auxiliary.config.design.chain.AbstractChainContext;
 import xyz.spc.serve.auxiliary.config.redis.tool.RedisCacheGeneral;
 import xyz.spc.serve.guest.common.enums.UsersChainMarkEnum;
+import xyz.spc.serve.guest.func.levels.LevelFunc;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -50,6 +49,12 @@ import java.util.concurrent.TimeUnit;
 @Service
 @RequiredArgsConstructor
 public class UsersFunc {
+
+
+    /**
+     * Func
+     */
+    private final LevelFunc levelFunc;
 
     /**
      * Repo
@@ -252,7 +257,17 @@ public class UsersFunc {
             throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
         }
         try {
-            usersRepo.addUser(userDTO);
+
+            // 1  预生成id
+            Long userId = SnowflakeIdUtil.nextId();
+
+            // 2 初始化等级信息
+            Long levelId = levelFunc.initialUserLevel(userId);
+
+            // 3 注册用户核心表
+            usersRepo.addUser(userDTO, userId, levelId);
+
+
         } catch (ClientException ex) {
             throw new ClientException(ClientError.USER_ACCOUNT_COLLISION);
         } finally {
@@ -267,7 +282,7 @@ public class UsersFunc {
     /**
      * 获取用户标记
      */
-    @Cacheable(key = "'getUserMark' + #account", value = "userMark")
+//    @Cacheable(key = "'getUserMark' + #account", value = "userMark")
     public Map<String, String> getUserMark(String account) {
         Map<String, String> userMark = new HashMap<>();
         //用account查userDO. 再联表查userDetailDO, 得到phone
@@ -288,7 +303,7 @@ public class UsersFunc {
     /**
      * 查用户三张表信息联表查询
      */
-    @Cacheable(key = "'getUserInfoById' + #id", value = "user")
+//    @Cacheable(key = "'getUserInfoById' + #id", value = "user")
     public UserGreatVO getUserInfo(Long id) {
         //MPJ联表查询 - 标准的经过拆分的对象的信息综合查询 (我只说一次)
         return usersRepo.userMapper.selectJoinOne(UserGreatVO.class, new MPJLambdaWrapper<UserDO>()
@@ -307,25 +322,40 @@ public class UsersFunc {
     /**
      * 联表更新用户信息(Null值的字段不更新)
      */
-    @CacheEvict(key = "'getUserInfoById' + #userGreatVO.id", value = "user")
+//    @CacheEvict(key = "'getUserInfoById' + #userGreatVO.id", value = "user")
     public void updateUserInfo(UserGreatVO userGreatVO) {
+
+        Long userId = UserContext.getUI();
 
         //用工具类直接打入三个DO:
         UserDO userDO = new UserDO();
         UserDetailDO userDetailDO = new UserDetailDO();
         UserFuncDO userFuncDO = new UserFuncDO();
+
         BeanUtil.copyProperties(userGreatVO, userDO, CopyOptions.create().setIgnoreNullValue(true));
         BeanUtil.copyProperties(userGreatVO, userDetailDO, CopyOptions.create().setIgnoreNullValue(true));
         BeanUtil.copyProperties(userGreatVO, userFuncDO, CopyOptions.create().setIgnoreNullValue(true));
 
-        //我只讲一遍: 联表更新 MPJ, 需要用到 UpdateJoinWrapper + setUpdateEntity (会自动忽略空属性更新)
-        usersRepo.userMapper.updateJoin(userDO, new UpdateJoinWrapper<>(UserDO.class)
+        // id补充
+        userDO.setId(userId);
+        userDetailDO.setId(userId);
+        userFuncDO.setId(userId);
+
+        // ? note 我只讲一遍: 联表更新 MPJ, 需要用到 UpdateJoinWrapper + setUpdateEntity (会自动忽略空属性更新)
+/*        usersRepo.userMapper.updateJoin(userDO, new UpdateJoinWrapper<>(UserDO.class)
                 //设置两个副表的 set 语句
                 .setUpdateEntity(userDetailDO, userFuncDO) //:使用传递的对象更新目标表的所有字段
                 //联表条件
                 .leftJoin(UserDetailDO.class, UserDetailDO::getId, UserDO::getId)
                 .leftJoin(UserFuncDO.class, UserFuncDO::getId, UserDO::getId)
-                .eq(UserDO::getId, userGreatVO.getId()));
+                .eq(UserDO::getId, userGreatVO.getId()));*/
+
+        // ? 我只讲一遍, 上面的这个没效果, 还是老实用这个吧... 也许是MPJ特性? 目前只有这个联表更新出问题了...
+        usersRepo.userService.updateById(userDO);
+        usersRepo.userDetailService.updateById(userDetailDO);
+        usersRepo.userFuncService.updateById(userFuncDO);
+
+
     }
 
 
@@ -358,11 +388,30 @@ public class UsersFunc {
         return res;
     }
 
+    /**
+     * 简单获得用户信息 批量
+     */
+    public List<UserVO> getUserDOInfoBatch(List<Long> creatorUserIds) {
+        List<UserDO> tmp = usersRepo.userService.listByIds(creatorUserIds);
+
+        List<UserVO> res = new ArrayList<>();
+        tmp.forEach(
+                user -> {
+                    UserVO userVO = UserVO.builder()
+                            .admin(user.getAdmin())
+                            .account(user.getAccount())
+                            .build();
+                    res.add(userVO);
+                }
+        );
+
+        return res;
+    }
 
     /**
      * 操作用户 创建 群组的数量 ( + / - by amount)
      */
-    @CacheEvict(key = "'getUserInfoById' + #userId", value = "user")
+//    @CacheEvict(key = "'getUserInfoById' + #userId", value = "user")
     public void opUserCreateClusterCount(Long userId, String opType, int amount) {
 
         //更新UserFunc id == id 的记录(一条) 的对应字段
@@ -392,7 +441,7 @@ public class UsersFunc {
     /**
      * 操作用户 加入 群组的数量 ( + / - by amount)
      */
-    @CacheEvict(key = "'getUserInfoById' + #userId", value = "user")
+//    @CacheEvict(key = "'getUserInfoById' + #userId", value = "user")
     public void opUserJoinClusterCount(Long userId, String opType, int amount) {
 
         //更新UserFunc id == id 的记录(一条) 的对应字段
@@ -471,7 +520,7 @@ public class UsersFunc {
             UserVO userVO = UserVO.builder()
 
                     // 补充 VO 展示信息
-                    .id(user.getId())
+                    .id(String.valueOf(user.getId()))
                     .account(user.getAccount())
                     .build();
 
@@ -480,4 +529,38 @@ public class UsersFunc {
 
         return userVOList;
     }
+
+
+    /**
+     * 通过用户id批量查询用户账号
+     */
+    public List<String> getUserAccountByIds(List<Long> userIds) {
+
+        if (userIds == null || userIds.isEmpty()) {
+            return List.of();
+        }
+
+        // 通过用户id批量查询用户账号
+        List<UserDO> userList = usersRepo.userService.list(Wrappers.lambdaQuery(UserDO.class)
+                .in(UserDO::getId, userIds)
+                .eq(UserDO::getStatus, User.STATUS_NORMAL) // 账号状态正常
+                .eq(UserDO::getDelFlag, DelEnum.NORMAL.getStatusCode()) // 逻辑删除处理
+        );
+
+        if (userList == null || userList.isEmpty()) {
+            return List.of();
+        }
+
+        // 将对象清单转换为账号清单
+        List<String> accountList = new ArrayList<>();
+
+        userList.forEach(user -> {
+            String account = user.getAccount();
+            accountList.add(Objects.requireNonNullElse(account, "未知账号"));
+        });
+
+        return accountList;
+    }
+
+
 }

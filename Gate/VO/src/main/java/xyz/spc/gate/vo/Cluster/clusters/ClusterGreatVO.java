@@ -15,13 +15,13 @@ import java.util.List;
 public class ClusterGreatVO extends BaseVO {
 
     //! id
-    private Long id;
+    private String id;
 
     //    ClusterVO
 
     private String name;
 
-    private Long creatorUserId;
+    private String creatorUserId;
 
     private String nickname;
 
@@ -43,9 +43,9 @@ public class ClusterGreatVO extends BaseVO {
 
     //    ClusterFuncVO
 
-    private Long noticeId;
+    private String noticeId;
 
-    private Long currencyId;
+    private String currencyId;
 
     private Integer allowInvite;
 

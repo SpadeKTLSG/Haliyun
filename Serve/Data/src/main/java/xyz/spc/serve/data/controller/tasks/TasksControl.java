@@ -13,6 +13,9 @@ import xyz.spc.common.funcpack.errorcode.ServerError;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.data.flow.TasksFlow;
+import xyz.spc.serve.data.special.TasksFlowBatch;
+
+import java.util.List;
 
 @Slf4j
 @MLog
@@ -24,6 +27,7 @@ public class TasksControl {
 
     // Flow
     private final TasksFlow tasksFlow;
+    private final TasksFlowBatch tasksFlowBatch;
 
 
     //! Func
@@ -53,6 +57,28 @@ public class TasksControl {
 
 
     /**
+     * 批量文件上传接口
+     */
+    @PostMapping("/upload/file/batch")
+    public Result<Object> uploadFileBatch(
+            @RequestParam("file") MultipartFile[] file, // 上传多个文件对象
+            @RequestParam("userId") Long userId,  // 用户id 由于没有登录鉴权, 不得不直接传入
+            @RequestParam("clusterId") Long clusterId,
+            @RequestParam(value = "pid", defaultValue = "0") Long pid // 未来拟合的需求: 在页面的对应位置点击了上传之后, 应该设置对应的pid为文件夹的id
+    ) {
+
+        // 批处理
+        try {
+            tasksFlowBatch.uploadFileBatch(file, clusterId, userId);
+        } catch (Exception e) {
+            throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
+        }
+
+        return Result.success();
+    }
+
+
+    /**
      * 下载文件接口
      */
     @GetMapping("/download/file")
@@ -72,14 +98,51 @@ public class TasksControl {
     }
 
 
-    //! ADD
+    /**
+     * 批量文件下载接口
+     */
+    @GetMapping("/download/file/batch")
+    public Result<Object> downloadFileBatch(
+            @RequestParam("ids")  List<Long>  fileIds,
+            @RequestParam("userId") Long userId,
+            @RequestParam("clusterId") Long clusterId,
+            HttpServletResponse response
+    ) {
+        try {
+            tasksFlowBatch.downloadFileBatch(fileIds, userId, clusterId, response);
+        } catch (Exception e) {
+            throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
+        }
+
+        return Result.success();
+    }
 
 
-    //! DELETE
+    /**
+     * 分享文件接口
+     */
+    @PostMapping("/share/file")
+    public Result<Object> shareFile(
+            @RequestParam("fileId") Long fileId, // 从前端出需要的文件对象 id
+            @RequestParam("clusterId") Long targetClusterId
+    ) {
+        try {
+            tasksFlow.shareFile(fileId, targetClusterId);
+        } catch (Exception e) {
+            throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
+        }
+        return Result.success();
+    }
 
 
-    //! UPDATE
+//! ADD
 
 
-    //! Query
+//! DELETE
+
+
+//! UPDATE
+
+
+//! Query
 }

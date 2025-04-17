@@ -60,6 +60,7 @@ public final class FileUtil {
                 os.write(b, 0, length);
             }
         } catch (IOException e) {
+            log.warn(e.getMessage());
             throw e;
         } finally {
             IOUtils.close(os);

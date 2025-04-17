@@ -14,7 +14,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @SpringBootApplication(scanBasePackages = {
         "xyz.spc.gate.gateway"})
 @Slf4j
-public class GatewayAPP {
+public class    GatewayAPP {
     public static void main(String[] args) {
         SpringApplication.run(GatewayAPP.class, args);
         log.info("网关服务启动成功");

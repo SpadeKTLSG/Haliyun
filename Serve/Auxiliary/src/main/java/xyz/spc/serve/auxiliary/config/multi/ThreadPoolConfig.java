@@ -39,7 +39,7 @@ public class ThreadPoolConfig {
     /**
      * 默认线程池任务执行器
      */
-    @Bean
+    @Bean(name = "SKThreadPoolTExecutor")
     public ThreadPoolTaskExecutor threadPoolTaskExecutor() {
         ThreadPoolTaskExecutor threadPool = new ThreadPoolTaskExecutor();
 

@@ -11,9 +11,11 @@ import xyz.spc.gate.vo.BaseVO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RisklogVO extends BaseVO {
-    private Long id;
+
+    private String id;
 
     private String header;
 
     private String lines;
+
 }

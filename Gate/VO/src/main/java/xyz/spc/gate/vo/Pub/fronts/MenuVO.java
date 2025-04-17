@@ -13,9 +13,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MenuVO extends BaseVO {
-    private Long id;
 
-    private Long parentId;
+    private String id;
+
+    private String parentId;
 
     private Integer type;
 

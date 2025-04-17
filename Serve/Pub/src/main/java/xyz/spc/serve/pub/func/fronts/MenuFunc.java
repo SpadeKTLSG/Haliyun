@@ -53,7 +53,7 @@ public class MenuFunc {
 
         // 递归设置子菜单
         rootMenuVO.forEach(menuVO -> {
-            List<MenuDO> childMenus = resMap.get(menuVO.getId());
+            List<MenuDO> childMenus = resMap.get(Long.parseLong(menuVO.getId()));
 
             if (childMenus != null) {
                 List<MenuVO> childMenuVOs = childMenus.stream().map(childMenu -> {

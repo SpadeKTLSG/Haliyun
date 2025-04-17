@@ -95,11 +95,11 @@ public class UploadTaskFunc {
         }
 
         return UploadTaskVO.builder()
-                .id(uploadTaskDO.getId())
-                .fileId(uploadTaskDO.getFileId())
+                .id(String.valueOf(uploadTaskDO.getId()))
+                .fileId(String.valueOf(uploadTaskDO.getFileId()))
                 .fileName(uploadTaskDO.getFileName())
-                .pid(uploadTaskDO.getPid())
-                .userId(uploadTaskDO.getUserId())
+                .pid(String.valueOf(uploadTaskDO.getPid()))
+                .userId(String.valueOf(uploadTaskDO.getUserId()))
                 .status(uploadTaskDO.getStatus())
                 .fileSizeTotal(uploadTaskDO.getFileSizeTotal())
                 .fileSizeOk(uploadTaskDO.getFileSizeOk())

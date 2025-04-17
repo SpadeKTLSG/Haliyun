@@ -14,15 +14,15 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TombVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long userId;
+    private String userId;
 
-    private Integer createNo;
+    private Long createNo;
 
     private Long maxCoin;
 
-    private String bigintestCluster;
+    private Long bigintestCluster;
 
     private LocalDateTime deepestNignt;
 

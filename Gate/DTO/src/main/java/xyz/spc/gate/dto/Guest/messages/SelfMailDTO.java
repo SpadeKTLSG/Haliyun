@@ -22,7 +22,7 @@ public class SelfMailDTO extends BaseDTO {
 
     private Integer status;
 
-    private Integer drop;
+    private Integer droped;
 
     private String header;
 

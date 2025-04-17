@@ -12,7 +12,7 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class FileDetailVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
     private String dscr;
 

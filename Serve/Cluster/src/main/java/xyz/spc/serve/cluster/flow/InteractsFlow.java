@@ -55,8 +55,8 @@ public class InteractsFlow {
 
                     PostShowVO postShowVO = new PostShowVO();
 
-                    postShowVO.setId(post.getId());
-                    postShowVO.setUserId(post.getUserId());
+                    postShowVO.setId(String.valueOf(post.getId()));
+                    postShowVO.setUserId(String.valueOf(post.getUserId()));
                     postShowVO.setContent(post.getContent());
                     postShowVO.setTitle(post.getTitle());
                     postShowVO.setPics(post.getPics());

@@ -11,7 +11,8 @@ import xyz.spc.gate.vo.BaseVO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RemarkVO extends BaseVO {
-    private Long id;
+
+    private String id;
 
     private Long targetId;
 

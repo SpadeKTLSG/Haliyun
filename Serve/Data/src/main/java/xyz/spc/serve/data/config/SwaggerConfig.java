@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
-@ComponentScan(basePackages = "xyz.spc.serve.guest.controller")
+@ComponentScan(basePackages = "xyz.spc.serve.data.controller")
 public class SwaggerConfig {
 
 

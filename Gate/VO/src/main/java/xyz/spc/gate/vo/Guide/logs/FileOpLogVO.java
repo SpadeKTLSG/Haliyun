@@ -11,15 +11,17 @@ import xyz.spc.gate.vo.BaseVO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileOpLogVO extends BaseVO {
-    private Long id;
 
-    private Long userId;
+    private String id;
 
-    private Long fileId;
+    private String userId;
+
+    private String fileId;
 
     private Integer op;
 
     private String account;
 
     private String fileName;
+
 }

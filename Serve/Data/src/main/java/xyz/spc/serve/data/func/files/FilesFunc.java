@@ -6,6 +6,8 @@ import com.github.yulichang.wrapper.MPJLambdaWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import xyz.spc.common.funcpack.errorcode.ServerError;
+import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.domain.dos.Data.files.FileDO;
 import xyz.spc.domain.dos.Data.files.FileDetailDO;
@@ -97,6 +99,54 @@ public class FilesFunc {
     }
 
     /**
+     * 完整拷贝文件对象, 返回新的文件对象 id
+     */
+    public Long cpFile(FileGreatVO source, Long targetClusterId) {
+
+        //插入三张表
+        Long file_id = SnowflakeIdUtil.nextId();
+
+        // File
+        FileDO fileDO = FileDO.builder()
+                .id(file_id)
+                .pid(file_id)
+                .userId(Long.valueOf(source.getUserId())) // 保持创建者不变
+                .clusterId(targetClusterId) // 新群组
+                .name(source.getName())
+                .type(source.getType())
+                .build();
+
+        filesRepo.fileService.save(fileDO);
+
+        // FileDetail
+        FileDetailDO fileDetailDO = FileDetailDO.builder()
+                .id(file_id)
+                .dscr("用户分享文件") // 描述
+                .downloadTime(0L)
+                .size(source.getSize()) //大小
+                .path(source.getPath()) // 废弃字段 : 路径
+                .diskPath(source.getDiskPath())  // 废弃字段 : HDFS路径
+                .build();
+
+        filesRepo.fileDetailService.save(fileDetailDO);
+
+        // FileFunc
+        FileFuncDO fileFuncDO = FileFuncDO.builder()
+                .id(file_id)
+                .tag(Long.valueOf(source.getTag())) // 文件标签
+                .fileLock(0L) // 文件锁
+                .status(FileFunc.STATUS_NORMAL) // 文件状态: 正常
+                .validDateType(source.getValidDateType()) // 有效期类型: 永久有效
+                .validDate(source.getValidDate()) // 有效期: null
+                .build();
+
+        filesRepo.fileFuncService.save(fileFuncDO);
+
+
+        return file_id;
+    }
+
+    /**
      * 用id 获取三张表信息
      */
     public FileGreatVO getFileInfo(Long fileId) {
@@ -116,10 +166,10 @@ public class FilesFunc {
 
 
         return FileGreatVO.builder()
-                .id(fileDO.getId())
-                .pid(fileDO.getPid())
-                .userId(fileDO.getUserId())
-                .clusterId(fileDO.getClusterId())
+                .id(String.valueOf(fileDO.getId()))
+                .pid(String.valueOf(fileDO.getPid()))
+                .userId(String.valueOf(fileDO.getUserId()))
+                .clusterId(String.valueOf(fileDO.getClusterId()))
                 .name(fileDO.getName())
                 .type(fileDO.getType())
                 .dscr(fileDetailDO.getDscr())
@@ -127,8 +177,8 @@ public class FilesFunc {
                 .size(fileDetailDO.getSize())
                 .path(fileDetailDO.getPath())
                 .diskPath(fileDetailDO.getDiskPath())
-                .tag(fileFuncDO.getTag())
-                .fileLock(fileFuncDO.getFileLock())
+                .tag(String.valueOf(fileFuncDO.getTag()))
+                .fileLock(String.valueOf(fileFuncDO.getFileLock()))
                 .status(fileFuncDO.getStatus())
                 .validDateType(fileFuncDO.getValidDateType())
                 .validDate(fileFuncDO.getValidDate())
@@ -164,6 +214,30 @@ public class FilesFunc {
                         .select(FileDO::getId)
                         .leftJoin(FileFuncDO.class, FileFuncDO::getId, FileDO::getId)
                         .eq(FileDO::getClusterId, clusterId)
+                        .eq(FileFuncDO::getStatus, FileFunc.STATUS_NORMAL)
+                        .orderByDesc(FileDO::getUpdateTime)
+        );
+
+        return res;
+    }
+
+    /**
+     * 获取群组中的所有正常的文件id, Name 进行模糊查询
+     */
+    public List<Long> getGroupFileIds8Name(Long clusterId, String fileName) {
+
+        // 和上面差不多
+
+        if (clusterId == null) {
+            return List.of();
+        }
+
+        List<Long> res = filesRepo.fileMapper.selectJoinList(Long.class,
+                new MPJLambdaWrapper<FileDO>()
+                        .select(FileDO::getId)
+                        .leftJoin(FileFuncDO.class, FileFuncDO::getId, FileDO::getId)
+                        .eq(FileDO::getClusterId, clusterId)
+                        .like(FileDO::getName, fileName)
                         .eq(FileFuncDO::getStatus, FileFunc.STATUS_NORMAL)
                         .orderByDesc(FileDO::getUpdateTime)
         );
@@ -227,5 +301,62 @@ public class FilesFunc {
                 .setSql("download_time = download_time + 1") // 使用 setSql 实现 自增
                 .eq(FileDetailDO::getId, fileId) // 文件id
         );
+    }
+
+
+    /**
+     * 更新文件File
+     */
+    public void updateFile(FileDO fileDO) {
+        filesRepo.fileService.updateById(fileDO);
+    }
+
+
+    /**
+     * 更新文件FileDetail
+     */
+    public void updateFileDetail(FileDetailDO fileDetailDO) {
+        filesRepo.fileDetailService.updateById(fileDetailDO);
+    }
+
+    /**
+     * 更新文件FileFunc
+     */
+    public void updateFileFunc(Long tagID, Long fileId) {
+        filesRepo.fileFuncService.update(Wrappers.lambdaUpdate(FileFuncDO.class)
+                .set(FileFuncDO::getTag, tagID)
+                .eq(FileFuncDO::getId, fileId)
+        );
+    }
+
+
+    /**
+     * 通过标签id查找文件列表
+     * ? note 使用 JoinList 进行联表批量查询
+     */
+    public List<FileDO> getFilesByTagId(Long tagId) {
+
+        List<FileDO> res = filesRepo.fileMapper.selectJoinList(FileDO.class,
+                new MPJLambdaWrapper<FileDO>()
+                        .selectAll(FileDO.class)
+                        .leftJoin(FileFuncDO.class, FileFuncDO::getId, FileDO::getId)
+                        .eq(FileFuncDO::getTag, tagId)
+                        .eq(FileFuncDO::getStatus, FileFunc.STATUS_NORMAL)
+        );
+
+        return res;
+    }
+
+
+    /**
+     * 通过 id 删除 HDFS 的文件对象
+     * ? note: 这个是 Event 调用的方法, 没加异步了 (已经有一层异步)
+     */
+    public void deleteFileInHDFSByPath(String hdfsPath) {
+        boolean success = hdfsRepo.deleteByPath(hdfsPath);
+
+        if(!success) {
+            throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
+        }
     }
 }

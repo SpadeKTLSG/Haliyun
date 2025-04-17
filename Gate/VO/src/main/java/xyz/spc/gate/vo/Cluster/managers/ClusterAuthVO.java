@@ -12,11 +12,11 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class ClusterAuthVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long clusterId;
+    private String clusterId;
 
-    private Long userId;
+    private String userId;
 
     private Integer canKick;
 
@@ -27,4 +27,8 @@ public class ClusterAuthVO extends BaseVO {
     private Integer canDownload;
 
     private Integer status;
+
+    // Tmodel
+
+    private String account;
 }

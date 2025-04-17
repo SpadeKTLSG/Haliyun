@@ -12,11 +12,11 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class FileShowVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long pid;
+    private String pid;
 
-    private Long userId;
+    private String userId;
 
     // 群组的需要去查具体 ClusterDO 的 name
     private String clusterName;

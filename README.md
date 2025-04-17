@@ -7,6 +7,12 @@
 
 这是后端, 其他文档在 /Asset 中
 
+### 状态
+
+阶段性封档, 不再做大规模更新, 拟合论文必要 bug 除外
+
+论文结束后会提供更多材料和文档
+
 ### 技术栈
 
 Spring Cloud Vue3 RabbitMQ Redisson JS ElementUI Postman Sentinel ESLint

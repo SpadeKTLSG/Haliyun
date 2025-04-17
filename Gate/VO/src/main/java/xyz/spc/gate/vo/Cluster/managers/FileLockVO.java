@@ -11,11 +11,12 @@ import xyz.spc.gate.vo.BaseVO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileLockVO extends BaseVO {
-    private Long id;
 
-    private Long clusterId;
+    private String id;
 
-    private Long ownerId;
+    private String clusterId;
+
+    private String ownerId;
 
     private String ownerAccount;
 

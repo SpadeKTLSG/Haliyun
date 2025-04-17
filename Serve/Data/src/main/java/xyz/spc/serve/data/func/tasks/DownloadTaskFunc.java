@@ -19,6 +19,8 @@ import xyz.spc.infra.special.Data.tasks.TasksRepo;
 import java.io.*;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import static cn.hutool.core.io.FileUtil.getOutputStream;
 
@@ -207,17 +209,22 @@ public class DownloadTaskFunc {
      */
     @Async
     public void cleanTempFile(File realLocalTempFile) {
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.schedule(() -> {
+            // 删除本地磁盘的临时文件
+            if (realLocalTempFile.exists()) {
 
-        // 删除本地磁盘的临时文件
-        if (realLocalTempFile.exists()) {
+                boolean deleted = realLocalTempFile.delete();
 
-            boolean deleted = realLocalTempFile.delete();
-
-            if (!deleted) {
-                log.error("删除下载中的本地磁盘的临时文件失败");
+                if (!deleted) {
+                    log.error("删除下载中的本地磁盘的临时文件失败");
+                }
+            } else {
+                log.warn("下载中的本地磁盘的临时文件不存在");
             }
-        } else {
-            log.warn("下载中的本地磁盘的临时文件不存在");
-        }
+        }, 20, java.util.concurrent.TimeUnit.SECONDS); // 20秒后删除
+
+        // 关闭调度器
+        scheduler.shutdown();
     }
 }

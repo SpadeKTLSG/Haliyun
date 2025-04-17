@@ -96,9 +96,24 @@ public class TasksControl {
     }
 
 
-/**
- * 批量文件下载接口
- */
+    /**
+     * 批量文件下载接口
+     */
+    @GetMapping("/download/file/batch")
+    public Result<Object> downloadFileBatch(
+            @RequestParam("id") Long fileId,
+            @RequestParam("userId") Long userId,
+            @RequestParam("clusterId") Long clusterId,
+            HttpServletResponse response
+    ) {
+        try {
+            tasksFlow.downloadFile(fileId, userId, clusterId, response);
+        } catch (Exception e) {
+            throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
+        }
+
+        return Result.success();
+    }
 
 
     /**

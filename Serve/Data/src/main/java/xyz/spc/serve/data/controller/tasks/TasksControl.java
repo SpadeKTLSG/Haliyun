@@ -13,6 +13,7 @@ import xyz.spc.common.funcpack.errorcode.ServerError;
 import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.serve.auxiliary.config.log.MLog;
 import xyz.spc.serve.data.flow.TasksFlow;
+import xyz.spc.serve.data.special.TasksFlowBatch;
 
 @Slf4j
 @MLog
@@ -24,6 +25,7 @@ public class TasksControl {
 
     // Flow
     private final TasksFlow tasksFlow;
+    private final TasksFlowBatch tasksFlowBatch;
 
 
     //! Func
@@ -65,7 +67,7 @@ public class TasksControl {
 
         // 批处理
         try {
-            tasksFlow.uploadFileBatch(file, clusterId, userId);
+            tasksFlowBatch.uploadFileBatch(file, clusterId, userId);
         } catch (Exception e) {
             throw new ServiceException(ServerError.SERVICE_RESOURCE_ERROR);
         }

@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import xyz.spc.common.funcpack.exception.ServiceException;
 import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.serve.data.flow.TasksFlow;
 import xyz.spc.serve.data.func.files.FilesFunc;
@@ -20,7 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service
@@ -130,7 +133,7 @@ public class TasksFlowBatch {
     /**
      * 下载文件批量处理接口
      */
-    public void downloadFileBatch(List<Long> fileIds, Long creatorUserId, Long fromClusterId, HttpServletResponse response) {
+    public void downloadFileBatch(List<Long> fileIds, Long creatorUserId, Long fromClusterId, HttpServletResponse response) throws InterruptedException {
 
 
         // 1 日志模块业务: 记录批量处理的总耗时等信息, 在开头进行计时等处理
@@ -142,26 +145,42 @@ public class TasksFlowBatch {
         // 2 使用 异步线程池 + 汇总的模式进行批处理.
         List<CompletableFuture<Map<String, Object>>> futures = new ArrayList<>();
 
+        // 2.1 初始化 CountDownLatch
+        int total = fileIds.size();
+        CountDownLatch latch = new CountDownLatch(total);
+
         // 3 针对每次处理, 返回对应的耗时, 最后汇总 (整合包装方法, 在下面)
 
         for (Long fileId : fileIds) {
 
             CompletableFuture<Map<String, Object>> future = CompletableFuture.supplyAsync(() -> {
                 try {
-                    // 调用单个文件下载方法并返回结果
+                    // 3.2 调用单个文件下载方法并返回结果
                     return this.downloadFileWithAroundLog(fileId, creatorUserId, fromClusterId);
 
                 } catch (IOException e) {
                     return Map.of("excuteTime", -1L); // -1 代表失败
+
+                } finally {
+                    // 3.3 任务完成后减少计数
+                    latch.countDown();
                 }
 
-            }, threadPoolTaskExecutor); //调用线程池执行异步任务
+                // 3.4 调用线程池执行异步任务
+            }, threadPoolTaskExecutor);
 
             futures.add(future); // 汇总
         }
 
-        // 4 所有任务完成后汇总结果
 
+        // 3.5 等待所有任务完成, 限时最大等待时间 = 6000000秒, AKA 100分钟
+        boolean await = latch.await(6000000, TimeUnit.SECONDS);
+        if (!await) {
+            throw new ServiceException("批量下载任务超时");
+        }
+
+
+        // 4 所有任务完成后汇总结果
 
         // 4.1 汇总结果: 需要把两段的Map分开为 time Map 和 file list
         List<Map<String, Object>> timeRes = new ArrayList<>();
@@ -205,7 +224,7 @@ public class TasksFlowBatch {
     /**
      * 下载文件流处理包装, 记录操作耗时等日志
      */
-    public Map<String, Object> downloadFileWithAroundLog(Long fileId, Long clusterId, Long userId) throws IOException {
+    public Map<String, Object> downloadFileWithAroundLog(Long fileId, Long userId, Long clusterId) throws IOException {
 
         // 1 日志模块业务: 记录批量处理的总耗时等信息, 在开头进行计时等处理
 

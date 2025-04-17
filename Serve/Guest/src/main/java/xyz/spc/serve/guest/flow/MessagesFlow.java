@@ -79,18 +79,18 @@ public class MessagesFlow {
                         selfMailDO -> {
                             SelfMailVO selfMailVO = new SelfMailVO();
 
-                            selfMailVO.setId(selfMailDO.getId());
+                            selfMailVO.setId(String.valueOf(selfMailDO.getId()));
 
                             // 发件者信息
-                            selfMailVO.setSenderId(selfMailDO.getSenderId());
+                            selfMailVO.setSenderId(String.valueOf(selfMailDO.getSenderId()));
                             selfMailVO.setSenderName(userAccountByIds.get(userIds.indexOf(selfMailDO.getSenderId())));
 
                             // 收件者信息
-                            selfMailVO.setReceiverId(selfMailDO.getReceiverId());
+                            selfMailVO.setReceiverId(String.valueOf(selfMailDO.getReceiverId()));
                             selfMailVO.setReceiverName(userAccountByIds.get(userIds.indexOf(selfMailDO.getReceiverId())));
 
                             // 群组信息 (这个可能为空)
-                            selfMailVO.setClusterId(selfMailDO.getClusterId());
+                            selfMailVO.setClusterId(String.valueOf(selfMailDO.getClusterId()));
 
                             if (clusterIds.contains(selfMailDO.getClusterId()) && !clusterNamesByIds.isEmpty()) {
                                 selfMailVO.setClusterName(clusterNamesByIds.get(clusterIds.indexOf(selfMailDO.getClusterId())));
@@ -148,18 +148,18 @@ public class MessagesFlow {
 
         // 4 组装, 拼装 Tmodel
         SelfMailVO res = SelfMailVO.builder()
-                .id(tmp.getId())
+                .id(String.valueOf(tmp.getId()))
 
                 // 发件者信息
-                .senderId(senderId)
+                .senderId(String.valueOf(senderId))
                 .senderName(senderName)
 
                 // 收件者信息
-                .receiverId(receiverId)
+                .receiverId(String.valueOf(receiverId))
                 .receiverName(receiverName)
 
                 // 群组信息
-                .clusterId(clusterId)
+                .clusterId(String.valueOf(clusterId))
                 .clusterName(clusterName)
 
                 // 信件信息

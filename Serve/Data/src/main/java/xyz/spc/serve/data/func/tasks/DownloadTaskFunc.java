@@ -70,7 +70,7 @@ public class DownloadTaskFunc {
             throw new ServiceException("任务不存在");
         }
 
-        return DownloadTaskVO.builder().id(String.valueOf(downloadTaskDO.getId())).fileId(downloadTaskDO.getFileId()).fileName(downloadTaskDO.getFileName()).pid(downloadTaskDO.getPid()).userId(downloadTaskDO.getUserId()).status(downloadTaskDO.getStatus()).fileSizeTotal(downloadTaskDO.getFileSizeTotal()).fileSizeOk(downloadTaskDO.getFileSizeOk()).executor(downloadTaskDO.getExecutor()).build();
+        return DownloadTaskVO.builder().id(String.valueOf(downloadTaskDO.getId())).fileId(String.valueOf(downloadTaskDO.getFileId())).fileName(downloadTaskDO.getFileName()).pid(String.valueOf(downloadTaskDO.getPid())).userId(String.valueOf(downloadTaskDO.getUserId())).status(downloadTaskDO.getStatus()).fileSizeTotal(downloadTaskDO.getFileSizeTotal()).fileSizeOk(downloadTaskDO.getFileSizeOk()).executor(downloadTaskDO.getExecutor()).build();
     }
 
     /**

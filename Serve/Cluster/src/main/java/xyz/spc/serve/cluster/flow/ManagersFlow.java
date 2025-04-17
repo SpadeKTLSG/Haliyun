@@ -45,9 +45,7 @@ public class ManagersFlow {
 
         // 我稍微换了个写法, 不是 直接用 stream的
         List<Long> userIds = new ArrayList<>();
-        clusterAuthDOList.forEach(clusterAuthDO -> {
-            userIds.add(clusterAuthDO.getUserId());
-        });
+        clusterAuthDOList.forEach(clusterAuthDO -> userIds.add(clusterAuthDO.getUserId()));
 
         // 2.2 批量查询对应账户的账户信息
         Result<List<UserVO>> listResult = Optional.ofNullable(usersClient.getUserDOInfoBatch(userIds))
@@ -60,13 +58,13 @@ public class ManagersFlow {
         clusterAuthDOList.forEach(source -> {
 
             ClusterAuthVO clusterAuthVO = ClusterAuthVO.builder()
-                    .id(source.getId())
+                    .id(String.valueOf(source.getId()))
                     // 群组默认前端带入不需要
-                    .userId(source.getUserId())
+                    .userId(String.valueOf(source.getUserId()))
 
                     // 补充用户信息
                     .account(userVOList.stream()
-                            .filter(userVO -> userVO.getId().equals(source.getUserId()))
+                            .filter(userVO -> userVO.getId().equals(String.valueOf(source.getUserId())))
                             .findFirst()
                             .orElseThrow(() -> new ServiceException(ServerError.SERVICE_RESOURCE_ERROR))
                             .getAccount())

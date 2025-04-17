@@ -520,7 +520,7 @@ public class UsersFunc {
             UserVO userVO = UserVO.builder()
 
                     // 补充 VO 展示信息
-                    .id(user.getId())
+                    .id(String.valueOf(user.getId()))
                     .account(user.getAccount())
                     .build();
 

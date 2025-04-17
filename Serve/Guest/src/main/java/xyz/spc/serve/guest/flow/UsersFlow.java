@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import xyz.spc.common.constant.SystemSpecialCT;
+import xyz.spc.common.funcpack.Result;
 import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.gate.dto.Guest.users.UserDTO;
 import xyz.spc.gate.vo.Guest.levels.LevelVO;
@@ -180,7 +181,8 @@ public class UsersFlow {
         Long userId = Objects.requireNonNull(UserContext.getUI());
 
         // 鉴权: 判断对应群组满了没...没满才可以加入
-        if (!clustersClient.checkClusterFull(clusterId)) {
+        Result<Object> r = clustersClient.checkClusterFull(clusterId);
+        if ((boolean) r.getData()) {
             throw new ClientException("群组人数已满, 无法加入!!!");
         }
 

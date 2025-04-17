@@ -14,7 +14,6 @@ import xyz.spc.domain.model.Data.attributes.FileTag;
 import xyz.spc.gate.vo.Data.attributes.FileTagVO;
 import xyz.spc.gate.vo.Data.files.FileGreatVO;
 import xyz.spc.gate.vo.Data.files.FileVO;
-import xyz.spc.infra.feign.Cluster.ClustersClient;
 import xyz.spc.serve.data.func.attributes.FileTagFunc;
 import xyz.spc.serve.data.func.files.FilesFunc;
 
@@ -28,7 +27,6 @@ public class AttributesFlow {
 
 
     // Feign
-    private final ClustersClient clustersClient;
 
     // Flow
     private final FilesFlow filesFlow;

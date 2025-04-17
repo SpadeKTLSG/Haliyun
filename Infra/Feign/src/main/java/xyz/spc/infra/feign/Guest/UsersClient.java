@@ -80,5 +80,5 @@ public interface UsersClient {
      * 计算中间表获取对应群组中用户数量
      */
     @GetMapping(BASE_URL + "/cluster/user/count")
-    Result<Integer> getClusterUserCount(Long clusterId);
+    Result<Integer> getClusterUserCount(@RequestParam Long clusterId);
 }

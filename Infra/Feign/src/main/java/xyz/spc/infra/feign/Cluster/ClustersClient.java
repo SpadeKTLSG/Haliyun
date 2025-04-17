@@ -2,6 +2,7 @@ package xyz.spc.infra.feign.Cluster;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+import xyz.spc.common.funcpack.Result;
 import xyz.spc.gate.vo.Cluster.clusters.ClusterVO;
 
 import java.util.List;
@@ -35,11 +36,14 @@ public interface ClustersClient {
      * 判断对应群组人满了没有
      */
     @GetMapping(BASE_URL + "/cluster/full/check")
-    boolean checkClusterFull(@RequestParam Long clusterId);
+    Result<Object> checkClusterFull(@RequestParam Long clusterId);
 
     /**
      * 操作对应群组人数 +=1
      */
     @PutMapping(BASE_URL + "/cluster/user/count")
-    void opClusterUserCount(Long clusterId, String opType, int amount);
+    void opClusterUserCount(
+            @RequestParam Long clusterId,
+            @RequestParam String opType,
+            @RequestParam int amount);
 }

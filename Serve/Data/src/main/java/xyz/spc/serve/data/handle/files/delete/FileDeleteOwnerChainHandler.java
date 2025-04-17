@@ -37,7 +37,7 @@ public class FileDeleteOwnerChainHandler implements FileDeleteChainFilter<File, 
 
         if(!auth){
             // 查出文件所在群的群主 (管理), 和当前用户进行对比
-            Long cluster_id = fileGreatVO.getClusterId();
+            Long cluster_id = Long.valueOf(fileGreatVO.getClusterId());
             auth = clustersClient.checkClusterCreatorEqual(cluster_id, nowUserId);
         }
 

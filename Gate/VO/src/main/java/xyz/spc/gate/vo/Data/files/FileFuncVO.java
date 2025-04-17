@@ -12,11 +12,11 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class FileFuncVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long tag;
+    private String tag;
 
-    private Long fileLock;
+    private String fileLock;
 
     private Integer status;
 

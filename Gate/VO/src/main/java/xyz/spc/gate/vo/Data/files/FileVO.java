@@ -12,13 +12,13 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class FileVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long pid;
+    private String pid;
 
-    private Long userId;
+    private String userId;
 
-    private Long clusterId;
+    private String clusterId;
 
     private String name;
 

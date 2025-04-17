@@ -110,7 +110,7 @@ public class FilesFunc {
         FileDO fileDO = FileDO.builder()
                 .id(file_id)
                 .pid(file_id)
-                .userId(source.getUserId()) // 保持创建者不变
+                .userId(Long.valueOf(source.getUserId())) // 保持创建者不变
                 .clusterId(targetClusterId) // 新群组
                 .name(source.getName())
                 .type(source.getType())
@@ -133,7 +133,7 @@ public class FilesFunc {
         // FileFunc
         FileFuncDO fileFuncDO = FileFuncDO.builder()
                 .id(file_id)
-                .tag(source.getTag()) // 文件标签
+                .tag(Long.valueOf(source.getTag())) // 文件标签
                 .fileLock(0L) // 文件锁
                 .status(FileFunc.STATUS_NORMAL) // 文件状态: 正常
                 .validDateType(source.getValidDateType()) // 有效期类型: 永久有效
@@ -166,10 +166,10 @@ public class FilesFunc {
 
 
         return FileGreatVO.builder()
-                .id(fileDO.getId())
-                .pid(fileDO.getPid())
-                .userId(fileDO.getUserId())
-                .clusterId(fileDO.getClusterId())
+                .id(String.valueOf(fileDO.getId()))
+                .pid(String.valueOf(fileDO.getPid()))
+                .userId(String.valueOf(fileDO.getUserId()))
+                .clusterId(String.valueOf(fileDO.getClusterId()))
                 .name(fileDO.getName())
                 .type(fileDO.getType())
                 .dscr(fileDetailDO.getDscr())
@@ -177,8 +177,8 @@ public class FilesFunc {
                 .size(fileDetailDO.getSize())
                 .path(fileDetailDO.getPath())
                 .diskPath(fileDetailDO.getDiskPath())
-                .tag(fileFuncDO.getTag())
-                .fileLock(fileFuncDO.getFileLock())
+                .tag(String.valueOf(fileFuncDO.getTag()))
+                .fileLock(String.valueOf(fileFuncDO.getFileLock()))
                 .status(fileFuncDO.getStatus())
                 .validDateType(fileFuncDO.getValidDateType())
                 .validDate(fileFuncDO.getValidDate())

@@ -46,7 +46,7 @@ public class AttributesFlow {
         FileGreatVO oneFileAllInfo = filesFlow.getOneFileAllInfo(fileId);
 
         // 2 通过Func, 找到 tag -> Tag
-        Long tagId = oneFileAllInfo.getTag();
+        Long tagId = Long.valueOf(oneFileAllInfo.getTag());
 
         // 3 id查
         FileTagDO tmp = fileTagFunc.getById(tagId);
@@ -148,12 +148,12 @@ public class AttributesFlow {
         tmp.forEach(
                 file -> {
                     FileVO fileVO = FileVO.builder()
-                            .id(file.getId())
-                            .pid(file.getPid())
+                            .id(String.valueOf(file.getId()))
+                            .pid(String.valueOf(file.getPid()))
                             .name(file.getName())
                             .type(file.getType())
-                            .userId(file.getUserId())
-                            .clusterId(file.getClusterId())
+                            .userId(String.valueOf(file.getUserId()))
+                            .clusterId(String.valueOf(file.getClusterId()))
                             .build();
 
                     res.add(fileVO);

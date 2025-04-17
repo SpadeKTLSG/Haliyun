@@ -65,7 +65,7 @@ public class MqTaskConsumer {
 
             // 3 通过任务信息定位具体的文件信息
             FileGreatVO fileGreatVO = filesFunc.getFileInfo(uploadTaskVO.getFileId());
-            fileId = fileGreatVO.getId();
+            fileId = Long.valueOf(fileGreatVO.getId());
 
             // 4 确定 HDFS 存储的目标路径, 唯一定位方法为 根目录Path + 用户id + 群组id + 文件名称
             String hdfsTargetPath = "/";

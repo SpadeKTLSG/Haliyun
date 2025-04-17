@@ -68,9 +68,9 @@ public class FilesFlow {
 
             FileShowVO fileShowVO = new FileShowVO();
 
-            fileShowVO.setId(file.getId());
-            fileShowVO.setPid(file.getPid());
-            fileShowVO.setUserId(file.getUserId());
+            fileShowVO.setId(String.valueOf(file.getId()));
+            fileShowVO.setPid(String.valueOf(file.getPid()));
+            fileShowVO.setUserId(String.valueOf(file.getUserId()));
             fileShowVO.setName(file.getName());
 
             fileShowVO.setCreateTime(file.getCreateTime());
@@ -96,7 +96,7 @@ public class FilesFlow {
 
         // 2 补充群组查询信息
         // 收集所有需要查询的 clusterId
-        List<Long> clusterIds = List.of(tmp.getClusterId());
+        List<Long> clusterIds = List.of(Long.valueOf(tmp.getClusterId()));
         // 批量查询 clusterName
         List<String> clusterNames = clustersClient.getClusterNamesByIds(clusterIds);
 
@@ -280,7 +280,7 @@ public class FilesFlow {
         FileGreatVO oneFileAllInfo = this.getOneFileAllInfo(fileId);
 
         // 2 找到对应群组id
-        Long clusterId = oneFileAllInfo.getClusterId();
+        Long clusterId = Long.valueOf(oneFileAllInfo.getClusterId());
 
         // 3 判断我是不是这个群组的群主
         Long myUserId = UserContext.getUI();

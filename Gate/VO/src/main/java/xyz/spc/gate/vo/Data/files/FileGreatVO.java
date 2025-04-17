@@ -14,15 +14,15 @@ import xyz.spc.gate.vo.BaseVO;
 public class FileGreatVO extends BaseVO {
 
 
-    private Long id;
+    private String id;
 
-    private Long pid;
+    private String pid;
 
     // FileVO
 
-    private Long userId;
+    private String userId;
 
-    private Long clusterId;
+    private String clusterId;
 
     private String name;
 
@@ -43,9 +43,9 @@ public class FileGreatVO extends BaseVO {
 
     // FileFuncVO
 
-    private Long tag;
+    private String tag;
 
-    private Long fileLock;
+    private String fileLock;
 
     private Integer status;
 

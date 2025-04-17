@@ -283,11 +283,7 @@ public final class NioUtil {
      */
     public static List<Path> listChildrenNotHidden(Path dir) throws IOException {
         // not hidden file filter
-        DirectoryStream.Filter<Path> notHiddenFilter = new DirectoryStream.Filter<Path>() {
-            public boolean accept(Path path) throws IOException {
-                return !Files.isHidden(path);
-            }
-        };
+        DirectoryStream.Filter<Path> notHiddenFilter = path -> !Files.isHidden(path);
         return listChildren(dir, notHiddenFilter);
     }
 

@@ -66,7 +66,7 @@ public final class UnitUtil {
      */
     public static String getByteToSize(long size) {
 
-        StringBuffer bytes = new StringBuffer();
+        StringBuilder bytes = new StringBuilder();
         // 保留两位有效数字
         DecimalFormat format = new DecimalFormat("###.00");
         if (size >= 1024 * 1024 * 1024) {

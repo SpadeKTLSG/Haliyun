@@ -479,19 +479,11 @@ public class ConvertUtil {
             return defaultValue;
         }
         valueStr = valueStr.trim().toLowerCase();
-        switch (valueStr) {
-            case "true":
-            case "yes":
-            case "ok":
-            case "1":
-                return true;
-            case "false":
-            case "no":
-            case "0":
-                return false;
-            default:
-                return defaultValue;
-        }
+        return switch (valueStr) {
+            case "true", "yes", "ok", "1" -> true;
+            case "false", "no", "0" -> false;
+            default -> defaultValue;
+        };
     }
 
     /**
@@ -839,7 +831,7 @@ public class ConvertUtil {
      * @return list集合
      */
     public static List<String> str2List(String str, String sep, boolean filterBlank, boolean trim) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new ArrayList<>();
         if (StringUtils.isEmpty(str)) {
             return list;
         }

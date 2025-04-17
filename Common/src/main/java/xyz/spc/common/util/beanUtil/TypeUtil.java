@@ -105,10 +105,9 @@ public class TypeUtil {
             return (T) new BigDecimal(input.toString());
         }
 
-        if (input instanceof String) {
+        if (input instanceof String inputStr) {
 
             // 对于输入的字符串,以是否存在“.“作为浮点数判断依据,转换时先转换为BigDecimal再进行目标转换
-            String inputStr = (String) input;
             if (inputStr.contains(".")) {
                 return toNumber(target, toNumber(BigDecimal.class, input));
             } else {

@@ -46,7 +46,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
         }
 
         // nowData 为当前请求参数
-        Map<String, Object> nowDataMap = new HashMap<String, Object>();
+        Map<String, Object> nowDataMap = new HashMap<>();
         nowDataMap.put(REPEAT_PARAMS, nowParams);
         nowDataMap.put(REPEAT_TIME, System.currentTimeMillis());
         String url = request.getRequestURI();
@@ -64,7 +64,7 @@ public class SameUrlDataInterceptor extends RepeatSubmitInterceptor {
                 }
             }
         }
-        Map<String, Object> cacheMap = new HashMap<String, Object>();
+        Map<String, Object> cacheMap = new HashMap<>();
         cacheMap.put(url, nowDataMap);
         redisCacheGeneral.setCacheObject(cacheRepeatKey, cacheMap, annotation.interval(), TimeUnit.MILLISECONDS);
         return false;

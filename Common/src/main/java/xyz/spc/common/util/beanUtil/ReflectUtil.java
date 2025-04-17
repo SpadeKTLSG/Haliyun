@@ -36,7 +36,7 @@ public final class ReflectUtil {
      */
     public static Map<String, Object> beanToMap(Object bean) {
         PropertyDescriptor[] propertyDescriptorArray = getPropertyDescriptorArray(bean);
-        Map<String, Object> parameterMap = new HashMap<String, Object>();
+        Map<String, Object> parameterMap = new HashMap<>();
         for (PropertyDescriptor propertyDescriptor : propertyDescriptorArray) {
             Object value = getPropertyDescriptorValue(bean, propertyDescriptor);
             parameterMap.put(propertyDescriptor.getName(), value);
@@ -177,9 +177,7 @@ public final class ReflectUtil {
                     resultValue = method.invoke(bean);
                 }
 
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
+            } catch (IllegalAccessException | InvocationTargetException e) {
                 e.printStackTrace();
             }
         }
@@ -223,9 +221,7 @@ public final class ReflectUtil {
         if (null != clazz) {
             try {
                 bean = clazz.newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }
@@ -272,9 +268,7 @@ public final class ReflectUtil {
         if (null != clazz) {
             try {
                 bean = clazz.newInstance();
-            } catch (InstantiationException e) {
-                e.printStackTrace();
-            } catch (IllegalAccessException e) {
+            } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }
         }

@@ -95,8 +95,8 @@ public class StatisticFunc {
         );
 
         StatisticsVO res = StatisticsVO.builder()
-                .id(one.getId())
-                .userId(one.getUserId())
+                .id(String.valueOf(one.getId()))
+                .userId(String.valueOf(one.getUserId()))
                 .comment(one.getComment())
                 .download(one.getDownload())
                 .upload(one.getUpload())

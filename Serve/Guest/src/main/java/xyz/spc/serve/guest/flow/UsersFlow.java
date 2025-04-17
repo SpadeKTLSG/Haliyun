@@ -100,7 +100,7 @@ public class UsersFlow {
         UserGreatVO userGreatVO = usersFunc.getUserInfo(id);
 
         //补充查询基础信息: Level等级 => 名称和层级
-        LevelVO levelVO = levelFunc.getLevelInfo(userGreatVO.getLevelId());
+        LevelVO levelVO = levelFunc.getLevelInfo(Long.valueOf(userGreatVO.getLevelId()));
         userGreatVO.setLevelName(levelVO.getName());
         userGreatVO.setLevelFloor(levelVO.getFloor());
 

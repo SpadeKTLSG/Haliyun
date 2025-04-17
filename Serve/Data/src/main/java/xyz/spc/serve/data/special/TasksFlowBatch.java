@@ -15,6 +15,7 @@ import xyz.spc.serve.data.func.files.FilesFunc;
 import xyz.spc.serve.data.func.tasks.DownloadTaskFunc;
 import xyz.spc.serve.data.func.tasks.UploadTaskFunc;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -196,15 +197,17 @@ public class TasksFlowBatch {
         long startTime = System.currentTimeMillis();
 
         // 2 调用单个下载接口
-        tasksFlow.downloadFileNotResp(fileId, userId,  clusterId);
+        File realFile = tasksFlow.downloadFileNotResp(fileId, userId, clusterId);
 
         // 1.2 结束计时:
         long endTime = System.currentTimeMillis();
 
-        // 1.3 返回单条记录
+
+        // 1.3 返回单条记录, 包括了日志记录和文件对象
 
         return Map.of(
-                "excuteTime", endTime - startTime
+                "excuteTime", endTime - startTime,
+                "realFile", realFile
         );
     }
 

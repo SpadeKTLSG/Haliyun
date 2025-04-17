@@ -84,7 +84,6 @@ public class TasksFlow {
     }
 
 
-
     /**
      * 下载文件流处理
      */
@@ -120,13 +119,50 @@ public class TasksFlow {
         downloadTaskFunc.download2Client(realLocalTempFile, response);
 
 
-
-        // 8 (异步) 清理对应的临时文件
+        // 8 (异步 + 延迟)  清理对应的临时文件
         downloadTaskFunc.cleanTempFile(realLocalTempFile);
 
     }
 
+    /**
+     * 下载文件流处理
+     */
+    @Transactional(rollbackFor = Exception.class, timeout = 50)
+    public File downloadFileNotResp(Long fileId, Long creatorUserId, Long fromClusterId) {
 
+
+        // 1 获取对应文件对象
+        FileGreatVO fileGreatVO = filesFunc.getFileInfo(fileId);
+        String fileName = fileGreatVO.getName(); // 文件名称
+
+
+        // 2 创建对应下载任务
+        downloadTaskFunc.taskGen(fileId, fileName, creatorUserId);
+
+
+        // 3 发起 HDFS 下载请求到本地磁盘缓存
+        String firstFileDiskPath = downloadTaskFunc.handleTempDownload(fileName, creatorUserId, fromClusterId);
+
+
+        // 4 定位到对应文件对象 + 进行本地缓存的文件对象重命名避免冲突
+        File realLocalTempFile = downloadTaskFunc.locateRenameFile(fileName, firstFileDiskPath, creatorUserId, fromClusterId);
+
+
+        // 5 (异步) 登记下载次数等信息
+        filesFunc.addUserDownloadTimes(fileId);
+
+
+        // 6 下载任务表登记完成
+        downloadTaskFunc.completeTask(fileId);
+
+
+        // 7 (异步 + 延迟) 清理对应的临时文件
+        downloadTaskFunc.cleanTempFile(realLocalTempFile);
+
+
+        // 8 返回文件对象用于汇总结果 (走统一压缩逻辑)
+        return realLocalTempFile;
+    }
 
 
     /**

@@ -57,16 +57,6 @@ public class UserClusterFunc {
 
         //? 收藏集 + 对应排序 功能在修改里面, 这个是新增关系
 
-        //由于数据库多主键问题, 这里需要先判断是否存在 (userId + clusterId都相同)
-        if (userClusterRepo.userClusterMapper.selectCount(
-                Wrappers.lambdaQuery(UserClusterDO.class)
-                        .eq(UserClusterDO::getUserId, userId)
-                        .eq(UserClusterDO::getClusterId, clusterId)
-        ) > 0) {
-            //已有关系, 提示客户
-
-        }
-
         //组装数据库字段
         Long id = SnowflakeIdUtil.nextId();
 

@@ -379,7 +379,7 @@ public final class ReflectUtil {
         try {
             return (E) method.invoke(obj, args);
         } catch (Exception e) {
-            String msg = "method: " + method + ", obj: " + obj + ", args: " + args;
+            String msg = "method: " + method + ", obj: " + obj + ", args: " + Arrays.toString(args);
             throw convertReflectionExceptionToUnchecked(msg, e);
         }
     }
@@ -423,7 +423,7 @@ public final class ReflectUtil {
             }
             return (E) method.invoke(obj, args);
         } catch (Exception e) {
-            String msg = "method: " + method + ", obj: " + obj + ", args: " + args;
+            String msg = "method: " + method + ", obj: " + obj + ", args: " + Arrays.toString(args);
             throw convertReflectionExceptionToUnchecked(msg, e);
         }
     }

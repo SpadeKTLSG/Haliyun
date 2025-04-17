@@ -181,11 +181,24 @@ public class UsersFlow {
 
         Long userId = Objects.requireNonNull(UserContext.getUI());
 
+        // 鉴权: 判断对应群组满了没...没满才可以加入
+        if (!clustersClient.checkClusterFull(clusterId)) {
+            throw new ClientException("群组人数已满, 无法加入!!!");
+        }
+
+        // 鉴权: 判断当前用户是否已经加入了这个群组
+        if (userClusterFunc.checkUserJoinCluster(userId, clusterId)) {
+            throw new ClientException("你已经加入了这个群组, 无需重复加入");
+        }
+
         // 加入群组表操作
         userClusterFunc.joinCluster(userId, clusterId);
 
         // 维护 UserFunc 的加入群组数量
         usersFunc.opUserJoinClusterCount(userId, SystemSpecialCT.ADD, 1);
+
+        // 维护对应群组人员数量: +=1
+        clustersClient.opClusterUserCount(clusterId, SystemSpecialCT.ADD, 1);
     }
 
     /**

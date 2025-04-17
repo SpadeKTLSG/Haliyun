@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import xyz.spc.common.funcpack.exception.ClientException;
 import xyz.spc.common.funcpack.snowflake.SnowflakeIdUtil;
 import xyz.spc.domain.dos.Guest.users.UserClusterDO;
 import xyz.spc.domain.model.Guest.users.UserCluster;
@@ -36,6 +35,21 @@ public class UserClusterFunc {
         return temp.stream().map(UserClusterDO::getClusterId).toList();
     }
 
+
+    /**
+     * 检查用户是否已经在群组中
+     */
+    public boolean checkUserJoinCluster(Long userId, Long clusterId) {
+
+        return userClusterRepo.userClusterMapper.selectCount(
+                Wrappers.lambdaQuery(UserClusterDO.class)
+                        .eq(UserClusterDO::getUserId, userId)
+                        .eq(UserClusterDO::getClusterId, clusterId)
+        ) > 0;
+
+    }
+
+
     /**
      * 创建 userId - clusterId 关系
      */
@@ -50,7 +64,7 @@ public class UserClusterFunc {
                         .eq(UserClusterDO::getClusterId, clusterId)
         ) > 0) {
             //已有关系, 提示客户
-            throw new ClientException("用户已经加入群组");
+
         }
 
         //组装数据库字段

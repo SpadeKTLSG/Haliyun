@@ -51,7 +51,7 @@ public class TasksFlowBatch {
     /**
      * 上传文件批量处理接口
      */
-    public void uploadFileBatch(MultipartFile[] files, Long clusterId, Long userId) {
+    public void uploadFileBatch(MultipartFile[] files, Long clusterId, Long userId) throws InterruptedException {
 
         // 1 日志模块业务: 记录批量处理的总耗时等信息, 在开头进行计时等处理
 
@@ -62,22 +62,36 @@ public class TasksFlowBatch {
         // 2 使用 异步线程池 + 汇总的模式进行批处理.
         List<CompletableFuture<Map<String, Object>>> futures = new ArrayList<>();
 
+        // 2.1 初始化 CountDownLatch
+        int total = files.length;
+        CountDownLatch latch = new CountDownLatch(total);
+
         // 3 针对每次处理, 返回对应的耗时, 最后汇总 (整合包装方法, 在下面)
+
 
         for (MultipartFile file : files) {
 
             CompletableFuture<Map<String, Object>> future = CompletableFuture.supplyAsync(() -> {
                 try {
-                    // 调用单个文件上传方法并返回结果
+                    // 3.1 调用单个文件上传方法并返回结果
                     return this.uploadFileWithAroundLog(file, clusterId, userId);
 
                 } catch (IOException e) {
                     return Map.of("excuteTime", -1L); // -1 代表失败
+                } finally {
+                    // 3.2 任务完成后减少计数
+                    latch.countDown();
                 }
 
             }, threadPoolTaskExecutor); //调用线程池执行异步任务
 
             futures.add(future); // 汇总
+        }
+
+        // 3.3 等待所有任务完成, 限时最大等待时间 = 6000000秒, AKA 100分钟
+        boolean await = latch.await(6000000, TimeUnit.SECONDS);
+        if (!await) {
+            throw new ServiceException("批量上传任务超时");
         }
 
         // 4 所有任务完成后汇总结果

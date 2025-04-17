@@ -41,5 +41,5 @@ public interface ClustersClient {
      * 操作对应群组人数 +=1
      */
     @PutMapping(BASE_URL + "/cluster/user/count")
-    void opClusterUserCount(Long clusterId, String add, int i);
+    void opClusterUserCount(Long clusterId, String opType, int amount);
 }

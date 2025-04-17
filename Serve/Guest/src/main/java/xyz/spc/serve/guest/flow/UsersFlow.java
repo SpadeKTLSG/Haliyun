@@ -143,8 +143,6 @@ public class UsersFlow {
         //文件: 删除所有文件, 清理历史
         //todo
 
-        //日志: 清理用户的日志, 降低管理日志压力
-        //todo
 
         //用户: 注销用户基础联表三张信息 - 逻辑删除
         usersFunc.killUserAccount(id);
@@ -197,7 +195,7 @@ public class UsersFlow {
         // 维护 UserFunc 的加入群组数量
         usersFunc.opUserJoinClusterCount(userId, SystemSpecialCT.ADD, 1);
 
-        // 维护对应群组人员数量: +=1
+        // 维护对应群组人员数量: +=1 (此方法目前无效果, 因为没有字段)
         clustersClient.opClusterUserCount(clusterId, SystemSpecialCT.ADD, 1);
     }
 
@@ -289,5 +287,12 @@ public class UsersFlow {
      */
     public List<UserVO> getUserDOInfoBatch(List<Long> creatorUserIds) {
         return usersFunc.getUserDOInfoBatch(creatorUserIds);
+    }
+
+    /**
+     * 计算中间表获取对应群组中用户数量
+     */
+    public Integer getClusterUserCount(Long clusterId) {
+        return userClusterFunc.getClusterUserCount(clusterId);
     }
 }

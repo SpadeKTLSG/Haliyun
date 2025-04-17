@@ -54,6 +54,22 @@ public class ClustersControl {
         return clustersFlow.checkClusterCreatorEqual(clusterId, myUserId);
     }
 
+    /**
+     * 判断对应群组人满了没有
+     */
+    @GetMapping("/cluster/full/check")
+    boolean checkClusterFull(@RequestParam Long clusterId){
+        return clustersFlow.checkClusterFull(clusterId);
+    }
+
+    /**
+     * 操作对应群组人数 +=1
+     */
+    @PutMapping( "/cluster/user/count")
+    void opClusterUserCount(Long clusterId, String opType, int amount){
+        clustersFlow.opClusterUserCount(clusterId, opType, amount);
+    }
+
 
     //! Func
 

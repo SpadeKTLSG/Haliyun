@@ -363,4 +363,46 @@ public class ClustersFlow {
     public boolean checkClusterCreatorEqual(Long clusterId, Long myUserId) {
         return clustersFunc.checkClusterCreatorEqual(clusterId, myUserId);
     }
+
+
+    /**
+     * 判断对应群组人满了没有
+     */
+    public boolean checkClusterFull(Long clusterId) {
+
+        // 1 获得对应群组人数上限字段
+        int maxUserCount = clustersFunc.getClusterMaxUserCount(clusterId);
+
+        // 2 获取群组当前人数 - 无字段需要手动加载计算
+        int currentUserCount = this.getClusterUserCount(clusterId);
+
+        // 3 判断
+        return currentUserCount >= maxUserCount;
+
+    }
+
+
+    /**
+     * 获取对应群组人员数量
+     */
+    public int getClusterUserCount(Long clusterId) {
+        Result<Integer> r = usersClient.getClusterUserCount(clusterId);
+        int i = r.getData();
+
+        return i;
+    }
+
+
+    /**
+     * 操作对应群组人数记录字段 操作类型 + 对应数量
+     * ? note 这个方法是空的, 因为暂时没有设计对应的 字段 存储人数, 都是用 Tmodel, 这个留给后面
+     */
+    public void opClusterUserCount(Long clusterId, String opType, int amount) {
+
+        // 查出对应记录
+
+        // 操作
+    }
+
+
 }

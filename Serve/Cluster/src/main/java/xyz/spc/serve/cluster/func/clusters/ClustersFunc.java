@@ -313,4 +313,21 @@ public class ClustersFunc {
         );
 
     }
+
+    /**
+     * 获取群组的最大人数字段
+     */
+    public int getClusterMaxUserCount(Long clusterId) {
+
+        ClusterDO one = clustersRepo.clusterService.getOne(
+                Wrappers.lambdaQuery(ClusterDO.class)
+                        .eq(ClusterDO::getId, clusterId)
+                        .eq(ClusterDO::getDelFlag, DelEnum.NORMAL.getStatusCode())
+        );
+
+        return one.getPopVolume();
+    }
+
+
+
 }

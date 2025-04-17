@@ -144,14 +144,26 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/cluster/kick_out?clusterId=1&userId=2
 
+
     /**
      * 所有人退出某群组
      */
     @DeleteMapping("/cluster/every_quit")
-    void everyQuitCluster(@RequestParam Long clusterId) {
+    Result<Object> everyQuitCluster(@RequestParam Long clusterId) {
         usersFlow.everyQuitCluster(clusterId);
+        return Result.success();
     }
     //http://localhost:10000/Guest/users/cluster/every_quit?clusterId=1
+
+
+    /**
+     * 计算中间表获取对应群组中用户数量
+     */
+    @GetMapping("/cluster/user/count")
+    Result<Integer> getClusterUserCount(@RequestParam Long clusterId) {
+        return Result.success(usersFlow.getClusterUserCount(clusterId));
+    }
+
 
     //! Func
 

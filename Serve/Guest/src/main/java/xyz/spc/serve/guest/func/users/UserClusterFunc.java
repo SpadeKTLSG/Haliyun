@@ -120,4 +120,19 @@ public class UserClusterFunc {
 
         return res;
     }
+
+
+    /**
+     * 计算中间表获取对应群组中用户数量
+     */
+    public Integer getClusterUserCount(Long clusterId) {
+
+        Integer count = Math.toIntExact(userClusterRepo.userClusterMapper.selectCount(
+                Wrappers.lambdaQuery(UserClusterDO.class)
+                        .eq(UserClusterDO::getClusterId, clusterId)
+        ));
+
+        return count;
+
+    }
 }

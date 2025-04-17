@@ -74,7 +74,11 @@ public interface UsersClient {
      * 所有人的退出群组
      */
     @DeleteMapping(BASE_URL + "/cluster/every_quit")
-    void everyQuitCluster(@RequestParam Long clusterId);
+    Result<Object> everyQuitCluster(@RequestParam Long clusterId);
 
-
+    /**
+     * 计算中间表获取对应群组中用户数量
+     */
+    @GetMapping(BASE_URL + "/cluster/user/count")
+    Result<Integer> getClusterUserCount(Long clusterId);
 }

@@ -165,15 +165,36 @@ public class TasksFlowBatch {
 
         // 4 所有任务完成后汇总结果
 
+
+        // 4.1 汇总结果: 需要把两段的Map分开为 time Map 和 file list
         List<Map<String, Object>> results = new ArrayList<>();
+        List<Map<String, Object>> timeRes = new ArrayList<>();
+        List<File> fileResList = new ArrayList<>();
 
         for (CompletableFuture<Map<String, Object>> future : futures) {
             try {
-                results.add(future.get()); // 获取每个任务的结果
+
+                // 4.2 进行拆分
+                Map<String, Object> resTemp = future.get(); // 获取每个任务的总结果
+
+                // time res
+                Map<String, Object> timeResMap = Map.of("excuteTime", resTemp.get("excuteTime")); // 获取时间
+                timeRes.add(timeResMap);
+
+                // file res
+                File fileRes = (File) resTemp.get("realFile"); // 获取文件
+                fileResList.add(fileRes);
+
+
             } catch (InterruptedException | ExecutionException e) {
                 log.error("批量上传任务获取结果失败", e);
             }
         }
+
+
+        // 5 进行文件压缩处理并返回用户
+
+//        todo
 
         // 1.X 结束计时:
         long endTime = System.currentTimeMillis();
@@ -181,7 +202,7 @@ public class TasksFlowBatch {
         // 1.X+1 计算耗时并调用日志模块内容
         // (TODO调用, 这里先记录)
         log.info("批量上传文件耗时: {}ms", endTime - startTime); // 未来加上用户id等信息
-        log.info("批量上传任务详情: {}", results); // 未来加上用户id等信息
+        log.info("批量上传任务详情: {}", timeRes); // 未来加上用户id等信息
 
     }
 

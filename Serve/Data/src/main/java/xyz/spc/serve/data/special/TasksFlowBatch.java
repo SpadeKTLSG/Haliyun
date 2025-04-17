@@ -5,7 +5,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -49,7 +48,6 @@ public class TasksFlowBatch {
     /**
      * 上传文件批量处理接口
      */
-    @Async("SKThreadPoolTExecutor")
     public void uploadFileBatch(MultipartFile[] files, Long clusterId, Long userId) {
 
         // 1 日志模块业务: 记录批量处理的总耗时等信息, 在开头进行计时等处理
@@ -132,7 +130,6 @@ public class TasksFlowBatch {
     /**
      * 下载文件批量处理接口
      */
-    @Async("SKThreadPoolTExecutor")
     public void downloadFileBatch(List<Long> fileIds, Long creatorUserId, Long fromClusterId, HttpServletResponse response) {
 
 
@@ -167,7 +164,6 @@ public class TasksFlowBatch {
 
 
         // 4.1 汇总结果: 需要把两段的Map分开为 time Map 和 file list
-        List<Map<String, Object>> results = new ArrayList<>();
         List<Map<String, Object>> timeRes = new ArrayList<>();
         List<File> fileResList = new ArrayList<>();
 

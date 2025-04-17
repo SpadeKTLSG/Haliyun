@@ -203,6 +203,7 @@ public class DownloadTaskFunc {
 
     /**
      * 下载业务中, 删除本地磁盘产生的临时文件
+     * ? note: 不要下载一半就给人家删除了啊
      */
     @Async
     public void cleanTempFile(File realLocalTempFile) {

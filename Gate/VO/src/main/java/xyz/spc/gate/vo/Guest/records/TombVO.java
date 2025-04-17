@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TombVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long userId;
+    private String userId;
 
     private Long createNo;
 

@@ -11,7 +11,8 @@ import xyz.spc.gate.vo.BaseVO;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PropVO extends BaseVO {
-    private Long id;
+
+    private String id;
 
     private Integer type;
 
@@ -26,4 +27,5 @@ public class PropVO extends BaseVO {
     private String pic;
 
     private String attribute;
+
 }

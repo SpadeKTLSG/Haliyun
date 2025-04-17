@@ -12,11 +12,11 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class CollectVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long targetId;
+    private String targetId;
 
-    private Long userId;
+    private String userId;
 
     private Integer type;
 

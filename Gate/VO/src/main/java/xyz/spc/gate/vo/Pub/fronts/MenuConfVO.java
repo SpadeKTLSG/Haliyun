@@ -12,13 +12,13 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class MenuConfVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long userId;
+    private String userId;
 
     private String userAccount;
 
-    private Long menuId;
+    private String menuId;
 
     private String menuName;
 

@@ -12,13 +12,13 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class SelfMailVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long clusterId;
+    private String clusterId;
 
-    private Long senderId;
+    private String senderId;
 
-    private Long receiverId;
+    private String receiverId;
 
     private Integer status;
 

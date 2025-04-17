@@ -12,7 +12,7 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class UserDetailVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
     private Integer gender;
 

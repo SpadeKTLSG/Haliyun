@@ -32,7 +32,7 @@ public class FilesControl {
     //! Client
 
     /**
-     * id 批量查询 Post 动态
+     * id 批量查询文件, - Post 动态
      */
     @PostMapping("/file/batch")
     List<FileShowVO> getFileByIdBatch(@RequestBody List<Long> fileIds) {

@@ -56,7 +56,7 @@ public class AttributesFlow {
 
         // 4 转化为VO
         FileTagVO res = FileTagVO.builder()
-                .id(tmp.getId())
+                .id(String.valueOf(tmp.getId()))
                 .name(tmp.getName())
                 .status(tmp.getStatus())
                 .build();
@@ -115,7 +115,7 @@ public class AttributesFlow {
 
         // 2 找到对应文件的标签
         FileTagVO tmp = this.getFileTag(fileId);
-        Long tagId = tmp.getId();
+        Long tagId = Long.valueOf(tmp.getId());
 
         // 3 直接删除 (对应文件的关联关系不处理, 直接降级)
         fileTagFunc.deleteTag(tagId);

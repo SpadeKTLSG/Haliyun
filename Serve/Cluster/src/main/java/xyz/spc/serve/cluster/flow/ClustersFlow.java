@@ -70,7 +70,7 @@ public class ClustersFlow {
 
             ClusterVO clusterVO = new ClusterVO();
 
-            clusterVO.setId(cluster.getId());
+            clusterVO.setId(String.valueOf(cluster.getId()));
             clusterVO.setName(cluster.getName());
             clusterVO.setNickname(cluster.getNickname());
             clusterVO.setPic(cluster.getPic());
@@ -136,7 +136,7 @@ public class ClustersFlow {
         // 将 ClusterDO 转换为 ClusterVO
         List<ClusterVO> pagedClusterVOList = pagedClusterList.stream().map(cluster -> {
             ClusterVO clusterVO = new ClusterVO();
-            clusterVO.setId(cluster.getId());
+            clusterVO.setId(String.valueOf(cluster.getId()));
             clusterVO.setName(cluster.getName());
             clusterVO.setNickname(cluster.getNickname());
             clusterVO.setPic(cluster.getPic());
@@ -177,7 +177,7 @@ public class ClustersFlow {
         Integer userisAdmin = 0;
         // 直接查 GreatVO 里面的 userId找到对应的 UserDO 即可
         //? 一般RPC, 直接用Result 包一层是推荐的, 因为可以被复用到前端 (不考虑性能) 这种写法可以, 下面的也可以
-        Result<UserVO> res1 = usersClient.getUserDOInfo(clusterGreatVO.getCreatorUserId());
+        Result<UserVO> res1 = usersClient.getUserDOInfo(Long.valueOf(clusterGreatVO.getCreatorUserId()));
         if (Objects.equals(res1.getCode(), ReqRespCT.FAIL_CODE)) {
             throw new ServiceException(ServerError.SERVICE_RPC_ERROR);
         }
@@ -192,7 +192,7 @@ public class ClustersFlow {
         String noticeName = "";
         String noticeContent = "";
         // 直接查 群组功能 Notice by id
-        NoticeDO noticeById = Optional.ofNullable(noticeFunc.getNoticeById(clusterGreatVO.getNoticeId())).orElse(
+        NoticeDO noticeById = Optional.ofNullable(noticeFunc.getNoticeById(Long.valueOf(clusterGreatVO.getNoticeId()))).orElse(
                 NoticeDO.builder()
                         .name("没有公告哦")
                         .content("这里什么都么有")
@@ -210,7 +210,7 @@ public class ClustersFlow {
         String currencyPic = "";
 
         // 直接查 Money模块 的 CurrencyDO 信息 by id
-        CurrencyDO currencyById = standardsClient.getCurrencyById(clusterGreatVO.getCurrencyId()).getData();
+        CurrencyDO currencyById = standardsClient.getCurrencyById(Long.valueOf(clusterGreatVO.getCurrencyId())).getData();
 
         currencyName = currencyById.getName();
         currencyExchangeRate = currencyById.getExchangeRate();
@@ -223,7 +223,7 @@ public class ClustersFlow {
         // 直接查 群组互动 RemarkDO by clusterid + type == 0
 
         List<String> content = remarkFunc.getRemark4ClusterHallShow(
-                clusterGreatVO.getId(),
+                Long.valueOf(clusterGreatVO.getId()),
                 3
         );
 

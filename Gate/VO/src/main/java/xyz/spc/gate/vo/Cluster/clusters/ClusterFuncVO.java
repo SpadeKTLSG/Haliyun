@@ -12,11 +12,11 @@ import xyz.spc.gate.vo.BaseVO;
 @AllArgsConstructor
 public class ClusterFuncVO extends BaseVO {
 
-    private Long id;
+    private String id;
 
-    private Long noticeId;
+    private String noticeId;
 
-    private Long currencyId;
+    private String currencyId;
 
     private Integer allowInvite;
 

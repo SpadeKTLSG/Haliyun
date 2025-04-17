@@ -13,9 +13,9 @@ import xyz.spc.gate.vo.BaseVO;
 public class ClusterLevelPrefixVO extends BaseVO {
 
 
-    private Long id;
+    private String id;
 
-    private Long clusterId;
+    private String clusterId;
 
     private String name;
 

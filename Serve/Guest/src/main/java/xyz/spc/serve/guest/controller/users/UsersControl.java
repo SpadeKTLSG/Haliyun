@@ -80,7 +80,8 @@ public class UsersControl {
     public Result<List<Long>> getUserClusterIds() {
         return Result.success(usersFlow.getUserClusterIds());
     }
-    //http://localhost:10000/Guest/users/user_clusters
+
+
 
 
     /**
@@ -295,4 +296,17 @@ public class UsersControl {
     }
     //http://localhost:10000/Guest/users/cluster/user_list?clusterId=1
 
+
+    /**
+     * 查用户加入的群组id清单 - 只用于展示
+     */
+    @GetMapping("/user_clusters/show")
+    public Result<List<String>> getUserClusterIdsShow() {
+        List<Long> userClusterIds = usersFlow.getUserClusterIds();
+        List<String> res = userClusterIds.stream()
+                .map(String::valueOf)
+                .toList();
+
+        return Result.success(res);
+    }
 }

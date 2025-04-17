@@ -202,7 +202,7 @@ public class UsersFlow {
     }
 
     /**
-     * 将当前 Context 的用户 (id) 加入群组 (id), 但是是群主
+     * 将当前 Context 的用户 (id) 加入群组 (id), 但是是群主创建的
      */
     public void creatorJoinCluster(Long clusterId) {
 

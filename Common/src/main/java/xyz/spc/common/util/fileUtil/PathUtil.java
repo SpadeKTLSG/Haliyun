@@ -128,7 +128,7 @@ public final class PathUtil {
             path = path.replaceAll("/+$", "");
 
             // 类似只有/的路径被正则替换后，无了
-            if (path.length() == 0) {
+            if (path.isEmpty()) {
                 return "/";
             }
         }

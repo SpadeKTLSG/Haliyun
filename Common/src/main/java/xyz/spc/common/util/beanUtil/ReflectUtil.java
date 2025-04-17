@@ -13,7 +13,6 @@ import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * 反射工具类合集. 提供调用getter/setter方法, 访问私有变量, 调用私有方法, 获取泛型类型Class, 被AOP过的真实类等工具函数.
@@ -286,8 +285,8 @@ public final class ReflectUtil {
      * 获取属性字段的注解属性
      */
     public static Annotation[] getFieldAnnotations(Object bean, PropertyDescriptor propertyDescriptor) {
-        List<Field> fieldList = Arrays.asList(bean.getClass().getDeclaredFields()).stream().filter(f -> f.getName().equals(propertyDescriptor.getName())).collect(Collectors.toList());
-        if (null != fieldList && fieldList.size() > 0) {
+        List<Field> fieldList = Arrays.stream(bean.getClass().getDeclaredFields()).filter(f -> f.getName().equals(propertyDescriptor.getName())).toList();
+        if (null != fieldList && !fieldList.isEmpty()) {
             return fieldList.get(0).getDeclaredAnnotations();
         }
         return null;
@@ -451,7 +450,6 @@ public final class ReflectUtil {
                 makeAccessible(field);
                 return field;
             } catch (NoSuchFieldException e) {
-                continue;
             }
         }
         return null;
@@ -475,7 +473,6 @@ public final class ReflectUtil {
                 makeAccessible(method);
                 return method;
             } catch (NoSuchMethodException e) {
-                continue;
             }
         }
         return null;

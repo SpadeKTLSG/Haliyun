@@ -51,12 +51,15 @@ public class MqTaskConsumer {
     @RabbitListener(queues = TasksMQCompo.UPLOAD_QUEUE)
     @Transactional(rollbackFor = Exception.class, timeout = 30)
     public void processUploadTask(Object[] input) {
+
         // 1 获取任务 ID 和本地文件路径
         Long taskId = (Long) input[0];
         String localFilePath = (String) input[1];
-        Long fileId = 0L;
+        long fileId = 0L;
         InputStream is = null;
         String tempFilePath = "";
+
+
         try {
 
 
@@ -65,7 +68,7 @@ public class MqTaskConsumer {
 
             // 3 通过任务信息定位具体的文件信息
             FileGreatVO fileGreatVO = filesFunc.getFileInfo(Long.valueOf(uploadTaskVO.getFileId()));
-            fileId = Long.valueOf(fileGreatVO.getId());
+            fileId = Long.parseLong(fileGreatVO.getId());
 
             // 4 确定 HDFS 存储的目标路径, 唯一定位方法为 根目录Path + 用户id + 群组id + 文件名称
             String hdfsTargetPath = "/";

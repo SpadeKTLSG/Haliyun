@@ -18,6 +18,8 @@ import xyz.spc.infra.special.Data.tasks.TasksRepo;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 @Slf4j
 @Service
@@ -147,21 +149,27 @@ public class UploadTaskFunc {
 
     /**
      * 上传业务中, 删除本地磁盘产生的临时文件
+     * ? note: 不要上传一半就给人家删除了啊
      */
     @Async
     public void cleanTempFile(File realLocalTempFile) {
+        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.schedule(() -> {
 
-        // 删除本地磁盘的临时文件
-        if (realLocalTempFile.exists()) {
+            // 删除本地磁盘的临时文件
+            if (realLocalTempFile.exists()) {
 
-            boolean deleted = realLocalTempFile.delete();
+                boolean deleted = realLocalTempFile.delete();
 
-            if (!deleted) {
-                log.error("删除上传中的本地磁盘的临时文件失败");
+                if (!deleted) {
+                    log.error("删除上传中的本地磁盘的临时文件失败");
+                }
+            } else {
+                log.warn("上传中的本地磁盘临时文件 {} 不存在", realLocalTempFile.getAbsolutePath());
             }
-        } else {
-            log.warn("上传中的本地磁盘临时文件 {} 不存在", realLocalTempFile.getAbsolutePath());
-        }
-    }
+        }, 20, java.util.concurrent.TimeUnit.SECONDS); // 20秒后删除
 
+        // 关闭调度器
+        scheduler.shutdown();
+    }
 }

@@ -65,7 +65,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
             }
 
             // 去除Postman产生的Bearer前缀
-
+            //? 测试使用
             if (token.startsWith("Bearer ")) {
                 token = token.substring(7);
             }
